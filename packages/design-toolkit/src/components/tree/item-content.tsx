@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -17,7 +17,7 @@ import DragVert from '@accelint/icons/drag-vert';
 import Hide from '@accelint/icons/hide';
 import Show from '@accelint/icons/show';
 import { useContext } from 'react';
-import { TreeItemContent as AriaTreeItemContent } from 'react-aria-components';
+import { TreeItemContent as AriaTreeItemContent } from 'react-aria-components/Tree';
 import { Button } from '../button';
 import { Checkbox } from '../checkbox';
 import { Icon } from '../icon';
@@ -29,14 +29,32 @@ import type { Key } from '@react-types/shared';
 import type { TreeItemContentProps } from './types';
 
 /**
- * ItemContent - Content of a tree item
+ * TreeItemContent - Renders the display content of a tree node
  *
- * Renders the content of a tree item with proper styling
+ * @example
+ * ```tsx
+ * <TreeItem id="node" textValue="Node">
+ *   <TreeItemContent>
+ *     <TreeItemPrefixIcon><Folder /></TreeItemPrefixIcon>
+ *     <TreeItemLabel>Folder Name</TreeItemLabel>
+ *     <TreeItemDescription>Contains 5 items</TreeItemDescription>
+ *   </TreeItemContent>
+ * </TreeItem>
+ * ```
+ *
+ * @param props - {@link TreeItemContentProps}
+ * @param props.children - Content to render, or a render function receiving TreeItemContentRenderProps.
+ * @returns The rendered TreeItemContent component.
  */
 export function TreeItemContent({ children }: TreeItemContentProps) {
-  const { showVisibility, variant, visibleKeys, onVisibilityChange } =
-    useContext(TreeContext);
-  const { isVisible, isViewable } = useContext(TreeItemContext);
+  const {
+    showVisibility,
+    variant,
+    visibleKeys,
+    indeterminateKeys,
+    onVisibilityChange,
+  } = useContext(TreeContext);
+  const { isVisible, isViewable, ancestors } = useContext(TreeItemContext);
   const size = variant === 'cozy' ? 'medium' : 'small';
 
   return (
@@ -55,9 +73,15 @@ export function TreeItemContent({ children }: TreeItemContentProps) {
           isSelected,
         } = renderProps;
 
-        const isLastOfSet = !(
-          state.collection.getItem(id)?.nextKey || hasChildItems
-        );
+        const item = state.collection.getItem(id);
+        const isLastOfSet = !item?.nextKey;
+
+        // Determine if ancestors are last of set (excludes current item)
+        const ancestorLastOfSet = ancestors.slice(0, -1).map((ancestorKey) => {
+          const ancestorItem = state.collection.getItem(ancestorKey);
+          return !ancestorItem?.nextKey;
+        });
+
         const shouldShowSelection =
           selectionBehavior === 'toggle' && selectionMode !== 'none';
 
@@ -86,9 +110,13 @@ export function TreeItemContent({ children }: TreeItemContentProps) {
                 </Button>
               )}
               {level > 1 && (
-                <TreeLines level={level} isLastOfSet={isLastOfSet} />
+                <TreeLines
+                  level={level}
+                  isLastOfSet={isLastOfSet}
+                  ancestorLastOfSet={ancestorLastOfSet}
+                />
               )}
-              {hasChildItems ? (
+              {hasChildItems && (
                 <Button
                   slot='chevron'
                   variant='icon'
@@ -97,8 +125,6 @@ export function TreeItemContent({ children }: TreeItemContentProps) {
                 >
                   <Icon>{isExpanded ? <ChevronDown /> : <ChevronUp />}</Icon>
                 </Button>
-              ) : (
-                <div className={clsx(styles.spacing, styles[variant])} />
               )}
               <div className={clsx(styles.display, styles[variant])}>
                 {typeof children === 'function'
@@ -116,6 +142,7 @@ export function TreeItemContent({ children }: TreeItemContentProps) {
                   slot='selection'
                   isSelected={isSelected}
                   isDisabled={isDisabled}
+                  isIndeterminate={indeterminateKeys?.has(id)}
                 />
               )}
               {allowsDragging && (

@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -32,7 +32,15 @@ import type { QueryBuilderContextType, QueryBuilderProps } from './types';
  * with support for multiple conditions, operators, and logical grouping. Enables
  * users to build complex filters without writing SQL or code.
  *
+ * @param props - {@link QueryBuilderProps}
+ * @param props.controlClassnames - Custom CSS class names for control elements.
+ * @param props.controlElements - Custom component overrides for controls.
+ * @param props.orientation - Layout orientation ('horizontal' or 'vertical').
+ * @param props.showRuleLines - Whether to show connecting lines between rules.
+ * @returns The rendered QueryBuilder component.
+ *
  * @example
+ * ```tsx
  * // Basic query builder
  * <QueryBuilder
  *   fields={[
@@ -48,6 +56,7 @@ import type { QueryBuilderContextType, QueryBuilderProps } from './types';
  *   }}
  *   orientation="vertical"
  * />
+ * ```
  */
 export function QueryBuilder({
   controlClassnames,
@@ -91,7 +100,7 @@ export function QueryBuilder({
       header: styles.header,
       combinators: styles.combinators,
       fields: styles.fields,
-      operators: '',
+      operators: styles.operators,
       value: styles.value,
       valueListItem: '',
       valueSource: '',

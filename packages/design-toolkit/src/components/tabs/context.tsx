@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -14,23 +14,39 @@
 
 import 'client-only';
 import { createContext } from 'react';
-import type { ContextValue } from 'react-aria-components';
+import type { ContextValue } from 'react-aria-components/slots';
 import type { ProviderProps } from '@/lib/types';
-import type { TabsProps } from './types';
+import type { TabProps, TabsProps } from './types';
 
-/**
- * Context for Tabs component
- *
- * Provides context for Tabs component to share props
- */
+/** Context for sharing props across Tabs components */
 export const TabsContext =
   createContext<ContextValue<TabsProps, HTMLDivElement>>(null);
 
 /**
- * Provider for Tabs component
+ * Sets default props for all Tabs components within.
  *
- * Allows setting default props for all Tabs components within
+ * @example
+ * ```tsx
+ * <TabsProvider orientation="vertical">
+ *   <Tabs>
+ *     <TabList>
+ *       <Tab>Profile</Tab>
+ *       <Tab>Settings</Tab>
+ *     </TabList>
+ *   </Tabs>
+ * </TabsProvider>
+ * ```
+ *
+ * @param props - ProviderProps with TabsProps.
+ * @param props.children - Child components that receive the context.
+ * @returns The TabsContext provider wrapping children.
  */
 export function TabsProvider({ children, ...props }: ProviderProps<TabsProps>) {
   return <TabsContext.Provider value={props}>{children}</TabsContext.Provider>;
+}
+
+export const TabContext = createContext<ContextValue<TabProps, Element>>(null);
+
+export function TabProvider({ children, ...props }: ProviderProps<TabProps>) {
+  return <TabContext.Provider value={props}>{children}</TabContext.Provider>;
 }

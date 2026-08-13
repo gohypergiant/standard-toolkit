@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -11,17 +11,19 @@
  */
 
 import type { RefAttributes } from 'react';
-import type {
-  FieldErrorProps,
-  TextAreaProps,
-  TextFieldProps,
-} from 'react-aria-components';
+import type { FieldErrorProps } from 'react-aria-components/FieldError';
+import type { TextAreaProps } from 'react-aria-components/TextArea';
+import type { TextFieldProps } from 'react-aria-components/TextField';
 
+/**
+ * Props for the TextAreaField component.
+ */
 export type TextAreaFieldProps = Omit<
   TextFieldProps,
   'children' | 'className'
 > &
   RefAttributes<HTMLDivElement> & {
+    /** Custom CSS class names for field elements. */
     classNames?: {
       field?: TextFieldProps['className'];
       label?: string;
@@ -29,10 +31,15 @@ export type TextAreaFieldProps = Omit<
       description?: string;
       error?: FieldErrorProps['className'];
     };
+    /** Label text for the field. */
     label?: string;
+    /** Props passed to the underlying TextArea element. */
     inputProps?: Omit<TextAreaProps, 'className'> &
       RefAttributes<HTMLTextAreaElement>;
+    /** Helper text displayed below the input. */
     description?: string;
+    /** Error message displayed when validation fails. */
     errorMessage?: FieldErrorProps['children'];
+    /** Size variant of the field. */
     size?: 'medium' | 'small';
   };

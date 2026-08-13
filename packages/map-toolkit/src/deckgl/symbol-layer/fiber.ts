@@ -12,6 +12,7 @@
 
 import { extend } from '@deckgl-fiber-renderer/dom';
 import { SymbolLayer, type SymbolLayerProps } from './index';
+import type { CoffinCornerExtensionProps } from '../extensions';
 
 extend({ SymbolLayer });
 
@@ -20,7 +21,25 @@ declare global {
     // biome-ignore lint/style/useNamingConvention: Built-in React namespace.
     namespace JSX {
       interface IntrinsicElements {
-        symbolLayer: SymbolLayerProps;
+        /**
+         * A Deck.gl Fiber layer for rendering MIL-STD-2525 and APP-6 military symbols.
+         *
+         * Automatically generates symbol icons from SIDC codes with support for
+         * multiple symbology standards and customizable rendering options.
+         *
+         * @example
+         * ```tsx
+         * <symbolLayer
+         *   id="military-units"
+         *   data={units}
+         *   getSidc={d => d.sidc}
+         *   getPosition={d => d.position}
+         *   getSize={32}
+         *   defaultSymbolOptions={{ colorMode: 'Dark' }}
+         * />
+         * ```
+         */
+        symbolLayer: CoffinCornerExtensionProps<SymbolLayerProps>;
       }
     }
   }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -14,11 +14,10 @@ import 'client-only';
 import { clsx } from '@accelint/design-foundation/lib/utils';
 import Check from '@accelint/icons/check';
 import Remove from '@accelint/icons/remove';
-import {
-  Checkbox as AriaCheckbox,
-  composeRenderProps,
-  useContextProps,
-} from 'react-aria-components';
+import { Checkbox as AriaCheckbox } from 'react-aria-components/Checkbox';
+import { composeRenderProps } from 'react-aria-components/composeRenderProps';
+import { useContextProps } from 'react-aria-components/slots';
+import { usePreventScrollFocus } from '../../hooks/use-prevent-scroll-focus';
 import { Icon } from '../icon';
 import { CheckboxContext } from './context';
 import styles from './styles.module.css';
@@ -31,43 +30,66 @@ import type { CheckboxProps } from './types';
  * or grouped selections. Includes visual feedback for checked, indeterminate, and
  * disabled states with integrated labeling and validation support.
  *
+ * @param props - The checkbox props.
+ * @param props.ref - Reference to the label element.
+ * @param props.classNames - Custom class names for sub-elements.
+ * @param props.children - Label content for the checkbox.
+ * @param props.isSelected - Whether the checkbox is checked.
+ * @param props.isIndeterminate - Whether the checkbox is in indeterminate state.
+ * @param props.isDisabled - Whether the checkbox is disabled.
+ * @returns The checkbox component.
+ *
  * @example
+ * ```tsx
  * // Basic checkbox
  * <Checkbox>
  *   Accept terms and conditions
  * </Checkbox>
+ * ```
  *
  * @example
+ * ```tsx
  * // Checkbox group with multiple options
  * <CheckboxGroup label="Select preferences">
  *   <Checkbox value="notifications">Email notifications</Checkbox>
  *   <Checkbox value="marketing">Marketing emails</Checkbox>
  *   <Checkbox value="updates">Product updates</Checkbox>
  * </CheckboxGroup>
+ * ```
  *
  * @example
+ * ```tsx
  * // Disabled checkbox
  * <Checkbox isDisabled>
  *   Unavailable option
  * </Checkbox>
+ * ```
  *
  * @example
+ * ```tsx
  * // Indeterminate checkbox (partial selection)
  * <Checkbox isIndeterminate>
  *   Select all items
  * </Checkbox>
+ * ```
  */
 export function Checkbox({ ref, ...props }: CheckboxProps) {
   [props, ref] = useContextProps(props, ref ?? null, CheckboxContext);
 
-  const { classNames, children, ...rest } = props;
+  const { classNames, children, labelPosition = 'end', ...rest } = props;
+  const handleRef = usePreventScrollFocus(ref);
 
   return (
     <AriaCheckbox
       {...rest}
-      ref={ref}
+      ref={handleRef}
       className={composeRenderProps(classNames?.checkbox, (className) =>
-        clsx('group/checkbox', styles.checkbox, className),
+        clsx(
+          'group/checkbox',
+          styles.checkbox,
+          labelPosition === 'start' && styles.labelStart,
+          className,
+        ),
       )}
     >
       {composeRenderProps(

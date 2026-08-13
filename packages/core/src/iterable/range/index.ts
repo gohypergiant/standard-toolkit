@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -17,8 +17,10 @@ import { createIterable } from '../create-iterable';
  *
  * @param start - The start of the number range (inclusive)
  * @param end - The end of the number range (inclusive)
+ * @returns An iterable iterator over the number range.
  *
  * @example
+ * ```typescript
  * for (const n of range(1, 10)) {
  *   console.log(n);
  * }
@@ -26,6 +28,7 @@ import { createIterable } from '../create-iterable';
  *
  * const rangeArr = [...range(1, 10)];
  * // [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+ * ```
  */
 export function range(start: number, end: number) {
   let counter = start;

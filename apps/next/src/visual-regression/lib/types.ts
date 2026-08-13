@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -69,6 +69,19 @@ export interface InteractiveVisualTestConfig<TProps = Record<string, unknown>> {
   beforeEach?: () => Promise<void> | void;
   /** Custom screenshot naming function */
   screenshotName?: (variant: string, state: InteractiveState) => string;
+  /** Optional className for the screenshot wrapper element */
+  className?: string;
+  /** CSS selector for the child element that should receive hover/pressed interactions.
+   *  When omitted, interactions target the wrapper element.
+   *  Use for compound components where a specific child needs to be hovered/pressed. */
+  interactionTarget?: string;
+  /** CSS selector for the element to screenshot (e.g. '[role="menu"]').
+   *  Use for portal-based components where the visual content renders outside the wrapper.
+   *  When omitted, screenshots target the wrapper element via testId. */
+  screenshotSelector?: string;
+  /** Delay in ms after render before interacting.
+   *  Use for portal-based components that need time to mount (e.g. menus, popovers). */
+  waitMs?: number;
 }
 
 // =============================================================================
@@ -102,4 +115,6 @@ export interface VisualTestScenario {
   selector?: string;
   /** Optional delay in ms before taking screenshot (for animations/transitions) */
   waitMs?: number;
+  /** Optional className for the screenshot wrapper element */
+  className?: string;
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -13,7 +13,9 @@
 
 import 'client-only';
 import { clsx } from '@accelint/design-foundation/lib/utils';
-import { HeadingContext, Provider, TextContext } from 'react-aria-components';
+import { TextContext } from 'react-aria-components/Text';
+import { Provider } from 'react-aria-components/slots';
+import { HeadingContext } from 'react-aria-components/Heading';
 import { AvatarContext } from '../avatar/context';
 import { IconContext } from '../icon/context';
 import styles from './styles.module.css';
@@ -23,6 +25,22 @@ import type { SidenavAvatarProps } from './types';
  * SidenavAvatar - Avatar component for sidenav
  *
  * Provides an avatar container with proper styling for the sidenav
+ *
+ * @example
+ * ```tsx
+ * <SidenavHeader>
+ *   <SidenavAvatar>
+ *     <Avatar>JD</Avatar>
+ *     <Heading>John Doe</Heading>
+ *     <Text>Administrator</Text>
+ *   </SidenavAvatar>
+ * </SidenavHeader>
+ * ```
+ *
+ * @param props - {@link SidenavAvatarProps}
+ * @param props.children - Avatar content (icon, heading, text).
+ * @param props.className - CSS class for the avatar container.
+ * @returns The rendered SidenavAvatar component.
  */
 export function SidenavAvatar({
   children,

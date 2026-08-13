@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -21,11 +21,13 @@ import { identity } from '../../combinators/identity';
  * @template C - The string template of property name of A.
  * @param obj - The table lookup object.
  * @param def - The function used to handle the default value if the lookup returns `undefined`.
+ * @returns A function that performs the lookup on the provided object.
  *
  * @remarks
  * pure function
  *
  * @example
+ * ```typescript
  * const colorTable = {
  *  FOO: [0, 0, 255, 155],
  *  BAR: [255, 0, 255, 155],
@@ -35,6 +37,7 @@ import { identity } from '../../combinators/identity';
  *
  * const colorLookup = tableLookup(colorTable, x => x ?? [128, 128, 128, 155]);
  * colorLookup(data.value);
+ * ```
  */
 export const lookup =
   <

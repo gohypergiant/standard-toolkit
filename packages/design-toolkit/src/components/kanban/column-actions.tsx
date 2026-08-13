@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -19,6 +19,14 @@ import { Icon } from '../icon';
 import styles from './styles.module.css';
 import type { KanbanColContentActionProps } from './types';
 
+/**
+ * KanbanColumnActions - Action button for adding new cards
+ *
+ * @param props - {@link KanbanColContentActionProps}
+ * @param props.className - Optional CSS class name.
+ * @param props.onAddCard - Callback when add card button is pressed.
+ * @returns The rendered KanbanColumnActions component.
+ */
 export function KanbanColumnActions({
   className,
   onAddCard,

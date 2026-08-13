@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -16,7 +16,7 @@ import { clsx } from '@accelint/design-foundation/lib/utils';
 import Check from '@accelint/icons/check';
 import CopyToClipboard from '@accelint/icons/copy-to-clipboard';
 import GlobalShare from '@accelint/icons/global-share';
-import { filterDOMProps } from '@react-aria/utils';
+import { filterDOMProps } from 'react-aria/filterDOMProps';
 import 'client-only';
 import {
   type CSSProperties,
@@ -25,17 +25,16 @@ import {
   useMemo,
   useState,
 } from 'react';
+import { Text as AriaText, TextContext } from 'react-aria-components/Text';
+import { composeRenderProps } from 'react-aria-components/composeRenderProps';
+import { Provider, useContextProps } from 'react-aria-components/slots';
 import {
-  Text as AriaText,
-  composeRenderProps,
   FieldError,
   FieldErrorContext,
-  GroupContext,
-  LabelContext,
-  Provider,
-  TextContext,
-  useContextProps,
-} from 'react-aria-components';
+} from 'react-aria-components/FieldError';
+import { LabelContext } from 'react-aria-components/Label';
+import { GroupContext } from 'react-aria-components/Group';
+
 import { useCoordinateField } from '../../hooks/coordinate-field';
 import { Button } from '../button';
 import { Dialog } from '../dialog';
@@ -50,6 +49,8 @@ import { PopoverContent } from '../popover/content';
 import { PopoverTitle } from '../popover/title';
 import { Radio } from '../radio';
 import { RadioGroup } from '../radio/group';
+import { Tooltip } from '../tooltip';
+import { TooltipTrigger } from '../tooltip/trigger';
 import { CoordinateFieldContext, CoordinateFieldStateContext } from './context';
 import {
   type CoordinateFormatResult,
@@ -74,11 +75,29 @@ import type { CoordinateFieldProps } from './types';
  * systems (DD, DDM, DMS, MGRS, UTM). All values are normalized to Decimal Degrees internally
  * for consistency.
  *
- * @example
- * // Basic coordinate field
- * <CoordinateField label="Location" />
+ * @param props - The coordinate field props.
+ * @param props.ref - Reference to the coordinate field element.
+ * @param props.classNames - Custom class names for sub-elements.
+ * @param props.description - Description text displayed below the field.
+ * @param props.label - Label text for the coordinate field.
+ * @param props.format - Coordinate format to use (dd, ddm, dms, mgrs, utm).
+ * @param props.size - Size variant of the field.
+ * @param props.variant - Layout variant (inline or stacked).
+ * @param props.showFormatButton - Whether to show the format conversion button.
+ * @param props.isDisabled - Whether the field is disabled.
+ * @param props.isInvalid - Whether the field is in an invalid state.
+ * @param props.isRequired - Whether the field is required.
+ * @param props.isReadOnly - Whether the field is read-only.
+ * @returns The coordinate field component.
  *
  * @example
+ * ```tsx
+ * // Basic coordinate field
+ * <CoordinateField label="Location" />
+ * ```
+ *
+ * @example
+ * ```tsx
  * // Coordinate field with validation
  * <CoordinateField
  *   label="Target Coordinates"
@@ -86,32 +105,40 @@ import type { CoordinateFieldProps } from './types';
  *   isInvalid={hasError}
  *   errorMessage="Please enter a valid coordinate"
  * />
+ * ```
  *
  * @example
+ * ```tsx
  * // Coordinate field with specific format
  * <CoordinateField
  *   label="Position"
  *   format="dms"
  *   description="Enter coordinates in Degrees Minutes Seconds format"
  * />
+ * ```
  *
  * @example
+ * ```tsx
  * // Compact coordinate field
  * <CoordinateField
  *   label="Coordinates"
  *   size="small"
  *   format="dd"
  * />
+ * ```
  *
  * @example
+ * ```tsx
  * // Controlled coordinate field
  * <CoordinateField
  *   label="Selected Location"
  *   value={coordinates}
  *   onChange={setCoordinates}
  * />
+ * ```
  *
  * @example
+ * ```tsx
  * // Coordinate field with error handling
  * <CoordinateField
  *   label="Target Coordinates"
@@ -124,6 +151,7 @@ import type { CoordinateFieldProps } from './types';
  *   isInvalid={!!errorMessage}
  *   errorMessage={errorMessage}
  * />
+ * ```
  */
 export function CoordinateField({ ref, ...props }: CoordinateFieldProps) {
   [props, ref] = useContextProps(props, ref, CoordinateFieldContext);
@@ -136,6 +164,7 @@ export function CoordinateField({ ref, ...props }: CoordinateFieldProps) {
     size = 'medium',
     variant = 'inline',
     showFormatButton = true,
+    formatButtonTooltip = 'View/copy other formats',
     isDisabled = false,
     isInvalid: isInvalidProp = false,
     isRequired = false,
@@ -191,8 +220,12 @@ export function CoordinateField({ ref, ...props }: CoordinateFieldProps) {
     CoordinateFormatResult
   > | null>(null);
 
+  // Track popover open state so tooltip hides when popover is open
+  const [isPopoverOpen, setIsPopoverOpen] = useState(false);
+
   const handlePopoverOpenChange = useCallback(
     (isOpen: boolean) => {
+      setIsPopoverOpen(isOpen);
       if (isOpen) {
         setAllCoordinateFormats(getAllCoordinateFormats(state.currentValue));
       }
@@ -311,6 +344,7 @@ export function CoordinateField({ ref, ...props }: CoordinateFieldProps) {
                       }
                       onBlur={() => {
                         focus.setFocusedSegmentIndex(-1);
+                        state.handleSegmentBlur?.(editableIndex);
                         state.flushPendingValidation();
                       }}
                       onKeyDown={(e) =>
@@ -354,59 +388,65 @@ export function CoordinateField({ ref, ...props }: CoordinateFieldProps) {
           </div>
 
           {showFormatButton && (
-            <DialogTrigger onOpenChange={handlePopoverOpenChange}>
-              <Button
-                variant='icon'
-                size={size}
-                color='mono-bold'
-                className={classNames?.formatButton}
-                aria-label='View coordinate in all formats'
-                isDisabled={!copy.isFormatButtonEnabled}
-              >
-                <Icon>
-                  <GlobalShare />
-                </Icon>
-              </Button>
-              <Popover classNames={{ popover: styles.popover }}>
-                <PopoverTitle className={styles.popoverTitle}>
-                  Copy Coordinates
-                </PopoverTitle>
-                <PopoverContent>
-                  {allCoordinateFormats &&
-                    COORDINATE_SYSTEMS.map((formatKey) => {
-                      const formatResult = allCoordinateFormats[formatKey];
-                      const isCopied = copy.copiedFormat === formatKey;
+            <TooltipTrigger isDisabled={isPopoverOpen}>
+              <DialogTrigger onOpenChange={handlePopoverOpenChange}>
+                <Button
+                  variant='icon'
+                  size='small'
+                  color='mono-bold'
+                  className={clsx(
+                    styles.formatButton,
+                    classNames?.formatButton,
+                  )}
+                  aria-label='View coordinate in all formats'
+                  isDisabled={!copy.isFormatButtonEnabled}
+                >
+                  <Icon>
+                    <GlobalShare />
+                  </Icon>
+                </Button>
+                <Popover classNames={{ popover: styles.popover }}>
+                  <PopoverTitle className={styles.popoverTitle}>
+                    Copy Coordinates
+                  </PopoverTitle>
+                  <PopoverContent>
+                    {allCoordinateFormats &&
+                      COORDINATE_SYSTEMS.map((formatKey) => {
+                        const formatResult = allCoordinateFormats[formatKey];
+                        const isCopied = copy.copiedFormat === formatKey;
 
-                      return (
-                        <div key={formatKey} className={styles.formatRow}>
-                          <div className={styles.formatLabels}>
-                            <span className={styles.formatLabel}>
-                              {COORDINATE_FORMAT_LABELS[formatKey]}
-                            </span>
-                            <span
-                              className={styles.formatValue}
-                              title={formatResult.value}
+                        return (
+                          <div key={formatKey} className={styles.formatRow}>
+                            <div className={styles.formatLabels}>
+                              <span className={styles.formatLabel}>
+                                {COORDINATE_FORMAT_LABELS[formatKey]}
+                              </span>
+                              <span
+                                className={styles.formatValue}
+                                title={formatResult.value}
+                              >
+                                {formatResult.value}
+                              </span>
+                            </div>
+                            <Button
+                              variant='icon'
+                              color='mono-bold'
+                              aria-label={`Copy ${COORDINATE_FORMAT_LABELS[formatKey]} format`}
+                              onPress={() => copy.handleCopyFormat(formatKey)}
+                              isDisabled={!formatResult.isValid}
                             >
-                              {formatResult.value}
-                            </span>
+                              <Icon>
+                                {isCopied ? <Check /> : <CopyToClipboard />}
+                              </Icon>
+                            </Button>
                           </div>
-                          <Button
-                            variant='icon'
-                            color='mono-bold'
-                            aria-label={`Copy ${COORDINATE_FORMAT_LABELS[formatKey]} format`}
-                            onClick={() => copy.handleCopyFormat(formatKey)}
-                            isDisabled={!formatResult.isValid}
-                          >
-                            <Icon>
-                              {isCopied ? <Check /> : <CopyToClipboard />}
-                            </Icon>
-                          </Button>
-                        </div>
-                      );
-                    })}
-                </PopoverContent>
-              </Popover>
-            </DialogTrigger>
+                        );
+                      })}
+                  </PopoverContent>
+                </Popover>
+              </DialogTrigger>
+              <Tooltip>{formatButtonTooltip}</Tooltip>
+            </TooltipTrigger>
           )}
         </div>
 

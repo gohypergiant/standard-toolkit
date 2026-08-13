@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -14,12 +14,10 @@
 import 'client-only';
 import { clsx } from '@accelint/design-foundation/lib/utils';
 import { useContext, useRef } from 'react';
-import {
-  composeRenderProps,
-  Provider,
-  TextContext,
-  ToggleButton,
-} from 'react-aria-components';
+import { composeRenderProps } from 'react-aria-components/composeRenderProps';
+import { Provider } from 'react-aria-components/slots';
+import { TextContext } from 'react-aria-components/Text';
+import { ToggleButton } from 'react-aria-components/ToggleButton';
 import { IconContext } from '../icon/context';
 import { Tooltip } from '../tooltip';
 import { TooltipTrigger } from '../tooltip/trigger';
@@ -31,6 +29,20 @@ import type { SidenavItemProps } from './types';
  * SidenavItem - Item component for sidenav
  *
  * Provides a selectable item with tooltip for the sidenav
+ *
+ * @example
+ * ```tsx
+ * <SidenavItem textValue="Dashboard" isSelected={true}>
+ *   <Icon><Home /></Icon>
+ *   <Text>Dashboard</Text>
+ * </SidenavItem>
+ * ```
+ *
+ * @param props - {@link SidenavItemProps}
+ * @param props.children - Item content (icon and text).
+ * @param props.classNames - Custom CSS class names for item elements.
+ * @param props.textValue - Text displayed in tooltip when collapsed.
+ * @returns The rendered SidenavItem component.
  */
 export function SidenavItem({
   children,

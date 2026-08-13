@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -11,9 +11,16 @@
  */
 import type { HTMLAttributes, PropsWithChildren } from 'react';
 
+/**
+ * Props for the ActionBar component.
+ *
+ * Extends standard HTML div attributes with action bar-specific options.
+ */
 export type ActionBarProps = PropsWithChildren<
   HTMLAttributes<HTMLDivElement>
 > & {
+  /** Visual elevation style: 'flat' for embedded, 'overlay' for floating, 'raised' for prominent. */
   elevation?: 'flat' | 'overlay' | 'raised';
+  /** Size of action buttons within the bar. */
   size?: 'medium' | 'small';
 };

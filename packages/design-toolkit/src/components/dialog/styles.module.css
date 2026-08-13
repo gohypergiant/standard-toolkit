@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -15,10 +15,33 @@
 @layer components.l1 {
   .overlay {
     @apply absolute inset-0 flex items-center justify-center;
+    background-color: var(--primitive-alpha-black-400);
+
+    @variant motion-safe {
+      transition: background-color var(--animation-duration-fast)
+        var(--animation-easing-accelerate);
+    }
+
+    @variant entering {
+      background-color: transparent;
+    }
+
+    @variant exiting {
+      background-color: transparent;
+    }
   }
 
   .modal {
     @apply bg-surface-overlay shadow-elevation-overlay flex flex-col justify-center;
+
+    @variant motion-safe {
+      @variant entering {
+        @apply animate-fade-enter;
+      }
+      @variant exiting {
+        @apply animate-fade-exit;
+      }
+    }
 
     @variant group-size-small/dialog {
       @apply rounded-medium;

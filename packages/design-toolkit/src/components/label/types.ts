@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -11,10 +11,15 @@
  */
 
 import type { RefAttributes } from 'react';
-import type { LabelProps as AriaLabelProps } from 'react-aria-components';
+import type { LabelProps as AriaLabelProps } from 'react-aria-components/Label';
 
+/**
+ * Props for the Label component.
+ */
 export type LabelProps = AriaLabelProps &
   RefAttributes<HTMLLabelElement> & {
+    /** Whether the label is in a disabled state. */
     isDisabled?: boolean;
+    /** Whether the associated field is required. */
     isRequired?: boolean;
   };

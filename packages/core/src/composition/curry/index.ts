@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -27,16 +27,19 @@ export type Curried<T extends unknown[], R> = <P extends Partial<T>>(
  *
  * @template T - The function type to curry.
  * @param fn - The function to convert to a curried version of.
+ * @returns A curried version of the input function.
  *
  * @remark
  * pure function
  *
  * @example
+ * ```typescript
  * const curried = autoCurry((a, b, c) => (a + b) * c);
  * curried(2)(3)(4);
  * curried(2, 3)(4);
  * curried(2)(3, 4);
  * curried(2, 3, 4);
+ * ```
  */
 // biome-ignore lint/suspicious/noExplicitAny: This is intended
 export function autoCurry<T extends (...args: any[]) => any>(

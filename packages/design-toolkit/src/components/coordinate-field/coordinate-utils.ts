@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -10,14 +10,9 @@
  * governing permissions and limitations under the License.
  */
 
-import { getLogger } from '@accelint/logger';
+import { createLoggerDomain } from '@/utils/logger';
 
-const logger = getLogger({
-  enabled: process.env.NODE_ENV !== 'production',
-  level: 'debug',
-  prefix: '[CoordinateField]',
-  pretty: true,
-});
+const logger = createLoggerDomain('[CoordinateField]');
 
 /**
  * Coordinate Conversion Utilities
@@ -576,6 +571,10 @@ export function convertDDToDisplaySegments(
       return null;
     }
 
+    // we're resetting the value in the created `coord` to preserve DD precision
+    coord.raw.LAT = value.lat;
+    coord.raw.LON = value.lon;
+
     // Format the coordinate using geo package formatters
     // These return complete coordinate strings (e.g., "40 42.768 N / 74 0.36 W")
     let coordString: string;
@@ -606,7 +605,7 @@ export function convertDDToDisplaySegments(
     return segments;
   } catch (error) {
     logger
-      .withContext({
+      .withMetadata({
         value: String(value),
         format: String(format),
       })
@@ -676,7 +675,7 @@ export function convertDisplaySegmentsToDD(
     };
   } catch (error) {
     logger
-      .withContext({
+      .withMetadata({
         segments: JSON.stringify(segments),
         format: String(format),
       })
@@ -856,7 +855,7 @@ function convertToFormat(
 
     // Log other errors in development
     logger
-      .withContext({
+      .withMetadata({
         value: JSON.stringify(value),
       })
       .withError(error)
@@ -930,7 +929,7 @@ export function getAllCoordinateFormats(
     return result;
   } catch (error) {
     logger
-      .withContext({
+      .withMetadata({
         value: JSON.stringify(validValue),
       })
       .withError(error)
@@ -1052,12 +1051,12 @@ export function parseCoordinatePaste(
     } catch (error) {
       // Log parsing errors in development for debugging
       logger
-        .withContext({
+        .withMetadata({
           pastedText: pastedText.trim(),
           format: String(format),
         })
         .withError(error)
-        .warn(`Failed to parse as ${format}`);
+        .error(`Failed to parse as ${format}`);
       // Continue trying other parsers
     }
   }
@@ -1067,6 +1066,11 @@ export function parseCoordinatePaste(
 
 /**
  * Check if two coordinates are equal within epsilon tolerance
+ *
+ * @param coord1 - First coordinate to compare.
+ * @param coord2 - Second coordinate to compare.
+ * @param epsilon - Tolerance for comparison (defaults to COORDINATE_EPSILON).
+ * @returns True if coordinates are equal within tolerance.
  */
 export function areCoordinatesEqual(
   coord1: { lat: number; lon: number },
@@ -1081,6 +1085,9 @@ export function areCoordinatesEqual(
 
 /**
  * Deduplicate coordinate matches by location, keeping first match for each unique location
+ *
+ * @param matches - Array of parsed coordinate matches to deduplicate.
+ * @returns Array of unique matches based on coordinate location.
  */
 export function deduplicateMatchesByLocation(
   matches: ParsedCoordinateMatch[],

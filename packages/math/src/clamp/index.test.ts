@@ -14,13 +14,18 @@ import { describe, expect, it } from 'vitest';
 import { clamp } from './';
 
 describe('clamp', () => {
-  it('clamps value', () => {
-    expect(clamp(1, 2, 0)).toBe(1);
-    expect(clamp(1, 2, 3)).toBe(2);
-    expect(clamp(1, 3, 2)).toBe(2);
+  it.each`
+    min  | max  | value | expected | scenario
+    ${1} | ${2} | ${0}  | ${1}     | ${'returns min when value is below minimum'}
+    ${1} | ${2} | ${3}  | ${2}     | ${'returns max when value is above maximum'}
+    ${1} | ${3} | ${2}  | ${2}     | ${'returns value when within range'}
+  `('should $scenario', ({ min, max, value, expected }) => {
+    const result = clamp(min, max, value);
+
+    expect(result).toBe(expected);
   });
 
-  it('throws when min is greater than max', () => {
-    expect(() => clamp(1, 0, 1)).toThrow(RangeError);
+  it('should throw RangeError when min exceeds max', () => {
+    expect(() => clamp(1, 0, 1)).toThrow('min exceeded max');
   });
 });

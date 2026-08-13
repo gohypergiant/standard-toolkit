@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -14,12 +14,28 @@
 import type { ProviderProps } from '@/lib/types';
 import 'client-only';
 import { createContext } from 'react';
-import type { ContextValue } from 'react-aria-components';
+import type { ContextValue } from 'react-aria-components/slots';
 import type { ClassificationBannerProps } from './types';
 
+/** React context for sharing ClassificationBanner configuration across components. */
 export const ClassificationBannerContext =
   createContext<ContextValue<ClassificationBannerProps, HTMLDivElement>>(null);
 
+/**
+ * Context provider for setting default props across multiple ClassificationBanner components.
+ *
+ * @param props - The provider props.
+ * @param props.children - Child components that will receive the classification banner context.
+ * @returns The classification banner context provider wrapping children.
+ *
+ * @example
+ * ```tsx
+ * <ClassificationBannerProvider variant="secret">
+ *   <ClassificationBanner />
+ *   <ClassificationBanner />
+ * </ClassificationBannerProvider>
+ * ```
+ */
 export function ClassificationBannerProvider({
   children,
   ...props

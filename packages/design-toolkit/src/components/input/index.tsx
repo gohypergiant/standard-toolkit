@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -14,20 +14,18 @@
 
 import 'client-only';
 import { clsx } from '@accelint/design-foundation/lib/utils';
-import CancelFill from '@accelint/icons/cancel-fill';
-import { useControlledState } from '@react-stately/utils';
+import { useControlledState } from 'react-stately/useControlledState';
+import { type ChangeEvent, useCallback } from 'react';
 import {
   Input as AriaInput,
   InputContext as AriaInputContext,
-  composeRenderProps,
-  useContextProps,
-} from 'react-aria-components';
-import { Button } from '../button';
-import { Icon } from '../icon';
+} from 'react-aria-components/Input';
+import { composeRenderProps } from 'react-aria-components/composeRenderProps';
+import { useContextProps } from 'react-aria-components/slots';
+import { ClearButton } from '../button/__internal__/clear';
 import { IconProvider } from '../icon/context';
 import { InputContext } from './context';
 import styles from './styles.module.css';
-import type { ChangeEvent } from 'react';
 import type { InputProps } from './types';
 
 // TODO: Improve this implementation so it is more of a realistic event
@@ -42,16 +40,31 @@ const clearInputEvent = {
  * and integrated validation states. Supports various styling options and integrates
  * seamlessly with form field components for comprehensive form experiences.
  *
- * @example
- * // Basic input
- * <Input placeholder="Enter text..." />
+ * @param props - {@link InputProps}
+ * @param props.ref - Ref to the input element.
+ * @param props.classNames - CSS class names for input subcomponents.
+ * @param props.autoSize - Whether the input should auto-size to its content.
+ * @param props.prefix - Content to display before the input.
+ * @param props.size - Size variant for the input.
+ * @param props.suffix - Content to display after the input.
+ * @param props.isClearable - Whether the input shows a clear button.
+ * @param props.isInvalid - Whether the input is in an invalid state.
+ * @returns The rendered Input component.
  *
  * @example
+ * ```tsx
+ * // Basic input
+ * <Input placeholder="Enter text..." />
+ * ```
+ *
+ * @example
+ * ```tsx
  * // Input with clear button
  * <Input
  *   defaultValue="Clearable text"
  *   classNames={{ clear: "hover:bg-info-bold" }}
  * />
+ * ```
  */
 
 // biome-ignore lint/complexity/noExcessiveCognitiveComplexity: just a little bit over, not worth refactoring
@@ -94,13 +107,21 @@ export function Input({ ref = null, ...props }: InputProps) {
   const clear = isClearable && styles.isClearable;
   const isEmpty = value == null || value === '';
 
-  function handleChange(event: ChangeEvent<HTMLInputElement>) {
-    onChange?.(event);
+  const handleChange = useCallback(
+    (event: ChangeEvent<HTMLInputElement>) => {
+      onChange?.(event);
 
-    if (!event.defaultPrevented) {
-      setValue(event.target.value);
-    }
-  }
+      if (!event.defaultPrevented) {
+        setValue(event.target.value);
+      }
+    },
+    [onChange, setValue],
+  );
+  const handleClearButtonPress = useCallback(() => {
+    handleChange(clearInputEvent);
+
+    ref?.current?.focus();
+  }, [handleChange, ref]);
 
   return (
     <IconProvider size='small'>
@@ -175,24 +196,13 @@ export function Input({ ref = null, ...props }: InputProps) {
           </span>
         )}
         {!readOnly && isClearable && (
-          <Button
+          <ClearButton
             className={composeRenderProps(classNames?.clear, (className) =>
               clsx(styles.clear, prefix, suffix, clear, className),
             )}
-            excludeFromTabOrder
-            size='small'
-            variant='icon'
             isDisabled={disabled}
-            onPress={() => {
-              handleChange(clearInputEvent);
-
-              ref?.current?.focus();
-            }}
-          >
-            <Icon>
-              <CancelFill />
-            </Icon>
-          </Button>
+            onPress={handleClearButtonPress}
+          />
         )}
       </div>
     </IconProvider>

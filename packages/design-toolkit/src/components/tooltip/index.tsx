@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -13,51 +13,34 @@
 
 import 'client-only';
 import { clsx } from '@accelint/design-foundation/lib/utils';
-import { useIsSSR } from '@react-aria/ssr';
+import { useIsSSR } from 'react-aria/SSRProvider';
 import { useMemo } from 'react';
-import {
-  Tooltip as AriaTooltip,
-  composeRenderProps,
-} from 'react-aria-components';
+import { Tooltip as AriaTooltip } from 'react-aria-components/Tooltip';
 import { PortalProvider } from '@/providers/portal';
 import styles from './styles.module.css';
 import type { TooltipProps } from './types';
+import { composeRenderProps } from 'react-aria-components/composeRenderProps';
 
 /**
- * Tooltip - A contextual popup component for providing additional information
+ * Tooltip - Contextual popup for additional information
  *
- * Displays helpful information when users hover over or focus on an element.
- * Provides accessible tooltip functionality with proper positioning, keyboard
- * navigation, and screen reader support for enhanced user experience.
+ * Displays on hover or focus with automatic positioning and accessibility support.
+ *
+ * @param props - {@link TooltipProps}
+ * @param props.children - Tooltip content.
+ * @param props.parentRef - Ref to the parent element for portal positioning.
+ * @param props.className - CSS class for the tooltip.
+ * @param props.offset - Distance from the trigger element.
+ * @param props.placement - Position relative to the trigger.
+ * @returns The rendered Tooltip component.
  *
  * @example
- * // Basic tooltip
+ * ```tsx
  * <TooltipTrigger>
  *   <Button>Hover me</Button>
- *   <Tooltip>
- *     This is helpful information
- *   </Tooltip>
+ *   <Tooltip>Additional information</Tooltip>
  * </TooltipTrigger>
- *
- * @example
- * // Tooltip with custom positioning
- * <TooltipTrigger>
- *   <Button>Hover for info</Button>
- *   <Tooltip placement="top" offset={10}>
- *     Positioned above with custom offset
- *   </Tooltip>
- * </TooltipTrigger>
- *
- * @example
- * // Icon with tooltip
- * <TooltipTrigger>
- *   <Button variant="icon">
- *     <Icon><Info /></Icon>
- *   </Button>
- *   <Tooltip>
- *     Additional context for this action
- *   </Tooltip>
- * </TooltipTrigger>
+ * ```
  */
 export function Tooltip({
   children,

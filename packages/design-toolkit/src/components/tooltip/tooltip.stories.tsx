@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -20,6 +20,11 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 const meta = {
   title: 'Components/Tooltip',
   component: Tooltip,
+  parameters: {
+    docs: {
+      subtitle: 'Contextual popup for additional information on hover or focus',
+    },
+  },
 } satisfies Meta<typeof Tooltip>;
 
 export default meta;

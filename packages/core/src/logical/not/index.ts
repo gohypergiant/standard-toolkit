@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -15,6 +15,7 @@
  *
  * @template T - The type of the input value.
  * @param x - The value to negate.
+ * @returns The negated boolean value.
  *
  * @see https://en.wikipedia.org/wiki/Negation
  *
@@ -22,8 +23,10 @@
  * pure function
  *
  * @example
+ * ```typescript
  * not(2);
  * // false
+ * ```
  */
 export const not = <T>(x: T) => !x;
 
@@ -33,6 +36,7 @@ export const not = <T>(x: T) => !x;
  * @template T - The type of the input value.
  * @param a - The function to negate the return of.
  * @param b - The value to pass to the given function.
+ * @returns The negated boolean value of the function result.
  *
  * @see https://en.wikipedia.org/wiki/Negation
  *
@@ -40,8 +44,10 @@ export const not = <T>(x: T) => !x;
  * pure function
  *
  * @example
+ * ```typescript
  * notFn(x => x & 1)(4);
  * // true
+ * ```
  */
 export const notFn =
   <T>(a: (x: T) => unknown) =>

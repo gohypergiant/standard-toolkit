@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -19,6 +19,16 @@ import { eventStore } from '@/stores/event-store';
  * Binds the hotkey listener to the global window object.
  *
  * Safe to call on the server.
+ *
+ * @returns void
+ *
+ * @example
+ * ```typescript
+ * import { globalBind } from '@accelint/hotkey-manager';
+ *
+ * // Bind hotkey listeners to window
+ * globalBind();
+ * ```
  */
 export function globalBind() {
   // Exit if running on a server

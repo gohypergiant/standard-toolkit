@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -14,15 +14,15 @@
 import 'client-only';
 import { clsx } from '@accelint/design-foundation/lib/utils';
 import Time from '@accelint/icons/time';
+import { composeRenderProps } from 'react-aria-components/composeRenderProps';
 import {
   DateInput as AriaDateInput,
-  Text as AriaText,
-  TimeField as AriaTimeField,
-  composeRenderProps,
   DateSegment,
   FieldError,
+  Text as AriaText,
+  TimeField as AriaTimeField,
   type TimeValue,
-} from 'react-aria-components';
+} from 'react-aria-components/TimeField';
 import { Icon } from '../icon';
 import { Label } from '../label';
 import styles from './styles.module.css';
@@ -31,11 +31,28 @@ import type { TimeFieldProps } from './types';
 /**
  * TimeField - Form input for time values
  *
- * A time input field with configurable granularity and size, built on React
- * Aria components and suitable for forms requiring time entry.
+ * Provides configurable granularity, 12/24-hour format, and automatic accessibility.
+ *
+ * @param props - {@link TimeFieldProps}
+ * @param props.classNames - Custom CSS class names for field elements.
+ * @param props.description - Helper text displayed below the input.
+ * @param props.errorMessage - Error message displayed when validation fails.
+ * @param props.granularity - The granularity of the time value (hour, minute, second).
+ * @param props.hourCycle - Whether to use 12 or 24 hour time format.
+ * @param props.inputProps - Props passed to the underlying DateInput element.
+ * @param props.label - Label text for the field.
+ * @param props.shouldForceLeadingZeros - Whether to force leading zeros in time segments.
+ * @param props.size - Size variant of the field.
+ * @param props.isDisabled - Whether the field is disabled.
+ * @param props.isInvalid - Whether the field is in an invalid state.
+ * @param props.isRequired - Whether the field is required.
+ * @param props.isReadOnly - Whether the field is read-only.
+ * @returns The rendered TimeField component.
  *
  * @example
- * <TimeField label="Time" granularity="second" />
+ * ```tsx
+ * <TimeField label="Start time" granularity="minute" onChange={setTime} />
+ * ```
  */
 export function TimeField<T extends TimeValue>({
   classNames,

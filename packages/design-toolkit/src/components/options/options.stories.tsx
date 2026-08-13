@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -15,7 +15,7 @@ import { useState } from 'react';
 import {
   ListLayout as AriaListLayout,
   Virtualizer as AriaVirtualizer,
-} from 'react-aria-components';
+} from 'react-aria-components/Virtualizer';
 import { DeferredCollection } from '../deferred-collection';
 import { Icon } from '../icon';
 import { Skeleton } from '../skeleton';
@@ -27,7 +27,7 @@ import { OptionsItemLabel } from './item-label';
 import { OptionsSection } from './section';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import type { ReactNode } from 'react';
-import type { Selection } from 'react-aria-components';
+import type { Selection } from 'react-aria-components/ListBox';
 import type { OptionsItemProps } from './types';
 
 const meta = {

@@ -32,11 +32,17 @@
  */
 
 import { Broadcast } from '@accelint/bus';
+import { clamp } from '@accelint/math';
 import { fitBounds } from '@math.gl/web-mercator';
 import { createMapStore } from '../shared/create-map-store';
 import { CameraEventTypes } from './events';
 import type { UniqueId } from '@accelint/core';
-import type { CameraEvent, ProjectionType, ViewType } from './types';
+import type {
+  CameraEvent,
+  ProjectionType,
+  TransitionEasing,
+  ViewType,
+} from './types';
 
 const cameraBus = Broadcast.getInstance<CameraEvent>();
 
@@ -51,6 +57,8 @@ type CameraState2D = {
   rotation: number;
   projection: 'mercator';
   view: '2D';
+  transitionDuration?: number;
+  transitionEasing?: TransitionEasing;
 };
 
 /**
@@ -64,6 +72,8 @@ type CameraState3D = {
   rotation: number;
   projection: 'globe';
   view: '3D';
+  transitionDuration?: number;
+  transitionEasing?: TransitionEasing;
 };
 
 /**
@@ -77,6 +87,8 @@ type CameraState2Point5D = {
   rotation: number;
   projection: 'mercator';
   view: '2.5D';
+  transitionDuration?: number;
+  transitionEasing?: TransitionEasing;
 };
 
 /**
@@ -111,6 +123,24 @@ const initialStateCache = new Map<UniqueId, CameraStateInput>();
 const initializedInstances = new Set<UniqueId>();
 
 /**
+ * Maximum pitch (degrees) the camera can tilt to in 2.5D, matching MapLibre's
+ * `maxPitch`. The camera store clamps pitch to `[0, MAX_PITCH]`, so a stored
+ * value never exceeds what the renderer can honor — a mouse tilt drag that
+ * overshoots stores the clamped angle, not the raw drag value.
+ *
+ * Exported so consumers can bound their own pitch UI (e.g. a slider's max)
+ * to the value the camera accepts, instead of hardcoding `85`.
+ *
+ * @example
+ * ```tsx
+ * import { MAX_PITCH } from '@accelint/map-toolkit/camera';
+ *
+ * <Slider minValue={0} maxValue={MAX_PITCH} value={pitch} />;
+ * ```
+ */
+export const MAX_PITCH = 85;
+
+/**
  * Input type for building camera state - simpler than union type
  */
 type CameraStateInput = {
@@ -121,11 +151,47 @@ type CameraStateInput = {
   rotation?: number;
   projection?: ProjectionType;
   view?: ViewType;
+  transitionDuration?: number;
+  transitionEasing?: TransitionEasing;
 };
 
 /**
  * Build a complete camera state from partial input.
  * Returns the appropriate discriminated union variant based on view/projection.
+ *
+ * This function ensures type-safe camera states by constructing the correct
+ * discriminated union variant (2D, 2.5D, or 3D) based on view and projection
+ * settings, applying appropriate defaults and constraints.
+ *
+ * @param partial - Optional partial camera state input
+ * @returns Complete camera state matching one of the discriminated union variants
+ *
+ * @example
+ * ```typescript
+ * // Build 2D state (default)
+ * const state2D = buildCameraState({
+ *   latitude: 40.7128,
+ *   longitude: -74.0060,
+ *   zoom: 10,
+ * });
+ * // Result: { ..., view: '2D', projection: 'mercator', pitch: 0 }
+ *
+ * // Build 2.5D state
+ * const state2Point5D = buildCameraState({
+ *   latitude: 37.7749,
+ *   longitude: -122.4194,
+ *   zoom: 12,
+ *   view: '2.5D',
+ * });
+ * // Result: { ..., view: '2.5D', projection: 'mercator', pitch: 60 }
+ *
+ * // Build 3D state
+ * const state3D = buildCameraState({
+ *   view: '3D',
+ *   zoom: 2,
+ * });
+ * // Result: { ..., view: '3D', projection: 'globe', pitch: 0, rotation: 0 }
+ * ```
  */
 function buildCameraState(partial?: CameraStateInput): CameraState {
   const latitude = partial?.latitude ?? 0;
@@ -137,9 +203,12 @@ function buildCameraState(partial?: CameraStateInput): CameraState {
   const is3D = partial?.view === '3D' || partial?.projection === 'globe';
   const is2Point5D = partial?.view === '2.5D';
 
+  // Build base state for the appropriate view type
+  let state: CameraState;
+
   if (is3D) {
     // 3D view: globe projection, no pitch, no rotation
-    return {
+    state = {
       latitude,
       longitude,
       zoom,
@@ -148,31 +217,40 @@ function buildCameraState(partial?: CameraStateInput): CameraState {
       projection: 'globe',
       view: '3D',
     } satisfies CameraState3D;
-  }
-
-  if (is2Point5D) {
-    // 2.5D view: mercator projection, variable pitch
-    return {
+  } else if (is2Point5D) {
+    // 2.5D view: mercator projection, variable pitch clamped to [0, MAX_PITCH].
+    state = {
       latitude,
       longitude,
       zoom,
-      pitch: partial?.pitch ?? 45,
+      pitch: clamp(0, MAX_PITCH, partial?.pitch ?? 60),
       rotation,
       projection: 'mercator',
       view: '2.5D',
     } satisfies CameraState2Point5D;
+  } else {
+    // Default: 2D view, mercator projection, no pitch
+    state = {
+      latitude,
+      longitude,
+      zoom,
+      pitch: 0,
+      rotation,
+      projection: 'mercator',
+      view: '2D',
+    } satisfies CameraState2D;
   }
 
-  // Default: 2D view, mercator projection, no pitch
-  return {
-    latitude,
-    longitude,
-    zoom,
-    pitch: 0,
-    rotation,
-    projection: 'mercator',
-    view: '2D',
-  } satisfies CameraState2D;
+  // Always handle transition properties - either set or clear them
+  if (partial?.transitionDuration !== undefined) {
+    state.transitionDuration = partial.transitionDuration;
+  }
+
+  if (partial?.transitionEasing !== undefined) {
+    state.transitionEasing = partial.transitionEasing;
+  }
+
+  return state;
 }
 
 /**
@@ -235,16 +313,18 @@ export const cameraStore = createMapStore<CameraState, CameraActions>({
         }
 
         const state = get();
-        replace(
-          buildCameraState({
-            ...state,
-            latitude: payload.latitude,
-            longitude: payload.longitude,
-            zoom: payload.zoom ?? state.zoom,
-            rotation: payload.heading ?? state.rotation,
-            pitch: payload.pitch ?? state.pitch,
-          }),
-        );
+        const newState = buildCameraState({
+          ...state,
+          latitude: payload.latitude,
+          longitude: payload.longitude,
+          zoom: payload.zoom ?? state.zoom,
+          rotation: payload.heading ?? state.rotation,
+          pitch: payload.pitch ?? state.pitch,
+          transitionDuration: payload.transitionDuration,
+          transitionEasing: payload.transitionEasing,
+        });
+
+        replace(newState);
       },
     );
 
@@ -289,11 +369,11 @@ export const cameraStore = createMapStore<CameraState, CameraActions>({
         const state = get();
         const newState = { ...state };
         newState.projection = payload.projection;
+        newState.pitch = 0;
         if (payload.projection === 'globe') {
           newState.view = '3D';
         } else {
           newState.view = '2D';
-          newState.pitch = 0;
         }
         replace(newState);
       },
@@ -317,7 +397,7 @@ export const cameraStore = createMapStore<CameraState, CameraActions>({
         }
 
         if (payload.view === '2.5D') {
-          newState.pitch = 45;
+          newState.pitch = 60;
         }
         replace(newState);
       },
@@ -358,7 +438,7 @@ export const cameraStore = createMapStore<CameraState, CameraActions>({
 
         const state = get();
         if (state.view === '2.5D') {
-          replace({ ...state, pitch: payload.pitch });
+          replace({ ...state, pitch: clamp(0, MAX_PITCH, payload.pitch) });
         }
       },
     );
@@ -391,6 +471,27 @@ export const cameraStore = createMapStore<CameraState, CameraActions>({
  *
  * @param mapId - Unique identifier for the map instance
  * @param initialState - Optional initial camera state
+ * @returns void
+ *
+ * @example
+ * ```typescript
+ * import { uuid } from '@accelint/core';
+ * import { initializeCameraState } from '@accelint/map-toolkit/camera';
+ *
+ * const mapId = uuid();
+ *
+ * // Initialize with default state
+ * initializeCameraState(mapId);
+ *
+ * // Initialize with custom state
+ * initializeCameraState(mapId, {
+ *   latitude: 37.7749,
+ *   longitude: -122.4194,
+ *   zoom: 10,
+ *   view: '2.5D',
+ *   pitch: 45,
+ * });
+ * ```
  */
 export function initializeCameraState(
   mapId: UniqueId,
@@ -405,7 +506,9 @@ export function initializeCameraState(
     initialStateCache.set(mapId, initialState);
   }
   const builtState = buildCameraState(initialState);
-  cameraStore.set(mapId, builtState);
+  // Set initial state BEFORE getInstance is called by useSyncExternalStore
+  // This ensures any code path that creates the instance uses this state
+  cameraStore.setInitialState(mapId, builtState);
 }
 
 /**
@@ -434,7 +537,10 @@ export function useMapCamera(
   cameraState: CameraState;
   setCameraState: (state: Partial<CameraState>) => void;
 } {
-  // Initialize on first use if initial state provided
+  // Initialize BEFORE subscribing to ensure first render has correct state.
+  // This prevents MapLibre from rendering at default (0,0,0) and firing onMove
+  // events that would overwrite the initialized state.
+  // This is safe because initializeCameraState is idempotent (checks initializedInstances first).
   if (initialCameraState && !initializedInstances.has(mapId)) {
     initializeCameraState(mapId, initialCameraState);
   }
@@ -447,7 +553,33 @@ export function useMapCamera(
 /**
  * Manually clear camera state for a specific map instance.
  *
+ * Removes all cached state including initial values and subscription tracking.
+ * Useful for cleanup when dynamically destroying map instances.
+ *
  * @param mapId - The unique identifier for the map instance to clear
+ * @returns void
+ *
+ * @example
+ * ```typescript
+ * import { clearCameraState } from '@accelint/map-toolkit/camera';
+ *
+ * // Clean up when removing a map
+ * function removeMap(mapId: UniqueId) {
+ *   clearCameraState(mapId);
+ *   // ... remove map component
+ * }
+ * ```
+ *
+ * @example
+ * ```typescript
+ * import { clearCameraState } from '@accelint/map-toolkit/camera';
+ * import { afterEach } from 'vitest';
+ *
+ * // Clean up in tests
+ * afterEach(() => {
+ *   clearCameraState('test-map-id');
+ * });
+ * ```
  */
 export function clearCameraState(mapId: UniqueId): void {
   initializedInstances.delete(mapId);

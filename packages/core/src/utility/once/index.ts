@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -19,8 +19,10 @@ type SomeFunction = (...args: any[]) => any;
  *
  * @template T - The type of the function to call once.
  * @param fn - The function to call once.
+ * @returns A wrapped function that executes only on the first call.
  *
  * @example
+ * ```typescript
  * let globalVal = 10;
  * const addGlobal = (n: number) => {
  *   globalVal = globalVal + n;
@@ -29,6 +31,7 @@ type SomeFunction = (...args: any[]) => any;
  *
  * onceAdd(5); // 15
  * onceAdd(5); // 15
+ * ```
  */
 export const once = <T extends SomeFunction>(fn: T) => {
   let done = false;

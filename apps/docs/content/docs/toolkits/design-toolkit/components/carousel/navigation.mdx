@@ -1,0 +1,155 @@
+---
+title: CarouselPrevious / CarouselNext
+description: Navigation buttons for moving between carousel items with automatic disable states.
+source: packages/design-toolkit/src/components/carousel/navigation.tsx
+source_sha: 2abbd9c0a7c3cbe3814555fa5edb73670b31e767
+doc_sha: 575308c12460be8b5999e7a3ee3f6480e653ab7f
+deprecated: false
+updated: 2026-07-13
+---
+
+Navigation buttons for moving between carousel items with automatic boundary detection.
+
+## Usage
+
+```tsx
+import { Carousel, CarouselPrevious, CarouselNext } from '@accelint/design-toolkit';
+
+export function Gallery({ items, position, setPosition }) {
+  return (
+    <Carousel items={items} currentPosition={position} setCurrentPosition={setPosition}>
+      <CarouselPrevious />
+      <CarouselNext />
+    </Carousel>
+  );
+}
+```
+
+## Reference
+
+```typescript
+interface CarouselNavigationProps extends ButtonProps {
+  className?: string;
+  variant?: 'filled' | 'outline' | 'flat' | 'icon';
+  isDisabled?: boolean;
+}
+```
+
+### Props
+
+Both components accept all props from the `Button` component, including:
+
+| Prop | Type | Default | Required |
+|------|------|---------|----------|
+| `className` | `string` | - | No |
+| `variant` | `'filled' \| 'outline' \| 'flat' \| 'icon'` | `'flat'` | No |
+| `isDisabled` | `boolean` | `false` | No |
+
+### Behavior
+
+**CarouselPrevious**
+- Navigates to the previous item (currentPosition - 1)
+- Automatically disables when at the first item (position 0)
+- Renders with a left chevron icon
+- Accessible label: "Previous"
+
+**CarouselNext**
+- Navigates to the next item (currentPosition + 1)
+- Automatically disables when at the last item
+- Renders with a right chevron icon
+- Accessible label: "Next"
+
+## Examples
+
+### Example: Basic navigation buttons
+
+```tsx
+import {
+  Carousel,
+  CarouselViewer,
+  CarouselPrevious,
+  CarouselNext
+} from '@accelint/design-toolkit';
+
+<Carousel items={items} currentPosition={position} setCurrentPosition={setPosition}>
+  <CarouselViewer />
+  <div style={{ display: 'flex', gap: '0.5rem', justifyContent: 'center' }}>
+    <CarouselPrevious />
+    <CarouselNext />
+  </div>
+</Carousel>
+```
+
+### Example: Filled variant buttons
+
+```tsx
+import { Carousel, CarouselPrevious, CarouselNext } from '@accelint/design-toolkit';
+
+<Carousel items={items} currentPosition={position} setCurrentPosition={setPosition}>
+  <CarouselPrevious variant="filled" />
+  <CarouselNext variant="filled" />
+</Carousel>
+```
+
+### Example: Icon-only buttons
+
+```tsx
+import { Carousel, CarouselPrevious, CarouselNext } from '@accelint/design-toolkit';
+
+<Carousel items={items} currentPosition={position} setCurrentPosition={setPosition}>
+  <CarouselPrevious variant="icon" />
+  <CarouselNext variant="icon" />
+</Carousel>
+```
+
+### Example: Positioned as overlay
+
+```tsx
+import {
+  Carousel,
+  CarouselViewer,
+  CarouselPrevious,
+  CarouselNext
+} from '@accelint/design-toolkit';
+
+<Carousel items={items} currentPosition={position} setCurrentPosition={setPosition}>
+  <CarouselViewer>
+    <div style={{
+      position: 'absolute',
+      inset: 0,
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      padding: '1rem'
+    }}>
+      <CarouselPrevious variant="filled" />
+      <CarouselNext variant="filled" />
+    </div>
+  </CarouselViewer>
+</Carousel>
+```
+
+### Example: Custom styling
+
+```tsx
+import { Carousel, CarouselPrevious, CarouselNext } from '@accelint/design-toolkit';
+
+<Carousel items={items} currentPosition={position} setCurrentPosition={setPosition}>
+  <CarouselPrevious
+    variant="outline"
+    className="rounded-full shadow-lg"
+  />
+  <CarouselNext
+    variant="outline"
+    className="rounded-full shadow-lg"
+  />
+</Carousel>
+```
+
+> **Good to know:** Navigation buttons automatically disable at carousel boundaries, preventing navigation beyond the first or last item. You can manually disable them with `isDisabled` if needed.
+
+## Related
+
+- [Carousel](./index.mdx) - Parent carousel component
+- [Button](../button/index.mdx) - Base button component
+- [Icon](../icon/index.mdx) - Icon component used for chevron icons

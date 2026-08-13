@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -13,17 +13,26 @@
 
 import 'client-only';
 import { createContext, useContext } from 'react';
-import type { ContextValue } from 'react-aria-components';
+import type { ContextValue } from 'react-aria-components/slots';
 import type { ListProps } from './types';
 
 const ListStylesDefaults = {
   variant: 'cozy',
 } as const;
 
+/**
+ * Context for sharing List variant across component tree.
+ */
 export const ListContext = createContext<
   ContextValue<ListProps<object>, HTMLDivElement>
 >({ variant: ListStylesDefaults.variant });
 
+/**
+ * Hook to get the current list item variant from context.
+ * Used internally by ListItemTitle and ListItemDescription for sizing.
+ *
+ * @returns The current list item variant from context, or 'cozy' as the default.
+ */
 export const useListItemVariant = () => {
   const context = useContext(ListContext);
 

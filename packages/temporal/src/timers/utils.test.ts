@@ -10,33 +10,209 @@
  * governing permissions and limitations under the License.
  */
 
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { callNextSecond } from './utils'; // adjust path
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { callNextSecond, remainder } from './utils';
+
+beforeEach(() => {
+  vi.useFakeTimers();
+});
+
+afterEach(() => {
+  vi.useRealTimers();
+});
+
+describe('remainder', () => {
+  describe('normal operation', () => {
+    it('should return correct remainder for valid interval', () => {
+      const now = 1234567890;
+      const interval = 1000;
+      vi.setSystemTime(now);
+
+      const result = remainder(interval);
+
+      const expected = interval - (now % interval);
+      expect(result).toBe(expected);
+    });
+
+    it('should return full interval when at second boundary', () => {
+      const interval = 1000;
+      const now = 5000;
+      vi.setSystemTime(now);
+
+      const result = remainder(interval);
+
+      expect(result).toBe(interval);
+    });
+
+    it('should calculate correctly with decimal precision', () => {
+      const now = 1234567890;
+      const interval = 100.5;
+      vi.setSystemTime(now);
+
+      const result = remainder(interval);
+
+      const expected = interval - (now % interval);
+      expect(result).toBeCloseTo(expected, 10);
+      expect(result).toBeGreaterThan(0);
+      expect(result).toBeLessThanOrEqual(interval);
+    });
+  });
+
+  describe('edge cases', () => {
+    it.each([
+      { interval: 0, description: 'zero' },
+      { interval: Number.NaN, description: 'NaN' },
+    ])('should return NaN for $description interval', ({ interval }) => {
+      const result = remainder(interval);
+
+      expect(result).toBeNaN();
+    });
+
+    it('should return negative value for negative interval', () => {
+      const now = 1234567890;
+      const interval = -1000;
+      vi.setSystemTime(now);
+
+      const result = remainder(interval);
+
+      const expected = interval - (now % interval);
+      expect(result).toBe(expected);
+      expect(result).toBeLessThan(0);
+    });
+
+    it('should handle very large interval', () => {
+      const now = 1234567890;
+      const interval = Number.MAX_SAFE_INTEGER;
+      vi.setSystemTime(now);
+
+      const result = remainder(interval);
+
+      expect(result).toBeGreaterThan(0);
+      expect(result).toBeLessThanOrEqual(interval);
+    });
+
+    it.each([
+      {
+        interval: Number.POSITIVE_INFINITY,
+        expected: Number.POSITIVE_INFINITY,
+        description: 'positive Infinity',
+      },
+      {
+        interval: Number.NEGATIVE_INFINITY,
+        expected: Number.NEGATIVE_INFINITY,
+        description: 'negative Infinity',
+      },
+    ])('should return $description for $description interval', ({
+      interval,
+      expected,
+    }) => {
+      const now = 1234567890;
+      vi.setSystemTime(now);
+
+      const result = remainder(interval);
+
+      expect(result).toBe(expected);
+    });
+  });
+});
 
 describe('callNextSecond', () => {
-  beforeEach(() => {
-    vi.useFakeTimers();
+  // biome-ignore lint/style/useNamingConvention: We need to change rule, this is valid
+  const SECOND = 1000;
+
+  describe('normal operation', () => {
+    it('should execute callback at next clock second', () => {
+      const callback = vi.fn();
+      const now = 1234567890;
+      vi.setSystemTime(now);
+      const expectedDelay = SECOND - (now % SECOND);
+
+      callNextSecond(callback);
+
+      expect(callback).not.toHaveBeenCalled();
+
+      vi.advanceTimersByTime(expectedDelay);
+      expect(callback).toHaveBeenCalledTimes(1);
+    });
+
+    it('should calculate correct delay from current time', () => {
+      const callback = vi.fn();
+      const now = 1500;
+      vi.setSystemTime(now);
+      const expectedDelay = SECOND - (now % SECOND);
+
+      callNextSecond(callback);
+
+      vi.advanceTimersByTime(expectedDelay - 1);
+      expect(callback).not.toHaveBeenCalled();
+
+      vi.advanceTimersByTime(1);
+      expect(callback).toHaveBeenCalledTimes(1);
+    });
+
+    it('should execute only once', () => {
+      const callback = vi.fn();
+      const now = 1234567890;
+      vi.setSystemTime(now);
+      const expectedDelay = SECOND - (now % SECOND);
+
+      callNextSecond(callback);
+      vi.advanceTimersByTime(expectedDelay);
+
+      expect(callback).toHaveBeenCalledTimes(1);
+
+      vi.advanceTimersByTime(SECOND * 10);
+      expect(callback).toHaveBeenCalledTimes(1);
+    });
+
+    it('should wait full second when at second boundary', () => {
+      const callback = vi.fn();
+      const now = 5000;
+      vi.setSystemTime(now);
+
+      callNextSecond(callback);
+
+      vi.advanceTimersByTime(SECOND);
+      expect(callback).toHaveBeenCalledTimes(1);
+    });
+
+    it('can be cancelled before the next second boundary', () => {
+      // Make "now" be 12.345s into a minute so remainder(1000) = 655ms
+      vi.spyOn(Date, 'now').mockReturnValue(12_345);
+
+      const cb = vi.fn();
+
+      // callNextSecond returns a cleanup fn
+      const cancel = callNextSecond(cb);
+
+      // Cancel immediately
+      cancel?.();
+
+      vi.advanceTimersByTime(1000);
+
+      expect(cb).not.toHaveBeenCalled();
+    });
   });
 
-  afterEach(() => {
-    vi.useRealTimers();
-    vi.restoreAllMocks();
-  });
+  describe('error handling', () => {
+    it('should propagate callback errors to caller', () => {
+      const throwingCallback = vi.fn(() => {
+        throw new Error('Callback execution error');
+      });
+      const now = 1234567890;
+      vi.setSystemTime(now);
+      const expectedDelay = SECOND - (now % SECOND);
 
-  it('can be cancelled before the next second boundary', () => {
-    // Make "now" be 12.345s into a minute so remainder(1000) = 655ms
-    vi.spyOn(Date, 'now').mockReturnValue(12_345);
+      callNextSecond(throwingCallback);
 
-    const cb = vi.fn();
+      expect(() => {
+        vi.advanceTimersByTime(expectedDelay);
+      }).toThrow('Callback execution error');
 
-    // callNextSecond returns a cleanup fn
-    const cancel = callNextSecond(cb);
+      expect(throwingCallback).toHaveBeenCalledTimes(1);
 
-    // Cancel immediately
-    cancel?.();
-
-    vi.advanceTimersByTime(1000);
-
-    expect(cb).not.toHaveBeenCalled();
+      vi.advanceTimersByTime(SECOND * 10);
+      expect(throwingCallback).toHaveBeenCalledTimes(1);
+    });
   });
 });

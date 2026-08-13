@@ -4,6 +4,7 @@
   "include": [
     "./src/**/*.test.ts",
     "./src/**/*.test.tsx",
+    "./src/**/*.stories.tsx",
     "./src/test/**/*",
     "./.storybook/*.tsx",
     "**/*.bench.ts",

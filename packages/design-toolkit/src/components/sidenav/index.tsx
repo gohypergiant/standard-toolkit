@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -15,7 +15,8 @@ import 'client-only';
 import { useOn } from '@accelint/bus/react';
 import { clsx } from '@accelint/design-foundation/lib/utils';
 import { useState } from 'react';
-import { DEFAULT_SLOT, HeadingContext, Provider } from 'react-aria-components';
+import { DEFAULT_SLOT, Provider } from 'react-aria-components/slots';
+import { HeadingContext } from 'react-aria-components/Heading';
 import { SidenavContext } from './context';
 import { SidenavEventTypes } from './events';
 import styles from './styles.module.css';
@@ -32,7 +33,15 @@ import type {
  * Provides a hierarchical collapsible side navigation intended to be used
  * inside a DrawerLayout. Supports headers, avatars, nested menus, and items.
  *
+ * @param props - {@link SidenavProps}
+ * @param props.id - Unique identifier for the sidenav.
+ * @param props.className - CSS class for the nav element.
+ * @param props.isHiddenWhenClosed - Whether to hide the sidenav when closed.
+ * @param props.children - Sidenav content (header, content, footer).
+ * @returns The rendered Sidenav component.
+ *
  * @example
+ * ```tsx
  * <DrawerLayout push="left">
  *   <DrawerLayoutMain className="col-start-2">
  *     <SidenavTrigger>
@@ -81,6 +90,7 @@ import type {
  *     </SidenavFooter>
  *   </Sidenav>
  * </DrawerLayout>
+ * ```
  */
 export function Sidenav({
   id,

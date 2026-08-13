@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -12,7 +12,6 @@
 'use client';
 
 import 'client-only';
-import { Label } from '../label';
 import { Radio } from '../radio';
 import { RadioGroup } from '../radio/group';
 import { Tooltip } from '../tooltip';
@@ -24,6 +23,14 @@ const operatorDescriptions: Record<string, string> = {
   OR: 'One of the rules below must be true for a match',
 };
 
+/**
+ * CombinatorSelector - AND/OR toggle for rule groups
+ *
+ * Renders a radio group with tooltips explaining each combinator's behavior.
+ *
+ * @param props - CombinatorSelectorProps from react-querybuilder.
+ * @returns The rendered CombinatorSelector component.
+ */
 export function CombinatorSelector({
   options,
   value,
@@ -35,8 +42,9 @@ export function CombinatorSelector({
       onChange={handleOnChange}
       orientation='horizontal'
       style={{ flexWrap: 'nowrap' }}
+      label='Combinator'
+      isRequired
     >
-      <Label>Combinator</Label>
       {options.map((option) => (
         <Radio key={option.label} value={option.label}>
           <TooltipTrigger>

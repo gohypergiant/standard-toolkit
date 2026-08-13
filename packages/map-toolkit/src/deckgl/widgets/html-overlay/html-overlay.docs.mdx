@@ -1,0 +1,204 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+import * as HtmlOverlayStories from './html-overlay.stories';
+
+<Meta of={HtmlOverlayStories} />
+
+# HtmlOverlay
+
+Render React components at geographic coordinates on a Deck.gl map. The widget projects `[lng, lat]` positions to screen pixels and keeps overlays in sync as the user pans and zooms.
+
+## Features
+
+- **Coordinate Projection**: Converts `[lng, lat]` (and optional altitude) to pixel positions on every viewport change
+- **Smooth Zoom**: Uses CSS `transform: translate()` instead of `top`/`left` to avoid jitter during zoom transitions
+- **Viewport Culling**: Hides items that fall outside the viewport bounds, with a configurable `overflowMargin`
+- **Position-Only Fast Path**: When the same items move on screen (pan/zoom), the widget mutates DOM transforms directly and skips a full React render
+- **Portal-Based Hook**: The `useHtmlOverlay` hook returns a React portal, so overlay content participates in the parent component tree (context, state, events all work)
+- **Custom Renderers**: Optional `onCreateOverlay`/`onRenderOverlay` callbacks let you swap in a different rendering strategy
+
+## Dependencies
+
+The widget builds on top of Deck.gl's widget system and React DOM:
+
+**Required:**
+- `@deck.gl/core` — Widget base class, Viewport, Deck types
+- `react` — Component rendering
+- `react-dom` — `createPortal` and `createRoot` for overlay content
+
+**Installation:**
+
+```bash
+pnpm add @accelint/map-toolkit @deck.gl/core react react-dom
+```
+
+## Usage
+
+### With the React Hook (recommended)
+
+The `useHtmlOverlay` hook handles widget creation, prop syncing, and portal rendering. It returns a `widget` to pass to Deck.gl and a `portal` to render in your component tree.
+
+```tsx
+import { useMemo } from 'react';
+import { BaseMap } from '@accelint/map-toolkit/deckgl';
+import { useHtmlOverlay } from '@accelint/map-toolkit/deckgl/widgets/html-overlay/use-html-overlay';
+import { HtmlOverlayItem } from '@accelint/map-toolkit/deckgl/widgets/html-overlay/item';
+
+function MapWithOverlay() {
+  const items = useMemo(
+    () => (
+      <HtmlOverlayItem coordinates={[-122.45, 37.78]}>
+        <div className="bg-white p-2 rounded shadow">San Francisco</div>
+      </HtmlOverlayItem>
+    ),
+    [],
+  );
+
+  const { widget, portal } = useHtmlOverlay({ items });
+
+  return (
+    <div className="relative h-dvh w-dvw">
+      <BaseMap
+        id={mapId}
+        initialViewState={{ longitude: -122.45, latitude: 37.78, zoom: 10 }}
+        widgets={[widget]}
+      >
+        {/* Deck.gl layers go here */}
+      </BaseMap>
+      {portal}
+    </div>
+  );
+}
+```
+
+**Items must be referentially stable.** Wrap inline JSX in `useMemo` or hoist it outside the component. A new reference on every render triggers `setProps`, which causes unnecessary Deck.gl redraws.
+
+```tsx
+// Bad — new reference every render
+const { widget, portal } = useHtmlOverlay({
+  items: <HtmlOverlayItem coordinates={pos}>Label</HtmlOverlayItem>,
+});
+
+// Good — stable reference, only updates when `pos` changes
+const items = useMemo(
+  () => <HtmlOverlayItem coordinates={pos}>Label</HtmlOverlayItem>,
+  [pos],
+);
+const { widget, portal } = useHtmlOverlay({ items });
+```
+
+### Multiple Overlay Items
+
+Pass an array of `HtmlOverlayItem` elements. Each one needs its own `coordinates` prop and a stable `key`.
+
+```tsx
+const items = useMemo(
+  () =>
+    entities.map((entity) => (
+      <HtmlOverlayItem key={entity.id} coordinates={entity.position}>
+        <EntityCard name={entity.name} status={entity.status} />
+      </HtmlOverlayItem>
+    )),
+  [entities],
+);
+
+const { widget, portal } = useHtmlOverlay({ items });
+```
+
+### Conditional Overlays
+
+Show an overlay when an entity is selected, hide it otherwise:
+
+```tsx
+const items = useMemo(
+  () =>
+    selected ? (
+      <HtmlOverlayItem key={selected.id} coordinates={selected.position}>
+        <Flashcard header={selected.name} subheader={selected.type}>
+          {/* details */}
+        </Flashcard>
+      </HtmlOverlayItem>
+    ) : null,
+  [selected],
+);
+
+const { widget, portal } = useHtmlOverlay({ items });
+```
+
+### Direct Widget Instantiation
+
+If you're not using the React hook (e.g., in a vanilla Deck.gl setup), create the widget directly:
+
+```ts
+import { HtmlOverlayWidget } from '@accelint/map-toolkit/deckgl/widgets/html-overlay';
+
+const overlay = new HtmlOverlayWidget({
+  id: 'my-overlay',
+  zIndex: 2,
+  overflowMargin: 50,
+  items: myReactElements,
+});
+
+const deck = new Deck({
+  widgets: [overlay],
+  // ...
+});
+```
+
+## API
+
+### `HtmlOverlayWidget`
+
+A Deck.gl widget that manages an absolutely-positioned container and renders React children into it. Extends `Widget` from `@deck.gl/core`.
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `id` | `string` | `'html-overlay'` | Widget identifier |
+| `viewId` | `string \| null` | `null` | Attach to a specific Deck.gl view. `null` uses the containing view. |
+| `overflowMargin` | `number` | `0` | Extra pixels beyond viewport edges before items are hidden |
+| `zIndex` | `number` | `1` | CSS z-index for the overlay container |
+| `items` | `ReactNode` | — | React elements to render. Each should have a `coordinates` prop. |
+| `onCreateOverlay` | `(container: HTMLElement) => unknown` | — | Called once to create a custom rendering root |
+| `onRenderOverlay` | `(root: unknown, element: ReactNode, container: HTMLElement) => void` | — | Called on every render when using custom rendering |
+
+### `HtmlOverlayItem`
+
+A thin wrapper component for overlay children. Accepts `coordinates` and passes them to the widget for projection. The widget injects `x` and `y` screen-pixel props after projection.
+
+| Prop | Type | Description |
+|------|------|-------------|
+| `coordinates` | `number[]` | Geographic position as `[lng, lat]` with optional altitude |
+| `x` | `number` | Injected by the widget — projected screen x |
+| `y` | `number` | Injected by the widget — projected screen y |
+| `className` | `string` | CSS class for the wrapper div |
+| `children` | `ReactNode` | Content to render at this position |
+
+Standard HTML div attributes are also accepted and spread onto the root element.
+
+### `useHtmlOverlay(props?)`
+
+React hook that creates and manages an `HtmlOverlayWidget` with portal-based rendering.
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `items` | `ReactNode` | — | Overlay children (must be referentially stable) |
+| `viewId` | `string \| null` | `null` | Target view |
+| `overflowMargin` | `number` | `0` | Overflow margin in pixels |
+| `zIndex` | `number` | `1` | Container z-index |
+| `id` | `string` | `'html-overlay'` | Widget id |
+| `className` | `string` | `''` | CSS class on the overlay container |
+
+**Returns:**
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `widget` | `HtmlOverlayWidget` | Pass this to Deck.gl's `widgets` array |
+| `portal` | `ReactPortal \| null` | Render this in your JSX tree. `null` until the container is established. |
+
+## How It Works
+
+1. Deck.gl calls `onRenderHTML` on every frame where the viewport changes.
+2. The widget projects each item's `[lng, lat]` coordinates to `[x, y]` screen pixels using the current viewport.
+3. Items outside the viewport (plus `overflowMargin`) get `display: none`.
+4. If items haven't changed since the last render, the widget takes a fast path — it updates CSS transforms directly on existing DOM nodes without going through React.
+5. When using the hook, the widget's rendered output is piped through `onRenderOverlay` into React state, which the hook surfaces as a portal.

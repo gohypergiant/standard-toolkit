@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -17,7 +17,21 @@ import type { ValidEnumStructures } from '../valid-enum-structures';
 /**
  * Gets the values from a SafeEnum and properly types them.
  *
- * @param safeEnum The enum to extract the values from.
+ * @param safeEnum - The enum to extract the values from.
+ * @returns A frozen array of the enum's values.
+ *
+ * @example
+ * ```typescript
+ * import { getSafeEnumValues } from '@accelint/core';
+ *
+ * const MyEnum = Object.freeze({
+ *   Active: 'active',
+ *   Inactive: 'inactive',
+ * } as const);
+ *
+ * const values = getSafeEnumValues(MyEnum);
+ * // ['active', 'inactive']
+ * ```
  */
 export function getSafeEnumValues<
   TSafeEnum extends ValidEnumStructures,

@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -13,19 +13,36 @@
 
 import 'client-only';
 import { clsx } from '@accelint/design-foundation/lib/utils';
-import { useContext } from 'react';
-import {
-  TreeItem as AriaTreeItem,
-  composeRenderProps,
-} from 'react-aria-components';
+import { useContext, useMemo } from 'react';
+import { composeRenderProps } from 'react-aria-components/composeRenderProps';
+import { TreeItem as AriaTreeItem } from 'react-aria-components/Tree';
 import { TreeContext, TreeItemContext } from './context';
 import styles from './styles.module.css';
 import type { TreeItemProps } from './types';
 
 /**
- * TreeItem - Individual node in a tree
+ * TreeItem - Individual node in the tree hierarchy
  *
- * Represents a single item in the tree structure
+ * @example
+ * ```tsx
+ * <Tree>
+ *   <TreeItem id="root" textValue="Root">
+ *     <TreeItemContent>
+ *       <TreeItemLabel>Root Node</TreeItemLabel>
+ *     </TreeItemContent>
+ *     <TreeItem id="child" textValue="Child">
+ *       <TreeItemContent>
+ *         <TreeItemLabel>Child Node</TreeItemLabel>
+ *       </TreeItemContent>
+ *     </TreeItem>
+ *   </TreeItem>
+ * </Tree>
+ * ```
+ *
+ * @param props - {@link TreeItemProps}
+ * @param props.className - CSS class for the tree item.
+ * @param props.id - Unique identifier for the tree item.
+ * @returns The rendered TreeItem component.
  */
 export function TreeItem({ className, id, ...rest }: TreeItemProps) {
   const { visibilityComputedKeys, visibleKeys, isStatic } =
@@ -36,14 +53,17 @@ export function TreeItem({ className, id, ...rest }: TreeItemProps) {
     (isStatic && ancestors.every((key) => visibleKeys?.has(key)));
   const isVisible = visibleKeys?.has(id);
 
+  const contextValue = useMemo(
+    () => ({
+      isVisible,
+      isViewable,
+      ancestors: [...ancestors, id],
+    }),
+    [isVisible, isViewable, ancestors, id],
+  );
+
   return (
-    <TreeItemContext.Provider
-      value={{
-        isVisible,
-        isViewable,
-        ancestors: [...ancestors, id],
-      }}
-    >
+    <TreeItemContext.Provider value={contextValue}>
       <AriaTreeItem
         {...rest}
         id={id}

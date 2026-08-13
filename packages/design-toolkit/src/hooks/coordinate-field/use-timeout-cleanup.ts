@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -12,10 +12,42 @@
 
 import { useEffect, useRef } from 'react';
 
+/** Return value from the useTimeoutCleanup hook */
 export interface UseTimeoutCleanupResult {
+  /** Register a timeout for automatic cleanup on unmount */
   registerTimeout: (timeoutId: NodeJS.Timeout) => void;
 }
 
+/**
+ * Registers timeouts for automatic cleanup on component unmount
+ *
+ * @example
+ * ```tsx
+ * function ComponentWithTimeouts() {
+ *   const { registerTimeout } = useTimeoutCleanup();
+ *   const [message, setMessage] = useState('');
+ *
+ *   const handleClick = () => {
+ *     setMessage('Saving...');
+ *
+ *     registerTimeout(
+ *       setTimeout(() => {
+ *         setMessage('Saved!');
+ *       }, 1000)
+ *     );
+ *   };
+ *
+ *   return (
+ *     <div>
+ *       <Button onPress={handleClick}>Save</Button>
+ *       <span>{message}</span>
+ *     </div>
+ *   );
+ * }
+ * ```
+ *
+ * @returns {@link UseTimeoutCleanupResult} Timeout registration function.
+ */
 export function useTimeoutCleanup(): UseTimeoutCleanupResult {
   const timeoutIdsRef = useRef<Set<NodeJS.Timeout>>(new Set());
 

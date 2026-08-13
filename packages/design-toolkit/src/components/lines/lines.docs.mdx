@@ -1,0 +1,51 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Components/Lines" />
+
+# Lines
+Decorative connector lines used for tree structures and visual grouping. Renders dotted vertical and horizontal lines for branch connectors.
+
+Used internally by [Tree](?path=/docs/components-tree--playground) and [QueryBuilder](?path=/docs/components-querybuilder--playground).
+
+## Example Usage
+
+```tsx
+<Lines variant="branch" />
+<Lines variant="vert" />
+<Lines variant="last" />
+```
+
+## Variants
+
+| Variant | Description |
+|---------|-------------|
+| `branch` | Vertical line with horizontal connector to the right |
+| `vert` | Vertical line only (for continuing branches) |
+| `last` | Vertical line (top half) with horizontal connector (for last items) |
+
+## Sizes
+
+| Size | Description |
+|------|-------------|
+| `large` | Larger height for expanded items |
+| `medium` | Standard height (default) |
+| `small` | Compact height |
+
+## Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `variant` | `'branch' \| 'vert' \| 'last'` | `'branch'` | Line pattern style |
+| `size` | `'large' \| 'medium' \| 'small'` | `'medium'` | Height variant |
+| `isVisible` | `boolean` | `true` | Whether the lines are visible |
+| `className` | `string` | - | Custom CSS class |
+
+## Implementation Notes
+- Renders a `<div>` element with CSS background gradients
+- Uses dotted line patterns via `repeating-linear-gradient`
+- Visibility controlled via data attribute for CSS styling
+
+**Related:**
+- [Tree Component](?path=/docs/components-tree--playground)
+- [QueryBuilder Component](?path=/docs/components-querybuilder--playground)
+- [Github Source](https://github.com/gohypergiant/standard-toolkit/tree/main/packages/design-toolkit/src/components/lines)

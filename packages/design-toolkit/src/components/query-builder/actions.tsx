@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -20,6 +20,17 @@ import { Button } from '../button';
 import { Icon } from '../icon';
 import type { ActionProps } from 'react-querybuilder';
 
+/**
+ * Delete button for removing rules or groups
+ *
+ * @example
+ * ```tsx
+ * <RemoveRuleAction handleOnClick={() => console.log('remove')} />
+ * ```
+ *
+ * @param props - ActionProps from react-querybuilder.
+ * @returns The rendered RemoveRuleAction button.
+ */
 export function RemoveRuleAction({
   handleOnClick,
   className,
@@ -40,6 +51,17 @@ export function RemoveRuleAction({
   );
 }
 
+/**
+ * Lock/unlock toggle button for rules or groups
+ *
+ * @example
+ * ```tsx
+ * <LockAction handleOnClick={() => console.log('lock toggled')} />
+ * ```
+ *
+ * @param props - ActionProps from react-querybuilder.
+ * @returns The rendered LockAction button.
+ */
 export function LockAction({ handleOnClick, className, ...rest }: ActionProps) {
   return (
     <Button
@@ -56,6 +78,17 @@ export function LockAction({ handleOnClick, className, ...rest }: ActionProps) {
   );
 }
 
+/**
+ * Duplicate button for cloning rules or groups
+ *
+ * @example
+ * ```tsx
+ * <CloneAction handleOnClick={() => console.log('clone')} />
+ * ```
+ *
+ * @param props - ActionProps from react-querybuilder.
+ * @returns The rendered CloneAction button.
+ */
 export function CloneAction({
   handleOnClick,
   className,

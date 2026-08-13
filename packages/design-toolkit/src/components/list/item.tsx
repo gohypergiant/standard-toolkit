@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -13,7 +13,8 @@
 
 import 'client-only';
 import { clsx } from '@accelint/design-foundation/lib/utils';
-import { composeRenderProps, GridListItem } from 'react-aria-components';
+import { GridListItem } from 'react-aria-components/GridList';
+import { composeRenderProps } from 'react-aria-components/composeRenderProps';
 import { ListItemTitle } from './item-title';
 import styles from './styles.module.css';
 import type { ListItemProps } from './types';
@@ -27,6 +28,7 @@ import type { ListItemProps } from './types';
  * wrapped in a ListItemTitle.
  *
  * @example
+ * ```tsx
  * <ListItem textValue="User item">
  *   <Icon><Avatar /></Icon>
  *   <ListItemContent>
@@ -34,6 +36,13 @@ import type { ListItemProps } from './types';
  *     <ListItemDescription>Software Engineer</ListItemDescription>
  *   </ListItemContent>
  * </ListItem>
+ * ```
+ *
+ * @param props - {@link ListItemProps}
+ * @param props.children - Content to render inside the list item.
+ * @param props.classNames - CSS class names for list item elements.
+ * @param props.textValue - Accessible text value for the item.
+ * @returns The rendered ListItem component.
  */
 export function ListItem<T extends object>({
   children,

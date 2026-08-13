@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -12,6 +12,21 @@
 'use client';
 
 import 'client-only';
-import { Text } from 'react-aria-components';
+import { Text } from 'react-aria-components/Text';
 
+/**
+ * HeroSubtitle - Secondary text content for the Hero component.
+ *
+ * Zero or more allowed per Hero for displaying additional metadata.
+ *
+ * @example
+ * ```tsx
+ * <Hero>
+ *   <Icon><User /></Icon>
+ *   <HeroTitle>John Doe</HeroTitle>
+ *   <HeroSubtitle>Software Engineer</HeroSubtitle>
+ *   <HeroSubtitle>San Francisco, CA</HeroSubtitle>
+ * </Hero>
+ * ```
+ */
 export const HeroSubtitle = Text;

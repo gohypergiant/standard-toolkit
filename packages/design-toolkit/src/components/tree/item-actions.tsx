@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -16,9 +16,23 @@ import { TreeContext } from './context';
 import styles from './styles.module.css';
 
 /**
- * ItemActions - Action buttons for a tree item
+ * TreeItemActions - Container for action buttons in a tree item
  *
- * Container for action buttons in a tree item
+ * @example
+ * ```tsx
+ * <TreeItemContent>
+ *   <TreeItemLabel>Document</TreeItemLabel>
+ *   <TreeItemActions>
+ *     <Button variant="icon"><Icon><Edit /></Icon></Button>
+ *     <Button variant="icon"><Icon><Delete /></Icon></Button>
+ *   </TreeItemActions>
+ * </TreeItemContent>
+ * ```
+ *
+ * @param props - Component props.
+ * @param props.children - Action buttons to render.
+ * @param props.className - CSS class for the actions container.
+ * @returns The rendered TreeItemActions component.
  */
 export function TreeItemActions({
   children,

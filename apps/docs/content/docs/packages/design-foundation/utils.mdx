@@ -1,0 +1,207 @@
+---
+title: clsx
+description: Conditionally construct className strings from multiple sources
+source: packages/design-foundation/src/lib/utils.ts
+source_sha: 4b2374afa10f0ffcda4f17ecc5b04c3fa85a12a4
+doc_sha: 5b61fe2bcc5db0ada5345ff86c67fe65f77dec81
+deprecated: false
+updated: 2026-07-14
+---
+
+## Usage
+
+```typescript
+import { clsx } from '@accelint/design-foundation/lib/utils';
+
+// Basic usage
+const className = clsx('btn', 'btn-primary');
+// 'btn btn-primary'
+
+// Conditional classes
+const className = clsx('btn', isActive && 'btn-active');
+// 'btn btn-active' (if isActive is true)
+// 'btn' (if isActive is false)
+
+// Object syntax
+const className = clsx({
+  'btn': true,
+  'btn-active': isActive,
+  'btn-disabled': isDisabled,
+});
+```
+
+## Reference
+
+```typescript
+const clsx: (...inputs: ClassValue[]) => string
+```
+
+Re-export of the `clsx` utility from the `clsx` package. Provides a standard interface for conditionally joining class names.
+
+### Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `...inputs` | `ClassValue[]` | Any number of class values: strings, numbers, objects, arrays, or falsy values |
+
+### Returns
+
+Returns a single string with all valid class names joined by spaces. Falsy values are filtered out.
+
+### Supported Input Types
+
+- **String**: `'btn btn-primary'`
+- **Number**: `1` (converted to `'1'`)
+- **Object**: `{ 'btn-active': true, 'btn-disabled': false }` (only keys with truthy values included)
+- **Array**: `['btn', { 'btn-active': isActive }]` (recursively flattened)
+- **Falsy values**: `null`, `undefined`, `false`, `''`, `0` (filtered out)
+
+> **Good to know:** This is a re-export from the `clsx` package maintained as a stable entrypoint. If internal behavior needs customization in the future, it can be modified here without changing the import path.
+
+## Examples
+
+### Example: Conditional styling with boolean flags
+
+```typescript
+import { clsx } from '@accelint/design-foundation/lib/utils';
+
+function Button({ primary, disabled, children }) {
+  return (
+    <button 
+      className={clsx(
+        'btn',
+        primary && 'btn-primary',
+        disabled && 'btn-disabled'
+      )}
+    >
+      {children}
+    </button>
+  );
+}
+```
+
+### Example: Object syntax for state classes
+
+```typescript
+import { clsx } from '@accelint/design-foundation/lib/utils';
+
+function Card({ isActive, isHovered, isDisabled }) {
+  return (
+    <div
+      className={clsx('card', {
+        'card-active': isActive,
+        'card-hover': isHovered,
+        'card-disabled': isDisabled,
+      })}
+    />
+  );
+}
+```
+
+### Example: Combining with Tailwind utility classes
+
+```typescript
+import { clsx } from '@accelint/design-foundation/lib/utils';
+
+function Alert({ variant, fullWidth, className }) {
+  return (
+    <div
+      className={clsx(
+        'rounded p-4',
+        {
+          'bg-red-500 text-white': variant === 'error',
+          'bg-blue-500 text-white': variant === 'info',
+          'bg-green-500 text-white': variant === 'success',
+        },
+        fullWidth && 'w-full',
+        className
+      )}
+    />
+  );
+}
+```
+
+### Example: Nested arrays and complex conditions
+
+```typescript
+import { clsx } from '@accelint/design-foundation/lib/utils';
+
+function Menu({ items, activeId }) {
+  return (
+    <ul className="menu">
+      {items.map(item => (
+        <li
+          key={item.id}
+          className={clsx([
+            'menu-item',
+            item.id === activeId && [
+              'menu-item-active',
+              item.highlighted && 'menu-item-highlighted'
+            ]
+          ])}
+        >
+          {item.label}
+        </li>
+      ))}
+    </ul>
+  );
+}
+```
+
+### Example: Dynamic component variants
+
+```typescript
+import { clsx } from '@accelint/design-foundation/lib/utils';
+
+type ButtonSize = 'sm' | 'md' | 'lg';
+type ButtonVariant = 'primary' | 'secondary' | 'outline';
+
+function Button({ 
+  size = 'md', 
+  variant = 'primary', 
+  disabled = false,
+  children 
+}: {
+  size?: ButtonSize;
+  variant?: ButtonVariant;
+  disabled?: boolean;
+  children: React.ReactNode;
+}) {
+  return (
+    <button
+      className={clsx(
+        'btn',
+        `btn-${size}`,
+        `btn-${variant}`,
+        disabled && 'btn-disabled'
+      )}
+      disabled={disabled}
+    >
+      {children}
+    </button>
+  );
+}
+```
+
+### Example: Filtering out falsy values
+
+```typescript
+import { clsx } from '@accelint/design-foundation/lib/utils';
+
+const className = clsx(
+  'btn',
+  null,              // filtered out
+  undefined,         // filtered out
+  false,             // filtered out
+  '',                // filtered out
+  0,                 // filtered out
+  'btn-primary',     // kept
+);
+// Result: 'btn btn-primary'
+```
+
+## Related
+
+- [clsx package](https://github.com/lukeed/clsx) - Original package documentation
+- [classnames](https://github.com/JedWatson/classnames) - Alternative library with similar API
+- [Tailwind CSS](https://tailwindcss.com/) - CSS framework commonly used with clsx

@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -14,12 +14,35 @@
 import 'client-only';
 import { clsx } from '@accelint/design-foundation/lib/utils';
 import { type ComponentProps, useContext } from 'react';
-import { OverlayTriggerStateContext } from 'react-aria-components';
+import { OverlayTriggerStateContext } from 'react-aria-components/Dialog';
 import { isSlottedContextValue } from '../../lib/utils';
 import { ButtonContext } from '../button/context';
 import { DialogContext } from './context';
 import styles from './styles.module.css';
 
+/**
+ * DialogFooter - Container for dialog action buttons.
+ *
+ * Automatically sizes child Button components based on the dialog size
+ * and wires up default close behavior on button press.
+ *
+ * @param props - The dialog footer props.
+ * @param props.children - Action buttons to display in the footer.
+ * @param props.className - Additional CSS class name.
+ * @returns The dialog footer component.
+ *
+ * @example
+ * ```tsx
+ * <Dialog>
+ *   <DialogTitle>Confirm</DialogTitle>
+ *   <DialogContent>Are you sure?</DialogContent>
+ *   <DialogFooter>
+ *     <Button variant="flat">Cancel</Button>
+ *     <Button>Confirm</Button>
+ *   </DialogFooter>
+ * </Dialog>
+ * ```
+ */
 export function DialogFooter({
   children,
   className,

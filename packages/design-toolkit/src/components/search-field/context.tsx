@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -13,7 +13,7 @@
 
 import 'client-only';
 import { createContext } from 'react';
-import type { ContextValue } from 'react-aria-components';
+import type { ContextValue } from 'react-aria-components/slots';
 import type { ProviderProps } from '@/lib/types';
 import type { SearchFieldProps } from './types';
 
@@ -29,6 +29,9 @@ export const SearchFieldContext =
  * Provider for SearchField component
  *
  * Allows setting default props for all SearchField components within
+ *
+ * @param props - Provider props including children and default SearchFieldProps.
+ * @returns The provider component wrapping children with context.
  */
 export function SearchFieldProvider({
   children,

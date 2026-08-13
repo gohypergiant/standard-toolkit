@@ -197,7 +197,7 @@ describe('useEditShape', () => {
       });
     });
 
-    it('sets bounding-transform mode for rectangles', async () => {
+    it('sets rectangle-transform mode for rectangles', async () => {
       const { result } = renderHook(() => useEditShape(mapId));
       const shape = createMockShape({ shape: ShapeFeatureType.Rectangle });
 
@@ -207,12 +207,12 @@ describe('useEditShape', () => {
 
       await waitFor(() => {
         expect(result.current.editingState?.editMode).toBe(
-          'bounding-transform',
+          'rectangle-transform',
         );
       });
     });
 
-    it('sets translate mode for points', async () => {
+    it('sets point-translate mode for points', async () => {
       const { result } = renderHook(() => useEditShape(mapId));
       const shape = createMockShape({ shape: ShapeFeatureType.Point });
 
@@ -221,7 +221,7 @@ describe('useEditShape', () => {
       });
 
       await waitFor(() => {
-        expect(result.current.editingState?.editMode).toBe('translate');
+        expect(result.current.editingState?.editMode).toBe('point-translate');
       });
     });
 
@@ -238,7 +238,7 @@ describe('useEditShape', () => {
       });
     });
 
-    it('sets bounding-transform mode for ellipses', async () => {
+    it('sets ellipse-transform mode for ellipses', async () => {
       const { result } = renderHook(() => useEditShape(mapId));
       const shape = createMockEllipseShape();
 
@@ -247,9 +247,7 @@ describe('useEditShape', () => {
       });
 
       await waitFor(() => {
-        expect(result.current.editingState?.editMode).toBe(
-          'bounding-transform',
-        );
+        expect(result.current.editingState?.editMode).toBe('ellipse-transform');
       });
     });
 

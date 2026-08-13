@@ -1,0 +1,128 @@
+// __private-exports
+/*
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
+ * This file is licensed to you under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License. You may obtain a copy
+ * of the License at https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under
+ * the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS
+ * OF ANY KIND, either express or implied. See the License for the specific language
+ * governing permissions and limitations under the License.
+ */
+
+import { ROW_VIRTUALIZATION_OVERSCAN } from '../constants';
+import type { GanttTimeBounds, GanttTimelineChunkObject } from '../types';
+
+export function deriveTranslateXValue(
+  msPerPx: number,
+  timelineChunks: GanttTimelineChunkObject[],
+  currentPositionMs: number,
+) {
+  const firstTimelineChunk = timelineChunks[0];
+
+  if (!firstTimelineChunk) {
+    return 0;
+  }
+
+  const timeOutsideViewableRegion =
+    firstTimelineChunk.timestampMs - currentPositionMs;
+
+  return timeOutsideViewableRegion / msPerPx;
+}
+
+function deriveElementTranslateX(
+  renderedRegionBounds: GanttTimeBounds,
+  elementStartMs: number,
+  totalBounds: GanttTimeBounds,
+  msPerPx: number,
+) {
+  const distanceFromTimelineStart =
+    (elementStartMs - totalBounds.startMs) / msPerPx;
+  const offsetMs = renderedRegionBounds.startMs - elementStartMs;
+  const offsetPx = offsetMs > 0 ? offsetMs / msPerPx : 0;
+
+  return distanceFromTimelineStart + offsetPx;
+}
+
+export function deriveCurrentTimeTranslateX(
+  currentTimeMs: number,
+  msPerPx: number,
+  currentPositionMs: number,
+) {
+  return (currentTimeMs - currentPositionMs) / msPerPx;
+}
+
+export function deriveRangeElementLayout(
+  renderedRegionBounds: GanttTimeBounds,
+  rangeElementBounds: GanttTimeBounds,
+  totalBounds: GanttTimeBounds,
+  msPerPx: number,
+) {
+  const renderedStartMs = Math.max(
+    renderedRegionBounds.startMs,
+    rangeElementBounds.startMs,
+  );
+  const renderedEndMs = Math.min(
+    renderedRegionBounds.endMs,
+    rangeElementBounds.endMs,
+  );
+
+  const translateX = deriveElementTranslateX(
+    renderedRegionBounds,
+    rangeElementBounds.startMs,
+    totalBounds,
+    msPerPx,
+  );
+
+  const widthPx = (renderedEndMs - renderedStartMs) / msPerPx;
+
+  return { translateX, widthPx };
+}
+
+export function derivePointElementLayout(
+  renderedRegionBounds: GanttTimeBounds,
+  pointElementMs: number,
+  totalBounds: GanttTimeBounds,
+  msPerPx: number,
+) {
+  const translateX = deriveElementTranslateX(
+    renderedRegionBounds,
+    pointElementMs,
+    totalBounds,
+    msPerPx,
+  );
+
+  return { translateX };
+}
+
+export function deriveRenderedSlice(
+  scrollPx: number,
+  rowHeightPx: number,
+  viewableRegionHeightPx: number,
+) {
+  const startIndex = Math.floor(scrollPx / rowHeightPx);
+
+  const viewableItems = Math.ceil(viewableRegionHeightPx / rowHeightPx);
+
+  const proposedRenderedItemsCount =
+    viewableItems + ROW_VIRTUALIZATION_OVERSCAN;
+
+  const itemsCountEven = proposedRenderedItemsCount % 2 === 0;
+  const itemsCount = itemsCountEven
+    ? proposedRenderedItemsCount + 1
+    : proposedRenderedItemsCount;
+
+  return {
+    start: startIndex,
+    end: startIndex + itemsCount,
+  };
+}
+
+export function deriveHorizontalScrollPosition(
+  timestampMs: number,
+  msPerPx: number,
+  totalBounds: GanttTimeBounds,
+): number {
+  return (timestampMs - totalBounds.startMs) / msPerPx;
+}

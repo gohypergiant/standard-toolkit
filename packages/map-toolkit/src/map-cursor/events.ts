@@ -13,6 +13,25 @@
 /**
  * Event keys for map cursor state changes.
  * These events are used for communication between cursor stores and consumers.
+ *
+ * @example
+ * ```typescript
+ * import { Broadcast } from '@accelint/bus';
+ * import { MapCursorEvents } from '@accelint/map-toolkit/map-cursor';
+ * import type { MapCursorEventType } from '@accelint/map-toolkit/map-cursor';
+ *
+ * const bus = Broadcast.getInstance<MapCursorEventType>();
+ *
+ * // Listen for cursor changes
+ * bus.on(MapCursorEvents.changed, (event) => {
+ *   console.log('Cursor changed to:', event.payload.currentCursor);
+ * });
+ *
+ * // Listen for rejections
+ * bus.on(MapCursorEvents.rejected, (event) => {
+ *   console.warn('Cursor change rejected:', event.payload.reason);
+ * });
+ * ```
  */
 export const MapCursorEvents = {
   /** Emitted when a component requests a cursor change */

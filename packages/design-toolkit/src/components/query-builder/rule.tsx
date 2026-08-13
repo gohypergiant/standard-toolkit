@@ -1,6 +1,6 @@
 // __private-exports
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -25,6 +25,7 @@ import { Lines } from '../lines';
 import styles from './styles.module.css';
 import type { QueryBuilderContextType } from './types';
 
+/** Renders connecting lines between rules in a query builder */
 const QueryBuilderLines = memo(function QueryBuilderLines({
   path,
   props,
@@ -47,6 +48,23 @@ const QueryBuilderLines = memo(function QueryBuilderLines({
   );
 });
 
+/**
+ * Rule - Individual rule component with field, operator, and value
+ *
+ * Renders the field selector, operator selector, value editor, and action buttons.
+ *
+ * @example
+ * ```tsx
+ * <Rule
+ *   rule={{ field: 'name', operator: 'equals', value: 'John' }}
+ *   path={[0]}
+ *   schema={queryBuilderSchema}
+ * />
+ * ```
+ *
+ * @param props - RuleProps from react-querybuilder.
+ * @returns The rendered Rule component with all selectors and actions.
+ */
 export function Rule(props: RuleProps) {
   const rule = useRule(props);
   const context: QueryBuilderContextType = useContext(props.context);

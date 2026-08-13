@@ -6,19 +6,22 @@ import * as ComboBoxStories from './combobox-field.stories';
 
 # ComboBoxField
 
-A comprehensive combobox component that provides an accessible input field with dropdown options. Built on top of React Aria Components, the ComboBoxField offers a complete solution for searchable select interfaces with full accessibility compliance, virtualization support, and flexible content organization.
+Accessible searchable combobox with dropdown options. Built on React Aria Components with virtualization support and flexible content organization.
 
-Iti is composed of the following components:
+Includes a clear button that allows users to quickly clear the input value. The clear button appears when the input has a value and can be triggered by clicking or pressing Escape.
 
-- **ComboBoxField** - Main combobox component with searchable dropdown functionality
-- **[Options](?path=/docs/components-options--playground)** - Main container for all option items
+Uses the [Options](?path=/docs/components-options--playground) component system for rendering dropdown items.
 
-## Example usage
+## Example Usage
+
+### Basic
 ```tsx
-// Basic combobox with dynamic items
-<ComboBoxField<CustomItem> defaultItems={items}>
+<ComboBoxField defaultItems={items} label="Select animal">
   {(item) => (
-    <OptionsItem key={item.id} textValue={item.name}>
+    <OptionsItem
+      key={item.id}
+      textValue={item.name}  // Required for filtering to work
+    >
       <Icon>{item.prefixIcon}</Icon>
       <OptionsItemContent>
         <OptionsItemLabel>{item.name}</OptionsItemLabel>
@@ -27,9 +30,14 @@ Iti is composed of the following components:
     </OptionsItem>
   )}
 </ComboBoxField>
+```
+<Canvas of={ComboBoxStories.Default} />
 
-// Combobox with sections
-<ComboBoxField<CustomItem> defaultItems={itemsWithSections}>
+> **Important:** Always include `textValue` on each `OptionsItem` when using `defaultItems`. This enables React Aria's built-in filtering.
+
+### With Sections
+```tsx
+<ComboBoxField defaultItems={itemsWithSections}>
   {(section) => (
     <OptionsSection header={section.name} items={section.children}>
       {(item) => (
@@ -41,63 +49,108 @@ Iti is composed of the following components:
   )}
 </ComboBoxField>
 ```
+<Canvas of={ComboBoxStories.WithDynamicSections} />
+
+### With Many Items (Virtualized)
+```tsx
+<ComboBoxField defaultItems={manyItems} layoutOptions={{ rowHeight: 32 }}>
+  {(item) => (
+    <OptionsItem key={item.id} textValue={item.name}>
+      <OptionsItemLabel>{item.name}</OptionsItemLabel>
+    </OptionsItem>
+  )}
+</ComboBoxField>
+```
+<Canvas of={ComboBoxStories.WithManyItems} />
+
+### Custom Value
+```tsx
+<ComboBoxField defaultItems={items} allowsCustomValue onInputChange={setValue}>
+  {(item) => <OptionsItem key={item.id} textValue={item.name}>{item.name}</OptionsItem>}
+</ComboBoxField>
+```
+<Canvas of={ComboBoxStories.WithCustomValue} />
+
+### Readonly
+```tsx
+<ComboBoxField defaultItems={items} inputProps={{ value: 'Display value' }} isReadOnly>
+  {(item) => <OptionsItem key={item.id} textValue={item.name}>{item.name}</OptionsItem>}
+</ComboBoxField>
+```
+<Canvas of={ComboBoxStories.Readonly} />
 
 ## Sizes
 
-* **small** - Compact combobox with reduced padding and no visible label, suitable for dense interfaces
-* **medium** - Standard combobox with comfortable spacing and visible label (default)
-
-**medium** is the default size and should be used for most use cases, while **small** is better suited for space-constrained interfaces or when the combobox is part of a more complex form layout.
-
-<Canvas of={ComboBoxStories.Default} />
+| Size | Description |
+|------|-------------|
+| `medium` | Standard size with visible label (default) |
+| `small` | Compact size, label and description hidden |
 
 ## Props
+Extends [`ComboBox`](https://react-spectrum.adobe.com/react-aria/ComboBox.html#props) props from react-aria-components.
 
-### ComboBoxField Props
-Implements [Combobox Props](https://react-spectrum.adobe.com/react-aria/ComboBox.html#combobox-1)
-- **`label`** - Label text displayed above the input field (hidden in small size)
-- **`description`** - Helper text displayed below the input field (hidden in small size or when invalid)
-- **`errorMessage`** - Error message displayed when the field is invalid
-- **`size`** - Size variant: `'small'` | `'medium'` (default: `'medium'`)
-- **`layoutOptions`** - Configuration for virtualization (e.g., `{ estimatedRowHeight: 46 }`)
-- **`classNames`** - Object containing custom class names for styling:
-  - `field` - Main field container
-  - `label` - Label styling
-  - `control` - Input and trigger button container
-  - `input` - Input field styling
-  - `trigger` - Dropdown trigger button styling
-  - `description` - Description text styling
-  - `error` - Error message styling
-  - `popover` - Dropdown popover styling
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `label` | `string` | - | Label text (hidden in small size) |
+| `description` | `string` | - | Helper text (hidden in small size or when invalid) |
+| `errorMessage` | `string` | - | Error message when invalid |
+| `size` | `'medium' \| 'small'` | `'medium'` | Size variant |
+| `isClearable` | `boolean` | `true` | Show clear button when input has value |
+| `inputValue` | `string` | - | Controlled input value |
+| `defaultInputValue` | `string` | `''` | Initial input value (uncontrolled) |
+| `layoutOptions` | `ListLayoutOptions` | - | Virtualization config (e.g., `{ estimatedRowHeight: 46 }`) |
+| `inputProps` | `InputProps` | - | Props passed to the input element |
+| `defaultItems` | `Iterable<T>` | - | Items for dynamic rendering |
+| `items` | `Iterable<T>` | - | Controlled items |
+| `allowsCustomValue` | `boolean` | `false` | Allow values not in the list |
+| `isReadOnly` | `boolean` | `false` | Readonly state (hides clear button) |
+| `isDisabled` | `boolean` | `false` | Disabled state |
+| `isRequired` | `boolean` | `false` | Required field |
+| `isInvalid` | `boolean` | - | Invalid state |
+| `menuTrigger` | `'focus' \| 'input' \| 'manual'` | `'focus'` | When to show dropdown |
+| `onSelectionChange` | `(key: Key) => void` | - | Called when selection changes |
+| `onInputChange` | `(value: string) => void` | - | Called when input changes |
+| `classNames` | `object` | - | Custom classes (see below) |
 
-### Data Structure
-The component works with a flexible data structure:
+**classNames:**
+
+| Key | Description |
+|-----|-------------|
+| `clear` | Clear button styling |
+| `field` | Main field container |
+| `label` | Label styling |
+| `control` | Input and trigger container |
+| `input` | Input field |
+| `trigger` | Dropdown trigger button |
+| `description` | Description text |
+| `error` | Error message |
+| `popover` | Dropdown popover |
+
+### ComboBoxFieldProvider
+Context provider for setting default props across multiple ComboBoxField components.
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `size` | `'medium' \| 'small'` | - | Size for all child ComboBoxFields |
+| `children` | `ReactNode` | - | ComboBoxField components |
 
 ```tsx
-interface CustomOptionsItem {
-  id: number | string;
-  name: string;
-  description?: string;
-  isDisabled?: boolean;
-  prefixIcon?: ReactNode;
-  suffixIcon?: ReactNode;
-  children?: CustomOptionsItem[]; // For sections
-}
+<ComboBoxFieldProvider size="small">
+  <ComboBoxField defaultItems={items1}>{...}</ComboBoxField>
+  <ComboBoxField defaultItems={items2}>{...}</ComboBoxField>
+</ComboBoxFieldProvider>
 ```
 
-### HTML Attributes
-The component accepts all standard HTML attributes for form elements, such as:
-- **`id`** - Unique identifier
-- **`aria-label`** - Accessible label
-- **`data-*`** - Custom data attributes
+## Usage Patterns
 
-## Features
+You can provide items two ways, and React Aria's filtering behavior depends on whether the collection is uncontrolled or controlled.
 
-### Dynamic Rendering
-Support for both static and dynamic content rendering:
+Dynamic items (recommended)
+Pass `defaultItems` with a render function. React Aria filters the list automatically as the user types.
+
 ```tsx
-// Dynamic rendering with defaultItems prop
-<ComboBoxField<CustomItem> defaultItems={items}>
+// ✅ Filtering works automatically
+<ComboBoxField defaultItems={items}>
   {(item) => (
     <OptionsItem key={item.id} textValue={item.name}>
       <OptionsItemLabel>{item.name}</OptionsItemLabel>
@@ -106,132 +159,159 @@ Support for both static and dynamic content rendering:
 </ComboBoxField>
 ```
 
-### Sectioned Content
-Organize options into logical groups with headers:
+**Key requirements:**
+- Each item must have an `id` field
+- Each `OptionsItem` must have a `textValue` prop so React Aria knows what text to match against
+- Don't forget the React `key` prop in your render function
+
+### Static Items
+### Static items
+Render `OptionsItem` children directly. React Aria still filters these automatically by each item's `textValue`.
+
 ```tsx
-<ComboBoxField<CustomItem> defaultItems={itemsWithSections}>
-  {(section) => (
-    <OptionsSection header={section.name} items={section.children}>
-      {(item) => (
-        <OptionsItem key={item.id} textValue={item.name}>
-          <OptionsItemLabel>{item.name}</OptionsItemLabel>
-        </OptionsItem>
-      )}
-    </OptionsSection>
-  )}
+// ⚠️ No automatic filtering - you control the children
+<ComboBoxField>
+  <OptionsItem textValue="Cat">Cat</OptionsItem>
+  <OptionsItem textValue="Dog">Dog</OptionsItem>
+  <OptionsItem textValue="Bird">Bird</OptionsItem>
 </ComboBoxField>
 ```
 
-### Virtualization Support
-Handle large datasets efficiently with built-in virtualization:
+### Controlled filtering
+Use the `items` prop (instead of `defaultItems`) when you want to filter the list yourself, for example async search or custom match logic. React Aria renders exactly the items you pass and does **not** filter them, so update the list from `onInputChange`.
+
+## Common Issues
+
+### Filtering doesn't work
+**Problem:** You type in the combobox but items don't filter.
+
+**Solution:** Add the `textValue` prop to each `OptionsItem`. This tells React Aria what text to match against.
+
 ```tsx
+// ❌ Filtering broken - no textValue
+<OptionsItem key={item.id}>
+  {item.name}
+</OptionsItem>
+
+// ✅ Filtering works
+<OptionsItem key={item.id} textValue={item.name}>
+  {item.name}
+</OptionsItem>
+```
+
+### TypeScript errors about item type
+**Problem:** TypeScript complains your items don't satisfy the `ComboBoxField<T>` constraint.
+
+**Solution:** `ComboBoxField<T extends OptionsDataItem>` requires every item to have an `id` (`string | number`) and a `name` (`string`). Add any other fields you need on top of those.
+
+
+### React key warnings
+**Problem:** Console shows "Each child in a list should have a unique key prop".
+
+**Solution:** Add `key={item.id}` to your `OptionsItem` in the render function.
+
+```tsx
+// ❌ Missing key
+<ComboBoxField defaultItems={items}>
+  {(item) => <OptionsItem textValue={item.name}>...</OptionsItem>}
+</ComboBoxField>
+
+// ✅ With key
+<ComboBoxField defaultItems={items}>
+  {(item) => <OptionsItem key={item.id} textValue={item.name}>...</OptionsItem>}
+</ComboBoxField>
+```
+
+### Selection or keyboard navigation broken
+**Problem:** Selecting items behaves strangely, or keyboard navigation jumps unexpectedly.
+
+**Solution:** All item `id` values must be unique across the entire list. React Aria uses these IDs for selection and focus management.
+
+```tsx
+// ❌ Duplicate IDs cause unpredictable behavior
+const items = [
+  { id: 1, name: 'Cat' },
+  { id: 1, name: 'Dog' },  // Duplicate ID!
+  { id: 2, name: 'Bird' },
+];
+
+// ✅ All IDs are unique
+const items = [
+  { id: 1, name: 'Cat' },
+  { id: 2, name: 'Dog' },
+  { id: 3, name: 'Bird' },
+];
+
+// ✅ String IDs work too
+const items = [
+  { id: 'cat', name: 'Cat' },
+  { id: 'dog', name: 'Dog' },
+  { id: 'bird', name: 'Bird' },
+];
+```
+
+### Dropdown doesn't show at all
+**Problem:** Clicking or focusing the field doesn't open the dropdown.
+
+**Common causes:**
+
+1. **Z-index stacking context issue** - Another element is covering the dropdown. Check if parent elements have `z-index` that creates a stacking context.
+
+2. **menuTrigger set to "manual"** - The dropdown won't open automatically.
+   ```tsx
+   // ❌ Won't open on focus/click
+   <ComboBoxField menuTrigger="manual" defaultItems={items}>...</ComboBoxField>
+
+   // ✅ Opens on focus (default)
+   <ComboBoxField defaultItems={items}>...</ComboBoxField>
+   // or explicitly:
+   <ComboBoxField menuTrigger="focus" defaultItems={items}>...</ComboBoxField>
+   ```
+
+3. **No items to show** - If `defaultItems` is empty or all items are filtered out, the dropdown may not open.
+
+### Nothing renders
+**Problem:** The dropdown is empty or items don't appear.
+
+**Checklist:**
+- Using `defaultItems`? Make sure each item has an `id` field
+- Using static children? Make sure they're direct `OptionsItem` or `OptionsSection` elements
+- Check browser console for React/TypeScript errors
+- Verify your items array isn't empty
+
+### Controlled value not updating
+**Problem:** You're setting `inputValue` but it doesn't change.
+
+**Solution:** When using controlled mode, you must handle `onInputChange` and update your state.
+
+```tsx
+// ❌ Controlled but no handler - input appears frozen
+<ComboBoxField inputValue={value} />
+
+// ✅ Controlled with handler
 <ComboBoxField
-  layoutOptions={{ estimatedRowHeight: 32 }}
-  defaultItems={manyItems}
->
-  {(item) => (
-    <OptionsItem key={item.id} textValue={item.name}>
-      <OptionsItemLabel>{item.name}</OptionsItemLabel>
-    </OptionsItem>
-  )}
-</ComboBoxField>
+  inputValue={value}
+  onInputChange={setValue}
+/>
+
+// ✅ Or use uncontrolled mode
+<ComboBoxField defaultInputValue={initialValue} />
 ```
 
-### Rich Content Options
-Support for icons, descriptions, and complex layouts:
-```tsx
-<ComboBoxField<CustomItem> defaultItems={items}>
-  {(item) => (
-    <OptionsItem key={item.id} textValue={item.name}>
-      {item.prefixIcon && <Icon>{item.prefixIcon}</Icon>}
-      <OptionsItemContent>
-        <OptionsItemLabel>{item.name}</OptionsItemLabel>
-        {item.description && (
-          <OptionsItemDescription>{item.description}</OptionsItemDescription>
-        )}
-      </OptionsItemContent>
-    </OptionsItem>
-  )}
-</ComboBoxField>
-```
-
-### Persist custom value
-Allow a custom value to be entered:
-```tsx
-<ComboBoxField<CustomItem> defaultItems={items} allowsCustomValue>
-  {(item) => (
-    <OptionsItem key={item.id} textValue={item.name}>
-      <OptionsItemLabel>{item.name}</OptionsItemLabel>
-    </OptionsItem>
-  )}
-</ComboBoxField>
-```
-
-### Readonly value
-Allowing the field to be readonly:
-```tsx
-    <ComboBoxField<CustomOptionsItem>
-      {...args}
-      defaultItems={items}
-      inputProps={{ value: 'some display value' }}
-      isReadOnly
-    >
-      {(item) => (
-        <OptionsItem
-          key={item.id}
-          textValue={item.name}
-          isDisabled={item.isDisabled}
-        >
-          {item.prefixIcon && <Icon>{item.prefixIcon}</Icon>}
-          <OptionsItemContent>
-            <OptionsItemLabel>{item.name}</OptionsItemLabel>
-            {item.description && (
-              <OptionsItemDescription>
-                {item.description}
-              </OptionsItemDescription>
-            )}
-          </OptionsItemContent>
-        </OptionsItem>
-      )}
-    </ComboBoxField>
-```
+## Accessibility
+- Keyboard: Arrow keys to navigate, Enter to select, Escape to close
+- Type-ahead filtering as you type
+- ARIA attributes for screen readers
+- Focus management between input and dropdown
+- Clear button excluded from tab order for streamlined keyboard navigation
 
 ## Implementation Notes
+- Wraps `ComboBox` from react-aria-components with `Virtualizer` for large lists
+- Uses the [Options](?path=/docs/components-options--playground) component system for dropdown content
+- Supports both static children and dynamic `defaultItems`/`items` rendering
+- React Aria filters uncontrolled collections (`defaultItems` or static children) automatically against each item's `textValue`; pass the `items` prop to filter the list yourself
 
-The `ComboBoxField` component is built using React Aria Components and provides a comprehensive, accessible combobox interface with flexible content organization.
-
-Key features:
-- **Accessibility**: Full ARIA compliance with proper focus management, screen reader support, and keyboard navigation
-- **Flexible Layout**: Support for both static and dynamic content rendering
-- **Sectioned Content**: Logical grouping with optional headers using the Options component system
-- **Icon Integration**: Seamless integration with the Icon component system
-- **Virtualization**: Built-in support for large datasets with React Aria Virtualizer
-- **Responsive Design**: Size variants that adapt to different interface needs
-- **Type Safety**: Full TypeScript support with comprehensive prop types
-- **Form Integration**: Proper form validation states and error handling
-
-The underlying HTML structure creates a semantic form field with proper accessibility:
-```html
-<div class="combobox-field" data-size="medium">
-  <label class="field-label">Label</label>
-  <div class="field-control">
-    <input class="field-input" placeholder="Search..." />
-    <button class="field-trigger">
-      <span class="icon"><ChevronDown /></span>
-    </button>
-  </div>
-  <div class="field-description">Helper text</div>
-  <div class="field-error">Error message</div>
-  <div class="field-popover">
-    <div class="options-list">
-      <!-- Options content -->
-    </div>
-  </div>
-</div>
-```
-
-The component wraps the `ComboBox` component from `react-aria-components`.
-
-[Docs](https://react-spectrum.adobe.com/react-aria/ComboBox.html)
-
-[Github Source](https://github.com/gohypergiant/standard-toolkit/tree/main/packages/design-toolkit/src/components/combobox-field)
+**Related:**
+- [React Aria ComboBox](https://react-spectrum.adobe.com/react-aria/ComboBox.html)
+- [Options Component](?path=/docs/components-options--playground)
+- [Github Source](https://github.com/gohypergiant/standard-toolkit/tree/main/packages/design-toolkit/src/components/combobox-field)

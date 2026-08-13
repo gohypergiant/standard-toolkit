@@ -1,0 +1,272 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+import * as RbzHandlerStories from './rbz-handler.stories';
+
+<Meta of={RbzHandlerStories} />
+
+# Rubber Band Zoom
+
+A MapLibre GL handler that lets users drag a selection rectangle on the map and zoom to fit that area. Hold **Shift** and drag to draw the rectangle; release to zoom in. Press **Escape** to cancel mid-drag.
+
+## Features
+
+- **Drag-to-Zoom**: Draw a rectangle on the map and the viewport fits to the selected bounds
+- **Single Gesture**: The handler disables itself after each completed gesture — the caller decides when to re-arm it
+- **Aspect Ratio Constraint**: Optionally lock the selection rectangle to the viewport's aspect ratio
+- **Center Origin**: Choose whether the rectangle grows from the top-left corner or expands symmetrically from the center
+- **Geographic Buffer**: Expand the selected area by a configurable distance (e.g. 10 nautical miles) before fitting
+- **Custom Styling**: Override the border color, border width, and fill color of the selection rectangle
+- **Escape to Cancel**: Press `Escape` at any point during a drag to abort without zooming
+- **Scroll Zoom Suppression**: Temporarily disables scroll zoom during a gesture to prevent interference
+
+## Dependencies
+
+RbzHandler requires the following peer dependencies:
+
+- `maplibre-gl` — MapLibre GL JS map instance
+- `@turf/helpers` — Unit conversions (radians to degrees)
+- `@turf/turf` — Geographic buffer calculations via `destination()`
+- `@accelint/constants` — `DistanceUnit` type for buffer configuration
+
+**Installation:**
+
+```bash
+pnpm add @accelint/map-toolkit @accelint/bus @deck.gl/core maplibre-gl @turf/helpers @turf/turf @accelint/constants
+```
+
+The RBZ handler is included in `@accelint/map-toolkit`. TypeScript types are included — no separate `@types` package needed.
+
+## Usage
+
+### With BaseMap (recommended)
+
+The easiest way to use rubber band zoom is through the `enableRbz` prop on `BaseMap`. This handles handler creation, registration, and Shift-key activation automatically.
+
+```tsx
+import { BaseMap } from '@accelint/map-toolkit/deckgl';
+import { uuid } from '@accelint/core';
+
+const MAP_ID = uuid();
+
+export function MapWithRbz() {
+  return (
+    <BaseMap
+      id={MAP_ID}
+      className="h-dvh w-dvw"
+      enableRbz
+    />
+  );
+}
+```
+
+When `enableRbz` is `true`, `boxZoom` is automatically set to `false` to avoid conflicts with the native MapLibre box zoom gesture.
+
+**How it works with BaseMap:**
+
+1. On map load, BaseMap creates an `RbzHandler` instance and registers it with MapLibre via `map.handlers._add('customRbz', rbzHandler)`.
+2. The handler's `startListening()` method installs global `keydown` / `keyup` listeners for the **Shift** key. Pressing Shift arms the handler and disables `dragPan`; releasing Shift disarms it.
+3. For multi-map layouts, BaseMap passes a `shouldActivate` callback that returns `true` only for the most-recently-hovered map, so Shift affects one map at a time.
+4. While Shift is held, drag anywhere on the map to draw the selection rectangle. On mouse release the viewport fits to the selected bounds, and the handler disables itself.
+5. When the map is removed, the handler's `destroy()` method is called automatically via MapLibre's `remove` event.
+
+> **Read once on map load.** The `enableRbz` and `rbzOptions` props are captured during map initialization. Changing them after mount has no effect — to update dynamically, change the map's `key` prop to force a remount.
+
+### Standalone usage
+
+For more control, instantiate `RbzHandler` directly against a MapLibre map instance. This is useful when you need custom activation triggers or configuration options beyond what `BaseMap` provides.
+
+```ts
+import { RbzHandler } from '@accelint/map-toolkit/maplibre';
+
+const map = new maplibregl.Map({ container: 'map', style: '...' });
+
+const rbz = new RbzHandler(map, {
+  origin: 'topLeft',
+  buffer: { amount: 10, unit: 'nauticalmiles' },
+  style: { borderColor: '#FF8C00' },
+});
+
+// Register with MapLibre's handler system
+map.handlers._add('customRbz', rbz);
+
+// Let the handler manage Shift key + dragPan internally
+rbz.startListening();
+
+// When the map is removed, stop listeners and release resources
+map.once('remove', () => rbz.destroy());
+```
+
+If you need a custom activation trigger (e.g. a toolbar button instead of Shift), skip `startListening()` and call `enable()` / `disable()` yourself:
+
+```ts
+const rbz = new RbzHandler(map);
+map.handlers._add('customRbz', rbz);
+
+toolbarButton.addEventListener('click', () => rbz.enable());
+```
+
+### Gating activation in multi-map layouts
+
+If you render multiple maps on the same page, pass a `shouldActivate` callback so only the active map responds to Shift:
+
+```ts
+let activeMapId: string | null = null;
+
+const rbz = new RbzHandler(map, {
+  shouldActivate: () => activeMapId === 'my-map-id',
+});
+
+map.on('mouseover', () => {
+  activeMapId = 'my-map-id';
+});
+
+rbz.startListening();
+```
+
+### With a geographic buffer
+
+Expand the selection area before fitting the viewport. This adds padding around what the user selected, which is helpful when you don't want the selected bounds pressed right against the viewport edges.
+
+```ts
+const rbz = new RbzHandler(map, {
+  buffer: { amount: 5, unit: 'nauticalmiles' },
+});
+```
+
+The buffer uses Turf.js `destination()` to project the SW corner at a bearing of 225° and the NE corner at 45°, then fits the viewport to the expanded bounds.
+
+### With aspect ratio constraint
+
+Lock the selection rectangle to match the viewport's aspect ratio. This prevents the fitBounds call from introducing padding in one axis.
+
+```ts
+const rbz = new RbzHandler(map, {
+  constrainAspectRatio: true,
+});
+```
+
+### With center origin
+
+By default the rectangle anchors at the corner closest to where you started dragging. Set `origin: 'center'` to grow the rectangle outward from the initial click point instead.
+
+```ts
+const rbz = new RbzHandler(map, {
+  origin: 'center',
+});
+```
+
+## API
+
+### `RbzHandler`
+
+```ts
+new RbzHandler(map: MaplibreMap, options?: RbzOptions)
+```
+
+Creates a new rubber band zoom handler and appends a hidden selection overlay to the map container. The handler starts in a disabled state.
+
+#### Methods
+
+##### `enable(): void`
+
+Arms the handler for one drag gesture. After the gesture completes (or is cancelled with Escape), the handler disables itself automatically. Call this each time you want to allow a rubber band zoom.
+
+##### `disable(): void`
+
+Disarms the handler immediately. Restores scroll zoom if it was suppressed, hides the selection rectangle, and clears all in-progress gesture state.
+
+##### `startListening(): void`
+
+Installs global `keydown` / `keyup` listeners on `window` that arm the handler on Shift press and disarm on release. Also toggles `map.dragPan` so panning and RBZ don't conflict. Idempotent — calling multiple times attaches listeners once.
+
+When a `shouldActivate` callback was provided in options, it's checked on each Shift press and the handler only arms when the callback returns `true`.
+
+##### `stopListening(): void`
+
+Removes the keyboard listeners installed by `startListening()` and disables the handler if currently armed. Idempotent — safe to call when not listening. Invoked automatically by `destroy()`.
+
+##### `isEnabled(): boolean`
+
+Returns `true` when the handler is armed and ready to process mouse events.
+
+##### `isActive(): boolean`
+
+Returns `true` when a drag gesture is in progress (the user has moved the mouse beyond the 3-pixel distance threshold after mousedown).
+
+##### `reset(): void`
+
+Clears in-progress gesture state and hides the selection rectangle. Called automatically by MapLibre during camera transitions.
+
+##### `destroy(): void`
+
+Full cleanup: stops keyboard listeners, cancels any pending animation frame, disables the handler, and removes the selection overlay element from the map container. Call this when the handler will no longer be used to avoid leaking DOM nodes and window event listeners.
+
+When used with `BaseMap`, this is called automatically via MapLibre's `remove` event.
+
+### `RbzOptions`
+
+| Property | Type | Default | Description |
+|---|---|---|---|
+| `origin` | `'topLeft' \| 'center'` | `'topLeft'` | Where the selection rectangle anchors during a drag. `'topLeft'` anchors at the drag-start corner; `'center'` expands symmetrically from the drag-start point. |
+| `constrainAspectRatio` | `boolean` | `false` | When `true`, the selection rectangle is locked to the viewport's current aspect ratio. |
+| `buffer` | `RbzBuffer` | — | Geographic buffer to expand the selection area before fitting the viewport. Omit for no buffer. |
+| `style` | `Partial<RbzStyleOptions>` | — | Visual overrides for the selection rectangle. Unspecified properties fall back to `DEFAULT_RBZ_STYLE`. |
+| `shouldActivate` | `() => boolean` | — | Called on each Shift press (when `startListening()` is active). Return `false` to skip activation — useful for gating keyboard shortcuts to a specific map in multi-map layouts. |
+
+### `RbzBuffer`
+
+| Property | Type | Description |
+|---|---|---|
+| `amount` | `number` | Distance to expand each side of the selection bounds. |
+| `unit` | `DistanceUnit` | Distance unit compatible with Turf.js (e.g. `'nauticalmiles'`, `'kilometers'`, `'miles'`). |
+
+### `RbzStyleOptions`
+
+| Property | Type | Default | Description |
+|---|---|---|---|
+| `borderColor` | `string` | `'#39b7fa'` | CSS color for the rectangle border. |
+| `borderWidth` | `number` | `2` | Border width in pixels. |
+| `fillColor` | `string` | `'rgba(57, 183, 250, 0.1)'` | CSS color for the rectangle fill. Use alpha for transparency. |
+
+### `DEFAULT_RBZ_STYLE`
+
+The default visual style applied to the selection rectangle when no `style` overrides are provided:
+
+```ts
+import { DEFAULT_RBZ_STYLE } from '@accelint/map-toolkit/maplibre';
+
+// {
+//   borderColor: '#39b7fa',
+//   borderWidth: 2,
+//   fillColor: 'rgba(57, 183, 250, 0.1)',
+// }
+```
+
+The values match the `outline-accent-primary-bold` semantic token from `@accelint/design-foundation` (resolves to `#39b7fa` in the dark theme).
+
+> **Why hardcoded hex instead of the CSS variable?** `RbzHandler` is a plain class that writes colors directly to inline `style` attributes on a DOM element and runs outside React. It has no access to theme context or computed styles at construction time. For theme-reactive colors, resolve the CSS variable at the call site (e.g. `getComputedStyle(document.documentElement).getPropertyValue('--outline-accent-primary-bold')`) and pass the result through `rbzOptions.style`.
+
+## Gesture Lifecycle
+
+1. **Arm** — `enable()` is called (e.g. when the user presses Shift).
+2. **Mousedown** — Records the start position and suppresses scroll zoom.
+3. **Mousemove** — Once the cursor moves more than 3 pixels from the start, the selection rectangle becomes visible and tracks the cursor.
+4. **Mouseup** — Unprojecting the rectangle corners from screen pixels to geographic coordinates, optionally applying a buffer, then calling `map.fitBounds()`. The handler disables itself.
+5. **Cancel** — Pressing Escape at any point between steps 2–3 hides the rectangle, restores scroll zoom, and disables the handler.
+
+## Imports
+
+```ts
+// Everything from the maplibre barrel
+import {
+  RbzHandler,
+  DEFAULT_RBZ_STYLE,
+  type RbzOptions,
+  type RbzOrigin,
+  type RbzBuffer,
+  type RbzStyleOptions,
+} from '@accelint/map-toolkit/maplibre';
+
+// Direct import
+import { RbzHandler } from '@accelint/map-toolkit/maplibre/rbz-handler';
+```

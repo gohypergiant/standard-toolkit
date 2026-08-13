@@ -20,6 +20,11 @@ import type { UniqueId } from '@accelint/core';
 /**
  * Create a new Map with an entry added or updated (immutable).
  *
+ * @param map - The Map to copy
+ * @param key - The key to set
+ * @param value - The value to set
+ * @returns A new Map with the entry added/updated
+ *
  * @example
  * ```ts
  * const newMap = mapSet(state.cursorOwners, 'draw-layer', 'crosshair');
@@ -35,6 +40,10 @@ export function mapSet<K, V>(map: Map<K, V>, key: K, value: V): Map<K, V> {
 /**
  * Create a new Map with an entry removed (immutable).
  *
+ * @param map - The Map to copy
+ * @param key - The key to remove
+ * @returns A new Map with the entry removed
+ *
  * @example
  * ```ts
  * const newMap = mapDelete(state.cursorOwners, 'draw-layer');
@@ -49,6 +58,8 @@ export function mapDelete<K, V>(map: Map<K, V>, key: K): Map<K, V> {
 
 /**
  * Create a new empty Map (immutable replacement for Map.clear()).
+ *
+ * @returns A new empty Map
  *
  * @example
  * ```ts
@@ -197,6 +208,19 @@ export type MapStore<TState, TActions> = {
   clear: (mapId: UniqueId) => void;
 
   /**
+   * Set initial state to be used when instance is created or updated.
+   * Handles both initialization scenarios:
+   * - If instance doesn't exist yet: stores pending state for getInstance
+   * - If instance already exists: updates existing instance directly
+   *
+   * This dual-path approach ensures correct initialization regardless of
+   * React lifecycle timing (e.g., React Strict Mode double-mount).
+   *
+   * Safe to call during render. Idempotent for repeated calls with same state.
+   */
+  setInitialState: (mapId: UniqueId, state: TState) => void;
+
+  /**
    * Low-level access for custom hooks or useSyncExternalStore.
    */
   subscribe: (mapId: UniqueId) => (callback: () => void) => () => void;
@@ -206,6 +230,9 @@ export type MapStore<TState, TActions> = {
 
 /**
  * Creates a store for managing state across multiple map instances.
+ *
+ * @param config - Store configuration including default state, actions, and optional bus setup
+ * @returns A MapStore instance with hooks and methods for accessing/updating state
  *
  * @example
  * ```ts
@@ -244,6 +271,10 @@ export function createMapStore<TState, TActions>(
 
   const instances = new Map<UniqueId, Instance<TState, TActions>>();
 
+  // Stores initial state to be used when instance is first created
+  // This allows setting initial state BEFORE any getInstance call
+  const pendingInitialState = new Map<UniqueId, TState>();
+
   // Cached functions for referential stability
   const subscriptionCache = new Map<
     UniqueId,
@@ -254,11 +285,14 @@ export function createMapStore<TState, TActions>(
   function getInstance(mapId: UniqueId): Instance<TState, TActions> {
     let instance = instances.get(mapId);
     if (!instance) {
+      // Check for pending initial state - use it instead of default
+      const initialState = pendingInitialState.get(mapId);
       instance = {
-        state: { ...defaultState },
+        state: initialState ?? { ...defaultState },
         subscribers: new Set(),
       };
       instances.set(mapId, instance);
+      pendingInitialState.delete(mapId); // Clear after use
     }
     return instance;
   }
@@ -298,7 +332,10 @@ export function createMapStore<TState, TActions>(
   }
 
   /**
-   * Clean up instance when last subscriber unmounts
+   * Clean up instance when last subscriber unmounts.
+   *
+   * @param mapId - Unique identifier for the map instance
+   * @param instance - The instance to clean up
    */
   function cleanupInstance(
     mapId: UniqueId,
@@ -311,8 +348,17 @@ export function createMapStore<TState, TActions>(
       instance.busCleanup();
     }
     instances.delete(mapId);
-    subscriptionCache.delete(mapId);
-    snapshotCache.delete(mapId);
+    // NOTE: Do NOT delete subscriptionCache or snapshotCache here!
+    // These are function reference caches. Clearing them causes React's
+    // useSyncExternalStore to see a new subscribe function reference on the next
+    // render, which triggers re-subscription, which triggers cleanupInstance again,
+    // creating an infinite cycle. The cached functions call getInstance() dynamically,
+    // so they work correctly even after the instance is recreated.
+    //
+    // NOTE: Do NOT delete pendingInitialState here!
+    // In React Strict Mode, cleanup runs but then subscribe re-runs BEFORE render.
+    // The pending state must survive cleanup so it's available when getInstance
+    // creates a new instance during the Strict Mode remount.
   }
 
   function subscribe(mapId: UniqueId): (callback: () => void) => () => void {
@@ -360,7 +406,10 @@ export function createMapStore<TState, TActions>(
   }
 
   /**
-   * Main hook - returns state and actions
+   * Main hook - returns state and actions.
+   *
+   * @param mapId - Unique identifier for the map instance
+   * @returns Object containing state and all actions
    */
   function use(mapId: UniqueId): { state: TState } & TActions {
     const state = useSyncExternalStore(
@@ -381,6 +430,10 @@ export function createMapStore<TState, TActions>(
    * Note: The selector function is intentionally NOT tracked as a dependency.
    * This prevents infinite re-render loops when using inline arrow functions.
    * If you need dynamic selector behavior, use the `use()` hook with `useMemo`.
+   *
+   * @param mapId - Unique identifier for the map instance
+   * @param selector - Function to select derived state
+   * @returns The selected value
    */
   function useSelector<TSelected>(
     mapId: UniqueId,
@@ -424,6 +477,20 @@ export function createMapStore<TState, TActions>(
       if (instance) {
         cleanupInstance(mapId, instance);
       }
+    },
+    setInitialState: (mapId, state) => {
+      // If instance already exists, update it directly.
+      // This handles React Strict Mode where subscribe() might create the instance
+      // BEFORE setInitialState is called during the re-render.
+      const instance = instances.get(mapId);
+      if (instance) {
+        instance.state = state;
+        // Don't call notify() - this is initialization, not a state change that
+        // should trigger re-renders. The component will get the state on next render.
+      }
+
+      // Always also set pending state for the case where getInstance is called later
+      pendingInitialState.set(mapId, state);
     },
     subscribe,
     snapshot,

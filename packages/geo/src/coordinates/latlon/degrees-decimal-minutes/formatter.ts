@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -12,13 +12,55 @@
 
 import { createFormatter } from '../internal/format';
 
+/**
+ * Converts a coordinate value to degrees decimal minutes format.
+ *
+ * @param num - The coordinate value to format.
+ * @returns Formatted coordinate string with degrees and decimal minutes (e.g., "45° 30.1234'").
+ *
+ * @example
+ * ```typescript
+ * toDegreesDecimalMinutes(45.5);
+ * // '45° 30.0000''
+ * ```
+ *
+ * @example
+ * ```typescript
+ * toDegreesDecimalMinutes(-122.4194);
+ * // '122° 25.1640''
+ * ```
+ */
 const toDegreesDecimalMinutes = (num: number): string => {
-  const degrees = Math.floor(Math.abs(num));
-  const minutes = ((Math.abs(num) - degrees) * 60).toFixed(4);
+  let degrees = Math.floor(Math.abs(num));
+  let minutes = Number(((Math.abs(num) - degrees) * 60).toFixed(4));
 
-  return `${degrees}° ${minutes}'`;
+  // Rounding can produce 60 minutes (e.g. 40.9999995 -> 40° 60.0000');
+  // carry into degrees so the output stays a valid coordinate.
+  degrees += Math.floor(minutes / 60);
+  minutes %= 60;
+
+  return `${degrees}° ${minutes.toFixed(4)}'`;
 };
 
+/**
+ * Formats latitude/longitude coordinates in degrees decimal minutes notation.
+ *
+ * @param coordinates - Tuple of [latitude, longitude] values.
+ * @param config - Optional formatting configuration.
+ * @returns Formatted coordinate string in degrees decimal minutes format.
+ *
+ * @example
+ * ```typescript
+ * formatDegreesDecimalMinutes([37.7749, -122.4194]);
+ * // '37° 46.4940' N, 122° 25.1640' W'
+ * ```
+ *
+ * @example
+ * ```typescript
+ * formatDegreesDecimalMinutes([37.7749, -122.4194], { separator: ' / ' });
+ * // '37° 46.4940' N / 122° 25.1640' W'
+ * ```
+ */
 export const formatDegreesDecimalMinutes = createFormatter(
   toDegreesDecimalMinutes,
 );

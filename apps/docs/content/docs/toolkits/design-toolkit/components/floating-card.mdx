@@ -1,0 +1,308 @@
+---
+title: FloatingCard
+description: Renders children into a resizable, draggable floating panel using React portals and Dockview
+source: packages/design-toolkit/src/components/floating-card/index.tsx
+source_sha: 8ab9f023e60d98c7af5b0f6a472145154b424b65
+doc_sha: 015bda6532d608121dc31f535623d60760db0fdf
+deprecated: false
+updated: 2026-07-13
+---
+
+Renders children into a resizable, draggable floating panel using React portals. Requires `FloatingCardProvider` as an ancestor.
+
+## Usage
+
+```tsx
+import { FloatingCard, FloatingCardProvider } from '@accelint/design-toolkit';
+import { uuid } from '@accelint/core';
+import { useState } from 'react';
+
+const cardId = uuid();
+
+export function App() {
+  const [isOpen, setIsOpen] = useState(true);
+
+  return (
+    <FloatingCardProvider>
+      <FloatingCard
+        id={cardId}
+        title="Settings Panel"
+        isOpen={isOpen}
+      >
+        <p>Panel content goes here</p>
+      </FloatingCard>
+
+      <button onClick={() => setIsOpen(!isOpen)}>
+        Toggle Panel
+      </button>
+    </FloatingCardProvider>
+  );
+}
+```
+
+## Reference
+
+```typescript
+interface FloatingCardProps {
+  id: UniqueId;
+  children: React.ReactNode;
+  title?: string;
+  isOpen?: boolean;
+  initialDimensions?: { width: number; height: number };
+  initialPosition?: { x?: number; y?: number };
+}
+```
+
+### Props
+
+| Prop | Type | Default | Required |
+|------|------|---------|----------|
+| `id` | `UniqueId` | - | Yes |
+| `children` | `React.ReactNode` | - | Yes |
+| `title` | `string` | - | No |
+| `isOpen` | `boolean` | `true` | No |
+| `initialDimensions` | `{ width: number; height: number }` | `{ width: 300, height: 400 }` | No |
+| `initialPosition` | `{ x?: number; y?: number }` | - | No |
+
+#### `id`
+
+Unique identifier for the floating card. Must be stable across renders.
+
+#### `title`
+
+Title displayed in the floating card header. Defaults to the `id` if not provided.
+
+#### `isOpen`
+
+Controls whether the floating card is rendered. When `false`, the card is closed and removed from the DOM.
+
+#### `initialDimensions`
+
+Initial width and height of the floating card in pixels.
+
+#### `initialPosition`
+
+Initial x and y coordinates for the floating card's top-left corner. If not specified, the card appears at a default position managed by Dockview.
+
+## Examples
+
+### Example: Basic floating card
+
+```tsx
+import { FloatingCard, FloatingCardProvider } from '@accelint/design-toolkit';
+import { uuid } from '@accelint/core';
+
+const cardId = uuid();
+
+<FloatingCardProvider>
+  <FloatingCard id={cardId} title="My Panel">
+    <div className="p-4">
+      <h2>Panel Content</h2>
+      <p>This is a floating panel</p>
+    </div>
+  </FloatingCard>
+</FloatingCardProvider>
+```
+
+### Example: Custom dimensions
+
+```tsx
+import { FloatingCard, FloatingCardProvider } from '@accelint/design-toolkit';
+import { uuid } from '@accelint/core';
+
+const cardId = uuid();
+
+<FloatingCardProvider>
+  <FloatingCard
+    id={cardId}
+    title="Wide Panel"
+    initialDimensions={{ width: 600, height: 400 }}
+  >
+    <p>This panel is 600x400 pixels</p>
+  </FloatingCard>
+</FloatingCardProvider>
+```
+
+### Example: Positioned card
+
+```tsx
+import { FloatingCard, FloatingCardProvider } from '@accelint/design-toolkit';
+import { uuid } from '@accelint/core';
+
+const cardId = uuid();
+
+<FloatingCardProvider>
+  <FloatingCard
+    id={cardId}
+    title="Positioned Panel"
+    initialPosition={{ x: 100, y: 100 }}
+  >
+    <p>This panel starts at (100, 100)</p>
+  </FloatingCard>
+</FloatingCardProvider>
+```
+
+### Example: Controlled visibility
+
+```tsx
+import { FloatingCard, FloatingCardProvider, Button } from '@accelint/design-toolkit';
+import { uuid } from '@accelint/core';
+import { useState } from 'react';
+
+function ControlledPanel() {
+  const cardId = uuid();
+  const [isOpen, setIsOpen] = useState(false);
+
+  return (
+    <FloatingCardProvider>
+      <Button onPress={() => setIsOpen(true)}>
+        Open Panel
+      </Button>
+
+      <FloatingCard
+        id={cardId}
+        title="Controlled Panel"
+        isOpen={isOpen}
+      >
+        <div className="p-4">
+          <p>Panel content</p>
+          <Button onPress={() => setIsOpen(false)}>
+            Close
+          </Button>
+        </div>
+      </FloatingCard>
+    </FloatingCardProvider>
+  );
+}
+```
+
+### Example: Multiple floating cards
+
+```tsx
+import { FloatingCard, FloatingCardProvider } from '@accelint/design-toolkit';
+import { uuid } from '@accelint/core';
+
+const ids = {
+  card1: uuid(),
+  card2: uuid(),
+  card3: uuid(),
+};
+
+<FloatingCardProvider>
+  <FloatingCard
+    id={ids.card1}
+    title="Panel 1"
+    initialPosition={{ x: 50, y: 50 }}
+  >
+    <p>First panel</p>
+  </FloatingCard>
+
+  <FloatingCard
+    id={ids.card2}
+    title="Panel 2"
+    initialPosition={{ x: 400, y: 50 }}
+  >
+    <p>Second panel</p>
+  </FloatingCard>
+
+  <FloatingCard
+    id={ids.card3}
+    title="Panel 3"
+    initialPosition={{ x: 750, y: 50 }}
+  >
+    <p>Third panel</p>
+  </FloatingCard>
+</FloatingCardProvider>
+```
+
+### Example: Large settings panel
+
+```tsx
+import { FloatingCard, FloatingCardProvider } from '@accelint/design-toolkit';
+import { uuid } from '@accelint/core';
+
+const cardId = uuid();
+
+<FloatingCardProvider>
+  <FloatingCard
+    id={cardId}
+    title="Application Settings"
+    initialDimensions={{ width: 800, height: 600 }}
+  >
+    <div className="p-6 space-y-4">
+      <section>
+        <h3>General</h3>
+        {/* Settings controls */}
+      </section>
+      <section>
+        <h3>Advanced</h3>
+        {/* More settings */}
+      </section>
+    </div>
+  </FloatingCard>
+</FloatingCardProvider>
+```
+
+## Behavior
+
+### Registration and Lifecycle
+
+FloatingCard registers itself with the floating card engine on mount and:
+1. Creates a Dockview panel if `isOpen` is `true`
+2. Updates the panel title when `title` prop changes
+3. Closes the panel when `isOpen` becomes `false`
+4. Cleans up when unmounted (handled at provider level)
+
+### Portal Rendering
+
+Children are rendered into the floating card's DOM node via React portals, allowing content to "escape" its parent container while maintaining React context.
+
+### Drag and Resize
+
+Floating cards are:
+- **Draggable** - Users can drag the header to reposition
+- **Resizable** - Users can drag edges/corners to resize
+- **Stackable** - Multiple cards can overlap, with z-index management
+
+### Lock Behavior
+
+Floating cards have `locked: 'no-drop-target'` preventing them from being docked into other layouts. They remain free-floating at all times.
+
+## Requirements
+
+### FloatingCardProvider
+
+FloatingCard must be used within a `FloatingCardProvider`:
+
+```tsx
+import { FloatingCardProvider } from '@accelint/design-toolkit';
+
+<FloatingCardProvider>
+  {/* Your app with FloatingCard components */}
+</FloatingCardProvider>
+```
+
+Without the provider, floating cards will not render.
+
+### Stable IDs
+
+Use stable unique IDs (via `uuid()` or similar) defined outside component render:
+
+```tsx
+// ✅ Good - stable ID
+const cardId = uuid();
+
+function App() {
+  return <FloatingCard id={cardId} />;
+}
+
+// ❌ Bad - new ID every render
+function App() {
+  return <FloatingCard id={uuid()} />;
+}
+```
+
+## Related
+
+- [FloatingCardProvider](./provider.mdx) - Required context provider
+- [Dockview](https://dockview.dev/) - Underlying panel management library

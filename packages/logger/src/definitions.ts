@@ -10,11 +10,12 @@
  * governing permissions and limitations under the License.
  */
 
-import {
-  type LogLayerPlugin,
-  type LogLayerTransport,
-  LogLevel as LogLevelEnum,
-} from 'loglayer';
+import type {
+  LogGroupsConfig,
+  LogLayerPlugin,
+  LogLayerTransport,
+  LogLevelType,
+} from '@loglayer/shared';
 
 /**
  * Configuration options for the logger.
@@ -22,23 +23,35 @@ import {
 export type LoggerOptions = {
   /**
    * Whether logging is enabled. When false, all log calls are no-ops.
+   * Reference: https://loglayer.dev/configuration.html#logging-control
    */
   enabled: boolean;
   /**
    * Additional LogLayer plugins to apply.
    * These are applied after the default callsite and environment plugins.
+   * Reference: https://loglayer.dev/configuration.html#plugin-system
    */
   plugins?: LogLayerPlugin[];
   /**
-   * Additional log transports for custom log destinations.
-   * These are applied alongside the default console transport.
+   * Custom transports that replace the default console transport.
+   * When provided, the default transport is not used. Include `prettyTransport`
+   * or `structuredTransport` explicitly to keep console output alongside your custom transport.
+   * Reference: https://loglayer.dev/configuration.html#transport-configuration
    */
   transports?: LogLayerTransport[];
+
+  /**
+   * Named log groups configuration for conditional group-level logging.
+   * Allows enabling or disabling entire categories of log calls by name.
+   * Reference: https://loglayer.dev/logging-api/groups.html
+   */
+  groups?: LogGroupsConfig;
   /**
    * Minimum log level to output.
+   * Reference: https://loglayer.dev/logging-api/adjusting-log-levels.html
    * @default 'debug'
    */
-  level?: LogLevel;
+  level?: LogLevelType;
   /**
    * Whether to use pretty-printed console output.
    * When false, outputs structured JSON.
@@ -47,22 +60,104 @@ export type LoggerOptions = {
   pretty?: boolean;
   /**
    * Prefix string prepended to all log messages.
+   * Reference: https://loglayer.dev/configuration.html#message-prefixing
    * @default ''
    */
   prefix?: string;
   /**
-   * Environment context for the logger.
+   * Environment context for the logger. Should reference process.env.NODE_ENV.
    * @default 'development'
    */
-  env?: 'production' | 'development' | 'test';
+  env?: 'production' | 'development';
 };
 
-export const LOG_LEVEL = LogLevelEnum;
-export type LogLevel = LogLevelEnum | `${keyof typeof LogLevelEnum}`;
+/**
+ * The log level type accepted by logger configuration.
+ * One of: `'trace'`, `'debug'`, `'info'`, `'warn'`, `'error'`, `'fatal'`.
+ * NOTE: this is vendored from @loglayer/shared since tsdown will not export/bundle an external
+ */
+export type LogLevel = 'trace' | 'debug' | 'info' | 'warn' | 'error' | 'fatal';
 
-export const ERROR: LogLevel = 'error';
-export const WARN: LogLevel = 'warn';
-export const INFO: LogLevel = 'info';
-export const DEBUG: LogLevel = 'debug';
-export const TRACE: LogLevel = 'trace';
-export const FATAL: LogLevel = 'fatal';
+/**
+ * Log level constant for error messages.
+ *
+ * Use for critical errors that require immediate attention.
+ *
+ * @example
+ * ```typescript
+ * import { getLogger, ERROR } from '@accelint/logger';
+ *
+ * const logger = getLogger({ level: ERROR, enabled: true });
+ * ```
+ */
+export const ERROR: LogLevelType = 'error';
+
+/**
+ * Log level constant for warning messages.
+ *
+ * Use for potentially harmful situations that don't prevent execution.
+ *
+ * @example
+ * ```typescript
+ * import { getLogger, WARN } from '@accelint/logger';
+ *
+ * const logger = getLogger({ level: WARN, enabled: true });
+ * ```
+ */
+export const WARN: LogLevelType = 'warn';
+
+/**
+ * Log level constant for informational messages.
+ *
+ * Use for general informational messages about application progress.
+ *
+ * @example
+ * ```typescript
+ * import { getLogger, INFO } from '@accelint/logger';
+ *
+ * const logger = getLogger({ level: INFO, enabled: true });
+ * ```
+ */
+export const INFO: LogLevelType = 'info';
+
+/**
+ * Log level constant for debug messages.
+ *
+ * Use for detailed diagnostic information useful during development.
+ *
+ * @example
+ * ```typescript
+ * import { getLogger, DEBUG } from '@accelint/logger';
+ *
+ * const logger = getLogger({ level: DEBUG, enabled: true });
+ * ```
+ */
+export const DEBUG: LogLevelType = 'debug';
+
+/**
+ * Log level constant for trace messages.
+ *
+ * Use for fine-grained debugging information, more verbose than debug.
+ *
+ * @example
+ * ```typescript
+ * import { getLogger, TRACE } from '@accelint/logger';
+ *
+ * const logger = getLogger({ level: TRACE, enabled: true });
+ * ```
+ */
+export const TRACE: LogLevelType = 'trace';
+
+/**
+ * Log level constant for fatal error messages.
+ *
+ * Use for severe errors that may cause the application to terminate.
+ *
+ * @example
+ * ```typescript
+ * import { getLogger, FATAL } from '@accelint/logger';
+ *
+ * const logger = getLogger({ level: FATAL, enabled: true });
+ * ```
+ */
+export const FATAL: LogLevelType = 'fatal';

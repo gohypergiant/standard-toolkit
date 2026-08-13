@@ -27,9 +27,12 @@ import type {
   MapHoverEvent,
 } from '../base-map/types';
 
-const meta: Meta<typeof BaseMapComponent> = {
+type StoryArgs = {
+  styleUrl: string;
+};
+
+const meta: Meta<StoryArgs> = {
   title: 'DeckGL/Base Map',
-  component: BaseMapComponent,
   argTypes: {
     styleUrl: {
       control: 'select',
@@ -46,7 +49,7 @@ const meta: Meta<typeof BaseMapComponent> = {
 };
 
 export default meta;
-type Story = StoryObj<typeof BaseMapComponent>;
+type Story = StoryObj<StoryArgs>;
 
 // Stable id for Storybook story
 const BASE_MAP_STORY_ID = uuid();

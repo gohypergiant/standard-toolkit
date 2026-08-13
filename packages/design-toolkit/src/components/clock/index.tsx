@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -30,15 +30,24 @@ const DEFAULT_FORMATTER = new Intl.DateTimeFormat('en-US', {
  *
  * NOTE: This component comes **unstyled by default**.
  *
+ * @param props - The clock props.
+ * @param props.formatter - Custom DateTimeFormat for time display.
+ * @returns The clock component displaying current time.
+ *
  * @example
+ * ```tsx
  * // Standard Clock
  * <Clock /> // <time>15:54:14 UTC</time>
+ * ```
  *
  * @example
+ * ```tsx
  * // Styled
  * <Clock className="fg-accent-primary-bold" />
+ * ```
  *
  * @example
+ * ```tsx
  * // Custom Format
  * const formatter = new Intl.DateTimeFormat('en-US', {
  *   dateStyle: "short",
@@ -48,6 +57,7 @@ const DEFAULT_FORMATTER = new Intl.DateTimeFormat('en-US', {
  * });
  *
  * <Clock formatter={formatter} /> // <time>9/30/25, 15:54:14 UTC</time>
+ * ```
  *
  * @see {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/DateTimeFormat| DateTimeFormat MDN}
  */
@@ -58,5 +68,9 @@ export function Clock({ formatter = DEFAULT_FORMATTER, ...rest }: ClockProps) {
 
   useEffect(() => setClockInterval(() => setTime(now()), 1000), [now]);
 
-  return <time {...rest}>{time}</time>;
+  return (
+    <time suppressHydrationWarning {...rest}>
+      {time}
+    </time>
+  );
 }

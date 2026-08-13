@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -13,13 +13,34 @@
 
 import 'client-only';
 import { createContext } from 'react';
-import type { ContextValue } from 'react-aria-components';
+import type { ContextValue } from 'react-aria-components/slots';
 import type { ProviderProps } from '@/lib/types';
 import type { DetailsListProps } from './types';
 
+/**
+ * Context for sharing DetailsList props across component tree.
+ */
 export const DetailsListContext =
   createContext<ContextValue<DetailsListProps, HTMLDListElement>>(null);
 
+/**
+ * DetailsListProvider - Context provider for setting default DetailsList props.
+ *
+ * Use this to configure shared alignment and classNames across multiple
+ * DetailsList components in your application.
+ *
+ * @param props - The provider props.
+ * @param props.children - Child components that will receive the details list context.
+ * @returns The details list context provider wrapping children.
+ *
+ * @example
+ * ```tsx
+ * <DetailsListProvider align="left">
+ *   <DetailsList>...</DetailsList>
+ *   <DetailsList>...</DetailsList>
+ * </DetailsListProvider>
+ * ```
+ */
 export function DetailsListProvider({
   children,
   ...props

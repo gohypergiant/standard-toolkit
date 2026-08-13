@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -13,15 +13,13 @@
 
 import 'client-only';
 import { clsx } from '@accelint/design-foundation/lib/utils';
-import {
-  ToggleButton as AriaToggleButton,
-  composeRenderProps,
-  useContextProps,
-} from 'react-aria-components';
+import { ToggleButton as AriaToggleButton } from 'react-aria-components/ToggleButton';
 import { IconProvider } from '../icon/context';
 import { ToggleButtonContext } from './context';
 import styles from './styles.module.css';
 import type { ToggleButtonProps } from './types';
+import { composeRenderProps } from 'react-aria-components/composeRenderProps';
+import { useContextProps } from 'react-aria-components/slots';
 
 /**
  * ToggleButton - A button component that maintains pressed/unpressed state
@@ -30,34 +28,55 @@ import type { ToggleButtonProps } from './types';
  * Perfect for features like favorites, bookmarks, switches, or any binary state controls.
  * Includes icon support and integrates with React Aria for keyboard navigation and accessibility.
  *
- * @example
- * // Basic toggle button
- * <ToggleButton>Toggle Feature</ToggleButton>
+ * @param props - The toggle button props.
+ * @param props.ref - Reference to the button element.
+ * @param props.children - Toggle button content (text, icons, or both).
+ * @param props.className - Additional CSS class names for styling.
+ * @param props.color - Semantic color variant.
+ * @param props.size - Size of the toggle button.
+ * @param props.variant - Visual style variant (filled not available).
+ * @param props.isSelected - Whether the toggle is currently selected.
+ * @param props.onChange - Callback when the toggle state changes.
+ * @returns The toggle button component.
  *
  * @example
+ * ```tsx
+ * // Basic toggle button
+ * <ToggleButton>Toggle Feature</ToggleButton>
+ * ```
+ *
+ * @example
+ * ```tsx
  * // Controlled toggle button with different variants
  * <ToggleButton variant="flat" isSelected={isEnabled} onChange={setIsEnabled}>
  *   Enable Notifications
  * </ToggleButton>
+ * ```
  *
  * @example
+ * ```tsx
  * // Toggle button with icon and state
  * <ToggleButton variant="outline" isSelected={isFavorite} onChange={setIsFavorite}>
  *   <Icon><Heart /></Icon>
  *   {isFavorite ? 'Favorite' : 'Add to Favorites'}
  * </ToggleButton>
+ * ```
  *
  * @example
+ * ```tsx
  * // Icon-only toggle button
  * <ToggleButton variant="icon" isSelected={isBookmarked} onChange={setIsBookmarked}>
  *   <Icon><Bookmark /></Icon>
  * </ToggleButton>
+ * ```
  *
  * @example
+ * ```tsx
  * // Toggle button with different colors and sizes
  * <ToggleButton color="critical" size="small" isSelected={isEnabled}>
  *   Critical Toggle
  * </ToggleButton>
+ * ```
  */
 export function ToggleButton({ ref, ...props }: ToggleButtonProps) {
   [props, ref] = useContextProps(props, ref ?? null, ToggleButtonContext);

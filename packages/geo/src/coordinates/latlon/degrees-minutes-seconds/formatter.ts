@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -12,15 +12,59 @@
 
 import { createFormatter } from '../internal/format';
 
+/**
+ * Converts a coordinate value to degrees minutes seconds format.
+ *
+ * @param num - The coordinate value to format.
+ * @returns Formatted coordinate string with degrees, minutes, and seconds (e.g., "45° 30' 15.23″").
+ *
+ * @example
+ * ```typescript
+ * toDegreesMinutesSeconds(45.5042);
+ * // '45° 30' 15.12″'
+ * ```
+ *
+ * @example
+ * ```typescript
+ * toDegreesMinutesSeconds(-122.4194);
+ * // '122° 25' 9.84″'
+ * ```
+ */
 const toDegreesMinutesSeconds = (num: number): string => {
-  const degrees = Math.floor(Math.abs(num));
+  let degrees = Math.floor(Math.abs(num));
   const minutesFull = (Math.abs(num) - degrees) * 60;
-  const minutes = Math.floor(minutesFull);
-  const seconds = ((minutesFull - minutes) * 60).toFixed(2);
+  let minutes = Math.floor(minutesFull);
+  let seconds = Number(((minutesFull - minutes) * 60).toFixed(2));
 
-  return `${degrees}° ${minutes}' ${seconds}″`;
+  // Rounding can produce 60 seconds (e.g. 40.9999999 -> 40° 59' 60.00″);
+  // carry into minutes (and degrees) so the output stays a valid coordinate.
+  minutes += Math.floor(seconds / 60);
+  seconds %= 60;
+  degrees += Math.floor(minutes / 60);
+  minutes %= 60;
+
+  return `${degrees}° ${minutes}' ${seconds.toFixed(2)}″`;
 };
 
+/**
+ * Formats latitude/longitude coordinates in degrees minutes seconds notation.
+ *
+ * @param coordinates - Tuple of [latitude, longitude] values.
+ * @param config - Optional formatting configuration.
+ * @returns Formatted coordinate string in degrees minutes seconds format.
+ *
+ * @example
+ * ```typescript
+ * formatDegreesMinutesSeconds([37.7749, -122.4194]);
+ * // '37° 46' 29.64″ N, 122° 25' 9.84″ W'
+ * ```
+ *
+ * @example
+ * ```typescript
+ * formatDegreesMinutesSeconds([37.7749, -122.4194], { separator: ' / ' });
+ * // '37° 46' 29.64″ N / 122° 25' 9.84″ W'
+ * ```
+ */
 export const formatDegreesMinutesSeconds = createFormatter(
   toDegreesMinutesSeconds,
 );

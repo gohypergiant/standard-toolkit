@@ -33,11 +33,15 @@ const test = (list: string[], val: unknown) =>
  * - `isOff(val)`
  *
  * @param val - The value to check whether or not it is falsey.
+ * @returns True if the value matches any falsy variant, false otherwise.
  *
  * @remarks
  * pure function
  *
  * @example
+ * ```typescript
+ * import { isAnyFalsy } from '@accelint/predicates/is-noyes';
+ *
  * isAnyFalsy('');        // true
  * isAnyFalsy('no');      // true
  * isAnyFalsy('off');     // true
@@ -46,6 +50,7 @@ const test = (list: string[], val: unknown) =>
  * isAnyFalsy(true);      // false
  * isAnyFalsy('on');      // false
  * isAnyFalsy('yes');     // false
+ * ```
  */
 export const isAnyFalsy = (val: unknown) =>
   isFalse(val) || isNo(val) || isOff(val);
@@ -57,11 +62,15 @@ export const isAnyFalsy = (val: unknown) =>
  * - `isOn(val)`
  *
  * @param val - The value to check whether or not it is truthy.
+ * @returns True if the value matches any truthy variant, false otherwise.
  *
  * @remarks
  * pure function
  *
  * @example
+ * ```typescript
+ * import { isAnyTruthy } from '@accelint/predicates/is-noyes';
+ *
  * isAnyTruthy('');        // false
  * isAnyTruthy('no');      // false
  * isAnyTruthy('off');     // false
@@ -70,6 +79,7 @@ export const isAnyFalsy = (val: unknown) =>
  * isAnyTruthy(true);      // true
  * isAnyTruthy('on');      // true
  * isAnyTruthy('yes');     // true
+ * ```
  */
 export const isAnyTruthy = (val: unknown) =>
   isTrue(val) || isYes(val) || isOn(val);
@@ -84,15 +94,20 @@ export const isAnyTruthy = (val: unknown) =>
  * package (\@accelint/converters).
  *
  * @param val - The value to check whether or not it is false.
+ * @returns True if the value is in the false values list, false otherwise.
  *
  * @remarks
  * pure function
  *
  * @example
+ * ```typescript
+ * import { isFalse } from '@accelint/predicates/is-noyes';
+ *
  * isFalse('');        // true
  * isFalse(0);         // true
  * isFalse(1);         // false
  * isFalse(true);      // false
+ * ```
  */
 export const isFalse = (val: unknown) => test(listFalse, val);
 
@@ -107,17 +122,22 @@ export const isFalse = (val: unknown) => test(listFalse, val);
  * package (\@accelint/converters).
  *
  * @param val - The value to check whether or not it is no.
+ * @returns True if the value is in the no values list, false otherwise.
  *
  * @remarks
  * pure function
  *
  * @example
+ * ```typescript
+ * import { isNo } from '@accelint/predicates/is-noyes';
+ *
  * isNo('n');       // true
  * isNo('');        // true
  * isNo(0);         // true
  * isNo(1);         // false
  * isNo(true);      // false
  * isNo('yes');     // false
+ * ```
  */
 export const isNo = (val: unknown) => test(listNo, val);
 
@@ -132,17 +152,22 @@ export const isNo = (val: unknown) => test(listNo, val);
  * package (\@accelint/converters).
  *
  * @param val - The value to check whether or not it is off.
+ * @returns True if the value is in the off values list, false otherwise.
  *
  * @remarks
  * pure function
  *
  * @example
+ * ```typescript
+ * import { isOff } from '@accelint/predicates/is-noyes';
+ *
  * isOff('off');     // true
  * isOff('');        // true
  * isOff(0);         // true
  * isOff(1);         // false
  * isOff(true);      // false
  * isOff('on');      // false
+ * ```
  */
 export const isOff = (val: unknown) => test(listOff, val);
 
@@ -157,17 +182,22 @@ export const isOff = (val: unknown) => test(listOff, val);
  * package (\@accelint/converters).
  *
  * @param val - The value to check whether or not it is on.
+ * @returns True if the value is in the on values list, false otherwise.
  *
  * @remarks
  * pure function
  *
  * @example
+ * ```typescript
+ * import { isOn } from '@accelint/predicates/is-noyes';
+ *
  * isOn('off');     // false
  * isOn('');        // false
  * isOn(0);         // false
  * isOn(1);         // true
  * isOn(true);      // true
  * isOn('on');      // true
+ * ```
  */
 export const isOn = (val: unknown) => test(listOn, val);
 
@@ -181,17 +211,22 @@ export const isOn = (val: unknown) => test(listOn, val);
  * package (\@accelint/converters).
  *
  * @param val - The value to check whether or not it is true.
+ * @returns True if the value is in the true values list, false otherwise.
  *
  * @remarks
  * pure function
  *
  * @example
- * isOn('no');      // false
- * isOn('');        // false
- * isOn(0);         // false
- * isOn(1);         // true
- * isOn(true);      // true
- * isOn('yes');     // true
+ * ```typescript
+ * import { isTrue } from '@accelint/predicates/is-noyes';
+ *
+ * isTrue('no');      // false
+ * isTrue('');        // false
+ * isTrue(0);         // false
+ * isTrue(1);         // true
+ * isTrue(true);      // true
+ * isTrue('yes');     // true
+ * ```
  */
 export const isTrue = (val: unknown) => test(listTrue, val);
 
@@ -206,14 +241,20 @@ export const isTrue = (val: unknown) => test(listTrue, val);
  * package (\@accelint/converters).
  *
  * @param val - The value to check whether or not it is yes.
+ * @returns True if the value is in the yes values list, false otherwise.
  *
  * @remarks
  * pure function
  *
  * @example
- * isTrue('');        // false
- * isTrue(0);         // false
- * isTrue(1);         // true
- * isTrue(true);      // true
+ * ```typescript
+ * import { isYes } from '@accelint/predicates/is-noyes';
+ *
+ * isYes('');        // false
+ * isYes(0);         // false
+ * isYes(1);         // true
+ * isYes(true);      // true
+ * isYes('yes');     // true
+ * ```
  */
 export const isYes = (val: unknown) => test(listYes, val);

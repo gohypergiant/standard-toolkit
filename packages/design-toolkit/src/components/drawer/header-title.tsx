@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -11,14 +11,31 @@
  */
 
 import { clsx } from '@accelint/design-foundation/lib/utils';
-import { Heading } from 'react-aria-components';
+import { Heading } from 'react-aria-components/Heading';
 import styles from './styles.module.css';
 import type { DrawerTitleProps } from './types';
 
 /**
- * To change size of title, use the `level` prop: `1`-`3` (large), `4`-`6` (medium).
+ * DrawerHeaderTitle - Semantic heading for drawer headers.
  *
- * `level` also changes the semantic heading tag number `h1`-`h6`
+ * The `level` prop controls both visual size and semantic heading level:
+ * - Levels 1-3: Large text size (renders as h1-h3)
+ * - Levels 4-6: Medium text size (renders as h4-h6)
+ *
+ * @param props - {@link DrawerTitleProps}
+ * @param props.className - Optional CSS class name.
+ * @param props.level - Heading level (1-6).
+ * @returns The rendered DrawerHeaderTitle component.
+ *
+ * @default level 2
+ *
+ * @example
+ * ```tsx
+ * <DrawerHeader>
+ *   <DrawerHeaderTitle level={2}>Settings</DrawerHeaderTitle>
+ *   <DrawerClose />
+ * </DrawerHeader>
+ * ```
  */
 export function DrawerHeaderTitle({
   className,

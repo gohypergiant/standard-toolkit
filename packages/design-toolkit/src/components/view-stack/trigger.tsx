@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -14,14 +14,35 @@
 import 'client-only';
 import { isUUID, type UniqueId } from '@accelint/core';
 import { useContext } from 'react';
-import { Pressable } from 'react-aria-components';
+import { Pressable } from 'react-aria-components/Pressable';
 import { useViewStackEmit, ViewStackContext } from './context';
 import type { ViewStackTriggerProps } from './types';
 
 /**
- * ViewStackTrigger - Trigger for ViewStack actions
+ * ViewStackTrigger - Pressable element that triggers ViewStack navigation actions
  *
- * Provides a pressable element that triggers ViewStack actions
+ * @example
+ * ```tsx
+ * <ViewStack id="main-stack">
+ *   <ViewStackView id="home">
+ *     <h1>Home</h1>
+ *     <ViewStackTrigger for="settings-view-id">
+ *       <Button>Go to Settings</Button>
+ *     </ViewStackTrigger>
+ *   </ViewStackView>
+ *   <ViewStackView id="settings-view-id">
+ *     <h1>Settings</h1>
+ *     <ViewStackTrigger for="back:main-stack">
+ *       <Button>Back</Button>
+ *     </ViewStackTrigger>
+ *   </ViewStackView>
+ * </ViewStack>
+ * ```
+ *
+ * @param props - {@link ViewStackTriggerProps}
+ * @param props.children - Pressable children content.
+ * @param props.for - Navigation action(s) to trigger on press.
+ * @returns The rendered ViewStackTrigger component.
  */
 export function ViewStackTrigger({
   children,

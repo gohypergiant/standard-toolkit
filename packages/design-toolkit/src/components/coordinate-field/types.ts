@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -16,11 +16,9 @@ import type {
   RefAttributes,
   SetStateAction,
 } from 'react';
-import type {
-  TextFieldProps as AriaTextFieldProps,
-  FieldErrorProps,
-  LabelProps,
-} from 'react-aria-components';
+import type { TextFieldProps as AriaTextFieldProps } from 'react-aria-components/TextField';
+import type { FieldErrorProps } from 'react-aria-components/FieldError';
+import type { LabelProps } from 'react-aria-components/Label';
 
 /**
  * Supported coordinate systems for display and input
@@ -276,4 +274,10 @@ export type CoordinateFieldProps = Omit<
      *   - Paste errors: `{ pastedText: string }`
      */
     onError?: (message: string, context?: Record<string, unknown>) => void;
+
+    /**
+     * Tooltip text for the format button
+     * @default 'View/copy other formats'
+     */
+    formatButtonTooltip?: string;
   };

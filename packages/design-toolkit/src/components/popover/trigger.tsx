@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -13,17 +13,38 @@
 'use client';
 
 import 'client-only';
-import { Pressable } from '@react-aria/interactions';
+import { Pressable } from 'react-aria/Pressable';
 import {
   Children,
   type DOMAttributes,
   type ReactElement,
   type ReactNode,
 } from 'react';
-import { DialogTrigger } from 'react-aria-components';
+import { DialogTrigger } from 'react-aria-components/Dialog';
 import type { FocusableElement } from '@react-types/shared';
 import type { PopoverTriggerProps } from './types';
 
+/**
+ * PopoverTrigger - Root component that manages popover state and positioning
+ *
+ * Wraps a trigger element and its associated Popover. The first child becomes
+ * the trigger, and the second child should be a Popover component.
+ *
+ * @example
+ * ```tsx
+ * <PopoverTrigger>
+ *   <Button>Open</Button>
+ *   <Popover>
+ *     <PopoverContent>Content here</PopoverContent>
+ *   </Popover>
+ * </PopoverTrigger>
+ * ```
+ *
+ * @param props - {@link PopoverTriggerProps}
+ * @param props.ref - Forwarded ref to the trigger element.
+ * @param props.children - Trigger element and Popover component.
+ * @returns The rendered PopoverTrigger component.
+ */
 export function PopoverTrigger({
   ref,
   children,

@@ -49,12 +49,18 @@ import {
 } from './constants';
 import { DrawShapeEvents } from './events';
 import { convertFeatureToShape } from './utils/feature-conversion';
+import type { DistanceUnitSymbol } from '@accelint/constants/units';
 import type { UniqueId } from '@accelint/core';
 import type { Feature } from 'geojson';
 import type { MapModeEventType } from '@/map-mode/types';
-import type { Shape, ShapeFeatureType } from '../shared/types';
+import type { Shape } from '../shared/types';
 import type { DrawShapeEvent, ShapeDrawnEvent } from './events';
-import type { DrawFunction, DrawingState, DrawShapeOptions } from './types';
+import type {
+  DrawableShapeType,
+  DrawFunction,
+  DrawingState,
+  DrawShapeOptions,
+} from './types';
 
 /**
  * Typed event bus instances
@@ -70,6 +76,7 @@ const DEFAULT_DRAWING_STATE: DrawingState = {
   tentativeFeature: null,
   styleDefaults: null,
   circleDefaults: null,
+  distanceUnit: null,
 };
 
 /**
@@ -88,7 +95,7 @@ type DrawShapeActions = {
 function startDrawing(
   mapId: UniqueId,
   state: DrawingState,
-  shapeType: ShapeFeatureType,
+  shapeType: DrawableShapeType,
   options: DrawShapeOptions | undefined,
   notify: () => void,
   setState: (updates: Partial<DrawingState>) => void,
@@ -135,9 +142,15 @@ function completeDrawingInternal(
 
   const shapeType = state.activeShapeType;
   const styleDefaults = state.styleDefaults;
+  const distanceUnit = state.distanceUnit;
 
   // Convert feature to Shape
-  const shape = convertFeatureToShape(feature, shapeType, styleDefaults);
+  const shape = convertFeatureToShape(
+    feature,
+    shapeType,
+    styleDefaults,
+    distanceUnit,
+  );
 
   // Reset state with new object reference
   setState({
@@ -145,6 +158,7 @@ function completeDrawingInternal(
     tentativeFeature: null,
     styleDefaults: null,
     circleDefaults: null,
+    distanceUnit: null,
   });
 
   // Release mode and cursor using shared utilities
@@ -182,6 +196,7 @@ function cancelDrawingInternal(
     tentativeFeature: null,
     styleDefaults: null,
     circleDefaults: null,
+    distanceUnit: null,
   });
 
   // Release mode and cursor using shared utilities
@@ -203,7 +218,7 @@ export const drawStore = createMapStore<DrawingState, DrawShapeActions>({
   defaultState: { ...DEFAULT_DRAWING_STATE },
 
   actions: (mapId, { get, set, notify }) => ({
-    draw: (shapeType: ShapeFeatureType, options?: DrawShapeOptions) => {
+    draw: (shapeType: DrawableShapeType, options?: DrawShapeOptions) => {
       startDrawing(mapId, get(), shapeType, options, notify, set);
     },
 
@@ -262,9 +277,47 @@ export const drawStore = createMapStore<DrawingState, DrawShapeActions>({
 // =============================================================================
 
 /**
- * Get the current drawing state for a mapId
- * Returns null if no store instance exists
+ * Get the current drawing state for a map instance.
+ *
+ * Returns the drawing state (active shape type, style defaults, etc.) for the
+ * specified map ID. Returns null if no drawing store instance exists for that map.
+ *
+ * ## Use Cases
+ * - Check if a map is currently in drawing mode
+ * - Access drawing state outside of React components
+ * - Inspect state for debugging purposes
+ *
+ * @param mapId - Unique identifier for the map instance
+ * @returns The drawing state, or null if no store instance exists
+ *
+ * @example
+ * ```typescript
+ * import { getDrawingState } from '@accelint/map-toolkit/deckgl/shapes';
+ *
+ * const state = getDrawingState('map-1');
+ * if (state?.activeShapeType) {
+ *   console.log(`Currently drawing: ${state.activeShapeType}`);
+ * }
+ * ```
  */
+/**
+ * Set the distance unit for the draw store.
+ *
+ * Called by DrawShapeLayer when its `unit` prop changes so that
+ * `convertFeatureToShape` can compute circle properties in the correct unit.
+ *
+ * @param mapId - The map instance ID to update.
+ * @param unit - The distance unit symbol (e.g. 'km', 'mi'), or null to clear.
+ */
+export function setDrawDistanceUnit(
+  mapId: UniqueId,
+  unit: DistanceUnitSymbol | null,
+): void {
+  if (drawStore.exists(mapId) && drawStore.get(mapId).activeShapeType) {
+    drawStore.set(mapId, { distanceUnit: unit });
+  }
+}
+
 export function getDrawingState(mapId: UniqueId): DrawingState | null {
   if (!drawStore.exists(mapId)) {
     return null;
@@ -273,7 +326,43 @@ export function getDrawingState(mapId: UniqueId): DrawingState | null {
 }
 
 /**
- * Hook for drawing state
+ * React hook for accessing drawing state and actions.
+ *
+ * Provides access to the drawing store for a specific map instance, including
+ * the current state and draw/cancel actions. Uses `useSyncExternalStore` for
+ * concurrent-safe React subscriptions.
+ *
+ * ## Comparison with useDrawShape
+ * - `useDrawingState`: Low-level store access without event callbacks
+ * - `useDrawShape`: High-level API with onCreate/onCancel callbacks
+ *
+ * Use `useDrawingState` when you need direct store access without event handling.
+ * Use `useDrawShape` (recommended) for most drawing interactions.
+ *
+ * @param mapId - Unique identifier for the map instance
+ * @returns Object containing drawing state and actions (draw, cancel)
+ *
+ * @example
+ * ```tsx
+ * import { useDrawingState } from '@accelint/map-toolkit/deckgl/shapes';
+ * import { ShapeFeatureType } from '@accelint/map-toolkit/deckgl/shapes/shared/types';
+ *
+ * function DrawingStatus({ mapId }: { mapId: UniqueId }) {
+ *   const { state, draw, cancel } = useDrawingState(mapId);
+ *
+ *   return (
+ *     <div>
+ *       <p>Status: {state.activeShapeType ?? 'Not drawing'}</p>
+ *       <button onClick={() => draw(ShapeFeatureType.Polygon)}>
+ *         Start Drawing
+ *       </button>
+ *       {state.activeShapeType && (
+ *         <button onClick={cancel}>Cancel</button>
+ *       )}
+ *     </div>
+ *   );
+ * }
+ * ```
  */
 export function useDrawingState(
   mapId: UniqueId,
@@ -282,14 +371,69 @@ export function useDrawingState(
 }
 
 /**
- * Manually clear drawing state for a specific mapId.
+ * Manually clear the drawing state for a specific map instance.
+ *
+ * Removes the drawing store instance for the given map ID, canceling any
+ * active drawing operation and releasing mode/cursor ownership. This is
+ * typically called automatically during cleanup, but can be used manually
+ * when needed.
+ *
+ * ## When to Use
+ * - Cleanup after programmatically managing drawing state
+ * - Force-reset drawing state in error conditions
+ * - Testing and debugging
+ *
+ * ## Side Effects
+ * - Cancels active drawing (if any)
+ * - Releases map mode and cursor
+ * - Emits 'shapes:draw-canceled' event
+ * - Removes store instance from memory
+ *
+ * @param mapId - Unique identifier for the map instance
+ *
+ * @example
+ * ```typescript
+ * import { clearDrawingState } from '@accelint/map-toolkit/deckgl/shapes';
+ *
+ * // Clear drawing state when unmounting a map
+ * function cleanup(mapId: UniqueId) {
+ *   clearDrawingState(mapId);
+ * }
+ * ```
  */
 export function clearDrawingState(mapId: UniqueId): void {
   drawStore.clear(mapId);
 }
 
 /**
- * Complete drawing with a feature (called by the layer component)
+ * Complete the drawing operation with a GeoJSON feature.
+ *
+ * Called internally by the DrawShapeLayer component when the user finishes
+ * drawing a shape. Converts the raw EditableGeoJsonLayer feature to a Shape
+ * object, resets drawing state, releases mode/cursor, and emits the drawn event.
+ *
+ * ## Internal API
+ * This function is exported for use by the DrawShapeLayer component and should
+ * not be called directly from application code. Use the `draw` action from
+ * `useDrawShape` or `useDrawingState` instead.
+ *
+ * @param mapId - Unique identifier for the map instance
+ * @param feature - The completed GeoJSON feature from EditableGeoJsonLayer
+ * @returns The newly created Shape object
+ * @throws Error if not currently drawing
+ *
+ * @example
+ * ```typescript
+ * // Internal usage in DrawShapeLayer
+ * const handleEdit = ({ updatedData, editType }: EditAction) => {
+ *   if (editType === 'addFeature') {
+ *     const feature = updatedData.features[updatedData.features.length - 1];
+ *     if (feature) {
+ *       completeDrawingFromLayer(mapId, feature);
+ *     }
+ *   }
+ * };
+ * ```
  */
 export function completeDrawingFromLayer(
   mapId: UniqueId,
@@ -308,7 +452,28 @@ export function completeDrawingFromLayer(
 }
 
 /**
- * Cancel drawing (called by the layer component)
+ * Cancel the current drawing operation from the layer.
+ *
+ * Called internally by the DrawShapeLayer component when the user presses ESC
+ * or the drawing is otherwise canceled. Resets drawing state, releases mode/cursor,
+ * and emits the canceled event.
+ *
+ * ## Internal API
+ * This function is exported for use by the DrawShapeLayer component and should
+ * not be called directly from application code. Use the `cancel` action from
+ * `useDrawShape` or `useDrawingState` instead.
+ *
+ * @param mapId - Unique identifier for the map instance
+ *
+ * @example
+ * ```typescript
+ * // Internal usage in DrawShapeLayer
+ * const handleEdit = ({ editType }: EditAction) => {
+ *   if (editType === 'cancelFeature') {
+ *     cancelDrawingFromLayer(mapId);
+ *   }
+ * };
+ * ```
  */
 export function cancelDrawingFromLayer(mapId: UniqueId): void {
   drawStore.actions(mapId).cancel();

@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -16,7 +16,18 @@ import type { KeyCombinationId } from '@/types/key-combination-id';
  * Converts an event to a standard key id.
  *
  * @internal
- * @param event Triggered event.
+ * @param event - Triggered event.
+ * @returns The standard key combination id.
+ *
+ * @example
+ * ```typescript
+ * import { eventToId } from '@/lib/event-to-id';
+ *
+ * window.addEventListener('keydown', (event) => {
+ *   const keyId = eventToId(event);
+ *   console.log(keyId); // e.g., "KeyA|no-alt|no-ctrl|meta|no-shift"
+ * });
+ * ```
  */
 export function eventToId(event: KeyboardEvent): KeyCombinationId {
   return [

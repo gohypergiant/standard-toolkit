@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -14,10 +14,21 @@
  * Determines if the given value is undefined or null.
  *
  * @param val - The value to check whether or not it is null or undefined.
+ * @returns True if the value is null or undefined, false otherwise.
  *
  * @example
- * if(isNothing(val)) {
+ * ```typescript
+ * import { isNothing } from '@accelint/predicates/is-nothing';
+ *
+ * if (isNothing(val)) {
  *   // error path...
  * }
+ *
+ * isNothing(null);      // true
+ * isNothing(undefined); // true
+ * isNothing(0);         // false
+ * isNothing('');        // false
+ * isNothing(false);     // false
+ * ```
  */
 export const isNothing = (val: unknown) => val == null;

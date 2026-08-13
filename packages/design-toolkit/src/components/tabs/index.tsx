@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -14,75 +14,58 @@
 
 import 'client-only';
 import { clsx } from '@accelint/design-foundation/lib/utils';
-import {
-  Tabs as AriaTabs,
-  composeRenderProps,
-  useContextProps,
-} from 'react-aria-components';
-import { TabsContext } from './context';
+import { composeRenderProps } from 'react-aria-components/composeRenderProps';
+import { useContextProps } from 'react-aria-components/slots';
+import { Tabs as AriaTabs } from 'react-aria-components/Tabs';
+import { TabStyleDefaults } from './constants';
+import { TabProvider, TabsContext } from './context';
 import styles from './styles.module.css';
 import type { TabsProps } from './types';
 
 /**
- * Tabs - A tab navigation component for organizing content into sections
+ * Tabs - Tab navigation for organizing content into multiple sections
  *
- * Provides accessible tab navigation with keyboard support and proper ARIA implementation.
- * Supports both horizontal and vertical orientations with icon and text variants.
- * Perfect for organizing related content into separate, focusable sections.
+ * Supports horizontal and vertical orientations with text or icon tabs.
+ *
+ * @param props - {@link TabsProps}
+ * @param props.ref - Ref to the tabs container element.
+ * @param props.children - TabList and TabPanel components.
+ * @param props.className - CSS class for the tabs container.
+ * @param props.align - Justification alignment passed down to Tab components. (only applicable when orientation is horizontal)
+ * @param props.flex - Boolean passed down to Tab components. (only applicable when orientation is horizontal)
+ * @returns The rendered Tabs component.
  *
  * @example
- * // Basic horizontal tabs
+ * ```tsx
  * <Tabs>
- *   <TabsList>
- *     <TabsListTab id="overview">Overview</TabsListTab>
- *     <TabsListTab id="details">Details</TabsListTab>
- *     <TabsListTab id="settings">Settings</TabsListTab>
- *   </TabsList>
- *   <TabsPanel id="overview">Overview content</TabsPanel>
- *   <TabsPanel id="details">Details content</TabsPanel>
- *   <TabsPanel id="settings">Settings content</TabsPanel>
+ *   <TabList>
+ *     <Tab id="overview">Overview</Tab>
+ *     <Tab id="settings">Settings</Tab>
+ *   </TabList>
+ *   <TabPanel id="overview">Overview content</TabPanel>
+ *   <TabPanel id="settings">Settings content</TabPanel>
  * </Tabs>
- *
- * @example
- * // Vertical tabs
- * <Tabs orientation="vertical">
- *   <TabsList>
- *     <TabsListTab id="profile">Profile</TabsListTab>
- *     <TabsListTab id="account">Account</TabsListTab>
- *   </TabsList>
- *   <TabsPanel id="profile">Profile settings</TabsPanel>
- *   <TabsPanel id="account">Account settings</TabsPanel>
- * </Tabs>
- *
- * @example
- * // Icon tabs
- * <Tabs>
- *   <TabsList variant="icons">
- *     <TabsListTab id="home">
- *       <Icon><Home /></Icon>
- *     </TabsListTab>
- *     <TabsListTab id="search">
- *       <Icon><Search /></Icon>
- *     </TabsListTab>
- *   </TabsList>
- *   <TabsPanel id="home">Home content</TabsPanel>
- *   <TabsPanel id="search">Search content</TabsPanel>
- * </Tabs>
+ * ```
  */
 export function Tabs({ ref, ...props }: TabsProps) {
   [props, ref] = useContextProps(props, ref ?? null, TabsContext);
 
-  const { children, className, ...rest } = props;
+  const { children, className, align, flex, ...rest } = {
+    ...TabStyleDefaults,
+    ...props,
+  };
 
   return (
-    <AriaTabs
-      {...rest}
-      ref={ref}
-      className={composeRenderProps(className, (className) =>
-        clsx('group/tabs', styles.tabs, className),
-      )}
-    >
-      {children}
-    </AriaTabs>
+    <TabProvider align={align} flex={flex}>
+      <AriaTabs
+        {...rest}
+        ref={ref}
+        className={composeRenderProps(className, (className) =>
+          clsx('group/tabs', styles.tabs, className),
+        )}
+      >
+        {children}
+      </AriaTabs>
+    </TabProvider>
   );
 }

@@ -1,0 +1,7 @@
+{
+  "title": "Degrees Decimal Minutes",
+  "pages": [
+    "formatter",
+    "parser"
+  ]
+}

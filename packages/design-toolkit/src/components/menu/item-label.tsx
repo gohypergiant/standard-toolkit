@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -14,9 +14,24 @@
 
 import 'client-only';
 import { clsx } from '@accelint/design-foundation/lib/utils';
-import { Text, type TextProps } from 'react-aria-components';
+import { Text, type TextProps } from 'react-aria-components/Text';
 import styles from './styles.module.css';
 
+/**
+ * MenuItemLabel - Primary text label for menu items
+ *
+ * Renders as a Text component with the 'label' slot.
+ *
+ * @example
+ * ```tsx
+ * <MenuItemLabel>Edit Document</MenuItemLabel>
+ * ```
+ *
+ * @param props - TextProps from react-aria-components.
+ * @param props.children - Label text content.
+ * @param props.className - Optional CSS class name.
+ * @returns The rendered MenuItemLabel component.
+ */
 export function MenuItemLabel({ children, className, ...rest }: TextProps) {
   return (
     <Text {...rest} slot='label' className={clsx(styles.label, className)}>

@@ -1,0 +1,176 @@
+---
+title: "Worker Predicates"
+description: Type guards for validating Worker and SharedWorker instances
+source: packages/predicates/src/is-worker/index.ts
+source_sha: f5624274cd5c4f7e2ff7e9ee0093a7f0a4d5b870
+doc_sha: c35673f0457a2957ba6f11f78aad0dbcbe396429
+deprecated: false
+updated: 2026-07-13
+---
+
+## Usage
+
+```typescript
+import { isWorker, isSharedWorker } from '@accelint/predicates/is-worker';
+
+const worker = new Worker(new URL('./worker.ts', import.meta.url));
+isWorker(worker);           // true
+isSharedWorker(worker);     // false
+
+const shared = new SharedWorker(new URL('./shared.ts', import.meta.url));
+isSharedWorker(shared);     // true
+isWorker(shared);           // false
+```
+
+## isWorker
+
+Determines if a value is a Worker instance.
+
+### Reference
+
+```typescript
+function isWorker(val: unknown): boolean
+```
+
+### Examples
+
+#### Example: Worker type validation
+
+```typescript
+import { isWorker } from '@accelint/predicates/is-worker';
+
+const worker = new Worker(new URL('./my-worker.ts', import.meta.url));
+
+if (isWorker(worker)) {
+  worker.postMessage({ type: 'start', data: [1, 2, 3] });
+}
+
+isWorker(worker);                          // true
+isWorker(new SharedWorker(new URL('./shared.ts', import.meta.url))); // false
+isWorker({});                              // false
+```
+
+#### Example: Validating worker pool
+
+```typescript
+import { isWorker } from '@accelint/predicates/is-worker';
+
+class WorkerPool {
+  private workers: Worker[] = [];
+  
+  addWorker(worker: unknown) {
+    if (!isWorker(worker)) {
+      throw new Error('Invalid worker instance');
+    }
+    this.workers.push(worker);
+  }
+}
+
+const pool = new WorkerPool();
+pool.addWorker(new Worker(new URL('./worker.ts', import.meta.url))); // OK
+pool.addWorker({}); // Error: Invalid worker instance
+```
+
+## isSharedWorker
+
+Determines if a value is a SharedWorker instance.
+
+### Reference
+
+```typescript
+function isSharedWorker(val: unknown): boolean
+```
+
+### Examples
+
+#### Example: SharedWorker type validation
+
+```typescript
+import { isSharedWorker } from '@accelint/predicates/is-worker';
+
+const sharedWorker = new SharedWorker(new URL('./shared.ts', import.meta.url));
+
+if (isSharedWorker(sharedWorker)) {
+  sharedWorker.port.postMessage({ type: 'connect' });
+}
+
+isSharedWorker(sharedWorker);               // true
+isSharedWorker(new Worker(new URL('./worker.ts', import.meta.url))); // false
+isSharedWorker({});                         // false
+```
+
+#### Example: Creating worker manager
+
+```typescript
+import { isWorker, isSharedWorker } from '@accelint/predicates/is-worker';
+
+type AnyWorker = Worker | SharedWorker;
+
+function postMessage(worker: AnyWorker, message: unknown) {
+  if (isWorker(worker)) {
+    worker.postMessage(message);
+  } else if (isSharedWorker(worker)) {
+    worker.port.postMessage(message);
+  } else {
+    throw new Error('Invalid worker type');
+  }
+}
+
+const worker = new Worker(new URL('./worker.ts', import.meta.url));
+const shared = new SharedWorker(new URL('./shared.ts', import.meta.url));
+
+postMessage(worker, { action: 'process' });  // Uses worker.postMessage
+postMessage(shared, { action: 'process' });  // Uses worker.port.postMessage
+```
+
+## Real-World Example: Worker factory
+
+```typescript
+import { isWorker, isSharedWorker } from '@accelint/predicates/is-worker';
+
+interface WorkerConfig {
+  type: 'worker' | 'shared';
+  script: string;
+}
+
+class WorkerFactory {
+  create(config: WorkerConfig): Worker | SharedWorker {
+    const url = new URL(config.script, import.meta.url);
+    
+    if (config.type === 'shared') {
+      return new SharedWorker(url);
+    }
+    
+    return new Worker(url);
+  }
+  
+  terminate(worker: Worker | SharedWorker) {
+    if (isWorker(worker)) {
+      worker.terminate();
+    } else if (isSharedWorker(worker)) {
+      worker.port.close();
+    }
+  }
+  
+  postMessage(worker: Worker | SharedWorker, message: unknown) {
+    if (isWorker(worker)) {
+      worker.postMessage(message);
+    } else if (isSharedWorker(worker)) {
+      worker.port.postMessage(message);
+    }
+  }
+}
+
+const factory = new WorkerFactory();
+const worker = factory.create({ type: 'worker', script: './worker.ts' });
+factory.postMessage(worker, { action: 'start' });
+factory.terminate(worker);
+```
+
+> **Good to know:** Workers and SharedWorkers have different message APIs. Workers use `postMessage()` directly, while SharedWorkers use `port.postMessage()`. Use these type guards to handle both cases correctly.
+
+## Related
+
+- [isString](../is-string/index.md) - Type guard for strings
+- [isNothing](../is-nothing/index.md) - Check for null or undefined
+- [isSomething](../is-something/index.md) - Check for defined values

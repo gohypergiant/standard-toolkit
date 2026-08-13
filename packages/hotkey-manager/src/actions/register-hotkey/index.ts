@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -11,7 +11,6 @@
  */
 
 import { castArray, uid } from 'radashi';
-import { useEffect } from 'react';
 import {
   FORCE_BOUND,
   HOTKEY_EXTRA_DEFAULTS,
@@ -20,18 +19,34 @@ import {
 import { keyToId } from '@/lib/key-to-id';
 import { hotkeyStore } from '@/stores/hotkey-store';
 import type { HotkeyConfig } from '@/types/hotkey-config';
-import type { HotkeyHook } from '@/types/hotkey-hook';
+import type { HotkeyManager } from '@/types/hotkey-manager';
 import type { HotkeyOptions } from '@/types/hotkey-options';
 import type { KeyCombination } from '@/types/key-combination';
 import type { NonEmptyArray } from '@/types/non-empty-array';
 
 /**
- * Registers a hotkey and returns a hook to activate and deactivate it.
+ * Registers a hotkey and returns a manager to activate and deactivate it.
  *
- * @param options The hotkey options.
- * @returns The hotkey hook.
+ * @param options - The hotkey options.
+ * @returns A framework-agnostic hotkey manager.
+ *
+ * @example
+ * ```typescript
+ * import { registerHotkey } from '@accelint/hotkey-manager';
+ *
+ * const manager = registerHotkey({
+ *   key: { code: 'KeyS', meta: true },
+ *   onKeyDown: () => console.log('Save triggered'),
+ * });
+ *
+ * // Bind the hotkey
+ * const unbind = manager.bind();
+ *
+ * // Later, unbind the hotkey
+ * unbind();
+ * ```
  */
-export function registerHotkey(options: HotkeyOptions) {
+export function registerHotkey(options: HotkeyOptions): HotkeyManager {
   const config = {
     ...HOTKEY_EXTRA_DEFAULTS,
     ...options,
@@ -68,31 +83,18 @@ export function registerHotkey(options: HotkeyOptions) {
     hotkeyStore.getState().deactivateHotkey(config.id, activationSymbol);
   };
 
-  const isActive = () =>
-    !!hotkeyStore.getState().hotkeyActivations.get(config.id);
-
-  const useHotkey = () => useEffect(() => activate(), []);
-
-  Object.defineProperties(useHotkey, {
-    id: {
-      get: () => config.id,
-      enumerable: true,
+  return {
+    get id() {
+      return config.id;
     },
-    config: {
-      get: () => config,
-      enumerable: true,
+    get config() {
+      return config;
     },
-    forceBind: {
-      value: () => activate(true),
+    bind: () => activate(false),
+    forceBind: () => activate(true),
+    forceUnbind: () => deactivate(FORCE_BOUND),
+    get isBound() {
+      return !!hotkeyStore.getState().hotkeyActivations.get(config.id);
     },
-    forceUnbind: {
-      value: () => deactivate(FORCE_BOUND),
-    },
-    isBound: {
-      get: isActive,
-      enumerable: true,
-    },
-  });
-
-  return useHotkey as HotkeyHook;
+  };
 }

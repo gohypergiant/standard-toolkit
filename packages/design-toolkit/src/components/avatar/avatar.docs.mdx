@@ -26,30 +26,32 @@ It is composed of the following components:
 <Canvas of={AvatarStories.Default} />
 
 ### With Badge
+Badges are automatically positioned in the top-right corner.
 ```tsx
-// Avatar with badge content
 <Avatar
   imageProps={{
     alt: "User with notification",
     src: "https://example.com/avatar.jpg"
   }}
 >
-  <Badge variant="critical">99+</Badge>
+  <Badge color="critical">99+</Badge>
 </Avatar>
 ```
 <Canvas of={AvatarStories.WithBadge} />
 
 ### With Fallback
+When the image fails to load, the fallback content displays. If no `fallbackProps.children` is provided, a default Person icon is shown.
 ```tsx
-// Avatar with icon fallback
+// Custom icon fallback
 <Avatar
-  imageProps={{
-    alt: "User icon",
-    src: "http://broken-url.com/avatar.jpg"
-  }}
-  fallbackProps={{
-    children: <Icon><Person /></Icon>
-  }}
+  imageProps={{ alt: "User", src: "http://broken-url.com" }}
+  fallbackProps={{ children: <Icon><Placeholder /></Icon> }}
+/>
+
+// Initials fallback
+<Avatar
+  imageProps={{ alt: "User", src: "http://broken-url.com" }}
+  fallbackProps={{ children: "DS" }}
 />
 ```
 <Canvas of={AvatarStories.WithFallback} />
@@ -61,45 +63,59 @@ It is composed of the following components:
 The size can be controlled via the `size` prop or set globally using the `AvatarProvider` component.
 
 ## Props
-All components and subcomponents accept either a `className` or a `classNames` prop that allow for custom style overrides. The `className` prop takes a string and `classNames` takes an object when there are multiple targets.
+Extends all standard HTML `span` attributes.
 
-* **`imageProps`** - Props passed to the image element:
-  * `src` - Image source URL
-  * `alt` - Alternative text for accessibility
-  * `onLoad` - Image load event handler
-  * `onError` - Image error event handler
-* **`fallbackProps`** - Props passed to the fallback element:
-  * `children` - Fallback content (typically initials or icon)
-  * `onClick` - Click event handler
-  * `onKeyDown` - Keyboard event handler
-* **`classNames`** - Custom class names for styling:
-  * `avatar` - Applied to the avatar container
-  * `image` - Applied to the image element
-  * `fallback` - Applied to the fallback element
-  * `content` - Applied to the content overlay (badges, status indicators)
-* **`children`** - Content to display over the avatar (typically badges, status indicators, or custom content)
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `size` | `'medium' \| 'small'` | `'medium'` | Avatar size |
+| `imageProps` | `object` | - | Props for the image element (see below) |
+| `fallbackProps` | `object` | - | Props for the fallback element (see below) |
+| `classNames` | `object` | - | Custom class names (see below) |
+| `children` | `ReactNode` | - | Overlay content (badges, status indicators) |
 
-The component accepts all standard HTML span attributes and forwards them to the underlying element.
+**imageProps:**
+| Prop | Type | Description |
+|------|------|-------------|
+| `src` | `string` | Image source URL |
+| `alt` | `string` | Alternative text for accessibility |
+| `onLoad` | `() => void` | Called when image loads |
+| `onError` | `() => void` | Called when image fails to load |
+
+**fallbackProps:**
+| Prop | Type | Description |
+|------|------|-------------|
+| `children` | `ReactNode` | Fallback content (initials, icon). Defaults to Person icon |
+
+**classNames:**
+| Key | Description |
+|-----|-------------|
+| `avatar` | Applied to the avatar container |
+| `image` | Applied to the image element |
+| `fallback` | Applied to the fallback element |
+| `content` | Applied to the content overlay |
 
 ### AvatarProvider
-Context provider component that allows setting default props for multiple Avatar components. Useful for maintaining consistent sizing across a group of avatars.
+Context provider for setting default props across multiple avatars.
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `size` | `'medium' \| 'small'` | - | Size applied to all child Avatars |
+| `children` | `ReactNode` | - | Avatar components |
 
 ```tsx
-// Using context provider for default props
 <AvatarProvider size="small">
   <Avatar imageProps={{ alt: "User 1", src: "avatar1.jpg" }} />
   <Avatar imageProps={{ alt: "User 2", src: "avatar2.jpg" }} />
 </AvatarProvider>
 ```
 
-### Avatar
-The main avatar component that renders the profile picture, fallback, and optional overlay content.
-
 ## Implementation Notes
-The `Avatar` component wraps the `Avatar`, `Image`, and `Fallback` components from `@radix-ui/react-avatar`.
+- Wraps `@radix-ui/react-avatar` (Root, Image, Fallback)
+- Uses CSS Grid for positioning image, fallback, and content overlay
+- Fallback displays automatically when image fails to load
+- Default fallback is a Person icon when no `fallbackProps.children` provided
+- Badge children are automatically positioned top-right via BadgeProvider
 
-[Docs](https://www.radix-ui.com/primitives/docs/components/avatar)
-
-[Github Source](https://github.com/gohypergiant/standard-toolkit/tree/main/packages/design-toolkit/src/components/avatar)
-
-The avatar uses CSS Grid for precise positioning of the image, fallback, and content overlay. The fallback automatically displays when an image fails to load, and the component integrates seamlessly with the Badge component for status indicators and notifications.
+**Related:**
+- [Radix Avatar Docs](https://www.radix-ui.com/primitives/docs/components/avatar)
+- [Github Source](https://github.com/gohypergiant/standard-toolkit/tree/main/packages/design-toolkit/src/components/avatar)

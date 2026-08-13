@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -15,6 +15,7 @@
  *
  * @param a - The first value to compare.
  * @param b - The second value to compare.
+ * @returns true if both values are strictly equal, false otherwise.
  *
  * @see https://en.wikipedia.org/wiki/Logical_equality
  *
@@ -24,8 +25,10 @@
  * pure function
  *
  * @example
+ * ```typescript
  * equality(4)(8);
  * // false
+ * ```
  */
 export const equality = (a: unknown) => (b: unknown) => a === b;
 
@@ -36,6 +39,7 @@ export const equality = (a: unknown) => (b: unknown) => a === b;
  * @param a - The first function to compare the return of.
  * @param b - The second function to compare the return of.
  * @param c - The value to pass to both `a` and `b`.
+ * @returns true if both function results are strictly equal, false otherwise.
  *
  * @see https://en.wikipedia.org/wiki/Logical_equality
  *
@@ -45,8 +49,10 @@ export const equality = (a: unknown) => (b: unknown) => a === b;
  * pure function
  *
  * @example
+ * ```typescript
  * equalityFn(x => x % 2)(x => x % 3)(6);
  * // true
+ * ```
  */
 export const equalityFn =
   <T>(a: (x: T) => unknown) =>

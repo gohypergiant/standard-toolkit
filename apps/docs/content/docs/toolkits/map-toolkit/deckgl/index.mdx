@@ -1,0 +1,205 @@
+---
+title: "DeckGL"
+description: Deck.gl integration components, layers, extensions, and widgets for geospatial visualization.
+source: packages/map-toolkit/src/deckgl/index.ts
+source_sha: 36799d731b35c7371f59f7a788b19d495bea3cfe
+doc_sha: 7d744d8e10a30e542d5d95e76cb28df99370e5c6
+deprecated: false
+updated: 2026-07-14
+---
+
+## Installation
+
+```bash
+pnpm add @accelint/map-toolkit
+```
+
+## Usage
+
+```typescript
+// Import base map
+import { BaseMap } from '@accelint/map-toolkit/deckgl';
+
+// Import layers
+import { DisplayShapeLayer, SymbolLayer } from '@accelint/map-toolkit/deckgl';
+
+// Import extensions
+import { CoffinCornerExtension } from '@accelint/map-toolkit/deckgl';
+
+// Import widgets
+import { HtmlOverlayWidget, useHtmlOverlay } from '@accelint/map-toolkit/deckgl';
+
+// Import utilities
+import { createSavedViewport } from '@accelint/map-toolkit/deckgl';
+```
+
+## Available Exports
+
+### Components
+
+| Export | Description |
+|--------|-------------|
+| [BaseMap](./base-map.mdx) | Deck.gl-powered base map with MapLibre GL integration |
+
+### Layers
+
+| Export | Description |
+|--------|-------------|
+| [DisplayShapeLayer](./shapes/display-shape-layer.mdx) | Display shapes (circles, ellipses, polygons) with custom styling |
+| [SymbolLayer](./symbol-layer.mdx) | Display military symbols using MIL-STD-2525 iconography |
+
+### Extensions
+
+| Export Path | Description |
+|-------------|-------------|
+| [extensions](./extensions/index.mdx) | Deck.gl layer extensions |
+| [extensions/coffin-corner](./extensions/coffin-corner.mdx) | Extension for handling entity positioning at map boundaries |
+
+### Grid Layers
+
+| Export Path | Description |
+|-------------|-------------|
+| [grid-layers](./grid-layers/index.mdx) | Military grid reference system layers |
+| [grid-layers/gars](./grid-layers/gars.mdx) | Global Area Reference System (GARS) grid layer |
+| [grid-layers/mgrs](./grid-layers/mgrs.mdx) | Military Grid Reference System (MGRS) grid layer |
+
+### Shapes
+
+| Export Path | Description |
+|-------------|-------------|
+| [shapes](./shapes/index.mdx) | Shape drawing and editing system |
+| [shapes/display-shape-layer](./shapes/display-shape-layer.mdx) | Display shapes with styling |
+| [shapes/draw-shape-layer](./shapes/draw-shape-layer.mdx) | Interactive shape drawing |
+| [shapes/edit-shape-layer](./shapes/edit-shape-layer.mdx) | Edit existing shapes |
+
+### Widgets
+
+| Export Path | Description |
+|-------------|-------------|
+| [widgets](./widgets/index.mdx) | HTML overlay widgets |
+| [widgets/html-overlay](./widgets/html-overlay.mdx) | Position HTML elements relative to map coordinates |
+
+### Utilities
+
+| Export | Description |
+|--------|-------------|
+| [saved-viewports](./saved-viewports.mdx) | Save and restore map viewports with hotkeys |
+
+### Events
+
+| Export | Description |
+|--------|-------------|
+| `MapEvents` | Event constants for map interactions |
+| `MapEventsNamespace` | Type-safe event namespace |
+| `ShapeEvents` | Event constants for shape interactions |
+
+### Constants
+
+| Export | Description |
+|--------|-------------|
+| `DARK_BASE_MAP_STYLE` | Dark mode MapLibre style URL |
+| `LIGHT_BASE_MAP_STYLE` | Light mode MapLibre style URL |
+| `PARAMETERS` | Default Deck.gl parameters |
+| `DASH_ARRAYS` | Predefined dash patterns for lines |
+| `DEFAULT_COLORS` | Default color palette for shapes |
+| `DEFAULT_STYLE_PROPERTIES` | Default style properties for shapes |
+| `LINE_PATTERNS` | Line pattern constants |
+| `LINE_WIDTHS` | Standard line width values |
+| `SHAPE_LAYER_IDS` | Layer ID constants for shape layers |
+
+## Quick Start
+
+### Basic Map with Symbol Layer
+
+```tsx
+import { BaseMap, SymbolLayer } from '@accelint/map-toolkit/deckgl';
+import { uuid } from '@accelint/core';
+
+const MAP_ID = uuid();
+
+const data = [
+  {
+    id: '1',
+    sidc: 'SFGPUCI----E---',
+    position: [-122.4, 37.8],
+    size: 32,
+  },
+];
+
+export function MapWithSymbols() {
+  return (
+    <BaseMap id={MAP_ID} className="w-full h-full">
+      <SymbolLayer id="symbols" data={data} />
+    </BaseMap>
+  );
+}
+```
+
+### Drawing Shapes
+
+```tsx
+import { BaseMap } from '@accelint/map-toolkit/deckgl';
+import { DrawShapeLayer } from '@accelint/map-toolkit/deckgl/shapes';
+import { useDrawShape } from '@accelint/map-toolkit/deckgl/shapes/draw-shape-layer';
+import { uuid } from '@accelint/core';
+
+const MAP_ID = uuid();
+
+export function DrawingMap() {
+  const { mode, setMode, shapes } = useDrawShape(MAP_ID);
+  
+  return (
+    <div className="relative w-full h-full">
+      <BaseMap id={MAP_ID} className="w-full h-full">
+        <DrawShapeLayer id="drawing" mode={mode} />
+      </BaseMap>
+      
+      <div className="absolute top-4 right-4 flex gap-2">
+        <button onClick={() => setMode('drawPolygon')}>Draw Polygon</button>
+        <button onClick={() => setMode('drawCircle')}>Draw Circle</button>
+        <button onClick={() => setMode('select')}>Select</button>
+      </div>
+    </div>
+  );
+}
+```
+
+### HTML Overlay
+
+```tsx
+import { BaseMap, HtmlOverlayWidget, HtmlOverlayItem } from '@accelint/map-toolkit/deckgl';
+import { uuid } from '@accelint/core';
+
+const MAP_ID = uuid();
+
+const markers = [
+  { id: '1', position: [-122.4, 37.8], label: 'San Francisco' },
+  { id: '2', position: [-118.2, 34.0], label: 'Los Angeles' },
+];
+
+export function MapWithOverlay() {
+  return (
+    <BaseMap id={MAP_ID} className="w-full h-full">
+      <HtmlOverlayWidget>
+        {markers.map(marker => (
+          <HtmlOverlayItem
+            key={marker.id}
+            coordinates={marker.position}
+          >
+            <div className="bg-white px-2 py-1 rounded shadow">
+              {marker.label}
+            </div>
+          </HtmlOverlayItem>
+        ))}
+      </HtmlOverlayWidget>
+    </BaseMap>
+  );
+}
+```
+
+## Related
+
+- [camera](../camera.mdx) - Camera state management
+- [map-mode](../map-mode.mdx) - Map interaction mode management
+- [viewport](../viewport.mdx) - Viewport state management
+- [Deck.gl Documentation](https://deck.gl) - Official Deck.gl docs

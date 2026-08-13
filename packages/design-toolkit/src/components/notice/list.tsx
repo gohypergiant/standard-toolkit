@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -14,24 +14,24 @@
 
 import { useBus } from '@accelint/bus/react';
 import { uuid } from '@accelint/core';
-import { useToastRegion } from '@react-aria/toast';
-import { useToastQueue } from '@react-stately/toast';
+import { useToastRegion } from 'react-aria/useToast';
+import { useToastQueue } from 'react-stately/useToastState';
 import 'client-only';
 import { clsx } from '@accelint/design-foundation/lib/utils';
 import { useEffect, useMemo, useRef, useState } from 'react';
+import { flushSync } from 'react-dom';
 import {
-  composeRenderProps,
   type QueuedToast,
   UNSTABLE_ToastList as ToastList,
   UNSTABLE_ToastQueue as ToastQueue,
   UNSTABLE_ToastRegion as ToastRegion,
   UNSTABLE_ToastStateContext as ToastStateContext,
-} from 'react-aria-components';
+} from 'react-aria-components/Toast';
 import { Button } from '../button';
 import { Notice } from './';
 import { NoticeEventTypes } from './events';
 import styles from './styles.module.css';
-import { matchesMetadata } from './utils';
+import { matchesDequeueFilter } from './utils';
 import type {
   NoticeActionEvent,
   NoticeContent,
@@ -39,7 +39,36 @@ import type {
   NoticeListProps,
   NoticeQueueEvent,
 } from './types';
+import { composeRenderProps } from 'react-aria-components/composeRenderProps';
 
+/**
+ * NoticeList - Queue manager for displaying multiple notices
+ *
+ * Manages a FIFO queue of notices with automatic timeout and dismissal.
+ * New notices push out older ones when the limit is reached.
+ * Uses event-driven communication via the bus system.
+ *
+ * @example
+ * ```tsx
+ * <NoticeList
+ *   aria-label="notifications"
+ *   placement="top right"
+ *   limit={3}
+ * />
+ * ```
+ *
+ * @param props - {@link NoticeListProps}
+ * @param props.id - Unique identifier for targeting notices to this list.
+ * @param props.classNames - CSS class names for list elements.
+ * @param props.defaultColor - Default color for notices without explicit color.
+ * @param props.defaultTimeout - Default timeout for notices without explicit timeout.
+ * @param props.hideClearAll - Whether to hide the "Clear All" button.
+ * @param props.limit - Maximum number of visible notices.
+ * @param props.global - Whether to use global ToastRegion for portal rendering.
+ * @param props.placement - Position of the notice list on screen.
+ * @param props.size - Size variant for notices in the list.
+ * @returns The rendered NoticeList component.
+ */
 export function NoticeList({
   id,
   classNames,
@@ -53,7 +82,19 @@ export function NoticeList({
   ...rest
 }: NoticeListProps) {
   const queue = useMemo(
-    () => new ToastQueue<NoticeContent>({ maxVisibleToasts: limit }),
+    () =>
+      new ToastQueue<NoticeContent>({
+        maxVisibleToasts: limit,
+        wrapUpdate(fn) {
+          if ('startViewTransition' in document) {
+            document.startViewTransition(() => {
+              flushSync(fn);
+            });
+          } else {
+            fn();
+          }
+        },
+      }),
     [limit],
   );
   const state = useToastQueue(queue);
@@ -70,13 +111,13 @@ export function NoticeList({
   const emitClose = useEmit(NoticeEventTypes.close);
 
   useOn(NoticeEventTypes.queue, (data) => {
-    if ((id && data.payload.target === id) || !id) {
-      const timeout = defaultTimeout ?? data.payload.timeout;
+    if (id ? data.payload.target === id : !data.payload.target) {
+      const timeout = data.payload.timeout ?? defaultTimeout;
       queue.add(
         {
           ...data.payload,
           id: data.payload.id || uuid(),
-          color: defaultColor || data.payload.color,
+          color: data.payload.color || defaultColor,
         },
         {
           timeout,
@@ -93,7 +134,7 @@ export function NoticeList({
     const queuedNotices = queue.queue;
 
     const dequeue = queuedNotices.filter((toast: QueuedToast<NoticeContent>) =>
-      matchesMetadata(data.payload, toast.content),
+      matchesDequeueFilter(data.payload, toast.content),
     );
 
     if (dequeue.length && dequeue.length === queuedNotices.length) {
@@ -105,11 +146,13 @@ export function NoticeList({
     }
   });
 
-  useEffect(() => {
-    queue.subscribe(() => {
-      setHasNotices(queue.visibleToasts.length > 0);
-    });
-  });
+  useEffect(
+    () =>
+      queue.subscribe(() => {
+        setHasNotices(queue.visibleToasts.length > 0);
+      }),
+    [queue],
+  );
 
   const children = (
     <>
@@ -120,7 +163,7 @@ export function NoticeList({
             (className) => className ?? '',
           )}
           variant='outline'
-          onPress={queue.clear}
+          onPress={() => queue.clear()}
         >
           Clear All
         </Button>
@@ -143,14 +186,25 @@ export function NoticeList({
             }
             classNames={classNames?.notice}
             size={size}
-            onPrimaryAction={() => emitActionPrimary({ id: toast.content.id })}
+            onPrimaryAction={() =>
+              emitActionPrimary({
+                id: toast.content.id,
+                metadata: toast.content.metadata,
+              })
+            }
             onSecondaryAction={() =>
-              emitActionSecondary({ id: toast.content.id })
+              emitActionSecondary({
+                id: toast.content.id,
+                metadata: toast.content.metadata,
+              })
             }
             onClose={() => {
               toast.onClose?.();
               queue.close(toast.key);
-              emitClose({ id: toast.content.id });
+              emitClose({
+                id: toast.content.id,
+                metadata: toast.content.metadata,
+              });
             }}
           />
         )}

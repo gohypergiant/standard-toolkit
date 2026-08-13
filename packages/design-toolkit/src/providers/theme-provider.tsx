@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -24,14 +24,15 @@ import {
   useState,
 } from 'react';
 import type {
+  DomainColorTokens,
   SemanticColorTokens,
-  StaticColorTokens,
   ThemeTokens,
 } from '@accelint/design-foundation/tokens/types';
 import type { PartialDeep } from 'type-fest';
 
+/** Theme mode for light or dark appearance */
 export type ThemeMode = 'dark' | 'light';
-type ContextColorTokens = SemanticColorTokens & StaticColorTokens;
+type ContextColorTokens = SemanticColorTokens & DomainColorTokens;
 
 type ThemeContextValue = {
   mode: ThemeMode;
@@ -41,7 +42,7 @@ type ThemeContextValue = {
 /** provide default context value to avoid optional chaining and null checks on the client */
 const defaultContextValue: ThemeContextValue = {
   mode: 'dark',
-  tokens: { ...designTokens.dark, ...designTokens.static },
+  tokens: { ...designTokens.dark, ...designTokens.domain },
   toggleMode: (_mode) => {
     // no-op
   },
@@ -55,6 +56,16 @@ type ThemeProviderProps = PropsWithChildren & {
   overrides?: PartialDeep<ThemeTokens>;
 };
 
+/**
+ * Provides theme context with mode toggling and token overrides
+ *
+ * @param props - {@link ThemeProviderProps}
+ * @param props.children - Content to render within the theme context.
+ * @param props.defaultMode - Initial theme mode (defaults to 'dark').
+ * @param props.onChange - Callback when theme mode changes.
+ * @param props.overrides - Partial overrides for theme tokens.
+ * @returns The theme provider wrapping children.
+ */
 export function ThemeProvider({
   children,
   defaultMode,
@@ -64,18 +75,17 @@ export function ThemeProvider({
   const [mode, setMode] = useState<ThemeMode>(defaultMode ?? 'dark');
 
   useEffect(() => {
-    if (document) {
-      const { documentElement } = document;
-      documentElement.classList.remove('dark', 'light');
-      documentElement.classList.add(mode);
-    }
+    const { documentElement } = document;
+    documentElement.style.colorScheme = mode;
+    documentElement.classList.remove('dark', 'light');
+    documentElement.classList.add(mode);
   }, [mode]);
 
   const tokens: ContextColorTokens = useMemo(() => {
     const tokensWithOverrides = assign(designTokens, overrides as ThemeTokens);
     return {
       ...tokensWithOverrides[mode],
-      ...tokensWithOverrides.static,
+      ...tokensWithOverrides.domain,
     };
   }, [mode, overrides]);
 
@@ -95,6 +105,11 @@ export function ThemeProvider({
   );
 }
 
+/**
+ * Access the current theme context
+ *
+ * @returns Theme context with mode, tokens, and toggleMode function.
+ */
 export function useTheme() {
   return useContext(ThemeContext);
 }

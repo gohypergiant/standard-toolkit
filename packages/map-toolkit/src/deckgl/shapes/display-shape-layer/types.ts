@@ -10,15 +10,98 @@
  * governing permissions and limitations under the License.
  */
 
+import type { DistanceUnitSymbol } from '@accelint/constants/units';
 import type { UniqueId } from '@accelint/core';
+import type { Rgba255Tuple } from '@accelint/predicates';
 import type { CompositeLayerProps } from '@deck.gl/core';
-import type {
-  Shape,
-  ShapeId,
-  StyledFeature as SharedStyledFeature,
-} from '../shared/types';
+import type { Shape, ShapeFeature, ShapeId } from '../shared/types';
 import type { LabelPositionOptions } from './utils/labels';
 
+// internal
+/**
+ * A vertical curtain polygon feature for elevation visualization.
+ * Used to render filled vertical surfaces from ground to elevation for LineStrings.
+ */
+export type CurtainFeature = {
+  type: 'Feature';
+  geometry: {
+    type: 'Polygon';
+    coordinates: number[][][];
+  };
+  properties: {
+    fillColor: Rgba255Tuple;
+    lineColor: Rgba255Tuple;
+    shapeId?: ShapeId;
+  };
+};
+
+/** A vertical line segment from ground to an elevated position. */
+export type LineSegment = {
+  source: [number, number, number];
+  target: [number, number, number];
+  color: Rgba255Tuple;
+};
+
+/**
+ * Result of classifying features by geometry type and elevation.
+ */
+export type ElevatedFeatureClassification = {
+  lines: Shape['feature'][];
+  polygons: Shape['feature'][];
+  nonPolygons: Shape['feature'][];
+};
+
+/**
+ * State type for DisplayShapeLayer
+ */
+export type DisplayShapeLayerState = {
+  /** Index of currently hovered shape, undefined when not hovering */
+  hoverIndex?: number;
+  /** ID of the last hovered shape for event deduplication */
+  lastHoveredId?: ShapeId;
+  /** Allow additional properties from base layer state */
+  [key: string]: unknown;
+};
+
+/**
+ * Cache for transformed features to avoid recreating objects on every render.
+ */
+export type FeaturesCache = {
+  /** Reference to the original data array for identity comparison */
+  data: Shape[];
+  /** Transformed features with shapeId added to properties */
+  features: Shape['feature'][];
+  /** Map of shapeId to feature index for O(1) lookup */
+  shapeIdToIndex: Map<ShapeId, number>;
+  /** Pre-normalized line colors parallel to features, for O(1) accessor lookup */
+  normalizedLineColors: Rgba255Tuple[];
+};
+
+/**
+ * Cache for elevation-derived data (feature classification + curtain features).
+ * Keyed on features identity and applyBaseOpacity to avoid per-frame recomputation.
+ * deck.gl calls renderLayers() every frame during map interaction; without this cache,
+ * curtain polygon arrays are recreated every frame, forcing deck.gl GPU buffer rebuilds.
+ */
+export type ElevationCache = {
+  features: Shape['feature'][];
+  applyBaseOpacity: boolean | undefined;
+  classification: ElevatedFeatureClassification;
+  curtainFeatures: CurtainFeature[];
+};
+
+/**
+ * Cache for elevation indicator line segments.
+ * Keyed on features, selectedShapeId, and hoverIndex since all three affect output.
+ */
+export type IndicatorCache = {
+  features: Shape['feature'][];
+  selectedShapeId: ShapeId | undefined;
+  hoverIndex: number | undefined;
+  lineData: LineSegment[];
+};
+
+// external
 /**
  * Label display mode for shapes
  * - `'always'`: Show labels for all shapes
@@ -26,16 +109,6 @@ import type { LabelPositionOptions } from './utils/labels';
  * - `'never'`: Never show labels
  */
 export type ShowLabelsMode = 'always' | 'hover' | 'never';
-
-/**
- * Re-export StyledFeature from shared types
- */
-export type StyledFeature = SharedStyledFeature;
-
-/**
- * Re-export StyledFeatureProperties from shared types
- */
-export type StyledFeatureProperties = SharedStyledFeature['properties'];
 
 /**
  * Props for DisplayShapeLayer
@@ -50,7 +123,7 @@ export type StyledFeatureProperties = SharedStyledFeature['properties'];
  * };
  * ```
  */
-export interface DisplayShapeLayerProps extends CompositeLayerProps {
+export type DisplayShapeLayerProps = CompositeLayerProps & {
   /** Unique layer ID - required for deck.gl layer management */
   id: string;
 
@@ -68,8 +141,8 @@ export interface DisplayShapeLayerProps extends CompositeLayerProps {
   data: Shape[];
 
   /**
-   * Currently selected shape ID (for highlighting)
-   * When set, renders a highlight layer around the selected shape
+   * Currently selected shape ID.
+   * When set, renders a brightness overlay for polygon shapes.
    */
   selectedShapeId?: ShapeId;
 
@@ -82,10 +155,46 @@ export interface DisplayShapeLayerProps extends CompositeLayerProps {
 
   /**
    * Callback when a shape is hovered
-   * Called with null when hover ends
-   * @param shape - The hovered shape, or null when hover ends
+   * Called with no argument when hover ends
+   * @param shape - The hovered shape, or undefined when hover ends
    */
-  onShapeHover?: (shape: Shape | null) => void;
+  onShapeHover?: (shape?: Shape) => void;
+
+  /**
+   * Custom fill color for the hovered shape, returned verbatim (the user owns
+   * alpha — no overlay-opacity scaling is applied). When set, replaces the
+   * default brightening on:
+   * - The main layer's fill for polygons (Polygon, Rectangle, Circle, Ellipse,
+   *   WagonWheel) and unstyled Point shapes.
+   * - The curtain wall fill for elevated LineStrings.
+   *
+   * No effect on icon-rendered Points (driven by the icon atlas) or on
+   * non-elevated LineStrings (which have no fill or curtain to render).
+   * Border brightening and width changes from the default hover treatment
+   * still apply.
+   *
+   * When a shape is both hovered and selected and both overrides are set,
+   * `getHoverFillColor` wins.
+   *
+   * @param feature - The hovered shape feature
+   * @returns RGBA tuple (0-255 per channel) to use as the fill color
+   */
+  getHoverFillColor?: (feature: ShapeFeature) => Rgba255Tuple;
+
+  /**
+   * Custom fill color for the selected shape, returned verbatim. When set,
+   * replaces the default brightening on:
+   * - The main layer's fill for polygons (Polygon, Rectangle, Circle, Ellipse,
+   *   WagonWheel) and unstyled Point shapes.
+   * - The curtain wall fill for elevated LineStrings.
+   *
+   * The selection outline color is unaffected and is still driven by
+   * `highlightColor`.
+   *
+   * @param feature - The selected shape feature
+   * @returns RGBA tuple (0-255 per channel) to use as the fill color
+   */
+  getSelectFillColor?: (feature: ShapeFeature) => Rgba255Tuple;
 
   /**
    * Label display mode for shapes
@@ -122,18 +231,57 @@ export interface DisplayShapeLayerProps extends CompositeLayerProps {
    * highlightColor={[255, 0, 0, 128]} // Red at 50% opacity
    * ```
    */
-  highlightColor?: [number, number, number, number];
+  highlightColor?: Rgba255Tuple;
 
   /**
-   * When true (default), multiplies fill color alpha by 0.2 (reducing to 20% of original opacity)
-   * for a standard semi-transparent look.
-   * When false, colors are rendered exactly as specified in styleProperties.
+   * When true (default), the layer dims non-active polygon fills by multiplying
+   * their alpha by 0.2 (rendering at 20% of the original opacity). Hovered or
+   * selected features escape the dimming and render at the un-dimmed base color
+   * scaled by `ACTIVE_FILL_OPACITY` (0.5), so the active feature stands out
+   * clearly against its dimmed neighbors.
+   *
+   * When false, all features render at their original alpha and the only visual
+   * difference between active and inactive is the RGB brightening (1.4× / 1.7×).
+   * For shapes with already-saturated base colors, that difference can be
+   * subtle — keep this prop on if you want hover and select states to be
+   * unambiguous.
+   *
    * @default true
    * @example Standard semi-transparent fills
    * ```tsx
    * <DisplayShapeLayer data={shapes} applyBaseOpacity />
-   * // Shape with fillColor [98, 166, 255, 255] renders at alpha 51 (255 × 0.2)
+   * // Inactive shape with fillColor [98, 166, 255, 255] renders at alpha 51 (255 × 0.2)
+   * // Hovered shape renders with brightened RGB at alpha 128 (255 × 0.5)
    * ```
    */
   applyBaseOpacity?: boolean;
-}
+
+  /**
+   * Enable 3D elevation rendering features (extrusion, curtains, vertical indicators).
+   * When false, shapes render as flat 2D with standard styling.
+   * When true, enables:
+   * - Polygon extrusion based on elevation coordinates
+   * - Filled curtains for elevated LineStrings
+   * - Vertical indicator lines from ground to elevated points
+   *
+   * Typically controlled by camera view: enable in 2.5D/3D, disable in 2D.
+   * @default false
+   * @example Enable elevation in 2.5D/3D views
+   * ```tsx
+   * const { cameraState } = useMapCamera(mapId);
+   * <DisplayShapeLayer
+   *   data={shapes}
+   *   enableElevation={cameraState.view !== '2D'}
+   * />
+   * ```
+   */
+  enableElevation?: boolean;
+
+  /**
+   * Distance unit symbol for displaying measurements (e.g., radius on hover).
+   * If the shape's stored radius uses a different unit, the value is converted.
+   * Matches the `unit` prop on DrawShapeLayer and EditShapeLayer.
+   * @default 'NM'
+   */
+  unit?: DistanceUnitSymbol;
+};

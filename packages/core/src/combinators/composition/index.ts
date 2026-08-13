@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -19,6 +19,7 @@
  * @param f - The second function in the composition.
  * @param g - The first function in the composition.
  * @param x - The value to pass to `g`.
+ * @returns The result of f(g(x)).
  *
  * @remarks
  * B combinator
@@ -30,8 +31,10 @@
  * pure function
  *
  * @example
+ * ```typescript
  * composition((x) => x + 8)((x) => x * 3)(4);
  * // 20
+ * ```
  */
 export const composition =
   <A, B>(f: (z: A) => B) =>

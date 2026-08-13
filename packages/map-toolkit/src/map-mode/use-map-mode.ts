@@ -16,15 +16,19 @@ import { useContext, useMemo } from 'react';
 import { MapContext } from '../deckgl/base-map/provider';
 import { modeStore } from './store';
 import type { UniqueId } from '@accelint/core';
+import type { DefaultMode } from './store';
 
 /**
- * Return value for the useMapMode hook
+ * Return value for the useMapMode hook.
+ *
+ * @typeParam Mode - String union of mode names the caller intends to use. `'default'` is always included.
+ * @typeParam Owner - String union of owner ids the caller intends to use.
  */
-export type UseMapModeReturn = {
+export type UseMapModeReturn<Mode = string, Owner = string> = {
   /** The current active map mode */
-  mode: string;
+  mode: Mode;
   /** Function to request a mode change with ownership */
-  requestModeChange: (desiredMode: string, requestOwner: string) => void;
+  requestModeChange: (desiredMode: Mode, requestOwner: Owner) => void;
 };
 
 /**
@@ -34,6 +38,12 @@ export type UseMapModeReturn = {
  * providing concurrent-safe mode state updates. Uses a fan-out pattern where
  * a single bus listener per map instance notifies N React component subscribers.
  *
+ * @typeParam Mode - String union of mode names the caller intends to use. `'default'`
+ *   is always added to the returned `mode` type. The narrowing is advisory — the
+ *   underlying store accepts any string, so values arriving from other bus
+ *   participants are not validated against this union.
+ * @typeParam Owner - String union of owner ids the caller intends to use when
+ *   calling `requestModeChange`. Same advisory caveat as `Mode`.
  * @param id - Optional map instance ID. If not provided, will use the ID from `MapContext`.
  * @returns The current map mode and requestModeChange function
  * @throws Error if no `id` is provided and hook is used outside of `MapProvider`
@@ -64,8 +74,25 @@ export type UseMapModeReturn = {
  *   </button>;
  * }
  * ```
+ *
+ * @example
+ * ```tsx
+ * // Narrow mode and owner types at the call site
+ * type Mode = 'drawing' | 'measuring';
+ * type Owner = 'drawing-toolbar' | 'details-panel';
+ *
+ * function DrawingToolbar({ mapId }: { mapId: UniqueId }) {
+ *   const { mode, requestModeChange } = useMapMode<Mode, Owner>(mapId);
+ *   // mode: 'drawing' | 'measuring' | 'default'
+ *   // requestModeChange rejects strings outside the Mode / Owner unions
+ *   return <button onClick={() => requestModeChange('drawing', 'drawing-toolbar')}>Draw</button>;
+ * }
+ * ```
  */
-export function useMapMode(id?: UniqueId): UseMapModeReturn {
+export function useMapMode<
+  Mode extends string = string,
+  Owner extends string = string,
+>(id?: UniqueId): UseMapModeReturn<Mode | DefaultMode, Owner> {
   const contextId = useContext(MapContext);
   const actualId = id ?? contextId;
 
@@ -81,12 +108,14 @@ export function useMapMode(id?: UniqueId): UseMapModeReturn {
   // Get actions separately (stable reference)
   const { requestModeChange } = modeStore.actions(actualId);
 
-  // Memoize the return value to prevent unnecessary re-renders
+  // Generics are advisory: the store accepts any string, so these casts narrow
+  // the surface for callers but don't validate values arriving from the bus.
   return useMemo(
-    () => ({
-      mode,
-      requestModeChange,
-    }),
+    () =>
+      ({ mode, requestModeChange }) as UseMapModeReturn<
+        Mode | DefaultMode,
+        Owner
+      >,
     [mode, requestModeChange],
   );
 }

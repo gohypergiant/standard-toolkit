@@ -12,6 +12,8 @@
 
 'use client';
 
+import { Keycode } from '@accelint/hotkey-manager';
+import { ShapeFeatureType } from '../shared/types';
 import type { CSSCursorType } from '@/map-cursor/types';
 import type { EditMode } from './types';
 
@@ -38,7 +40,30 @@ export const EDIT_SHAPE_LAYER_ID = 'edit-shape-layer';
 export const EDIT_CURSOR_MAP: Record<EditMode, CSSCursorType> = {
   view: 'default',
   'bounding-transform': 'crosshair',
+  'rectangle-transform': 'crosshair',
+  'ellipse-transform': 'crosshair',
+  'locked-bounding-transform': 'crosshair',
   'vertex-transform': 'crosshair',
   'circle-transform': 'crosshair',
   translate: 'crosshair',
+  'point-translate': 'crosshair',
+};
+
+/**
+ * Defaults for EditShapeLayer hotkeys.
+ */
+export const DEFAULT_HOTKEY_CONFIG = {
+  panning: { code: Keycode.Space },
+};
+
+/**
+ * Maps shape types to the `properties.shape` value required by editable-layers modes.
+ * - ResizeCircleMode requires `shape: 'Circle'`
+ * - RectangleScaleMode (rectangle-transform) requires `shape: 'Rectangle'`
+ * - EllipseScaleMode (ellipse-transform) requires `shape: 'Ellipse'`
+ */
+export const SHAPE_PROPERTY_MAP: Partial<Record<ShapeFeatureType, string>> = {
+  [ShapeFeatureType.Circle]: 'Circle',
+  [ShapeFeatureType.Rectangle]: 'Rectangle',
+  [ShapeFeatureType.Ellipse]: 'Ellipse',
 };

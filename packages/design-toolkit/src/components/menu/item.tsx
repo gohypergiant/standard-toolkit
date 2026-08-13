@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -16,14 +16,11 @@ import ChevronRight from '@accelint/icons/chevron-right';
 import 'client-only';
 import { clsx } from '@accelint/design-foundation/lib/utils';
 import { useContext } from 'react';
-import {
-  MenuItem as AriaMenuItem,
-  composeRenderProps,
-  DEFAULT_SLOT,
-  KeyboardContext,
-  Provider,
-  Text,
-} from 'react-aria-components';
+import { MenuItem as AriaMenuItem } from 'react-aria-components/Menu';
+import { Text } from 'react-aria-components/Text';
+import { KeyboardContext } from 'react-aria-components/Keyboard';
+import { DEFAULT_SLOT, Provider } from 'react-aria-components/slots';
+import { composeRenderProps } from 'react-aria-components/composeRenderProps';
 import { isSlottedContextValue } from '../../lib/utils';
 import { Icon } from '../icon';
 import { IconContext } from '../icon/context';
@@ -31,6 +28,26 @@ import { MenuContext } from './context';
 import styles from './styles.module.css';
 import type { MenuItemProps } from './types';
 
+/**
+ * MenuItem - Individual selectable item within a Menu
+ *
+ * Supports labels, descriptions, icons, hotkeys, and submenu indicators.
+ * String children are automatically wrapped in a Text label slot.
+ *
+ * @example
+ * ```tsx
+ * <MenuItem>
+ *   <MenuItemLabel>Edit</MenuItemLabel>
+ *   <MenuItemDescription>Modify the item</MenuItemDescription>
+ * </MenuItem>
+ * ```
+ *
+ * @param props - {@link MenuItemProps}
+ * @param props.children - Content to render inside the menu item.
+ * @param props.classNames - CSS class names for menu item elements.
+ * @param props.color - Color variant for the menu item.
+ * @returns The rendered MenuItem component.
+ */
 export function MenuItem({
   children,
   classNames,

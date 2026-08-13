@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -17,6 +17,7 @@ import type {
   Header,
   HeaderGroup,
   Row,
+  RowData,
   RowSelectionState,
 } from '@tanstack/react-table';
 import type {
@@ -25,16 +26,17 @@ import type {
   PropsWithChildren,
   SetStateAction,
 } from 'react';
+import type { TableFeatures } from './features';
 
 type BaseTableProps = Omit<ComponentPropsWithRef<'table'>, 'children'>;
 
 type ExtendedTableProps<T extends { id: Key }> = {
   /**
-   * An array of column definitions, one for each key in `T`.
+   * An array of column definitions. Build them with
+   * `createTableColumnHelper<T>()`.
    */
-  columns: {
-    [K in keyof Required<T>]: ColumnDef<T, T[K]>;
-  }[keyof T][];
+  // biome-ignore lint/suspicious/noExplicitAny: mirrors TanStack's own ColumnHelper['columns'] typing — ColumnDef is invariant in TValue, and only `any` accepts column-helper output
+  columns: ColumnDef<TableFeatures, T, any>[];
   /**
    * An array of data objects of type `T`.
    * Each object must have a unique `id` property.
@@ -151,6 +153,27 @@ type ExtendedTableProps<T extends { id: Key }> = {
    * @default false
    */
   fullWidth?: boolean;
+
+  /**
+   * Number of rows per page. Enables built-in pagination when set.
+   */
+  pageSize?: number;
+
+  /**
+   * Controlled current page (1-indexed).
+   */
+  page?: number;
+
+  /**
+   * Uncontrolled default page (1-indexed).
+   * @default 1
+   */
+  defaultPage?: number;
+
+  /**
+   * Callback when the page changes.
+   */
+  onPageChange?: (page: number) => void;
 };
 
 /**
@@ -194,9 +217,10 @@ export type TableProps<T extends { id: Key }> = BaseTableProps &
  * @see {@link HTMLAttributes}
  * @see {@link RefAttributes}
  */
-export type TableBodyProps<T> = ComponentPropsWithRef<'tbody'> & {
-  rows?: Row<T>[];
-};
+export type TableBodyProps<T extends RowData> =
+  ComponentPropsWithRef<'tbody'> & {
+    rows?: Row<TableFeatures, T>[];
+  };
 
 /**
  * Props for a table row (`<tr>`) component.
@@ -207,8 +231,8 @@ export type TableBodyProps<T> = ComponentPropsWithRef<'tbody'> & {
  * @see {@link HTMLAttributes}
  * @see {@link RefAttributes}
  */
-export type TableRowProps<T> = ComponentPropsWithRef<'tr'> & {
-  row?: Row<T>;
+export type TableRowProps<T extends RowData> = ComponentPropsWithRef<'tr'> & {
+  row?: Row<TableFeatures, T>;
 };
 
 /**
@@ -223,8 +247,8 @@ export type TableRowProps<T> = ComponentPropsWithRef<'tr'> & {
  * @property ref - Optional React ref for the table cell element.
  * @property className - Optional class name for custom styling.
  */
-export type TableCellProps<T> = ComponentPropsWithRef<'td'> & {
-  cell?: Cell<T, unknown>;
+export type TableCellProps<T extends RowData> = ComponentPropsWithRef<'td'> & {
+  cell?: Cell<TableFeatures, T, unknown>;
 };
 
 /**
@@ -235,9 +259,10 @@ export type TableCellProps<T> = ComponentPropsWithRef<'td'> & {
  *
  * @see {@link RefAttributes}
  */
-export type TableHeaderCellProps<T> = ComponentPropsWithRef<'th'> & {
-  header?: Header<T, unknown>;
-};
+export type TableHeaderCellProps<T extends RowData> =
+  ComponentPropsWithRef<'th'> & {
+    header?: Header<TableFeatures, T, unknown>;
+  };
 
 /**
  * Props for the table header (`<thead>`) component.
@@ -247,17 +272,21 @@ export type TableHeaderCellProps<T> = ComponentPropsWithRef<'th'> & {
  * @see {@link HTMLAttributes}
  * @see {@link RefAttributes}
  */
-export type TableHeaderProps<T> = ComponentPropsWithRef<'thead'> & {
-  /**
-   * Array of header groups of the table
-   */
-  headerGroups?: HeaderGroup<T>[];
-  /**
-   * The currently selected column ID
-   */
-  columnSelection?: string | null;
-};
+export type TableHeaderProps<T extends RowData> =
+  ComponentPropsWithRef<'thead'> & {
+    /**
+     * Array of header groups of the table
+     */
+    headerGroups?: HeaderGroup<TableFeatures, T>[];
+    /**
+     * The currently selected column ID
+     */
+    columnSelection?: string | null;
+  };
 
+/**
+ * Context value for table configuration and state.
+ */
 export type TableContextValue = {
   columnSelection: string | null;
   enableColumnReordering: boolean;

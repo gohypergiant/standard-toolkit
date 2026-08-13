@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -13,10 +13,18 @@
 import 'client-only';
 
 import { clsx } from '@accelint/design-foundation/lib/utils';
-import { Heading } from 'react-aria-components';
+import { Heading } from 'react-aria-components/Heading';
 import styles from './styles.module.css';
 import type { KanbanComponentProps } from './types';
 
+/**
+ * KanbanHeaderTitle - Heading element for the board title
+ *
+ * @param props - {@link KanbanComponentProps}
+ * @param props.children - Title text content.
+ * @param props.className - Optional CSS class name.
+ * @returns The rendered KanbanHeaderTitle component.
+ */
 export function KanbanHeaderTitle({
   children,
   className,

@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -29,7 +29,7 @@ import {
 } from '@accelint/design-toolkit';
 import { useMemo } from 'react';
 
-export function DrawerClient() {
+export function DrawerExampleClient() {
   const ids = useMemo(
     () => ({
       drawer: uuid(),
@@ -60,7 +60,7 @@ export function DrawerClient() {
             <DrawerView id={ids.viewA}>
               <DrawerHeader>
                 <DrawerHeaderTitle>View A</DrawerHeaderTitle>
-                <DrawerClose />
+                <DrawerClose for={ids.viewA} />
               </DrawerHeader>
               <DrawerContent>
                 <p>This is the content for View A.</p>
@@ -76,7 +76,7 @@ export function DrawerClient() {
             <DrawerView id={ids.viewB}>
               <DrawerHeader>
                 <DrawerHeaderTitle>View B</DrawerHeaderTitle>
-                <DrawerClose />
+                <DrawerClose for={ids.viewB} />
               </DrawerHeader>
               <DrawerContent>
                 <p>This is the content for View B.</p>
@@ -92,7 +92,7 @@ export function DrawerClient() {
             <DrawerView id={ids.viewC}>
               <DrawerHeader>
                 <DrawerHeaderTitle>View C</DrawerHeaderTitle>
-                <DrawerClose />
+                <DrawerClose for={ids.viewC} />
               </DrawerHeader>
               <DrawerContent>
                 <p>This is the content for View C.</p>

@@ -21,6 +21,13 @@ declare global {
     // biome-ignore lint/style/useNamingConvention: Built-in React namespace.
     namespace JSX {
       interface IntrinsicElements {
+        /**
+         * A read-only Deck.gl Fiber layer for displaying geographic shapes with interactive features.
+         *
+         * Supports Point, LineString, Polygon, and Circle geometries with customizable styling,
+         * icons, labels, selection, and hover effects. Ideal for rendering shapes from external
+         * APIs or displaying geographic data without editing capabilities.
+         */
         displayShapeLayer: DisplayShapeLayerProps;
       }
     }

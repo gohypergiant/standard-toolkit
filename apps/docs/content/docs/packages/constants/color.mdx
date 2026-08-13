@@ -1,0 +1,195 @@
+---
+title: "Colors"
+description: Regular expressions for validating CSS rgba() and hex color formats.
+source: packages/constants/src/color/index.ts
+source_sha: d6cb28551a341a293027f2084e6e7f5c6c5cd467
+doc_sha: b6d51078a88222cfea127a64fe3d37333179fcdc
+deprecated: false
+updated: 2026-07-13
+---
+
+## Usage
+
+```typescript
+import { 
+  CSS_RGBA_LEGACY_REGEX, 
+  CSS_RGBA_MODERN_REGEX, 
+  HEX_REGEX 
+} from '@accelint/constants/color';
+
+// Validate legacy CSS rgba syntax
+const isLegacy = CSS_RGBA_LEGACY_REGEX.test('rgba(255, 128, 64, 0.5)');
+
+// Validate modern CSS rgb/rgba syntax
+const isModern = CSS_RGBA_MODERN_REGEX.test('rgb(255 128 64 / 0.5)');
+
+// Validate hex color codes
+const isHex = HEX_REGEX.test('#ff8040');
+```
+
+## Reference
+
+### CSS_RGBA_LEGACY_REGEX
+
+```typescript
+const CSS_RGBA_LEGACY_REGEX: RegExp;
+```
+
+Validates legacy comma-separated CSS rgb/rgba syntax.
+
+**Supports:**
+- `rgb(255, 128, 64)` - Three comma-separated values
+- `rgba(255, 128, 64, 0.5)` - Four comma-separated values with alpha
+- Integer values: `rgb(255, 128, 64)`
+- Percentage values: `rgb(100%, 50%, 25%)`
+- Mixed whitespace: `rgb( 255 , 128 , 64 )`
+
+**Pattern:** `/^rgba?\(\s*(\d+(?:\.\d+)?%?)\s*,\s*(\d+(?:\.\d+)?%?)\s*,\s*(\d+(?:\.\d+)?%?)\s*(?:,\s*(\d+(?:\.\d+)?%?)\s*)?\)$/i`
+
+### CSS_RGBA_MODERN_REGEX
+
+```typescript
+const CSS_RGBA_MODERN_REGEX: RegExp;
+```
+
+Validates modern space-separated CSS rgb/rgba syntax.
+
+**Supports:**
+- `rgb(255 128 64)` - Three space-separated values
+- `rgb(255 128 64 / 0.5)` - Space-separated with slash for alpha
+- Integer values: `rgb(255 128 64)`
+- Percentage values: `rgb(100% 50% 25%)`
+- Mixed whitespace: `rgb( 255  128  64 )`
+
+**Pattern:** `/^rgba?\(\s*(\d+(?:\.\d+)?%?)\s+(\d+(?:\.\d+)?%?)\s+(\d+(?:\.\d+)?%?)\s*(?:\/\s*(\d+(?:\.\d+)?%?)\s*)?\)$/i`
+
+### HEX_REGEX
+
+```typescript
+const HEX_REGEX: RegExp;
+```
+
+Validates hexadecimal color codes.
+
+**Supports:**
+- `#RGB` - 3-digit shorthand (e.g., `#f80`)
+- `#RGBA` - 4-digit shorthand with alpha (e.g., `#f80a`)
+- `#RRGGBB` - 6-digit full format (e.g., `#ff8040`)
+- `#RRGGBBAA` - 8-digit with alpha (e.g., `#ff8040aa`)
+- With or without `#` prefix
+
+**Pattern:** `/^#?([0-9a-fA-F]{3}|[0-9a-fA-F]{4}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})$/`
+
+> **Good to know:** All patterns are case-insensitive and accept optional whitespace. The hex pattern accepts both uppercase and lowercase letters.
+
+## Examples
+
+### Example: Validating legacy CSS rgba syntax
+
+```typescript
+import { CSS_RGBA_LEGACY_REGEX } from '@accelint/constants/color';
+
+// Valid legacy syntax
+CSS_RGBA_LEGACY_REGEX.test('rgb(255, 128, 64)');        // true
+CSS_RGBA_LEGACY_REGEX.test('rgba(255, 128, 64, 0.5)'); // true
+CSS_RGBA_LEGACY_REGEX.test('rgb(100%, 50%, 25%)');     // true
+
+// Invalid - modern syntax
+CSS_RGBA_LEGACY_REGEX.test('rgb(255 128 64)');         // false
+```
+
+### Example: Validating modern CSS rgb syntax
+
+```typescript
+import { CSS_RGBA_MODERN_REGEX } from '@accelint/constants/color';
+
+// Valid modern syntax
+CSS_RGBA_MODERN_REGEX.test('rgb(255 128 64)');         // true
+CSS_RGBA_MODERN_REGEX.test('rgb(255 128 64 / 0.5)');   // true
+CSS_RGBA_MODERN_REGEX.test('rgb(100% 50% 25%)');       // true
+
+// Invalid - legacy syntax
+CSS_RGBA_MODERN_REGEX.test('rgb(255, 128, 64)');       // false
+```
+
+### Example: Validating hex colors
+
+```typescript
+import { HEX_REGEX } from '@accelint/constants/color';
+
+// Valid hex formats
+HEX_REGEX.test('#f80');        // true (3-digit)
+HEX_REGEX.test('#ff8040');     // true (6-digit)
+HEX_REGEX.test('#ff8040aa');   // true (8-digit with alpha)
+HEX_REGEX.test('ff8040');      // true (without #)
+
+// Invalid
+HEX_REGEX.test('#gg8040');     // false (invalid characters)
+HEX_REGEX.test('#ff804');      // false (5 digits)
+```
+
+### Example: Parsing color components
+
+```typescript
+import { CSS_RGBA_LEGACY_REGEX } from '@accelint/constants/color';
+
+function parseLegacyRgba(color: string): [number, number, number, number] | null {
+  const match = color.match(CSS_RGBA_LEGACY_REGEX);
+  if (!match) return null;
+
+  const [, r, g, b, a = '1'] = match;
+  return [
+    parseFloat(r),
+    parseFloat(g),
+    parseFloat(b),
+    parseFloat(a),
+  ];
+}
+
+parseLegacyRgba('rgba(255, 128, 64, 0.5)');
+// [255, 128, 64, 0.5]
+```
+
+### Example: Supporting both legacy and modern syntax
+
+```typescript
+import { 
+  CSS_RGBA_LEGACY_REGEX, 
+  CSS_RGBA_MODERN_REGEX 
+} from '@accelint/constants/color';
+
+function isValidRgbColor(color: string): boolean {
+  return CSS_RGBA_LEGACY_REGEX.test(color) || 
+         CSS_RGBA_MODERN_REGEX.test(color);
+}
+
+isValidRgbColor('rgb(255, 128, 64)');     // true (legacy)
+isValidRgbColor('rgb(255 128 64)');       // true (modern)
+isValidRgbColor('rgba(255 128 64, 0.5)'); // false (mixed syntax)
+```
+
+### Example: Comprehensive color validator
+
+```typescript
+import { 
+  CSS_RGBA_LEGACY_REGEX, 
+  CSS_RGBA_MODERN_REGEX, 
+  HEX_REGEX 
+} from '@accelint/constants/color';
+
+function isValidColor(color: string): boolean {
+  return HEX_REGEX.test(color) ||
+         CSS_RGBA_LEGACY_REGEX.test(color) ||
+         CSS_RGBA_MODERN_REGEX.test(color);
+}
+
+isValidColor('#ff8040');              // true
+isValidColor('rgb(255, 128, 64)');    // true
+isValidColor('rgb(255 128 64)');      // true
+isValidColor('invalid');              // false
+```
+
+## Related
+
+- [CSS Color Module Level 4](https://www.w3.org/TR/css-color-4/) - W3C specification
+- [MDN: CSS color values](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value) - Color syntax reference

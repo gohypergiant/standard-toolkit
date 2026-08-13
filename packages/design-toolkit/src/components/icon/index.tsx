@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -13,7 +13,7 @@
 
 import 'client-only';
 import { clsx } from '@accelint/design-foundation/lib/utils';
-import { useContextProps } from 'react-aria-components';
+import { useContextProps } from 'react-aria-components/slots';
 import { IconContext } from './context';
 import styles from './styles.module.css';
 import type { IconProps } from './types';
@@ -25,13 +25,23 @@ import type { IconProps } from './types';
  * proper accessibility support. Works seamlessly with the Accelint icon library
  * and supports custom SVG elements with consistent styling and alignment.
  *
+ * @param props - {@link IconProps}
+ * @param props.ref - Ref to the span element.
+ * @param props.children - SVG icon element to display.
+ * @param props.className - Optional CSS class name.
+ * @param props.size - Size variant for the icon.
+ * @returns The rendered Icon component.
+ *
  * @example
+ * ```tsx
  * // Basic icon usage
  * <Icon>
  *   <Settings />
  * </Icon>
+ * ```
  *
  * @example
+ * ```tsx
  * // Icon with different sizes
  * <Icon size="small">
  *   <User />
@@ -39,13 +49,16 @@ import type { IconProps } from './types';
  * <Icon size="large">
  *   <Dashboard />
  * </Icon>
+ * ```
  *
  * @example
+ * ```tsx
  * // Icon in button context (automatically inherits sizing)
  * <Button>
  *   <Icon><Plus /></Icon>
  *   Add Item
  * </Button>
+ * ```
  */
 export function Icon({ ref, ...props }: IconProps) {
   [props, ref] = useContextProps(props, ref ?? null, IconContext);

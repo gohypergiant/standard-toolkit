@@ -5,37 +5,56 @@ import * as ClockStories from './clock.stories';
 <Meta of={ClockStories} />
 
 # Clock
-The Clock component is an _**unstyled**_, self-updating `<time>` element formatted as `XX:XX:XX UTC`.
+An **unstyled**, self-updating `<time>` element displaying the current time. Updates every second.
 
+## Example Usage
+
+### Basic Clock
+```tsx
+<Clock />
+```
 <Canvas of={ClockStories.Default} />
 
-## Example usage
+### Styled Clock
 ```tsx
-// Basic Clock
-<Clock />
-
-// Styled Clock
 <Clock className="fg-accent-primary-bold" />
+```
+<Canvas of={ClockStories.Styling} />
 
-// Custom Format
+### Custom Format
+```tsx
 const formatter = new Intl.DateTimeFormat('en-US', {
-  dateStyle: "short",
+  dateStyle: 'short',
   timeStyle: 'long',
   timeZone: 'UTC',
-  hour12: false
+  hour12: false,
 });
 
 <Clock formatter={formatter} />
 ```
+<Canvas of={ClockStories.CustomFormat} />
 
 ## Props
-* **`className`** - Additional CSS classes for custom styling
-* **`formatter`** - [Intl.DateTimeFormat](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/DateTimeFormat)
-  ```tsx
-  // Default Formatter
-  new Intl.DateTimeFormat('en-US', {
-    timeStyle: 'long',
-    timeZone: 'UTC',
-    hour12: false
-  });
-  ```
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `formatter` | `Intl.DateTimeFormat` | See below | Custom date/time formatter |
+| `className` | `string` | - | Additional CSS classes |
+
+**Default formatter:**
+```tsx
+new Intl.DateTimeFormat('en-US', {
+  timeStyle: 'long',
+  timeZone: 'UTC',
+  hour12: false,
+})
+```
+
+## Implementation Notes
+- Renders a `<time>` element
+- Updates every second using `setClockInterval` from `@accelint/temporal`
+- Unstyled by default - add your own styles via `className`
+
+**Related:**
+- [Intl.DateTimeFormat MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/DateTimeFormat)
+- [Github Source](https://github.com/gohypergiant/standard-toolkit/tree/main/packages/design-toolkit/src/components/clock)

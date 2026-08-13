@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -19,6 +19,29 @@ import { useDragContext } from './kanban';
 import styles from './styles.module.css';
 import type { KanbanCardProps } from './types';
 
+/**
+ * KanbanCard - Individual draggable card component
+ *
+ * Provides drag-and-drop functionality with visual feedback
+ * including drop position indicators.
+ *
+ * @param props - {@link KanbanCardProps}
+ * @param props.className - Optional CSS class name.
+ * @param props.children - Card content (header, body).
+ * @param props.card - Card data.
+ * @param props.isActive - Whether this card is currently active/selected.
+ * @returns The rendered KanbanCard component.
+ *
+ * @example
+ * ```tsx
+ * <KanbanCard card={cardData}>
+ *   <KanbanCardHeader>
+ *     <KanbanCardHeaderTitle>{card.title}</KanbanCardHeaderTitle>
+ *   </KanbanCardHeader>
+ *   <KanbanCardBody>{card.body}</KanbanCardBody>
+ * </KanbanCard>
+ * ```
+ */
 export function KanbanCard({
   className,
   children,

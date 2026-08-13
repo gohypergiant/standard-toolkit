@@ -1,0 +1,134 @@
+import { Canvas, Meta } from '@storybook/addon-docs/blocks';
+
+import * as FloatingCardStories from './floating-card.stories';
+
+<Meta of={FloatingCardStories} />
+
+# FloatingCard
+
+Draggable, resizable floating panels rendered via React portals. Built on top of [dockview](https://dockview.dev/) to provide a lightweight windowing system for overlay content such as detail views, inspectors, and contextual tooling.
+
+Components:
+- **FloatingCard** - Portal-based card that registers with the floating card engine
+- **FloatingCardProvider** - Context provider that manages card layout, lifecycle, and the dockview instance
+
+## Example Usage
+
+### Basic
+
+```tsx
+<FloatingCardProvider>
+  <FloatingCard id={cardId} title="Details">
+    <p>Panel content goes here</p>
+  </FloatingCard>
+</FloatingCardProvider>
+```
+
+<Canvas of={FloatingCardStories.Default} />
+
+### With Header Actions
+
+Custom icons and action buttons can be added to the card header via the provider.
+
+```tsx
+<FloatingCardProvider
+  icon={() => <span>🌟</span>}
+  headerActions={[
+    { icon: <span>⚙️</span>, onClick: () => console.log('action') },
+  ]}
+>
+  <FloatingCard id={cardId} title="Settings">
+    Panel content with custom header
+  </FloatingCard>
+</FloatingCardProvider>
+```
+
+<Canvas of={FloatingCardStories.WithHeaderActions} />
+
+### Multiple Cards
+
+Multiple floating cards can coexist within the same provider. Each card is independently draggable and resizable.
+
+```tsx
+<FloatingCardProvider>
+  <FloatingCard id={idA} title="Card A">Content A</FloatingCard>
+  <FloatingCard id={idB} title="Card B">Content B</FloatingCard>
+  <FloatingCard id={idC} title="Card C">Content C</FloatingCard>
+</FloatingCardProvider>
+```
+
+<Canvas of={FloatingCardStories.MultipleCards} />
+
+### Custom Dimensions
+
+Override the default panel size with `initialDimensions`.
+
+```tsx
+<FloatingCardProvider>
+  <FloatingCard
+    id={cardId}
+    title="Compact"
+    initialDimensions={{ width: 250, height: 200 }}
+  >
+    Smaller panel
+  </FloatingCard>
+</FloatingCardProvider>
+```
+
+<Canvas of={FloatingCardStories.CustomDimensions} />
+
+### Controlled Visibility
+
+Toggle a card open or closed with the `isOpen` prop. Closed cards are removed from the layout but can be quickly reopened without remounting.
+
+```tsx
+const [isOpen, setIsOpen] = useState(true);
+
+<FloatingCardProvider>
+  <FloatingCard id={cardId} title="Toggleable" isOpen={isOpen}>
+    This card can be opened and closed
+  </FloatingCard>
+</FloatingCardProvider>
+```
+
+<Canvas of={FloatingCardStories.ControlledVisibility} />
+
+## Props
+
+### FloatingCard
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `id` | `UniqueId` | — | Unique identifier for the floating card |
+| `title` | `string` | — | Title displayed in the card header |
+| `isOpen` | `boolean` | `true` | Whether the card is rendered |
+| `initialDimensions` | `{ width: number; height: number }` | `{ width: 300, height: 400 }` | Initial size of the floating card |
+| `children` | `ReactNode` | — | Content rendered inside the card via a portal |
+
+### FloatingCardProvider
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `icon` | `ReactNode \| (cardId: string) => ReactNode` | — | Icon rendered at the start of the card header |
+| `headerActions` | `Array \| (cardId: string) => Array` | — | Action buttons rendered before the close button |
+| `className` | `string` | — | Additional CSS class for the provider root |
+| `children` | `ReactNode` | — | Application content and FloatingCard components |
+
+**headerActions items:**
+
+| Key | Type | Description |
+|-----|------|-------------|
+| `icon` | `ReactNode` | Icon displayed in the action button |
+| `onClick` | `() => void` | Callback when the action is clicked |
+
+## Implementation Notes
+
+- Renders children into floating dockview panels via `createPortal`
+- The provider creates an absolutely-positioned overlay with `pointer-events: none`; only the card panels receive pointer events
+- Floating cards are bounded within the viewport
+- Stale card refs are automatically cleaned up when panels are removed via any path (drag close, API close, etc.)
+- Header adapters map dockview's internal props to the custom header components
+
+**Related:**
+- [Dockview Documentation](https://dockview.dev/)
+- [GitHub Source](https://github.com/gohypergiant/standard-toolkit/tree/main/packages/design-toolkit/src/components/floating-card)

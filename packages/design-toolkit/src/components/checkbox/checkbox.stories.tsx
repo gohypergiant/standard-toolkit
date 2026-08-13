@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -20,6 +20,7 @@ const meta = {
     children: 'Checkbox',
     isDisabled: false,
     isIndeterminate: false,
+    labelPosition: 'end',
   },
   parameters: {
     controls: {
@@ -33,4 +34,37 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   render: ({ children, ...args }) => <Checkbox {...args}>Unsubscribe</Checkbox>,
+};
+
+export const ScrollPreventionTest: Story = {
+  render: () => (
+    <div
+      style={{
+        height: '400px',
+        overflow: 'auto',
+        border: '2px solid #ccc',
+        padding: '20px',
+      }}
+    >
+      <p>
+        Scroll down and click checkboxes - the viewport should not jump or
+        scroll
+      </p>
+      <div style={{ height: '200px' }} />
+      {Array.from({ length: 20 }, (_, i) => (
+        <div key={i} style={{ marginBottom: '20px' }}>
+          <Checkbox>Checkbox {i + 1}</Checkbox>
+        </div>
+      ))}
+      <div style={{ height: '200px' }} />
+    </div>
+  ),
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'Tests that clicking checkboxes does not cause unwanted scroll-into-view behavior. Scroll within the container and click checkboxes - the viewport should remain stable.',
+      },
+    },
+  },
 };

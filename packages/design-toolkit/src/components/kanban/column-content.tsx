@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -20,6 +20,17 @@ import {
 import styles from './styles.module.css';
 import type { KanbanColContentProps } from './types';
 
+/**
+ * KanbanColumnContent - Container for cards within a column
+ *
+ * Provides sortable context for card drag-and-drop.
+ *
+ * @param props - {@link KanbanColContentProps}
+ * @param props.children - Card elements.
+ * @param props.className - Optional CSS class name.
+ * @param props.column - Column data for sortable context.
+ * @returns The rendered KanbanColumnContent component.
+ */
 export function KanbanColumnContent({
   children,
   className,

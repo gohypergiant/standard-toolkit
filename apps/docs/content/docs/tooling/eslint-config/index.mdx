@@ -1,0 +1,59 @@
+---
+title: "Overview"
+description: Placeholder package for ESLint configuration - migrated to Biome
+source: tooling/eslint-config/package.json
+source_sha: 27b5f260b4f15e9e0f01d5e1ad2b41dd411a34e6
+doc_sha: ae45ecef6d6ebe048965f88b184581701c7bdad4
+deprecated: true
+updated: 2026-07-14
+---
+
+> **Deprecated**: This package is a placeholder. The standard-toolkit repository has migrated to [Biome](https://biomejs.dev/) for linting and formatting. Use [@accelint/biome-config](../biome-config/index.mdx) instead.
+
+## Status
+
+This package is currently a placeholder with no active configuration. Accelint projects have migrated to Biome for improved performance and integrated formatting.
+
+## Migration to Biome
+
+Biome provides:
+- Faster linting and formatting than ESLint + Prettier
+- Single tool for both linting and formatting
+- Better compatibility with modern JavaScript/TypeScript
+- Unified configuration
+
+## Installation
+
+```bash
+# Using pnpm (recommended)
+pnpm add -D @accelint/eslint-config
+```
+
+> **Note**: Installing this package is not recommended. It contains no configuration files and exists only for backward compatibility.
+
+## Recommended Alternative
+
+Use [@accelint/biome-config](../biome-config/index.mdx) for new projects:
+
+```bash
+# Install Biome configuration
+pnpm add -D @accelint/biome-config @biomejs/biome
+```
+
+Create a `biome.json` in your project root:
+
+```json
+{
+  "extends": ["@accelint/biome-config"]
+}
+```
+
+## Future Plans
+
+This package may be fully deprecated in a future release. All new projects should use [@accelint/biome-config](../biome-config/index.mdx).
+
+## Related
+
+- [@accelint/biome-config](../biome-config/index.mdx) - Active linting configuration
+- [@accelint/typescript-config](../typescript-config/index.mdx) - TypeScript configuration
+- [@accelint/prettier-config](../../prettier-config/index.mdx) - Prettier configuration (also deprecated in favor of Biome)

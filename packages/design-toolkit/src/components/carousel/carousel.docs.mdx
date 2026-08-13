@@ -1,0 +1,166 @@
+import { Canvas, Meta } from '@storybook/addon-docs/blocks';
+
+import * as CarouselStories from './carousel.stories';
+
+<Meta of={CarouselStories} />
+
+# Carousel
+
+A compound component for navigating a collection of media items. The carousel displays a main viewer alongside navigable thumbnails, with support for previous/next buttons, a position indicator, and a dropdown select.
+
+Its layout is fully composable using the following sub-components:
+
+- **CarouselViewer** - Displays the full-size media for the active item.
+- **CarouselPrevious** - Navigates to the previous item. Disables at the start.
+- **CarouselNext** - Navigates to the next item. Disables at the end.
+- **CarouselGallery** - A horizontally-scrolling strip of clickable thumbnails.
+- **CarouselPosition** - Displays the current position and total count (e.g. "3 / 9").
+- **CarouselSelect** - A [`SelectField`](?path=/docs/components-selectfield--playground) dropdown listing all items by title.
+
+## Example Usage
+
+### Gallery View
+
+The default layout with thumbnail navigation.
+
+```tsx
+const [currentPosition, setCurrentPosition] = useState(0);
+
+<Carousel
+  items={items}
+  currentPosition={currentPosition}
+  setCurrentPosition={setCurrentPosition}
+>
+  <CarouselViewer />
+  <div className="flex w-full flex-row justify-between gap-s">
+    <CarouselPrevious />
+    <CarouselGallery />
+    <CarouselNext />
+  </div>
+</Carousel>
+```
+
+<Canvas of={CarouselStories.Default} />
+
+### Select View
+
+Replace the thumbnail gallery with a position indicator and dropdown select for a more compact layout.
+
+```tsx
+const [currentPosition, setCurrentPosition] = useState(0);
+
+<Carousel
+  items={items}
+  currentPosition={currentPosition}
+  setCurrentPosition={setCurrentPosition}
+>
+  <CarouselViewer />
+  <div className="flex flex-row justify-between gap-s p-s">
+    <div className="flex shrink-0 flex-row gap-s">
+      <CarouselPrevious />
+      <CarouselPosition />
+      <CarouselNext />
+    </div>
+    <CarouselSelect />
+  </div>
+</Carousel>
+```
+
+<Canvas of={CarouselStories.WithSelect} />
+
+## Props
+
+### Carousel
+
+The root component. Provides carousel state to all sub-components via context.
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `items` | `CarouselData[]` | `[]` | The media items to display. |
+| `currentPosition` | `number` | - | Zero-based index of the active item. |
+| `setCurrentPosition` | `(index: number) => void` | - | Callback when the active item changes. |
+| `className` | `string` | - | Additional css styles applied to container |
+| `children` | `ReactNode` | - | Carousel sub-components to render. |
+
+#### CarouselData
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `dataType` | `'image' \| 'video' \| 'audio'` | The media type of the item. |
+| `dataUrl` | `string` | URL for the full-size media displayed in the viewer. |
+| `fileName` | `string` | Original file name of the media asset. |
+| `title` | `string` | Display title shown in the gallery and select. |
+| `thumbnailUrl` | `string` | URL for the thumbnail image in the gallery. |
+| `id` | `UniqueId` | Unique identifier for the item. |
+| `metadata` | `Record<string, unknown>` | Optional metadata associated with the item. |
+
+### CarouselViewer
+
+Displays the full-size media for the currently active item.
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `children` | `ReactNode` | - | Optional overlay content rendered inside the viewer. |
+| `classNames` | `object` | - | Custom class names (see below). |
+
+**classNames object:**
+
+| Key | Type | Description |
+|-----|------|-------------|
+| `container` | `string` | Applied to the viewer container. |
+| `media` | `string` | Applied to the displayed media element (img, video, or audio). |
+
+### CarouselGallery
+
+A horizontally-scrolling strip of thumbnail buttons. Automatically scrolls to keep the selected thumbnail visible.
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `classNames` | `object` | - | Custom class names (see below). |
+
+**classNames object:**
+
+| Key | Type | Description |
+|-----|------|-------------|
+| `container` | `string` | Applied to the gallery container. |
+| `item` | `string` | Applied to individual gallery items. |
+
+### CarouselPrevious, CarouselNext
+
+Navigates to the previous or next item. Automatically disables at the first item. Takes ButtonProps.
+
+### CarouselPosition
+
+Displays the current position and total count (e.g. "3 / 9"). Takes `HTMLAttributes<HTMLDivElement>` as props
+
+### CarouselSelect
+
+A [`SelectField`](?path=/docs/components-selectfield--playground) dropdown listing all items by title. Selecting an item navigates the carousel.
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `classNames` | `object` | - | Custom class names (see below). |
+
+**classNames object:**
+
+| Key | Type | Description |
+|-----|------|-------------|
+| `select` | `SelectFieldProps['classNames']` | Passed to the SelectField component. |
+| `optionItem` | `OptionsItemProps['classNames']` | Passed to each OptionsItem. |
+
+## Accessibility
+
+- Navigation buttons have accessible labels ("Previous", "Next").
+- Gallery thumbnails derive their accessible name from the item's `title` via image alt text.
+- The select dropdown has an `aria-label` for screen readers.
+- Previous and Next buttons use `aria-disabled` when at boundary positions.
+
+## Implementation Notes
+
+- Supports displaying images, videos, and audio files. The viewer automatically renders the appropriate media element based on the item's `dataType`.
+- The carousel state is managed externally via `currentPosition` and `setCurrentPosition` props (controlled component pattern).
+- Sub-components read state from `CarouselContext` and can be composed in any order or layout.
+
+**Related:**
+
+- [Github Source](https://github.com/gohypergiant/standard-toolkit/tree/main/packages/design-toolkit/src/components/carousel)

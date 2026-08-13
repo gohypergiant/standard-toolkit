@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -15,16 +15,18 @@ import 'client-only';
 import { clsx } from '@accelint/design-foundation/lib/utils';
 import Kebab from '@accelint/icons/kebab';
 import Pin from '@accelint/icons/pin';
-import { useListData } from '@react-stately/data';
 import {
-  getCoreRowModel,
-  getSortedRowModel,
+  type ColumnDef,
+  type OnChangeFn,
+  type PaginationState,
   type Row,
+  type RowData,
   type RowPinningState,
   type RowSelectionState,
-  useReactTable,
+  useTable,
 } from '@tanstack/react-table';
 import { useCallback, useContext, useMemo, useState } from 'react';
+import { useControlledState } from 'react-stately/useControlledState';
 import { Button } from '../button';
 import { Checkbox } from '../checkbox';
 import { Icon } from '../icon';
@@ -34,9 +36,12 @@ import { MenuSeparator } from '../menu/separator';
 import { MenuTrigger } from '../menu/trigger';
 import { TableBody } from './body';
 import { TableContext } from './context';
+import { tableFeatures } from './features';
 import { TableHeader } from './header';
 import styles from './styles.module.css';
 import type { Key } from '@react-types/shared';
+import type { TableFeatures } from './features';
+import type { RowOrderingState } from './row-ordering-feature';
 import type { TableProps } from './types';
 
 // This width is for columns in the table that provide features:
@@ -46,19 +51,11 @@ import type { TableProps } from './types';
 // These columns should not need to grow with table width
 const META_COLUMN_WIDTH = 32;
 
-type RowActionsMenuProps<T> = {
-  row: Row<T>;
-  rows: Row<T>[];
-  moveRowsDown: (row: Row<T>, rows: Row<T>[]) => void;
-  moveRowsUp: (row: Row<T>, rows: Row<T>[]) => void;
+type RowActionsMenuProps<T extends RowData> = {
+  row: Row<TableFeatures, T>;
 };
 
-function RowActionsMenu<T>({
-  moveRowsDown,
-  moveRowsUp,
-  row,
-  rows,
-}: RowActionsMenuProps<T>) {
+function RowActionsMenu<T extends RowData>({ row }: RowActionsMenuProps<T>) {
   const { enableRowActions, persistRowKebabMenu } = useContext(TableContext);
   const isPinned = !!row.getIsPinned();
   const hideRowKebab = !persistRowKebabMenu;
@@ -78,14 +75,14 @@ function RowActionsMenu<T>({
             </MenuItem>
             <MenuSeparator />
             <MenuItem
-              onAction={() => moveRowsUp(row, rows)}
-              isDisabled={isPinned || row.index === 0}
+              onAction={() => row.moveUp()}
+              isDisabled={!row.getCanMoveUp()}
             >
               Move Up
             </MenuItem>
             <MenuItem
-              onAction={() => moveRowsDown(row, rows)}
-              isDisabled={isPinned || row.index === rows.length - 1}
+              onAction={() => row.moveDown()}
+              isDisabled={!row.getCanMoveDown()}
             >
               Move Down
             </MenuItem>
@@ -97,13 +94,34 @@ function RowActionsMenu<T>({
 }
 
 /**
- * Table - Configurable data table with sorting and row actions
+ * Table - Configurable data table with sorting, selection, and row actions
  *
- * Standardizes table behavior (sorting, selection, row actions) and can be
- * used with column definitions from TanStack React Table.
+ * Supports data-driven mode with TanStack column definitions or static mode with subcomponents.
+ *
+ * @param props - {@link TableProps}
+ * @param props.children - Custom children for static mode.
+ * @param props.columns - Column definitions for data-driven mode.
+ * @param props.data - Data array for data-driven mode.
+ * @param props.showCheckbox - Whether to show selection checkboxes.
+ * @param props.rowSelection - Initial row selection state.
+ * @param props.kebabPosition - Position of row action menu.
+ * @param props.persistRowKebabMenu - Keep row kebab menu visible.
+ * @param props.persistHeaderKebabMenu - Keep header kebab menu visible.
+ * @param props.persistNumerals - Keep row numerals visible.
+ * @param props.enableSorting - Enable column sorting.
+ * @param props.enableColumnReordering - Enable column reordering.
+ * @param props.enableRowActions - Enable row action menu.
+ * @param props.manualSorting - Use server-side sorting.
+ * @param props.onSortChange - Callback when sort changes.
+ * @param props.onColumnReorderChange - Callback when column order changes.
+ * @param props.onRowSelectionChange - Callback when row selection changes.
+ * @param props.fullWidth - Whether table uses full width.
+ * @returns The rendered Table component.
  *
  * @example
- * <Table columns={columns} data={data} />
+ * ```tsx
+ * <Table columns={columns} data={rows} enableSorting showCheckbox />
+ * ```
  */
 export function Table<T extends { id: Key }>({
   children,
@@ -123,15 +141,61 @@ export function Table<T extends { id: Key }>({
   onColumnReorderChange,
   onRowSelectionChange,
   fullWidth = false,
+  pageSize,
+  page: pageProp,
+  defaultPage = 1,
+  onPageChange,
   ...rest
 }: TableProps<T>) {
-  const {
-    items: data,
-    moveAfter,
-    moveBefore,
-  } = useListData({
-    initialItems: dataProp,
-  });
+  // Only the manual row order is state (owned by the table's
+  // rowOrderingFeature, mirrored here); row content stays owned by the data
+  // prop so external updates (polling, refetch) flow through without remount.
+  const [rowOrdering, setRowOrdering] = useState<RowOrderingState>([]);
+
+  const data = useMemo(() => {
+    const items = dataProp ?? [];
+
+    if (!rowOrdering.length) {
+      return items;
+    }
+
+    // rowOrdering holds positions, not sort keys: place ranked rows straight
+    // into their slot and append the rest in natural order — O(n), no sort
+    const rank = new Map<string, number>();
+    rowOrdering.forEach((id, index) => {
+      rank.set(id, index);
+    });
+
+    const slots = new Array<T | undefined>(rowOrdering.length);
+    const unranked: T[] = [];
+
+    for (const item of items) {
+      const slot = rank.get(String(item.id));
+
+      // duplicate ids fall through to unranked
+      if (slot === undefined || slots[slot] !== undefined) {
+        unranked.push(item);
+      } else {
+        slots[slot] = item;
+      }
+    }
+
+    const ordered: T[] = [];
+
+    // stale ids (rows no longer in data) leave holes; skip them
+    for (const slot of slots) {
+      if (slot !== undefined) {
+        ordered.push(slot);
+      }
+    }
+
+    for (const item of unranked) {
+      ordered.push(item);
+    }
+
+    return ordered;
+  }, [dataProp, rowOrdering]);
+
   const [rowSelection, setRowSelection] = useState<RowSelectionState>(
     rowSelectionProp ?? {},
   );
@@ -141,87 +205,43 @@ export function Table<T extends { id: Key }>({
     bottom: [],
   });
 
-  /**
-   * moveUpSelectedRows moves the selected rows up in the table.
-   * It finds the first selected row, determines its index,
-   * and moves it before the previous row if it exists.
-   */
-  const moveRowsUp = useCallback(
-    (row: Row<T>, rows: Row<T>[]) => {
-      const isSelected = rowSelection[row.id];
-      const rowsToMove = isSelected
-        ? rows.filter(({ id }) => rowSelection[id])
-        : [row];
-      const firstRowToMove = rowsToMove[0];
-
-      if (!firstRowToMove || firstRowToMove.index === 0) {
-        return;
-      }
-
-      const prevRowId = rows[firstRowToMove.index - 1]?.id;
-
-      if (!prevRowId) {
-        return;
-      }
-
-      moveBefore(
-        prevRowId,
-        rowsToMove.map(({ id }) => id),
-      );
-    },
-    [rowSelection, moveBefore],
+  const [currentPage, setCurrentPage] = useControlledState(
+    pageProp,
+    defaultPage,
+    onPageChange,
   );
 
-  /**
-   * moveDownRows moves the selected or active rows down in the table.
-   * It finds the last selected row, determines its index,
-   * and moves it after the next row if it exists.
-   */
-  const moveRowsDown = useCallback(
-    (row: Row<T>, rows: Row<T>[]) => {
-      const isSelected = rowSelection[row.id];
-      const rowsToMove = isSelected
-        ? rows.filter(({ id }) => rowSelection[id])
-        : [row];
-      const lastRowToMove = rowsToMove[rowsToMove.length - 1];
+  const pagination = useMemo(
+    () =>
+      pageSize != null ? { pageIndex: currentPage - 1, pageSize } : undefined,
+    [currentPage, pageSize],
+  );
 
-      if (!lastRowToMove || lastRowToMove.index === rows.length - 1) {
+  const handlePaginationChange = useCallback<OnChangeFn<PaginationState>>(
+    (updater) => {
+      if (pagination == null) {
         return;
       }
-
-      const nextRowId = rows[lastRowToMove.index + 1]?.id;
-
-      if (!nextRowId) {
-        return;
-      }
-
-      moveAfter(
-        nextRowId,
-        rowsToMove.map(({ id }) => id),
-      );
+      const next =
+        typeof updater === 'function' ? updater(pagination) : updater;
+      setCurrentPage(next.pageIndex + 1);
     },
-    [rowSelection, moveAfter],
+    [pagination, setCurrentPage],
   );
 
   /**
    * actionColumn defines the actions available in the kebab menu for each row.
-   * It includes options to move the row up or down in the table.
+   * It includes options to move the row up or down in the table. Moves go
+   * through the table's rowOrderingFeature APIs, which are identity-stable, so
+   * this column def never has to be recreated.
    */
-  // biome-ignore lint/correctness/useExhaustiveDependencies: can of worms to fix ticket added
-  const actionColumn: NonNullable<typeof columnsProp>[number] = useMemo(
+  const actionColumn: ColumnDef<TableFeatures, T, unknown> = useMemo(
     () => ({
       id: 'kebab',
-      cell: ({ row }) => (
-        <RowActionsMenu
-          moveRowsUp={moveRowsUp}
-          moveRowsDown={moveRowsDown}
-          row={row}
-          rows={getRowModel().rows}
-        />
-      ),
+      cell: ({ row }) => <RowActionsMenu row={row} />,
       size: META_COLUMN_WIDTH,
     }),
-    [moveRowsUp, moveRowsDown],
+    [],
   );
 
   /**
@@ -230,7 +250,7 @@ export function Table<T extends { id: Key }>({
    * The kebab menu position can be set to 'left' or 'right'.
    * If showCheckbox is true, a checkbox column is added.
    */
-  const columns = useMemo<NonNullable<typeof columnsProp>>(
+  const columns = useMemo<ColumnDef<TableFeatures, T, unknown>[]>(
     () => [
       {
         id: 'numeral',
@@ -251,7 +271,11 @@ export function Table<T extends { id: Key }>({
               header: ({ table }) => (
                 <Checkbox
                   isSelected={table.getIsAllRowsSelected()}
-                  isIndeterminate={table.getIsSomeRowsSelected()}
+                  // v9: getIsSomeRowsSelected stays true at full selection
+                  isIndeterminate={
+                    table.getIsSomeRowsSelected() &&
+                    !table.getIsAllRowsSelected()
+                  }
                   onChange={table.toggleAllRowsSelected}
                 />
               ),
@@ -259,12 +283,13 @@ export function Table<T extends { id: Key }>({
                 <Checkbox
                   isSelected={row.getIsSelected()}
                   isIndeterminate={row.getIsSomeSelected()}
-                  onChange={row.toggleSelected}
+                  // v9 row methods are prototype-shared; keep the receiver
+                  onChange={(isSelected) => row.toggleSelected(isSelected)}
                 />
               ),
               size: META_COLUMN_WIDTH,
             },
-          ] satisfies NonNullable<typeof columnsProp>)
+          ] satisfies ColumnDef<TableFeatures, T, unknown>[])
         : []),
       ...(kebabPosition === 'left' ? [actionColumn] : []),
       ...(columnsProp ?? []),
@@ -301,9 +326,9 @@ export function Table<T extends { id: Key }>({
     getTopRows,
     getCenterRows,
     getBottomRows,
-    getRowModel,
     setColumnOrder,
-  } = useReactTable<T>({
+  } = useTable({
+    features: tableFeatures,
     data,
     columns,
     enableSorting,
@@ -314,6 +339,8 @@ export function Table<T extends { id: Key }>({
     state: {
       rowSelection,
       rowPinning,
+      rowOrdering,
+      ...(pagination != null && { pagination }),
     },
     getRowId: (row, index) => {
       // Use the index as the row ID if no unique identifier is available
@@ -322,10 +349,12 @@ export function Table<T extends { id: Key }>({
     enableRowSelection: true,
     enableRowPinning: true,
     manualSorting: manualSorting,
+    // no pageSize → paginated row model passes rows through untouched
+    manualPagination: pagination == null,
     onRowSelectionChange: handleRowSelectionChange,
     onRowPinningChange: setRowPinning,
-    getCoreRowModel: getCoreRowModel<T>(),
-    getSortedRowModel: getSortedRowModel<T>(),
+    onRowOrderingChange: setRowOrdering,
+    onPaginationChange: handlePaginationChange,
   });
 
   const moveColumnLeft = useCallback(

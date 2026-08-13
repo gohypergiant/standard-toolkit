@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -14,24 +14,46 @@
 
 import 'client-only';
 import { clsx } from '@accelint/design-foundation/lib/utils';
-import {
-  Tab as AriaTab,
-  composeRenderProps,
-  type TabProps,
-} from 'react-aria-components';
+import { composeRenderProps } from 'react-aria-components/composeRenderProps';
+import { useContextProps } from 'react-aria-components/slots';
+import { Tab as AriaTab } from 'react-aria-components/Tabs';
+import { TabStyleDefaults } from './constants';
+import { TabContext } from './context';
 import styles from './styles.module.css';
+import type { TabProps } from './types';
 
 /**
- * Tab - Individual tab component
+ * Tab - Selectable tab within a TabList.
  *
- * Represents a selectable tab within a TabList
+ * @example
+ * ```tsx
+ * <TabList>
+ *   <Tab id="profile">Profile</Tab>
+ *   <Tab id="settings">Settings</Tab>
+ *   <Tab id="notifications" isDisabled>Notifications</Tab>
+ * </TabList>
+ * ```
+ *
+ * @param props - TabProps from react-aria-components.
+ * @param props.children - Tab label content.
+ * @param props.className - CSS class for the tab.
+ * @param props.align - Justification alignment for content within the Tab (only applicable when orientation is horizontal)
+ * @param props.flex - Boolean to determine if the Tab should grow in size (up to a max width). (only applicable when orientation is horizontal)
+ * @returns The rendered Tab component.
  */
-export function Tab({ children, className, ...rest }: TabProps) {
+export function Tab({ ref, ...props }: TabProps) {
+  [props, ref] = useContextProps(props, ref, TabContext);
+
+  const { children, className, align, flex, ...rest } = {
+    ...TabStyleDefaults,
+    ...props,
+  };
+
   return (
     <AriaTab
       {...rest}
       className={composeRenderProps(className, (className) =>
-        clsx(styles.tab, className),
+        clsx(styles.tab, styles[align], flex && styles.flex, className),
       )}
     >
       {children}

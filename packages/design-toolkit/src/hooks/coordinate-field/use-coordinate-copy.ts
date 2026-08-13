@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -10,15 +10,10 @@
  * governing permissions and limitations under the License.
  */
 
-import { getLogger } from '@accelint/logger';
 import { useState } from 'react';
+import { createLoggerDomain } from '@/utils/logger';
 
-const logger = getLogger({
-  enabled: process.env.NODE_ENV !== 'production',
-  level: 'debug',
-  prefix: '[CoordinateField]',
-  pretty: true,
-});
+const logger = createLoggerDomain('[CoordinateField]');
 
 import { getAllCoordinateFormats } from '../../components/coordinate-field/coordinate-utils';
 import type {
@@ -29,19 +24,63 @@ import type { UseTimeoutCleanupResult } from './use-timeout-cleanup';
 
 const COPY_FEEDBACK_DURATION_MS = 2000;
 
+/** Options for the useCoordinateCopy hook */
 export interface UseCoordinateCopyOptions {
+  /** Current coordinate value to copy (null if empty) */
   currentValue: CoordinateValue | null;
+  /** Array of validation error messages */
   validationErrors: string[];
+  /** Whether copying is disabled */
   isDisabled: boolean;
+  /** Function to register timeouts for cleanup */
   registerTimeout: UseTimeoutCleanupResult['registerTimeout'];
 }
 
+/** Return value from the useCoordinateCopy hook */
 export interface UseCoordinateCopyResult {
+  /** Currently copied format (for visual feedback) or null */
   copiedFormat: CoordinateSystem | null;
+  /** Copy coordinate in specified format to clipboard */
   handleCopyFormat: (formatToCopy: CoordinateSystem) => Promise<void>;
+  /** Whether copy format buttons should be enabled */
   isFormatButtonEnabled: boolean;
 }
 
+/**
+ * Handles copying coordinates to clipboard with format conversion and visual feedback
+ *
+ * @example
+ * ```tsx
+ * function CoordinateField() {
+ *   const { registerTimeout } = useTimeoutCleanup();
+ *   const [value, setValue] = useState<CoordinateValue | null>(null);
+ *   const [errors, setErrors] = useState<string[]>([]);
+ *
+ *   const { copiedFormat, handleCopyFormat, isFormatButtonEnabled } = useCoordinateCopy({
+ *     currentValue: value,
+ *     validationErrors: errors,
+ *     isDisabled: false,
+ *     registerTimeout,
+ *   });
+ *
+ *   return (
+ *     <Button
+ *       onPress={() => handleCopyFormat('dd')}
+ *       isDisabled={!isFormatButtonEnabled}
+ *     >
+ *       {copiedFormat === 'dd' ? <Check /> : <Copy />}
+ *     </Button>
+ *   );
+ * }
+ * ```
+ *
+ * @param options - {@link UseCoordinateCopyOptions}
+ * @param options.currentValue - Current coordinate value to copy (null if empty).
+ * @param options.validationErrors - Array of validation error messages.
+ * @param options.isDisabled - Whether copying is disabled.
+ * @param options.registerTimeout - Function to register timeouts for cleanup.
+ * @returns {@link UseCoordinateCopyResult} Copy utilities and feedback state.
+ */
 export function useCoordinateCopy({
   currentValue,
   validationErrors,
@@ -88,7 +127,7 @@ export function useCoordinateCopy({
         }, COPY_FEEDBACK_DURATION_MS),
       );
     } catch (err) {
-      logger.withError(err).warn('Fallback copy to clipboard failed');
+      logger.withError(err).error('Fallback copy to clipboard failed');
     }
 
     // Clean up temporary textarea

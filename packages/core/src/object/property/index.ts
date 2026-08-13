@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -17,16 +17,19 @@
  * @template K - The string template of property name of T.
  * @param obj - The object to get the value from.
  * @param prop - The property to get the value of.
+ * @returns The value of the specified property.
  *
  * @remarks
  * pure function
  *
  * @example
+ * ```typescript
  * property(personStore)('address');
  * // personStore.address
  *
  * property(userStore.profile)(0);
  * // userStore.profile.at(0)
+ * ```
  */
 export const property =
   <T extends object>(obj: T) =>
@@ -47,16 +50,19 @@ export const prop = property;
  * @template K - The string template of property name of T.
  * @param obj - The object to get the value from.
  * @param prop - The property to get the value of.
+ * @returns The value of the specified property, or undefined if not found.
  *
  * @remarks
  * pure function
  *
  * @example
+ * ```typescript
  * optionalProperty(personStore)('address');
  * // personStore?.address
  *
  * optionalProperty(userStore.profile)(0);
  * // userStore?.profile?.at(0)
+ * ```
  */
 export const optionalProperty =
   <T extends object>(obj?: T) =>

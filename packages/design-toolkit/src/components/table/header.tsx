@@ -1,6 +1,6 @@
 // __private-exports
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -12,9 +12,29 @@
  */
 
 import { TableHeaderCell } from './header-cell';
+import type { RowData } from '@tanstack/react-table';
 import type { TableHeaderProps } from './types';
 
-export function TableHeader<T>({
+/**
+ * TableHeader - Renders the table header section (`<thead>`).
+ *
+ * @example
+ * ```tsx
+ * <Table>
+ *   <TableHeader headerGroups={table.getHeaderGroups()} />
+ *   <TableBody rows={table.getRowModel().rows} />
+ * </Table>
+ * ```
+ *
+ * @param props - {@link TableHeaderProps}
+ * @param props.ref - Ref to the thead element.
+ * @param props.children - Custom children content.
+ * @param props.className - CSS class for the thead element.
+ * @param props.headerGroups - Array of TanStack header groups.
+ * @param props.columnSelection - Currently selected column ID.
+ * @returns The rendered TableHeader component.
+ */
+export function TableHeader<T extends RowData>({
   ref,
   children,
   className,

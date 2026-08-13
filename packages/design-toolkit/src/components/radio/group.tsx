@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -13,13 +13,11 @@
 
 import 'client-only';
 import { clsx } from '@accelint/design-foundation/lib/utils';
-import {
-  RadioGroup as AriaRadioGroup,
-  composeRenderProps,
-  useContextProps,
-} from 'react-aria-components';
+import { RadioGroup as AriaRadioGroup } from 'react-aria-components/RadioGroup';
+import { composeRenderProps } from 'react-aria-components/composeRenderProps';
+import { useContextProps } from 'react-aria-components/slots';
 import { Label } from '../label';
-import { RadioContext } from './context';
+import { RadioContext, RadioGroupContext } from './context';
 import styles from './styles.module.css';
 import type { RadioGroupProps } from './types';
 
@@ -28,11 +26,27 @@ import type { RadioGroupProps } from './types';
  *
  * Groups related Radio components and manages their selection state.
  * Only one Radio can be selected at a time within a RadioGroup.
+ *
+ * @example
+ * ```tsx
+ * <RadioGroup label="Size" value="medium" onChange={setValue}>
+ *   <Radio value="small">Small</Radio>
+ *   <Radio value="medium">Medium</Radio>
+ *   <Radio value="large">Large</Radio>
+ * </RadioGroup>
+ * ```
+ *
+ * @param props - {@link RadioGroupProps}
+ * @param props.ref - Forwarded ref for the group container.
+ * @param props.classNames - Custom CSS class names for group and label.
+ * @param props.label - Optional text label for the group.
+ * @param props.children - Radio components to render inside the group.
+ * @returns The rendered RadioGroup component.
  */
 export function RadioGroup({ ref, ...props }: RadioGroupProps) {
-  [props, ref] = useContextProps(props, ref ?? null, RadioContext);
+  [props, ref] = useContextProps(props, ref ?? null, RadioGroupContext);
 
-  const { children, classNames, label, ...rest } = props;
+  const { children, classNames, label, labelPosition, ...rest } = props;
 
   return (
     <AriaRadioGroup
@@ -43,7 +57,7 @@ export function RadioGroup({ ref, ...props }: RadioGroupProps) {
       )}
     >
       {composeRenderProps(children, (children, { isDisabled, isRequired }) => (
-        <>
+        <RadioContext value={{ labelPosition }}>
           {label && (
             <Label
               className={clsx(styles.label, classNames?.label)}
@@ -54,7 +68,7 @@ export function RadioGroup({ ref, ...props }: RadioGroupProps) {
             </Label>
           )}
           {children}
-        </>
+        </RadioContext>
       ))}
     </AriaRadioGroup>
   );

@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -15,7 +15,7 @@ import 'client-only';
 import { clsx } from '@accelint/design-foundation/lib/utils';
 import ChevronDown from '@accelint/icons/chevron-down';
 import { useContext } from 'react';
-import { composeRenderProps, Heading } from 'react-aria-components';
+import { Heading } from 'react-aria-components/Heading';
 import { isSlottedContextValue } from '../../lib/utils';
 import { Button } from '../button';
 import { Icon } from '../icon';
@@ -23,7 +23,30 @@ import { IconContext } from '../icon/context';
 import { AccordionContext } from './context';
 import styles from './styles.module.css';
 import type { AccordionTriggerProps } from './types';
+import { composeRenderProps } from 'react-aria-components/composeRenderProps';
 
+/**
+ * Trigger button component for expanding/collapsing accordion sections.
+ *
+ * Renders a clickable button that toggles the visibility of the associated
+ * accordion panel. Includes a chevron icon that rotates to indicate state.
+ *
+ * @param props - The accordion trigger props.
+ * @param props.ref - Reference to the heading element.
+ * @param props.children - Content to display in the trigger button.
+ * @param props.classNames - Custom class names for the heading and trigger elements.
+ * @returns The accordion trigger component.
+ *
+ * @example
+ * ```tsx
+ * <Accordion>
+ *   <AccordionHeader>
+ *     <AccordionTrigger>Click to expand</AccordionTrigger>
+ *   </AccordionHeader>
+ *   <AccordionPanel>Hidden content</AccordionPanel>
+ * </Accordion>
+ * ```
+ */
 export function AccordionTrigger({
   ref,
   children,

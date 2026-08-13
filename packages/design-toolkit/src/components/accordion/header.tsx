@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -15,7 +15,7 @@ import 'client-only';
 import { clsx } from '@accelint/design-foundation/lib/utils';
 import Kebab from '@accelint/icons/kebab';
 import { useContext } from 'react';
-import { Header, Provider } from 'react-aria-components';
+import { Header } from 'react-aria-components/Header';
 import { isSlottedContextValue } from '../../lib/utils';
 import { ButtonContext } from '../button/context';
 import { Icon } from '../icon';
@@ -23,7 +23,32 @@ import { IconContext } from '../icon/context';
 import { AccordionContext } from './context';
 import styles from './styles.module.css';
 import type { AccordionHeaderProps } from './types';
+import { Provider } from 'react-aria-components/slots';
 
+/**
+ * Header component for accordion sections.
+ *
+ * Provides context and styling for the accordion trigger button and
+ * optional menu actions. Automatically adjusts icon sizes based on
+ * the accordion variant.
+ *
+ * @param props - The accordion header props.
+ * @param props.ref - Reference to the header element.
+ * @param props.children - Content to display in the header, typically an AccordionTrigger.
+ * @param props.className - Additional CSS class names for styling.
+ * @returns The accordion header component.
+ *
+ * @example
+ * ```tsx
+ * <Accordion>
+ *   <AccordionHeader>
+ *     <AccordionTrigger>Section Title</AccordionTrigger>
+ *     <Button>Action</Button>
+ *   </AccordionHeader>
+ *   <AccordionPanel>Content</AccordionPanel>
+ * </Accordion>
+ * ```
+ */
 export function AccordionHeader({
   ref,
   children,

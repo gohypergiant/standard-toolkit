@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -11,14 +11,10 @@
  */
 
 import { bootstrap } from './bootstrap';
-import type { LogLayer, LogLevel } from 'loglayer';
+import type { LogLayer } from 'loglayer';
 import type { LoggerOptions } from '../definitions';
 
-let logInstance: LogLayer;
-
-type LogLevelType = LogLevel | `${LogLevel}`;
-
-export type { LogLevel, LogLevelType };
+let logInstance: LogLayer | undefined;
 
 /**
  * Returns a singleton LogLayer logger instance.
@@ -31,21 +27,30 @@ export type { LogLevel, LogLevelType };
  * - Environment plugin (adds server/browser context to log data)
  * - Error serialization via serialize-error
  *
- * @param opts - Configuration options for the logger
+ * @param opts - Logger configuration options
+ * @param opts.enabled - Whether logging is active; `false` makes all calls no-ops
+ * @param opts.level - Minimum log level to output (default: `'debug'`)
+ * @param opts.env - Runtime environment; controls server detection (default: `'development'`)
+ * @param opts.pretty - Use pretty console output; `false` emits structured JSON (default: `true`)
+ * @param opts.prefix - String prepended to all log messages (default: `''`)
+ * @param opts.plugins - Additional plugins applied after the built-in ones
+ * @param opts.transports - Custom transports that replace the default console transport; include `prettyTransport` or `structuredTransport` explicitly to keep console output
+ * @param opts.groups - Named group configuration for conditional group logging
  * @returns A configured LogLayer instance
  *
  * @example
- * ```ts
+ * ```typescript
  * const logger = getLogger({
- *   enabled: process.env.NODE_ENV !== 'test',
+ *   enabled: true,
+ *   env: process.env.NODE_ENV as 'production' | 'development',
  *   level: 'warn',
  *   prefix: '[MyApp]',
  * });
  *
- * logger.info('User logged in', { userId: 123 });
+ * logger.withMetadata({ userId: 123 }).info('User logged in');
  * ```
  */
-export function getLogger(opts: LoggerOptions): LogLayer {
+export function getLogger(opts: LoggerOptions) {
   if (!logInstance) {
     logInstance = bootstrap(opts);
   }

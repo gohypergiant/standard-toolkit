@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -13,16 +13,42 @@
 
 import 'client-only';
 import { clsx } from '@accelint/design-foundation/lib/utils';
-import {
-  CheckboxGroup as AriaCheckboxGroup,
-  composeRenderProps,
-  useContextProps,
-} from 'react-aria-components';
+import { CheckboxGroup as AriaCheckboxGroup } from 'react-aria-components/CheckboxGroup';
 import { Label } from '../label';
-import { CheckboxGroupContext } from './context';
+import { CheckboxContext, CheckboxGroupContext } from './context';
 import styles from './styles.module.css';
 import type { CheckboxGroupProps } from './types';
+import { composeRenderProps } from 'react-aria-components/composeRenderProps';
+import { useContextProps } from 'react-aria-components/slots';
 
+/**
+ * Groups multiple checkboxes with shared state and configuration.
+ *
+ * @param props - The checkbox group props.
+ * @param props.ref - Reference to the group container element.
+ * @param props.children - Checkbox components to render within the group.
+ * @param props.classNames - Custom class names for sub-elements.
+ * @param props.label - Label text displayed above the group.
+ * @param props.orientation - Layout orientation ('vertical' or 'horizontal').
+ * @returns The checkbox group component.
+ *
+ * @example
+ * ```tsx
+ * <CheckboxGroup label="Preferences">
+ *   <Checkbox value="email">Email</Checkbox>
+ *   <Checkbox value="sms">SMS</Checkbox>
+ * </CheckboxGroup>
+ * ```
+ *
+ * @example
+ * ```tsx
+ * // Horizontal layout
+ * <CheckboxGroup label="Features" orientation="horizontal">
+ *   <Checkbox value="a">Feature A</Checkbox>
+ *   <Checkbox value="b">Feature B</Checkbox>
+ * </CheckboxGroup>
+ * ```
+ */
 export function CheckboxGroup({ ref, ...props }: CheckboxGroupProps) {
   [props, ref] = useContextProps(props, ref ?? null, CheckboxGroupContext);
 
@@ -30,6 +56,7 @@ export function CheckboxGroup({ ref, ...props }: CheckboxGroupProps) {
     children,
     classNames,
     label,
+    labelPosition,
     orientation = 'vertical',
     ...rest
   } = props;
@@ -44,7 +71,7 @@ export function CheckboxGroup({ ref, ...props }: CheckboxGroupProps) {
       data-orientation={orientation}
     >
       {composeRenderProps(children, (children, { isDisabled, isRequired }) => (
-        <>
+        <CheckboxContext value={{ labelPosition }}>
           {label && (
             <Label
               className={clsx(styles.label, classNames?.label)}
@@ -55,7 +82,7 @@ export function CheckboxGroup({ ref, ...props }: CheckboxGroupProps) {
             </Label>
           )}
           {children}
-        </>
+        </CheckboxContext>
       ))}
     </AriaCheckboxGroup>
   );

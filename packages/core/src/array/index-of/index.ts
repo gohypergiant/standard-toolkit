@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -17,15 +17,18 @@
  * @template T - The type of array elements.
  * @param x - The value to find in the array.
  * @param arr - The array to search for the element in.
+ * @returns The index of the element, or -1 if not found.
  *
  * @remarks
  * pure function
  *
  * @example
+ * ```typescript
  * import { indexOf } from '@accelint/core';
  *
  * indexOf(3)([1, 2, 3, 4, 5]);
  * // 2
+ * ```
  */
 export const indexOf =
   <T>(x: T) =>

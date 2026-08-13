@@ -10,35 +10,38 @@
  * governing permissions and limitations under the License.
  */
 
-'use client';
-
-import {
-  DEFAULT_DISTANCE_UNITS,
-  getDistanceUnitFromAbbreviation,
-} from '@/shared/units';
+import { DISTANCE_UNIT_BY_SYMBOL } from '@accelint/constants/units';
+import { DEFAULT_DISTANCE_UNITS } from '@/shared/units';
 import {
   DEFAULT_EDIT_HANDLE_COLOR,
   EDITABLE_LAYER_SUBLAYER_PROPS,
 } from '../constants';
+import type {
+  DistanceUnit,
+  DistanceUnitSymbol,
+} from '@accelint/constants/units';
 import type { Color } from '@deck.gl/core';
-import type { DistanceUnit } from '@/shared/units';
 
 /**
  * Props returned by getDefaultEditableLayerProps.
  * These are common configuration props shared between DrawShapeLayer and EditShapeLayer.
  */
-export interface EditableLayerDefaultProps {
-  /** Edit handle point color */
+export type EditableLayerDefaultProps = {
+  /** Edit handle point color. */
   getEditHandlePointColor: Color;
-  /** Edit handle point outline color */
+  /** Edit handle point outline color. */
   getEditHandlePointOutlineColor: Color;
-  /** Mode configuration with distance units */
+  /** Mode configuration with distance units. */
   modeConfig: {
     distanceUnits: DistanceUnit;
   };
-  /** Sublayer props for tooltips and edit handles */
+  /** Sublayer props for tooltips and edit handles. */
   _subLayerProps: typeof EDITABLE_LAYER_SUBLAYER_PROPS;
-}
+};
+
+let cachedSymbol: DistanceUnitSymbol | undefined;
+let cachedProps: EditableLayerDefaultProps | undefined;
+let hasCache = false;
 
 /**
  * Returns default props for EditableGeoJsonLayer configuration.
@@ -48,8 +51,8 @@ export interface EditableLayerDefaultProps {
  * - Mode configuration with distance units
  * - Sublayer props for tooltips and handles
  *
- * @param unitAbbrev - Optional unit abbreviation (e.g., 'km', 'mi'). Defaults to DEFAULT_DISTANCE_UNITS.
- * @returns Default props to spread onto EditableGeoJsonLayer
+ * @param unitSymbol - Optional unit symbol (e.g., 'km', 'mi'). Defaults to DEFAULT_DISTANCE_UNITS.
+ * @returns Default props to spread onto EditableGeoJsonLayer.
  *
  * @example
  * ```tsx
@@ -60,18 +63,25 @@ export interface EditableLayerDefaultProps {
  * ```
  */
 export function getDefaultEditableLayerProps(
-  unitAbbrev?: string,
+  unitSymbol?: DistanceUnitSymbol,
 ): EditableLayerDefaultProps {
-  return {
+  if (hasCache && cachedSymbol === unitSymbol && cachedProps) {
+    return cachedProps;
+  }
+
+  hasCache = true;
+  cachedSymbol = unitSymbol;
+  cachedProps = {
     getEditHandlePointColor: DEFAULT_EDIT_HANDLE_COLOR,
     getEditHandlePointOutlineColor: DEFAULT_EDIT_HANDLE_COLOR,
     modeConfig: {
-      distanceUnits: unitAbbrev
-        ? (getDistanceUnitFromAbbreviation(unitAbbrev) ??
-          DEFAULT_DISTANCE_UNITS)
+      distanceUnits: unitSymbol
+        ? (DISTANCE_UNIT_BY_SYMBOL[unitSymbol] ?? DEFAULT_DISTANCE_UNITS)
         : DEFAULT_DISTANCE_UNITS,
     },
     // biome-ignore lint/style/useNamingConvention: deck.gl API convention
     _subLayerProps: EDITABLE_LAYER_SUBLAYER_PROPS,
   };
+
+  return cachedProps;
 }

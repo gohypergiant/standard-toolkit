@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -15,11 +15,11 @@ import 'client-only';
 import { clsx } from '@accelint/design-foundation/lib/utils';
 import {
   Dialog as AriaDialog,
-  composeRenderProps,
   Modal,
   ModalOverlay,
-  useContextProps,
-} from 'react-aria-components';
+} from 'react-aria-components/Modal';
+import { composeRenderProps } from 'react-aria-components/composeRenderProps';
+import { useContextProps } from 'react-aria-components/slots';
 import { PortalProvider } from '@/providers/portal';
 import { DialogContext } from './context';
 import styles from './styles.module.css';
@@ -32,7 +32,16 @@ import type { DialogProps } from './types';
  * and keyboard navigation. Supports multiple sizes and customizable dismissal behavior.
  * Perfect for confirmations, forms, or any content requiring user focus.
  *
+ * @param props - The dialog props.
+ * @param props.ref - Reference to the dialog element.
+ * @param props.children - Dialog content (can be a render function with close callback).
+ * @param props.classNames - Custom class names for sub-elements.
+ * @param props.parentRef - Reference to parent element for portal rendering.
+ * @param props.size - Size variant of the dialog.
+ * @returns The dialog component.
+ *
  * @example
+ * ```tsx
  * // Basic dialog with trigger
  * <DialogTrigger>
  *   <Button>Open Dialog</Button>
@@ -48,6 +57,7 @@ import type { DialogProps } from './types';
  *     )}
  *   </Dialog>
  * </DialogTrigger>
+ * ```
  */
 export function Dialog({ ref, ...props }: DialogProps) {
   [props, ref] = useContextProps(props, ref ?? null, DialogContext);

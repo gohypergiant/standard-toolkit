@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -14,17 +14,50 @@
 import 'client-only';
 import { clsx } from '@accelint/design-foundation/lib/utils';
 import CancelFill from '@accelint/icons/cancel-fill';
-import {
-  Tag as AriaTag,
-  composeRenderProps,
-  useContextProps,
-} from 'react-aria-components';
+import { Tag as AriaTag } from 'react-aria-components/TagGroup';
+import { composeRenderProps } from 'react-aria-components/composeRenderProps';
+import { useContextProps } from 'react-aria-components/slots';
 import { Button } from '../button';
 import { Icon } from '../icon';
 import { ChipContext } from './context';
 import styles from './styles.module.css';
 import type { DeletableChipProps } from './types';
 
+/**
+ * DeletableChip - Chip with built-in remove button for dynamic content management.
+ *
+ * Must be used inside a ChipList with an onRemove handler.
+ *
+ * @param props - The deletable chip props.
+ * @param props.ref - Reference to the chip element.
+ * @param props.id - Unique identifier for removal tracking.
+ * @param props.children - Chip content.
+ * @param props.classNames - Custom class names for sub-elements.
+ * @param props.size - Size of the chip.
+ * @param props.textValue - Accessible text value for the chip.
+ * @returns The deletable chip component.
+ *
+ * @example
+ * ```tsx
+ * <ChipList onRemove={(keys) => console.log('Removed:', keys)}>
+ *   <DeletableChip id="tag1">JavaScript</DeletableChip>
+ *   <DeletableChip id="tag2">Python</DeletableChip>
+ * </ChipList>
+ * ```
+ *
+ * @example
+ * ```tsx
+ * // With custom classNames
+ * <ChipList onRemove={handleRemove}>
+ *   <DeletableChip
+ *     id="tag1"
+ *     classNames={{ chip: 'custom-chip', remove: 'custom-remove' }}
+ *   >
+ *     Styled Tag
+ *   </DeletableChip>
+ * </ChipList>
+ * ```
+ */
 export function DeletableChip({ ref, ...props }: DeletableChipProps) {
   [props, ref] = useContextProps(props, ref ?? null, ChipContext);
 

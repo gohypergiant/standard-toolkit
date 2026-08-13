@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -16,7 +16,9 @@ import { useEmit } from '@accelint/bus/react';
 import { clsx } from '@accelint/design-foundation/lib/utils';
 import ChevronLeft from '@accelint/icons/chevron-left';
 import { useContext } from 'react';
-import { Button, composeRenderProps, Header } from 'react-aria-components';
+import { composeRenderProps } from 'react-aria-components/composeRenderProps';
+import { Button } from 'react-aria-components/Button';
+import { Header } from 'react-aria-components/Header';
 import { Icon } from '../icon';
 import { SidenavContext } from './context';
 import { SidenavEventTypes } from './events';
@@ -27,6 +29,23 @@ import type { SidenavHeaderProps, SidenavToggleEvent } from './types';
  * SidenavHeader - Header component for sidenav
  *
  * Provides a header with toggle button for the sidenav
+ *
+ * @example
+ * ```tsx
+ * <Sidenav>
+ *   <SidenavHeader>
+ *     <SidenavAvatar>
+ *       <Avatar>JD</Avatar>
+ *       <Heading>John Doe</Heading>
+ *     </SidenavAvatar>
+ *   </SidenavHeader>
+ * </Sidenav>
+ * ```
+ *
+ * @param props - {@link SidenavHeaderProps}
+ * @param props.children - Header content (typically SidenavAvatar).
+ * @param props.classNames - Custom CSS class names for header elements.
+ * @returns The rendered SidenavHeader component.
  */
 export function SidenavHeader({
   children,

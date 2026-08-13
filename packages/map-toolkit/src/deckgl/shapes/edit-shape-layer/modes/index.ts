@@ -13,6 +13,10 @@
 import { TranslateMode, ViewMode } from '@deck.gl-community/editable-layers';
 import { BoundingTransformMode } from './bounding-transform-mode';
 import { CircleTransformMode } from './circle-transform-mode';
+import { EllipseTransformMode } from './ellipse-transform-mode';
+import { LockedBoundingTransformMode } from './locked-bounding-transform-mode';
+import { PointTranslateMode } from './point-translate-mode';
+import { RectangleTransformMode } from './rectangle-transform-mode';
 import { VertexTransformMode } from './vertex-transform-mode';
 import type { EditMode } from '../types';
 
@@ -24,9 +28,23 @@ import type { EditMode } from '../types';
  * causes the EditableGeoJsonLayer to fail with assertion errors.
  *
  * BoundingTransformMode combines ScaleModeWithFreeTransform, RotateMode, and
- * TranslateMode for shapes without vertex editing (ellipses, rectangles),
- * allowing non-uniform scaling plus rotate/translate via bounding box handles.
- * Shows live dimension tooltips during scaling.
+ * TranslateMode for generic axis-bounded shapes, allowing non-uniform scaling
+ * plus rotate/translate via bounding box handles. Shows live dimension
+ * tooltips during scaling. Most concrete shapes use a more specific subclass
+ * — see RectangleTransformMode and EllipseTransformMode below.
+ *
+ * RectangleTransformMode mirrors BoundingTransformMode but uses RectangleScaleMode
+ * in place of ScaleModeWithFreeTransform. The replacement places scale handles
+ * at the rectangle's actual rotated corners and projects corner drags onto the
+ * rectangle's local edge directions, so rotated rectangles can be resized
+ * without distorting into a parallelogram.
+ *
+ * EllipseTransformMode mirrors BoundingTransformMode but uses EllipseScaleMode
+ * in place of ScaleModeWithFreeTransform. Scale handles sit on the ellipse
+ * curve at the four axis endpoints (where the major and minor axes meet the
+ * boundary); each drag projects the cursor onto the dragged axis in Mercator
+ * space and regenerates the polygon parametrically, so rotated ellipses stay
+ * a clean rotated ellipse rather than being stretched into a non-ellipse.
  *
  * VertexTransformMode combines ModifyMode with ScaleModeWithFreeTransform,
  * RotateMode, and TranslateMode for shapes that support vertex editing
@@ -34,23 +52,57 @@ import type { EditMode } from '../types';
  *
  * CircleTransformMode combines ResizeCircleMode with TranslateMode
  * for circles, allowing resize from edge plus drag to translate.
- * Shows live diameter/area tooltips during resize.
+ * Shows live radius/area tooltips during resize.
  *
- * TranslateMode allows dragging to move the shape (used for points).
+ * PointTranslateMode allows clicking anywhere on the map to reposition
+ * a point, or dragging the point for traditional translation behavior.
+ *
+ * TranslateMode allows dragging to move the shape (generic translation).
  */
 const EDIT_MODE_INSTANCES = {
   view: new ViewMode(),
   'bounding-transform': new BoundingTransformMode(),
+  'rectangle-transform': new RectangleTransformMode(),
+  'ellipse-transform': new EllipseTransformMode(),
+  'locked-bounding-transform': new LockedBoundingTransformMode(),
   'vertex-transform': new VertexTransformMode(),
   'circle-transform': new CircleTransformMode(),
   translate: new TranslateMode(),
+  'point-translate': new PointTranslateMode(),
 } as const;
 
 /**
  * Get the cached mode instance for an edit mode.
  *
+ * Returns the pre-instantiated edit mode for the specified mode type.
+ * Modes are cached at module level to prevent deck.gl assertion failures
+ * that occur when creating new mode instances on each render.
+ *
+ * ## Available Edit Modes
+ * - `'bounding-transform'`: Generic axis-bounded fallback (scale via bbox handles + rotate + translate)
+ * - `'rectangle-transform'`: For rectangles (rotation-aware corner-drag scale + rotate + translate)
+ * - `'ellipse-transform'`: For ellipses (axis-endpoint scale handles + rotate + translate)
+ * - `'vertex-transform'`: For shapes with vertex editing (polygons, lines)
+ * - `'circle-transform'`: For circles (resize from edge + translate)
+ * - `'point-translate'`: For points (click to place + drag to move)
+ * - `'translate'`: Generic translation (drag to move)
+ *
  * @param mode - The edit mode to get the instance for
  * @returns The cached mode instance
+ *
+ * @example
+ * ```typescript
+ * import { getEditModeInstance } from '@accelint/map-toolkit/deckgl/shapes/edit-shape-layer/modes';
+ *
+ * // Get the bounding transform mode for editing rectangles/ellipses
+ * const boundingMode = getEditModeInstance('bounding-transform');
+ *
+ * // Use with EditableGeoJsonLayer
+ * const layer = new EditableGeoJsonLayer({
+ *   mode: boundingMode,
+ *   // ... other props
+ * });
+ * ```
  */
 export function getEditModeInstance(
   mode: EditMode,
@@ -61,7 +113,25 @@ export function getEditModeInstance(
 /**
  * Get the ViewMode instance (for when not editing).
  *
+ * Returns the pre-instantiated ViewMode which is the default mode when
+ * no editing operation is active. This mode allows viewing and interacting
+ * with the map without editing shapes.
+ *
  * @returns The cached ViewMode instance
+ *
+ * @example
+ * ```typescript
+ * import { getViewModeInstance } from '@accelint/map-toolkit/deckgl/shapes/edit-shape-layer/modes';
+ *
+ * // Get the view mode (default when not editing)
+ * const viewMode = getViewModeInstance();
+ *
+ * // Use with EditableGeoJsonLayer
+ * const layer = new EditableGeoJsonLayer({
+ *   mode: viewMode,
+ *   // ... other props
+ * });
+ * ```
  */
 export function getViewModeInstance(): ViewMode {
   return EDIT_MODE_INSTANCES.view;

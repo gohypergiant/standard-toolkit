@@ -28,9 +28,14 @@ storybook-static
 # ide files
 *.iml
 .idea
+.pi/tasks/
 
 # MemLab - Generated artifacts (don't commit)
 */memlab/reports/*.json
 */memlab/reports/html
 */memlab/reports/memlab-report.html
 apps/next/test-results/
+
+# Agent audits
+.agents/audit/*
+apps/docs/next-env.d.ts

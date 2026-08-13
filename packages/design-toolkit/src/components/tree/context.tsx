@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -15,9 +15,7 @@ import 'client-only';
 import { createContext } from 'react';
 import type { TreeContextValue, TreeItemContextValue } from './types';
 
-/**
- * Context for Tree component
- */
+/** Context for sharing state across Tree components */
 export const TreeContext = createContext<TreeContextValue>({
   visibilityComputedKeys: new Set(),
   showRuleLines: true,
@@ -27,9 +25,7 @@ export const TreeContext = createContext<TreeContextValue>({
   onVisibilityChange: () => undefined,
 });
 
-/**
- * Context for TreeItem component
- */
+/** Context for sharing state within a TreeItem */
 export const TreeItemContext = createContext<TreeItemContextValue>({
   isVisible: true,
   isViewable: true,

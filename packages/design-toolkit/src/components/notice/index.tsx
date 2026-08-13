@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -18,7 +18,7 @@ import {
   Text,
   UNSTABLE_Toast as Toast,
   UNSTABLE_ToastContent as ToastContent,
-} from 'react-aria-components';
+} from 'react-aria-components/Toast';
 import { Button } from '../button';
 import { Icon } from '../icon';
 import { NoticeIcon } from './notice-icon';
@@ -34,6 +34,37 @@ const ButtonColorMap: Record<NoticeColor, ButtonProps['color']> = {
   critical: 'critical',
 };
 
+/**
+ * Notice - Notification component for temporary messages and alerts
+ *
+ * Displays messages with optional action buttons and close functionality.
+ * Icons are automatically displayed based on the color variant.
+ *
+ * @example
+ * ```tsx
+ * <Notice
+ *   id="notice-1"
+ *   message="Operation completed"
+ *   color="normal"
+ * />
+ * ```
+ *
+ * @param props - {@link NoticeProps}
+ * @param props.id - Unique identifier for the notice.
+ * @param props.classNames - CSS class names for notice elements.
+ * @param props.color - Color variant indicating severity.
+ * @param props.message - Message text to display.
+ * @param props.primary - Primary action button configuration.
+ * @param props.secondary - Secondary action button configuration.
+ * @param props.hideIcon - Whether to hide the status icon.
+ * @param props.showClose - Whether to show the close button.
+ * @param props.shouldCloseOnAction - Whether to close the notice when an action button is pressed.
+ * @param props.size - Size variant for the notice.
+ * @param props.onPrimaryAction - Callback when primary action button is pressed.
+ * @param props.onSecondaryAction - Callback when secondary action button is pressed.
+ * @param props.onClose - Callback when the notice is closed.
+ * @returns The rendered Notice component.
+ */
 export function Notice({
   id,
   classNames,
@@ -41,6 +72,7 @@ export function Notice({
   message,
   primary,
   secondary,
+  metadata,
   hideIcon,
   showClose,
   shouldCloseOnAction,
@@ -55,6 +87,7 @@ export function Notice({
       toast={{ key: id, content: message, onClose }}
       data-color={color}
       data-size={size}
+      style={{ viewTransitionName: id }}
     >
       <ToastContent className={clsx(styles.content, classNames?.content)}>
         {!hideIcon && size === 'medium' && (
@@ -75,7 +108,7 @@ export function Notice({
                 {...primary}
                 size={size}
                 onPress={() => {
-                  onPrimaryAction?.();
+                  onPrimaryAction?.(metadata);
 
                   if (shouldCloseOnAction) {
                     onClose?.();
@@ -90,7 +123,7 @@ export function Notice({
                 {...secondary}
                 size={size}
                 onPress={() => {
-                  onSecondaryAction?.();
+                  onSecondaryAction?.(metadata);
 
                   if (shouldCloseOnAction) {
                     onClose?.();

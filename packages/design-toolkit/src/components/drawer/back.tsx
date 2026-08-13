@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -20,6 +20,24 @@ import { Icon } from '../icon';
 import { ViewStackContext } from '../view-stack/context';
 import { DrawerTrigger } from './trigger';
 
+/**
+ * DrawerBack - Back navigation button for nested drawer views.
+ *
+ * Only renders when the view stack has more than one view.
+ * Triggers a 'back' action to pop the current view from the stack.
+ *
+ * @returns The rendered DrawerBack button, or null if at root view.
+ *
+ * @example
+ * ```tsx
+ * <DrawerView id={nestedViewId}>
+ *   <DrawerHeader>
+ *     <DrawerBack />
+ *     <DrawerHeaderTitle>Nested View</DrawerHeaderTitle>
+ *   </DrawerHeader>
+ * </DrawerView>
+ * ```
+ */
 export function DrawerBack() {
   const { stack } = useContext(ViewStackContext);
 

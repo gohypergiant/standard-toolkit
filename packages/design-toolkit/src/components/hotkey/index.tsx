@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -14,7 +14,8 @@
 
 import 'client-only';
 import { clsx } from '@accelint/design-foundation/lib/utils';
-import { Keyboard, useContextProps } from 'react-aria-components';
+import { Keyboard } from 'react-aria-components/Keyboard';
+import { useContextProps } from 'react-aria-components/slots';
 import { HotkeyContext } from './context';
 import styles from './styles.module.css';
 import type { HotkeyProps } from './types';
@@ -27,28 +28,43 @@ import type { HotkeyProps } from './types';
  * keyboard shortcuts. Supports multiple visual styles including outlined keys,
  * flat presentation, and icon-specific formatting.
  *
- * @example
- * // Basic hotkey display
- * <Hotkey>Ctrl</Hotkey>
+ * @param props - {@link HotkeyProps}
+ * @param props.ref - Ref to the kbd element.
+ * @param props.children - Key text or icon to display.
+ * @param props.className - Optional CSS class name.
+ * @param props.variant - Visual style variant.
+ * @returns The rendered Hotkey component.
  *
  * @example
+ * ```tsx
+ * // Basic hotkey display
+ * <Hotkey>Ctrl</Hotkey>
+ * ```
+ *
+ * @example
+ * ```tsx
  * // Hotkey combination with different variants
  * <HotkeySet>
  *   <Hotkey variant="outline">Cmd</Hotkey>
  *   <span>+</span>
  *   <Hotkey variant="outline">K</Hotkey>
  * </HotkeySet>
+ * ```
  *
  * @example
+ * ```tsx
  * // Flat style for inline text
  * <p>Press <Hotkey variant="flat">Enter</Hotkey> to submit</p>
+ * ```
  *
  * @example
+ * ```tsx
  * // Icon variant for special keys
  * <HotkeySet>
  *   <Hotkey variant="icon">⌘</Hotkey>
  *   <Hotkey>Space</Hotkey>
  * </HotkeySet>
+ * ```
  */
 export function Hotkey({ ref, children, ...props }: HotkeyProps) {
   [props, ref] = useContextProps(props, ref ?? null, HotkeyContext);

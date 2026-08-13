@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -14,7 +14,8 @@ import { uuid } from '@accelint/core';
 import { Placeholder } from '@accelint/icons';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { Heading, Text } from 'react-aria-components';
+import { Text } from 'react-aria-components/Text';
+import { Heading } from 'react-aria-components/Heading';
 import { describe, expect, it } from 'vitest';
 import { Button } from '../button';
 import { Divider } from '../divider';
@@ -154,6 +155,24 @@ describe('Sidenav', () => {
     expect(screen.getByText('Settings')).toBeInTheDocument();
     expect(screen.getByText('Menu Item')).toBeInTheDocument();
     expect(screen.getByText('Menu Item 2')).toBeInTheDocument();
+  });
+
+  it('wires the external-link arrow as a transient icon so it hides when collapsed', () => {
+    // Structural contract for the collapsed-state hide. The trailing arrow is
+    // an <Icon> (which sets its own `display: block`), so it must carry the
+    // `transient` class for `.transient`'s collapsed `display: none!` to reach
+    // it; without the class the arrow leaks into the collapsed rail. jsdom does
+    // not evaluate the Tailwind CSS module, so the pixel outcome is covered by
+    // the `sidenav-collapsed` visual-regression baseline.
+    setup();
+
+    const link = screen.getByRole('link', { name: /Link item/i });
+    const icons = link.querySelectorAll('[class*="icon"]');
+    const arrow = icons[icons.length - 1];
+
+    // First icon is the main icon (not transient); the trailing arrow is.
+    expect(icons[0]?.className).not.includes('transient');
+    expect(arrow?.className).includes('transient');
   });
 
   it('should open externally', async () => {

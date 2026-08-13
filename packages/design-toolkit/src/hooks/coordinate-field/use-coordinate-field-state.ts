@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -32,31 +32,102 @@ import type {
   SegmentConfig,
 } from '../../components/coordinate-field/types';
 
+/** Options for the useCoordinateFieldState hook */
 export interface UseCoordinateFieldStateOptions {
+  /** Controlled coordinate value */
   value?: CoordinateValue | null;
+  /** Default value for uncontrolled mode */
   defaultValue?: CoordinateValue;
+  /** Coordinate format system (dd, ddm, dms, mgrs, utm) */
   format: CoordinateSystem;
+  /** Callback when coordinate value changes */
   onChange?:
     | Dispatch<SetStateAction<CoordinateValue | null>>
     | ((value: CoordinateValue | null) => void);
+  /** Callback for validation errors */
   onError?: (message: string, context?: Record<string, unknown>) => void;
+  /** Register timeouts for cleanup on unmount */
   registerTimeout?: (timeoutId: NodeJS.Timeout) => void;
 }
 
+/** Return value from the useCoordinateFieldState hook */
 export interface UseCoordinateFieldStateResult {
+  /** Current coordinate value (null if incomplete/invalid) */
   currentValue: CoordinateValue | null;
+  /** Array of display values for each segment */
   segmentValues: string[];
+  /** Array of validation error messages */
   validationErrors: string[];
+  /** All segment configurations including literals */
   segmentConfigs: SegmentConfig[];
+  /** Only editable segment configurations */
   editableSegmentConfigs: SegmentConfig[];
+  /** Handle change of a single segment */
   handleSegmentChange: (index: number, newValue: string) => void;
+  /** Handle blur event for a segment */
+  handleSegmentBlur: (index: number) => void;
+  /** Set all segment values at once */
   setSegmentValues: (values: string[]) => void;
+  /** Set validation errors */
   setValidationErrors: (errors: string[]) => void;
+  /** First validation error or null */
   effectiveErrorMessage: string | null;
+  /** Apply a pasted coordinate value */
   applyPastedCoordinate: (pastedValue: CoordinateValue) => void;
+  /** Immediately run pending validation */
   flushPendingValidation: () => void;
 }
 
+/**
+ * Manages coordinate segment values, validation, and format conversion
+ *
+ * @example
+ * ```tsx
+ * function CoordinateInputs() {
+ *   const [value, setValue] = useState<CoordinateValue | null>(null);
+ *   const { registerTimeout } = useTimeoutCleanup();
+ *
+ *   const {
+ *     currentValue,
+ *     segmentValues,
+ *     validationErrors,
+ *     editableSegmentConfigs,
+ *     handleSegmentChange,
+ *   } = useCoordinateFieldState({
+ *     value,
+ *     format: 'ddm',
+ *     onChange: setValue,
+ *     onError: (msg) => console.error(msg),
+ *     registerTimeout,
+ *   });
+ *
+ *   return (
+ *     <div>
+ *       {editableSegmentConfigs.map((config, i) => (
+ *         <input
+ *           key={i}
+ *           value={segmentValues[i]}
+ *           onChange={(e) => handleSegmentChange(i, e.target.value)}
+ *           placeholder={config.placeholder}
+ *         />
+ *       ))}
+ *       {validationErrors.map((error, i) => (
+ *         <span key={i}>{error}</span>
+ *       ))}
+ *     </div>
+ *   );
+ * }
+ * ```
+ *
+ * @param options - {@link UseCoordinateFieldStateOptions}
+ * @param options.value - Controlled coordinate value.
+ * @param options.defaultValue - Default value for uncontrolled mode.
+ * @param options.format - Coordinate format system (dd, ddm, dms, mgrs, utm).
+ * @param options.onChange - Callback when coordinate value changes.
+ * @param options.onError - Callback for validation errors.
+ * @param options.registerTimeout - Register timeouts for cleanup on unmount.
+ * @returns {@link UseCoordinateFieldStateResult} Segment state, validation, and change handlers.
+ */
 export function useCoordinateFieldState({
   value,
   defaultValue,
@@ -70,6 +141,10 @@ export function useCoordinateFieldState({
   );
   const [validationErrors, setValidationErrors] = useState<string[]>([]);
   const validationTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  // Last value emitted via onChange; `undefined` means nothing emitted yet.
+  const lastEmittedValueRef = useRef<CoordinateValue | null | undefined>(
+    undefined,
+  );
 
   const currentValue = value !== undefined ? value : internalValue;
 
@@ -81,6 +156,7 @@ export function useCoordinateFieldState({
   };
 
   const handleChange = (newValue: CoordinateValue | null) => {
+    lastEmittedValueRef.current = newValue;
     if (value === undefined) {
       setInternalValue(newValue);
     }
@@ -136,7 +212,27 @@ export function useCoordinateFieldState({
   }, [format, value, internalValue, convertValueToSegmentsOrClear]);
 
   useEffect(() => {
-    if (value !== undefined) {
+    if (value === undefined) {
+      return;
+    }
+
+    /*
+     * Skip re-syncing when the controlled `value` is just the echo of our own
+     * onChange (the parent storing what we emitted). Without this guard, the
+     * `handleChange(null)` fired for an in-progress edit (one segment emptied,
+     * or an invalid entry) comes straight back and wipes every segment and any
+     * validation error that was just set.
+     */
+    const lastEmitted = lastEmittedValueRef.current;
+    const isEchoOfEmit =
+      lastEmitted !== undefined &&
+      (value === lastEmitted ||
+        (value !== null &&
+          lastEmitted !== null &&
+          value.lat === lastEmitted.lat &&
+          value.lon === lastEmitted.lon));
+
+    if (!isEchoOfEmit) {
       convertValueToSegmentsOrClear(value);
     }
   }, [value, convertValueToSegmentsOrClear]);
@@ -178,16 +274,30 @@ export function useCoordinateFieldState({
 
   const handleSegmentChange = (index: number, newValue: string) => {
     const updatedValues = [...segmentValues];
-    updatedValues[index] = newValue;
+
+    // Normalize MGRS letter inputs (Band/Grid): uppercase only
+    if (
+      format === 'mgrs' &&
+      (index === 1 || index === 2) &&
+      /^[a-zA-Z]+$/.test(newValue)
+    ) {
+      updatedValues[index] = newValue.toUpperCase();
+    } else {
+      updatedValues[index] = newValue;
+    }
+
     setSegmentValues(updatedValues);
 
     if (areAllSegmentsFilled(updatedValues)) {
       // Clear any pending validation timeout
       clearValidationTimeout();
 
+      // Capture segment values at timeout creation
+      const capturedValues = [...updatedValues];
+
       // Debounce validation by 400ms when all segments are full
       const timeoutId = setTimeout(() => {
-        validateAndUpdateCoordinate(updatedValues);
+        validateAndUpdateCoordinate(capturedValues);
         validationTimeoutRef.current = null;
       }, 400);
 
@@ -199,6 +309,18 @@ export function useCoordinateFieldState({
       setValidationErrors([]);
       if (currentValue !== null) {
         handleChange(null);
+      }
+    }
+  };
+
+  const handleSegmentBlur = (index: number) => {
+    // MGRS zone field: add leading zero to single-digit values on blur
+    if (format === 'mgrs' && index === 0) {
+      const currentVal = segmentValues[0];
+      if (currentVal && currentVal.length === 1 && /^\d$/.test(currentVal)) {
+        const updatedValues = [...segmentValues];
+        updatedValues[0] = currentVal.padStart(2, '0');
+        setSegmentValues(updatedValues);
       }
     }
   };
@@ -239,6 +361,7 @@ export function useCoordinateFieldState({
     segmentConfigs,
     editableSegmentConfigs,
     handleSegmentChange,
+    handleSegmentBlur,
     setSegmentValues,
     setValidationErrors,
     effectiveErrorMessage,

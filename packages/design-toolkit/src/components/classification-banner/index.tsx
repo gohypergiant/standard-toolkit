@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -13,7 +13,7 @@
 
 import 'client-only';
 import { clsx } from '@accelint/design-foundation/lib/utils';
-import { useContextProps } from 'react-aria-components';
+import { useContextProps } from 'react-aria-components/slots';
 import { ClassificationBannerContext } from './context';
 import styles from './styles.module.css';
 import type { ClassificationBannerProps } from './types';
@@ -35,9 +35,18 @@ const fallbackContent = {
  * information at the top or bottom of pages. Essential for applications handling
  * classified or sensitive information requiring clear visual indicators.
  *
+ * @param props - The classification banner props.
+ * @param props.ref - Reference to the banner element.
+ * @param props.children - Custom text content (defaults to variant label).
+ * @param props.className - Additional CSS class names for styling.
+ * @param props.variant - Classification level variant.
+ * @returns The classification banner component.
+ *
  * @example
+ * ```tsx
  * // Top classification banner
  * <ClassificationBanner variant="confidential" />
+ * ```
  */
 export function ClassificationBanner({
   ref,

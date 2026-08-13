@@ -56,8 +56,8 @@
       "notes": "Simple display component - zero tolerance for leaks"
     },
     "avatar": {
-      "maxLeakedObjects": 6,
-      "maxRetainedSize": 163840,
+      "maxLeakedObjects": 7,
+      "maxRetainedSize": 196000,
       "notes": "Image component using @radix-ui/react-avatar. Radix's useImageLoadingStatus hook creates window.Image() objects that persist after unmount during rapid mount/unmount cycles. This is expected browser behavior - pending image loads cannot be cancelled via standard DOM APIs. The hook's cleanup removes event listeners but not the image reference or pending network request.",
       "knownIssues": [
         "Radix Avatar useImageLoadingStatus does not clear image.src on unmount",

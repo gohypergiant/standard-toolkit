@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -19,6 +19,7 @@
  * @template B - The type of the second input value.
  * @param a - The value to ignore.
  * @param b - The value to return.
+ * @returns The second argument.
  *
  * @remarks
  * KI combinator
@@ -30,8 +31,10 @@
  * pure function
  *
  * @example
+ * ```typescript
  * inverseConstant(1)(2);
  * // 2
+ * ```
  */
 export const inverseConstant =
   <A>(_: A) =>

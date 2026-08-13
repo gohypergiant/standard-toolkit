@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -11,6 +11,18 @@
  */
 
 /**
- * Is true if running client-side
+ * Is true if running client-side.
+ *
+ * @example
+ * ```typescript
+ * import { isClient } from '@/lib/is-client';
+ *
+ * if (isClient) {
+ *   console.log('Running in browser');
+ *   window.addEventListener('keydown', handler);
+ * } else {
+ *   console.log('Running on server');
+ * }
+ * ```
  */
 export const isClient = typeof window !== 'undefined';

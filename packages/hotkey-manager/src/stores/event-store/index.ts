@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -35,6 +35,33 @@ type EventActions = {
   hasHeldTimeout: (id: HeldId) => boolean;
 };
 
+/**
+ * Zustand store for managing global hotkey event state.
+ *
+ * Tracks binding status, held key timeouts, and triggered held keys.
+ *
+ * @internal
+ *
+ * @example
+ * ```typescript
+ * import { eventStore } from '@/stores/event-store';
+ *
+ * // Get current state
+ * const state = eventStore.getState();
+ *
+ * // Set bound status
+ * state.setBound(true);
+ *
+ * // Add held timeout
+ * const timeout = window.setTimeout(() => {}, 1000);
+ * state.addHeldTimeout('KeyA_meta_my-hotkey', timeout);
+ *
+ * // Check if timeout exists
+ * if (state.hasHeldTimeout('KeyA_meta_my-hotkey')) {
+ *   state.removeHeldTimeout('KeyA_meta_my-hotkey');
+ * }
+ * ```
+ */
 export const eventStore = createStore<EventState & EventActions>()(
   immer((set, get) => ({
     bound: false,

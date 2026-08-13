@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -14,11 +14,11 @@ import type { HotkeyConfig } from '@/types/hotkey-config';
 import type { KeyCombination } from '@/types/key-combination';
 
 /**
- * Hotkey action
+ * Hotkey action callback function.
  *
- * @param event The keyboard event that triggered the action
- * @param key The key combination that triggered the action
- * @param hotkey The hotkey configuration
+ * @param event - The keyboard event that triggered the action.
+ * @param key - The key combination that triggered the action.
+ * @param hotkey - The hotkey configuration.
  */
 export type HotkeyAction = (
   event: KeyboardEvent,

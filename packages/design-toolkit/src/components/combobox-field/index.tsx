@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -13,18 +13,13 @@
 import 'client-only';
 import { clsx } from '@accelint/design-foundation/lib/utils';
 import ChevronDown from '@accelint/icons/chevron-down';
+import { useCallback, useRef } from 'react';
 import {
-  Button,
   ComboBox,
-  composeRenderProps,
+  type ComboBoxProps,
   FieldError,
-  Input,
-  ListLayout,
-  Popover,
-  Text,
-  useContextProps,
-  Virtualizer,
-} from 'react-aria-components';
+} from 'react-aria-components/ComboBox';
+import { ClearButton } from '../button/__internal__/clear';
 import { Icon } from '../icon';
 import { Label } from '../label';
 import { Options } from '../options';
@@ -32,6 +27,14 @@ import { ComboBoxFieldContext } from './context';
 import styles from './styles.module.css';
 import type { OptionsDataItem } from '../options/types';
 import type { ComboBoxFieldProps } from './types';
+import { useControlledState } from 'react-stately/useControlledState';
+import { composeRenderProps } from 'react-aria-components/composeRenderProps';
+import { useContextProps } from 'react-aria-components/slots';
+import { Input } from 'react-aria-components/Input';
+import { Button } from 'react-aria-components/Button';
+import { Text } from 'react-aria-components/Text';
+import { Popover } from 'react-aria-components/Popover';
+import { Virtualizer, ListLayout } from 'react-aria-components/Virtualizer';
 
 /**
  * ComboBoxField - Accessible searchable combobox with dropdown options
@@ -39,10 +42,22 @@ import type { ComboBoxFieldProps } from './types';
  * A combobox field that provides a searchable input with virtualized dropdown
  * options and support for sections, icons, and rich content.
  *
+ * @param props - The combobox field props.
+ * @param props.ref - Reference to the field element.
+ * @param props.children - Render function for options.
+ * @param props.classNames - Custom class names for sub-elements.
+ * @param props.label - Label text displayed above the field.
+ * @param props.description - Helper text displayed below the field.
+ * @param props.errorMessage - Error message displayed when invalid.
+ * @param props.size - Size variant of the field.
+ * @returns The combobox field component.
+ *
  * @example
+ * ```tsx
  * <ComboBoxField defaultItems={items}>
  *   {(item) => <OptionsItem key={item.id} textValue={item.name}>{item.name}</OptionsItem>}
  * </ComboBoxField>
+ * ```
  */
 export function ComboBoxField<T extends OptionsDataItem>({
   ref,
@@ -56,16 +71,43 @@ export function ComboBoxField<T extends OptionsDataItem>({
     description: descriptionProp,
     errorMessage: errorMessageProp,
     inputProps,
+    inputValue: inputValueProp,
+    defaultInputValue = '',
     label: labelProp,
     layoutOptions,
     menuTrigger = 'focus',
     size = 'medium',
     isInvalid: isInvalidProp,
     isReadOnly = false,
+    isClearable = true,
+    onInputChange,
+    onKeyDown,
     ...rest
   } = props;
+
+  const [inputValue, setInputValue] = useControlledState(
+    inputValueProp,
+    defaultInputValue,
+    onInputChange,
+  );
+
+  const pointerDownInsidePopoverRef = useRef(false);
   const errorMessage = errorMessageProp || null; // Protect against empty string
   const isSmall = size === 'small';
+
+  const handleClear = useCallback(() => {
+    setInputValue('');
+  }, [setInputValue]);
+
+  const handleKeyDown = useCallback<Required<ComboBoxProps<T>>['onKeyDown']>(
+    (event) => {
+      onKeyDown?.(event);
+      if (isClearable && event.key === 'Escape' && inputValue) {
+        handleClear();
+      }
+    },
+    [onKeyDown, isClearable, handleClear, inputValue],
+  );
 
   return (
     <ComboBox<T>
@@ -77,11 +119,13 @@ export function ComboBoxField<T extends OptionsDataItem>({
       menuTrigger={menuTrigger}
       isInvalid={isInvalidProp || (errorMessage ? true : undefined)} // Leave uncontrolled if possible to fallback to validation state
       isReadOnly={isReadOnly}
+      inputValue={inputValue}
+      onInputChange={setInputValue}
+      onKeyDown={handleKeyDown}
       data-size={size}
+      data-empty={!inputValue || null}
     >
-      {(
-        { isDisabled, isInvalid, isRequired }, // Rely on internal state, not props, since state could differ from props
-      ) => {
+      {({ isDisabled, isInvalid, isRequired }) => {
         const shouldShowDescription =
           !isReadOnly && !!descriptionProp && !(isSmall || isInvalid);
 
@@ -108,6 +152,16 @@ export function ComboBoxField<T extends OptionsDataItem>({
                 )}
                 title={inputProps?.value ? String(inputProps?.value) : ''}
               />
+              {!isReadOnly && isClearable && (
+                <ClearButton
+                  className={composeRenderProps(
+                    classNames?.clear,
+                    (className) => clsx(styles.clear, className),
+                  )}
+                  isDisabled={isDisabled}
+                  onPress={handleClear}
+                />
+              )}
               {!isReadOnly && (
                 <Button
                   className={composeRenderProps(
@@ -137,6 +191,16 @@ export function ComboBoxField<T extends OptionsDataItem>({
               {errorMessage}
             </FieldError>
             <Popover
+              onPointerDownCapture={() => {
+                pointerDownInsidePopoverRef.current = true;
+              }}
+              onPointerUpCapture={(e) => {
+                if (!pointerDownInsidePopoverRef.current) {
+                  e.stopPropagation();
+                  e.preventDefault();
+                }
+                pointerDownInsidePopoverRef.current = false;
+              }}
               className={composeRenderProps(classNames?.popover, (className) =>
                 clsx(styles.popover, className),
               )}

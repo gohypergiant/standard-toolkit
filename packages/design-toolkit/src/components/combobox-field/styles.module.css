@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -14,11 +14,11 @@
 
 @layer components.l1 {
   .field {
-    @apply gap-xs flex flex-col;
+    @apply gap-xs flex flex-col select-none;
   }
 
   .control {
-    @apply rounded-medium px-s py-xs fg-primary-bold outline-interactive flex items-center outline;
+    @apply rounded-medium px-s py-xs fg-primary-bold outline-interactive gap-xs flex items-center outline;
 
     @variant placeholder {
       @apply fg-primary-muted;
@@ -99,7 +99,40 @@
 
   .popover {
     --trigger-width: initial; /* is inlined by react aria components on render */
-    @apply -ml-s;
+    @apply -ml-s select-none;
     min-width: calc(var(--trigger-width) + (var(--spacing-s) * 2));
+
+    @variant motion-safe {
+      @variant entering {
+        animation: fade-enter var(--animation-duration-normal)
+          var(--animation-easing-decelerate) both;
+      }
+
+      @variant exiting {
+        animation: fade-exit var(--animation-duration-fast)
+          var(--animation-easing-accelerate) both;
+      }
+    }
+  }
+}
+
+@layer components.l2 {
+  .clear {
+    @apply pointer-events-none invisible;
+
+    @variant group-focus-within/combobox-field {
+      @variant group-not-data-empty/combobox-field {
+        @apply pointer-events-auto visible;
+      }
+    }
+  }
+
+  .input {
+    @variant group-not-focus-within/combobox-field {
+      @variant group-data-empty/combobox-field {
+        margin-right: calc((var(--icon-size-s) + var(--spacing-xs)) * -1);
+        padding-right: calc(var(--icon-size-s) + var(--spacing-xs));
+      }
+    }
   }
 }

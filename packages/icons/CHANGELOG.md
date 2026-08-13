@@ -1,5 +1,17 @@
 # @accelint/icons
 
+## 3.0.0
+
+### Major Changes
+
+- 8070d19: Add new icons: Stop, JumpToStart, JumpToEnd, MercatorProjection, Wheel, EllipseTool. Rename TrackHistory > AirTrackHistory and add new TrackHistory icon to match CORE design system Figma.
+
+## 2.2.0
+
+### Minor Changes
+
+- 77b277d: Add audio and media controls components implemented using media-chrome
+
 ## 2.1.2
 
 ### Patch Changes

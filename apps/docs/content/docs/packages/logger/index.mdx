@@ -1,0 +1,170 @@
+---
+title: "Overview"
+description: Structured logger built on LogLayer with callsite tracking, environment detection, and flexible transports
+source: packages/logger/src/index.ts
+source_sha: 6590120cecd2a4cd41b06ceb0e316216a25867a5
+doc_sha: c472c0db3a3b7f5007e62322c6bde3b87735bca7
+deprecated: false
+updated: 2026-07-13
+---
+
+## Usage
+
+```typescript
+import { getLogger } from '@accelint/logger';
+
+// Create a singleton logger instance
+const logger = getLogger({
+  enabled: true,
+  env: process.env.NODE_ENV as 'production' | 'development',
+  level: 'info',
+  prefix: '[MyApp]',
+});
+
+logger.info('Application started');
+logger.withMetadata({ userId: 123 }).warn('Token expiring soon');
+```
+
+## Exports
+
+### Functions
+
+- [getLogger](./default/index.md) - Returns a singleton LogLayer logger instance
+- [bootstrap](./default/bootstrap.md) - Initializes a new LogLayer instance with default plugins
+
+### Constants
+
+- [DEBUG](./definitions.md#debug) - Log level constant for debug messages
+- [ERROR](./definitions.md#error) - Log level constant for error messages
+- [FATAL](./definitions.md#fatal) - Log level constant for fatal error messages
+- [INFO](./definitions.md#info) - Log level constant for informational messages
+- [TRACE](./definitions.md#trace) - Log level constant for trace messages
+- [WARN](./definitions.md#warn) - Log level constant for warning messages
+
+### Plugins
+
+- [callsitePlugin](./plugins/callsite.md) - Tracks and injects source code location into log data
+- [environmentPlugin](./plugins/environment.md) - Injects environment context (server/browser) into log data
+
+### Transports
+
+- [prettyTransport](./transports/pretty.md) - Pretty-printed console transport
+- [structuredTransport](./transports/structured.md) - Structured JSON log transport
+
+### Types
+
+- `LogLevel` - The log level type: `'trace' | 'debug' | 'info' | 'warn' | 'error' | 'fatal'`
+- `LoggerOptions` - Configuration options for the logger
+- `CallsitePluginOptions` - Options for callsite tracking plugin
+- `EnvironmentPluginOptions` - Options for environment detection plugin
+
+## Examples
+
+### Example: Basic logger setup
+
+```typescript
+import { getLogger, INFO } from '@accelint/logger';
+
+const logger = getLogger({
+  enabled: true,
+  level: INFO,
+  env: 'production',
+});
+
+logger.info('Server started', { port: 3000 });
+```
+
+### Example: Development logger with pretty output
+
+```typescript
+import { getLogger, DEBUG } from '@accelint/logger';
+
+const logger = getLogger({
+  enabled: true,
+  level: DEBUG,
+  env: 'development',
+  pretty: true,
+  prefix: '[Dev]',
+});
+
+logger.debug('Cache miss', { key: 'user:123' });
+```
+
+### Example: Production logger with structured JSON
+
+```typescript
+import { getLogger, WARN } from '@accelint/logger';
+
+const logger = getLogger({
+  enabled: true,
+  level: WARN,
+  env: 'production',
+  pretty: false, // Outputs JSON
+});
+
+logger.error('Payment failed', { orderId: 'ord_123', reason: 'insufficient_funds' });
+```
+
+### Example: Custom plugins
+
+```typescript
+import { getLogger } from '@accelint/logger';
+import type { LogLayerPlugin } from '@loglayer/shared';
+
+const timingPlugin: LogLayerPlugin = {
+  id: 'timing',
+  onBeforeDataOut({ data }) {
+    return {
+      ...data,
+      timestamp: Date.now(),
+    };
+  },
+};
+
+const logger = getLogger({
+  enabled: true,
+  plugins: [timingPlugin],
+});
+```
+
+### Example: Custom transports
+
+```typescript
+import { getLogger, prettyTransport, structuredTransport } from '@accelint/logger';
+
+// Multiple transports: pretty console + structured JSON
+const logger = getLogger({
+  enabled: true,
+  transports: [
+    prettyTransport({ level: 'debug' }),
+    structuredTransport({ level: 'info' }),
+  ],
+});
+
+logger.info('Logged to both transports');
+```
+
+### Example: Log groups
+
+```typescript
+import { getLogger } from '@accelint/logger';
+
+const logger = getLogger({
+  enabled: true,
+  groups: {
+    database: { enabled: true },
+    network: { enabled: false }, // Network logs disabled
+  },
+});
+
+logger.withGroup('database').info('Query executed');
+logger.withGroup('network').info('This will not log');
+```
+
+> **Good to know:** `getLogger` returns a singleton. The first call initializes the logger with the provided options; subsequent calls return the same instance and ignore new options. Use `bootstrap` directly if you need multiple independent logger instances.
+
+## Related
+
+- [LogLayer Documentation](https://loglayer.dev/) - Upstream library documentation
+- [getLogger](./default/index.md) - Singleton logger factory
+- [bootstrap](./default/bootstrap.md) - Direct logger initialization

@@ -1,0 +1,263 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+import * as CoffinCornerStories from './coffin-corner.stories';
+
+<Meta of={CoffinCornerStories} />
+
+# Coffin Corner Extension
+
+A deck.gl layer extension that draws bracket-shaped "coffin corner" indicators around hovered and selected map entities. Works with IconLayer (and subclasses like SymbolLayer) and ScatterplotLayer.
+
+## Dependencies
+
+| Package | Role |
+|---------|------|
+| `@deck.gl/core` | deck.gl layer extension system |
+| `@deck.gl/layers` | IconLayer, ScatterplotLayer support |
+| `radashi` | Value equality for Set comparison (`isSetEqual`) |
+
+**Installation:**
+
+```bash
+pnpm add @accelint/map-toolkit @deck.gl/core @deck.gl/layers radashi
+```
+
+## Quick Start
+
+```tsx
+import { CoffinCornerExtension } from '@accelint/map-toolkit/deckgl';
+
+const coffinCornerExtension = new CoffinCornerExtension();
+
+<symbolLayer
+  id="my-symbols"
+  data={data}
+  pickable
+  extensions={[coffinCornerExtension]}
+  selectedEntityIds={selectedSet}
+  hoveredEntityIds={hoveredSet}
+/>
+```
+
+## What is this?
+
+This extension renders L-shaped bracket indicators at all four corners of an icon or scatterplot circle when it's hovered or selected. The brackets are drawn entirely in the GPU using signed distance functions (SDFs) — no extra DOM elements, no additional layers, no texture swaps. Hovering shows white brackets with a subtle background fill. Selecting shows colored brackets (configurable via `selectedCoffinCornerColor`).
+
+## Why a shader extension?
+
+The original approach used a separate icon atlas (sprite sheet) layer to draw coffin corners. This creates a dependency on a sprite sheet that is typically generated at the application level rather than the library level, forcing consumers to either pass sprite sheet props into the layer or export a "basic" sprite sheet from MapTK. A shader extension sidesteps this entirely: the brackets are rendered via SDF math in the fragment shader, so there's no sprite sheet, no icon atlas conflicts, and no extra layer. The extension plugs directly into the host layer (IconLayer, SymbolLayer, or ScatterplotLayer) and composites the brackets over the existing geometry on the GPU.
+
+## API
+
+### `CoffinCornerExtension`
+
+deck.gl `LayerExtension` that injects coffin corner shader code into the host layer.
+
+**Supported layers:** `IconLayer` (and subclasses like `SymbolLayer`) and `ScatterplotLayer`. Each layer type gets its own shader path — IconLayer samples `iconsTexture` to composite brackets over the icon, while ScatterplotLayer replicates the circle fill/stroke logic and expands the quad to make room for brackets beyond the circle edge.
+
+**Props (added to the host layer):**
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `selectedEntityIds` | `ReadonlySet<EntityId> \| undefined` | `undefined` | Set of selected entity IDs. Draws colored brackets. |
+| `hoveredEntityIds` | `ReadonlySet<EntityId> \| undefined` | `undefined` | Set of hovered entity IDs. Draws white brackets with background fill. |
+| `selectedCoffinCornerColor` | `[R, G, B, A]` (0-255) | `[57, 183, 250, 255]` | Bracket fill color when selected |
+| `getEntityId` | `(item: any) => EntityId` | `(item) => item.id` | Accessor to extract entity ID from data items. Matched against `selectedEntityIds` and `hoveredEntityIds` to drive shader state. |
+
+```tsx
+const extension = new CoffinCornerExtension();
+
+<iconLayer
+  extensions={[extension]}
+  selectedEntityIds={new Set(['entity-123'])}
+  hoveredEntityIds={new Set(['entity-456'])}
+  selectedCoffinCornerColor={[255, 0, 0, 255]}
+  getEntityId={(d) => d.properties.id}
+  pickable
+/>
+```
+
+---
+
+### Types
+
+```ts
+import type {
+  CoffinCornerExtensionProps,
+  EntityId,
+} from '@accelint/map-toolkit/deckgl';
+```
+
+| Type | Description |
+|------|-------------|
+| `EntityId` | `string \| number` |
+| `CoffinCornerExtensionProps<TLayerProps>` | Props the extension adds to the host layer |
+
+## Examples
+
+### Single select
+
+The simplest usage — click to select one entity, click again to deselect. Uses a Set with 0 or 1 entries.
+
+```tsx
+import { CoffinCornerExtension } from '@accelint/map-toolkit/deckgl';
+
+const coffinCornerExtension = new CoffinCornerExtension();
+
+function MyMap({ mapId }) {
+  const [selected, setSelected] = useState<Set<EntityId>>(() => new Set());
+  const [hovered, setHovered] = useState<Set<EntityId>>(() => new Set());
+
+  const handleClick = useCallback((info: PickingInfo) => {
+    if (!info.object) {
+      setSelected(new Set());
+      return;
+    }
+    const id = info.object.id;
+    setSelected((prev) => prev.has(id) ? new Set() : new Set([id]));
+  }, []);
+
+  const handleHover = useCallback((info: PickingInfo) => {
+    setHovered(info.object ? new Set([info.object.id]) : new Set());
+  }, []);
+
+  return (
+    <BaseMap id={mapId} onClick={handleClick} onHover={handleHover}>
+      <iconLayer
+        id="icons"
+        data={data}
+        pickable
+        extensions={[coffinCornerExtension]}
+        selectedEntityIds={selected}
+        hoveredEntityIds={hovered}
+      />
+    </BaseMap>
+  );
+}
+```
+
+### Multiselect
+
+For multiselect scenarios (e.g. with a SelectionManager), toggle IDs in the Set. The extension draws brackets on every entity in the Set.
+
+```tsx
+function MultiSelectMap({ mapId }) {
+  const [selected, setSelected] = useState<Set<EntityId>>(() => new Set());
+  const [hovered, setHovered] = useState<Set<EntityId>>(() => new Set());
+
+  const handleClick = useCallback((info: PickingInfo) => {
+    if (!info.object) {
+      setSelected(new Set());
+      return;
+    }
+    setSelected((prev) => {
+      const next = new Set(prev);
+      const id = info.object.id;
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  }, []);
+
+  const handleHover = useCallback((info: PickingInfo) => {
+    setHovered(info.object ? new Set([info.object.id]) : new Set());
+  }, []);
+
+  return (
+    <BaseMap id={mapId} onClick={handleClick} onHover={handleHover}>
+      <symbolLayer
+        id="symbols"
+        data={data}
+        pickable
+        extensions={[coffinCornerExtension]}
+        selectedEntityIds={selected}
+        hoveredEntityIds={hovered}
+      />
+    </BaseMap>
+  );
+}
+```
+
+### Multiple layers on one map
+
+Multiple layers can share the same selection state. Pass the same Set to all layers.
+
+```tsx
+function MyMap({ mapId }) {
+  const [selected, setSelected] = useState<Set<EntityId>>(() => new Set());
+  const [hovered, setHovered] = useState<Set<EntityId>>(() => new Set());
+
+  return (
+    <BaseMap id={mapId} onClick={handleClick} onHover={handleHover}>
+      <symbolLayer
+        id="klv-tracks"
+        data={klvData}
+        pickable
+        extensions={[coffinCornerExtension]}
+        selectedEntityIds={selected}
+        hoveredEntityIds={hovered}
+      />
+      <symbolLayer
+        id="cot-symbols"
+        data={cotData}
+        pickable
+        extensions={[coffinCornerExtension]}
+        selectedEntityIds={selected}
+        hoveredEntityIds={hovered}
+      />
+    </BaseMap>
+  );
+}
+```
+
+### Custom entity ID accessor
+
+If your data items don't have a top-level `id` field:
+
+```tsx
+<iconLayer
+  extensions={[coffinCornerExtension]}
+  selectedEntityIds={selected}
+  hoveredEntityIds={hovered}
+  getEntityId={(d) => d.properties.shapeId}
+/>
+```
+
+### Custom selection color
+
+Override the default blue (`#39B7FA`) bracket color:
+
+```tsx
+<symbolLayer
+  extensions={[coffinCornerExtension]}
+  selectedEntityIds={selected}
+  hoveredEntityIds={hovered}
+  selectedCoffinCornerColor={[255, 0, 0, 255]} // Red, fully opaque
+/>
+```
+
+The alpha channel modulates bracket opacity. `[255, 0, 0, 127]` gives you semi-transparent red brackets.
+
+### With SelectionManager
+
+When using a SelectionManager, convert the selected/highlighted Maps to Sets and pass them as props. The extension is a pure rendering primitive — SelectionManager owns the selection policy (single, multi, toggle, drag-select).
+
+```tsx
+const selected = useSelectedEntities('klv-tracks');
+const highlighted = useHighlightedEntities('klv-tracks');
+
+const selectedIds = useMemo(() => new Set(selected.keys()), [selected]);
+const hoveredIds = useMemo(() => new Set(highlighted.keys()), [highlighted]);
+
+<SymbolLayer
+  extensions={[coffinCornerExtension]}
+  selectedEntityIds={selectedIds}
+  hoveredEntityIds={hoveredIds}
+/>
+```
+
+## Limitations
+
+- **IconLayer and ScatterplotLayer only.** Other layer types (PathLayer, SolidPolygonLayer, etc.) are not supported — the extension returns `null` from `getShaders()` for unsupported types.
+
+- **Globe mode (ScatterplotLayer).** The scatterplot quad expansion uses clip-space XY manipulation, which conflicts with globe projection depth. The extension skips bracket rendering on ScatterplotLayer in globe mode to prevent points from disappearing. IconLayer brackets are unaffected. This is related to a known deck.gl globe occlusion issue (PR #9975).

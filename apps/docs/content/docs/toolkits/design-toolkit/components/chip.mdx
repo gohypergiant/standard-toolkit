@@ -1,0 +1,173 @@
+---
+title: Chip
+description: Compact element for displaying tags, filters, or selectable items with support for removal and selection
+source: packages/design-toolkit/src/components/chip/index.tsx
+source_sha: 0443f3fb445e502a2ef7c06a6bc33f8071a6b3c1
+doc_sha: 3d5f1fc198422509c7fd7a6848d0ffd5f0d66e21
+deprecated: false
+updated: 2026-07-13
+---
+
+Compact element for displaying tags, filters, or selectable items with keyboard navigation and accessibility features.
+
+## Usage
+
+```tsx
+import { Chip } from '@accelint/design-toolkit';
+
+export function Tags() {
+  return <Chip>JavaScript</Chip>;
+}
+```
+
+## Reference
+
+```typescript
+interface ChipProps {
+  children: React.ReactNode;
+  className?: string;
+  color?: 'info' | 'advisory' | 'normal' | 'serious' | 'critical';
+  size?: 'small' | 'medium';
+}
+```
+
+### Props
+
+| Prop | Type | Default | Required |
+|------|------|---------|----------|
+| `children` | `React.ReactNode` | - | Yes |
+| `className` | `string` | - | No |
+| `color` | `'info' \| 'advisory' \| 'normal' \| 'serious' \| 'critical'` | `'info'` | No |
+| `size` | `'small' \| 'medium'` | `'medium'` | No |
+
+#### `color`
+
+Semantic color variant:
+- `info` - Informational (default, blue)
+- `advisory` - Warning or advisory (yellow)
+- `normal` - Success or normal state (green)
+- `serious` - Serious caution (orange)
+- `critical` - Error or critical state (red)
+
+#### `size`
+
+Controls chip dimensions and font size:
+- `medium` - Default size for standard use
+- `small` - Compact size for dense layouts
+
+The `size` prop automatically sizes nested `Icon` components.
+
+## Examples
+
+### Example: Basic chips with colors
+
+```tsx
+import { Chip } from '@accelint/design-toolkit';
+
+<>
+  <Chip color="info">Info</Chip>
+  <Chip color="advisory">Warning</Chip>
+  <Chip color="normal">Success</Chip>
+  <Chip color="serious">Caution</Chip>
+  <Chip color="critical">Error</Chip>
+</>
+```
+
+### Example: Chip with icon
+
+```tsx
+import { Chip, Icon } from '@accelint/design-toolkit';
+import { Tag } from '@accelint/icons';
+
+<Chip color="info">
+  <Icon><Tag /></Icon>
+  Tagged Item
+</Chip>
+```
+
+### Example: Small chips
+
+```tsx
+import { Chip } from '@accelint/design-toolkit';
+
+<>
+  <Chip size="small">Compact</Chip>
+  <Chip size="small" color="normal">Small Success</Chip>
+</>
+```
+
+### Example: Chip list for multiple tags
+
+```tsx
+import { ChipList, Chip } from '@accelint/design-toolkit';
+
+<ChipList>
+  <Chip color="info">React</Chip>
+  <Chip color="advisory">TypeScript</Chip>
+  <Chip color="normal">Node.js</Chip>
+</ChipList>
+```
+
+### Example: Deletable chips
+
+```tsx
+import { ChipList, DeletableChip } from '@accelint/design-toolkit';
+
+<ChipList onRemove={(keys) => console.log('Removed:', keys)}>
+  <DeletableChip id="tag1">Removable Tag 1</DeletableChip>
+  <DeletableChip id="tag2" color="normal">Removable Tag 2</DeletableChip>
+</ChipList>
+```
+
+### Example: Selectable chips
+
+```tsx
+import { ChipList, SelectableChip } from '@accelint/design-toolkit';
+import { useState } from 'react';
+
+function FilterChips() {
+  const [selected, setSelected] = useState(new Set(['active']));
+
+  return (
+    <ChipList
+      selectionMode="multiple"
+      selectedKeys={selected}
+      onSelectionChange={setSelected}
+    >
+      <SelectableChip id="active" color="normal">Active</SelectableChip>
+      <SelectableChip id="pending" color="advisory">Pending</SelectableChip>
+      <SelectableChip id="failed" color="critical">Failed</SelectableChip>
+    </ChipList>
+  );
+}
+```
+
+### Example: Single selection mode
+
+```tsx
+import { ChipList, SelectableChip } from '@accelint/design-toolkit';
+
+<ChipList selectionMode="single">
+  <SelectableChip id="all">All</SelectableChip>
+  <SelectableChip id="active">Active</SelectableChip>
+  <SelectableChip id="archived">Archived</SelectableChip>
+</ChipList>
+```
+
+## Multi-Part Structure
+
+Chip has several related components:
+
+- **Chip** - Basic non-interactive chip
+- **ChipList** - Container for multiple chips with keyboard navigation
+- **DeletableChip** - Chip with remove button
+- **SelectableChip** - Chip that can be selected/deselected
+
+> **Good to know:** When using `DeletableChip` or `SelectableChip`, always wrap them in a `ChipList` to enable proper keyboard navigation and state management.
+
+## Related
+
+- [ChipList](./list.mdx) - Container component for chip collections
+- [DeletableChip](./deletable-chip.mdx) - Chip variant with removal
+- [SelectableChip](./selectable-chip.mdx) - Chip variant with selection
+- [Icon](../icon/index.mdx) - Icon component for chip decorations

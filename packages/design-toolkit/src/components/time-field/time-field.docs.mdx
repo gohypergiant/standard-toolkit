@@ -5,57 +5,88 @@ import * as TimeFieldStories from './time-field.stories';
 <Meta of={TimeFieldStories} />
 
 # TimeField
-A form input component for entering and editing time values.
 
-## Example usage
+Form input for entering and editing time values with configurable granularity.
+
 ```tsx
+import { parseTime } from '@internationalized/date';
+
+// Basic time field
+<TimeField label="Start Time" />
+
+// With default value and granularity
 <TimeField
-  label="Time"
-  defaultValue={parseTime('2020-01-23')}
-  granularity="second"
-  description="Format: hh:mm:ssz"
+  label="Meeting Time"
+  defaultValue={parseTime('14:30')}
+  granularity="minute"
+  description="Select meeting start time"
+/>
+
+// With validation
+<TimeField
+  label="Deadline"
+  errorMessage="Please enter a valid time"
+  isInvalid
+  isRequired
+/>
+
+// Small size
+<TimeField label="Time" size="small" />
+
+// Readonly
+<TimeField
+  label="Recorded Time"
+  defaultValue={parseTime('09:15:30')}
+  isReadOnly
 />
 ```
-
-## Sizes
-
-* **small** - Compact size with smaller text and no time icon, ideal for dense layouts
-* **medium** - Standard size with time icon and larger text, suitable for most use cases
-
-**medium** is the default size and should be used in most cases, unless space constraints require the smaller variant.
 
 <Canvas of={TimeFieldStories.Default} />
 
 ## Props
 
-### Core Props
-- **`label`** - Text label displayed above the input field
-- **`description`** - Helper text displayed below the input field
-- **`errorMessage`** - Error message displayed when validation fails
-- **`placeholder`** - Placeholder text shown when no value is entered
-- **`isReadOnly`** -Whether the field is readonly
-- **`isRequired`** - Whether the field is required (adds optional label if not required)
-- **`isDisabled`** - Whether the field is disabled
-- **`isInvalid`** - Whether to show the field in an invalid state
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `label` | `string` | — | Label text |
+| `description` | `string` | — | Helper text below the input |
+| `errorMessage` | `string` | — | Error text when invalid |
+| `size` | `'medium' \| 'small'` | `'medium'` | Size variant |
+| `granularity` | `'hour' \| 'minute' \| 'second'` | `'second'` | Time precision level |
+| `hourCycle` | `12 \| 24` | `24` | 12-hour or 24-hour format |
+| `shouldForceLeadingZeros` | `boolean` | `true` | Force leading zeros on segments |
+| `defaultValue` | `TimeValue` | — | Initial time value |
+| `value` | `TimeValue` | — | Controlled time value |
+| `onChange` | `(value: TimeValue) => void` | — | Change handler |
+| `isDisabled` | `boolean` | — | Whether the field is disabled |
+| `isReadOnly` | `boolean` | — | Whether the field is readonly |
+| `isRequired` | `boolean` | — | Whether the field is required |
+| `isInvalid` | `boolean` | — | Whether the field is invalid |
+| `inputProps` | `DateInputProps` | — | Props passed to the date input |
+| `classNames` | `object` | — | Custom classes for internal elements |
 
-### Size & Appearance
-- **`size`** - Size variant: `'small'` | `'medium'` (default: `'medium'`)
+Extends React Aria [TimeField](https://react-spectrum.adobe.com/react-aria/TimeField.html) props.
 
-### Time Configuration
-- **`granularity`** - Time precision: `'hour'` | `'minute'` | `'second'` (default: `'second'`)
-- **`defaultValue`** - Initial time value
-- **`value`** - Controlled time value
-- **`onChange`** - Callback when time value changes
+### classNames
 
-## Examples
+| Key | Description |
+|-----|-------------|
+| `field` | Field container |
+| `label` | Label element |
+| `control` | Control wrapper containing icon and input |
+| `input` | Date input element |
+| `segment` | Individual time segment |
+| `description` | Description text |
+| `error` | Error message |
 
-### (Default)
-<Canvas of={TimeFieldStories.Default} />
+## Accessibility
 
+- ARIA attributes for screen readers
+- Keyboard navigation between segments
+- Error state announcements
+- Required field indicators
+- Proper labeling and descriptions
 
-## Implementation Notes
-The `TimeField` component is built on top of React Aria Components, specifically wrapping the `TimeField` and `DateInput` components.
+## Related
 
-[Docs](https://react-spectrum.adobe.com/react-aria/TimeField.html)
-
-
+- [React Aria TimeField](https://react-spectrum.adobe.com/react-aria/TimeField.html)
+- [GitHub Source](https://github.com/gohypergiant/standard-toolkit/tree/main/packages/design-toolkit/src/components/time-field)

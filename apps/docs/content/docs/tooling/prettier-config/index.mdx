@@ -1,0 +1,186 @@
+---
+title: "Overview"
+description: Shared Prettier configuration with Tailwind CSS support and pragma-based formatting
+source: tooling/prettier-config/prettier.config.js
+source_sha: 53c7908e5a5c8faaad0a546c239524c18097e3e9
+doc_sha: de9c3af8b1aa20d48e0ed15cec5b36967a5814ba
+deprecated: false
+updated: 2026-07-14
+---
+
+## Usage
+
+```json
+{
+  "prettier": "@accelint/prettier-config/config"
+}
+```
+
+## Reference
+
+```typescript
+import type { Config } from 'prettier';
+
+const config: Config = {
+  plugins: ['prettier-plugin-tailwindcss'],
+  requirePragma: true,
+  overrides: [
+    {
+      files: ['*.css', '*.module.css'],
+      options: {
+        requirePragma: false,
+        singleQuote: true,
+      },
+    },
+  ],
+};
+```
+
+The configuration exports a Prettier config object with three key features:
+
+### Plugins
+
+- **prettier-plugin-tailwindcss**: Automatically sorts Tailwind CSS classes according to the official [recommended class order](https://tailwindcss.com/blog/automatic-class-sorting-with-prettier)
+
+### Core Settings
+
+- **requirePragma**: `true` - Files must include `/** @format */` comment to be formatted. Prevents accidental formatting of legacy or intentionally unformatted code.
+
+### Overrides
+
+Special handling for CSS files (`*.css`, `*.module.css`):
+- **requirePragma**: `false` - CSS files are formatted by default without pragma
+- **singleQuote**: `true` - Enforces single quotes in CSS for consistency
+
+> **Good to know:** The pragma requirement prevents Prettier from reformatting files that haven't been opted in. This is especially useful in large codebases with mixed formatting conventions or during gradual Prettier adoption.
+
+## Examples
+
+### Example: Basic setup
+
+```json
+{
+  "name": "my-app",
+  "prettier": "@accelint/prettier-config/config"
+}
+```
+
+### Example: Adding format pragma
+
+Add this comment to the top of any file you want Prettier to format:
+
+```typescript
+/** @format */
+
+export function myFunction() {
+  return 'This file will be formatted';
+}
+```
+
+### Example: Extending the configuration
+
+Create a `prettier.config.js` to customize settings:
+
+```javascript
+import baseConfig from '@accelint/prettier-config/config';
+
+export default {
+  ...baseConfig,
+  semi: false,
+  printWidth: 100,
+  // Disable pragma requirement for your project
+  requirePragma: false,
+};
+```
+
+### Example: Tailwind CSS class sorting
+
+The configuration automatically sorts Tailwind classes:
+
+```tsx
+/** @format */
+
+// Before formatting
+<Button className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600" />
+
+// After formatting (classes sorted by Tailwind conventions)
+<Button className="rounded-lg bg-blue-500 px-4 py-2 text-white hover:bg-blue-600" />
+```
+
+### Example: CSS file formatting
+
+CSS files are formatted by default without requiring pragma:
+
+```css
+/* No @format comment needed for CSS */
+
+.button {
+  background-color: 'blue';
+  padding: '1rem';
+}
+
+/* After formatting */
+.button {
+  background-color: 'blue';
+  padding: '1rem';
+}
+```
+
+### Example: Format scripts
+
+Add these npm scripts to format your codebase:
+
+```json
+{
+  "scripts": {
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
+  }
+}
+```
+
+### Example: VSCode integration
+
+Configure VSCode to format on save in `.vscode/settings.json`:
+
+```json
+{
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.formatOnSave": true,
+  "[typescript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[typescriptreact]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  }
+}
+```
+
+### Example: Pre-commit hook
+
+Using [lefthook](https://github.com/evilmartians/lefthook) to format staged files:
+
+```yaml
+pre-commit:
+  commands:
+    prettier:
+      glob: "*.{js,ts,jsx,tsx,json,css,md}"
+      run: prettier --write {staged_files}
+      stage_fixed: true
+```
+
+### Example: CI validation
+
+Validate formatting in CI pipeline:
+
+```yaml
+- name: Check Code Formatting
+  run: |
+    pnpm install
+    pnpm prettier --check .
+```
+
+## Related
+
+- [prettier](https://prettier.io/docs/en/configuration.html) - Prettier configuration documentation
+- [prettier-plugin-tailwindcss](https://github.com/tailwindlabs/prettier-plugin-tailwindcss) - Tailwind CSS class sorting plugin

@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -14,11 +14,35 @@
 import 'client-only';
 import { clsx } from '@accelint/design-foundation/lib/utils';
 import ChevronRight from '@accelint/icons/chevron-right';
-import { Breadcrumb, composeRenderProps, Link } from 'react-aria-components';
+import { Breadcrumb } from 'react-aria-components/Breadcrumbs';
+import { Link } from 'react-aria-components/Link';
 import { Icon } from '../icon';
 import styles from './styles.module.css';
 import type { BreadcrumbItemProps } from './types';
+import { composeRenderProps } from 'react-aria-components/composeRenderProps';
 
+/**
+ * Individual breadcrumb item. Renders as a link when `linkProps` is provided,
+ * or as plain text for the current page.
+ *
+ * @param props - The breadcrumb item props.
+ * @param props.children - Content to display in the breadcrumb.
+ * @param props.classNames - Custom class names for sub-elements.
+ * @param props.linkProps - Props for the Link component (omit for current page).
+ * @returns The breadcrumb item component.
+ *
+ * @example
+ * ```tsx
+ * // Link item
+ * <BreadcrumbItem linkProps={{ href: '/home' }}>Home</BreadcrumbItem>
+ * ```
+ *
+ * @example
+ * ```tsx
+ * // Current page (no link)
+ * <BreadcrumbItem>Current Page</BreadcrumbItem>
+ * ```
+ */
 export function BreadcrumbItem({
   children,
   classNames,

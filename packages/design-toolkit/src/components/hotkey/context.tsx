@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -15,12 +15,32 @@
 import type { ProviderProps } from '@/lib/types';
 import 'client-only';
 import { createContext } from 'react';
-import type { ContextValue } from 'react-aria-components';
+import type { ContextValue } from 'react-aria-components/slots';
 import type { HotkeyProps } from './types';
 
+/**
+ * Context for sharing Hotkey props across component tree.
+ */
 export const HotkeyContext =
   createContext<ContextValue<HotkeyProps, HTMLElement>>(null);
 
+/**
+ * HotkeyProvider - Context provider for setting default Hotkey props.
+ *
+ * Use this to configure shared variant across multiple Hotkey components.
+ *
+ * @param props - ProviderProps<HotkeyProps>
+ * @param props.children - Child components to receive context.
+ * @returns The rendered HotkeyProvider component.
+ *
+ * @example
+ * ```tsx
+ * <HotkeyProvider variant="flat">
+ *   <Hotkey>Ctrl</Hotkey>
+ *   <Hotkey>C</Hotkey>
+ * </HotkeyProvider>
+ * ```
+ */
 export function HotkeyProvider({
   children,
   ...props

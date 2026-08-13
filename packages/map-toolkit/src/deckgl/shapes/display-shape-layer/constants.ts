@@ -11,50 +11,87 @@
  */
 
 'use client';
-
+import { PathStyleExtension } from '@deck.gl/extensions';
+import { CoffinCornerExtension } from '../../extensions/coffin-corner/coffin-corner-extension';
 import { DEFAULT_COLORS } from '../shared/constants';
+import type { Rgba255Tuple } from '@accelint/predicates';
 
 /**
- * Map interaction constants
- * Values derived from ngc2 for consistency
+ * Map interaction constants.
+ *
+ * Values derived from ngc2 for consistency with existing UI patterns.
+ * Controls sizing and interaction feedback for shape rendering.
  */
 export const MAP_INTERACTION = {
-  LINE_WIDTH_MIN_PIXELS: 1, // Minimum line width in pixels
-  ICON_SIZE: 38, // Size of shape icons
-  ICON_HOVER_SIZE_INCREASE: 5, // Additional pixels added on hover
+  LINE_WIDTH_MIN_PIXELS: 1,
+  ICON_SIZE: 38,
+  ICON_HOVER_SIZE_INCREASE: 5,
 } as const;
 
 /**
- * Selection highlight configuration
- */
-export const SELECTION_HIGHLIGHT = {
-  /** Uses DEFAULT_COLORS.highlight from shared constants */
-  COLOR: DEFAULT_COLORS.highlight,
-  ICON_SIZE_INCREASE: 8, // Additional pixels for highlight icon
-} as const;
-
-/**
- * Coffin corners configuration for Point selection/hover feedback
- * Coffin corners are bracket-like corners that appear around points
- */
-export const COFFIN_CORNERS = {
-  /** Icon name for hover state (white corners with background fill) */
-  HOVER_ICON: 'coffin-corners-hover',
-  /** Icon name for selected state (blue corners, no fill) */
-  SELECTED_ICON: 'coffin-corners-selected',
-  /** Icon name for selected+hover state (blue corners with background fill) */
-  SELECTED_HOVER_ICON: 'coffin-corners-selected-hover',
-  /** Size of the coffin corners icon */
-  SIZE: 38,
-} as const;
-
-/**
- * Default props for DisplayShapeLayer
+ * Default props for DisplayShapeLayer.
+ *
+ * Provides sensible defaults for interactive shape display with labels,
+ * standard opacity handling, and minimal visual feedback. These can be
+ * overridden via layer props.
  */
 export const DEFAULT_DISPLAY_PROPS = {
   pickable: true,
   showLabels: 'always' as const,
   showHighlight: false,
   applyBaseOpacity: true,
-  highlightColor: SELECTION_HIGHLIGHT.COLOR,
+  highlightColor: DEFAULT_COLORS.highlight,
 };
+
+/**
+ * Material settings for lighting on polygon shapes.
+ * The main layer uses NORMAL for all features; hover/select brightening is
+ * handled via the fill-color accessor, not material variation.
+ */
+export const MATERIAL_SETTINGS = {
+  NORMAL: {
+    ambient: 0.35,
+    diffuse: 0.6,
+    shininess: 32,
+    specularColor: [255, 255, 255] as [number, number, number],
+  },
+} as const;
+
+/**
+ * Brightness multipliers for interaction state feedback.
+ * Applied via brightenColor() to line colors, curtains, and elevation indicators.
+ * - HOVER_OR_SELECT: shape is hovered or selected (single active state)
+ * - HOVER_AND_SELECT: shape is both hovered and selected simultaneously
+ */
+export const BRIGHTNESS_FACTOR = {
+  HOVER_OR_SELECT: 1.4,
+  HOVER_AND_SELECT: 1.7,
+} as const;
+
+/**
+ * Opacity multiplier applied to the active feature's fill alpha (hover and
+ * select brightening paths, both polygon fills and curtain walls). Sits
+ * between the dimmed base opacity (`BASE_FILL_OPACITY = 0.2`) and full
+ * opacity, so the active fill stands out without rendering as a solid block
+ * on top of the basemap.
+ */
+export const ACTIVE_FILL_OPACITY = 0.5;
+
+/** Default elevation in meters — ground level (MSL). Used as the fallback when minElevation is not set. */
+export const DEFAULT_ELEVATION = 0;
+
+/** Reusable deck.gl PathStyleExtension enabling dash patterns on GeoJsonLayer lines. */
+export const DASH_EXTENSION = new PathStyleExtension({ dash: true });
+
+export const COFFIN_CORNER_EXTENSION = new CoffinCornerExtension();
+
+/** Stable extensions array for GeoJsonLayer — avoids new reference per render triggering getShaders() re-evaluation. */
+export const DISPLAY_EXTENSIONS = [DASH_EXTENSION, COFFIN_CORNER_EXTENSION];
+
+/** Readonly [r, g, b, a] tuple of DEFAULT_COLORS.highlight, pre-spread at module load for hot-path usage. */
+export const HIGHLIGHT_COLOR_TUPLE: Rgba255Tuple = [
+  DEFAULT_COLORS.highlight[0],
+  DEFAULT_COLORS.highlight[1],
+  DEFAULT_COLORS.highlight[2],
+  DEFAULT_COLORS.highlight[3] ?? 255,
+];

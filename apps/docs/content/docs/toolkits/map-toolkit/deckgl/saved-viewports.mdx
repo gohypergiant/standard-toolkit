@@ -1,0 +1,248 @@
+---
+title: "Saved Viewports"
+description: Save and restore map viewports using keyboard hotkeys with persistent storage.
+source: packages/map-toolkit/src/deckgl/saved-viewports/index.ts
+source_sha: 49b4a049f2fb4f9c2d5c9dae2732cfc1ece555c0
+doc_sha: 57232c3dbc2f822843b7a18d54ec43521618d839
+deprecated: false
+updated: 2026-07-14
+---
+
+## Usage
+
+```tsx
+import { createSavedViewport } from '@accelint/map-toolkit/deckgl/saved-viewports';
+import { BaseMap } from '@accelint/map-toolkit/deckgl';
+import { MapEvents } from '@accelint/map-toolkit/deckgl/base-map';
+import { CameraEventTypes } from '@accelint/map-toolkit/camera';
+import { Broadcast } from '@accelint/bus';
+import { useOn } from '@accelint/bus/react';
+import { uuid } from '@accelint/core';
+import { globalBind } from '@accelint/hotkey-manager';
+
+// Enable global hotkey handling
+globalBind();
+
+const MAP_ID = uuid();
+const cameraBus = Broadcast.getInstance();
+let currentViewport;
+
+// Create the saved viewport hook
+const useSavedViewportHotkey = createSavedViewport({
+  threshold: 1000, // Hold key for 1 second to save
+  getCurrentViewport: () => currentViewport,
+  setCurrentViewport: (newState) => {
+    currentViewport = { ...currentViewport, ...newState };
+    cameraBus.emit(CameraEventTypes.setCenter, {
+      id: MAP_ID,
+      latitude: newState.latitude,
+      longitude: newState.longitude,
+      zoom: newState.zoom,
+    });
+  },
+});
+
+export function MapView() {
+  // Activate saved viewport hotkeys
+  useSavedViewportHotkey();
+  
+  // Track viewport changes
+  useOn(MapEvents.viewport, (event) => {
+    currentViewport = { ...currentViewport, ...event.payload };
+  });
+  
+  return <BaseMap id={MAP_ID} className="w-full h-full" />;
+}
+```
+
+## Reference
+
+### `createSavedViewport`
+
+Creates a React hook that registers hotkeys for saving and restoring map viewports.
+
+**Type Signature:**
+
+```typescript
+function createSavedViewport(
+  options: SavedViewportOptions
+): () => void
+```
+
+**Parameters:**
+
+- `options.getCurrentViewport` **(required)** - Function that returns the current map viewport state
+- `options.setCurrentViewport` **(required)** - Function that applies a viewport state to the map
+- `options.threshold` *(optional)* - Milliseconds to hold a key before saving (default: `1000`)
+- `options.uniqueIdentifier` *(optional)* - Namespace for multiple map instances
+- `options.getSavedViewport` *(optional)* - Custom storage retrieval function
+- `options.setSavedViewport` *(optional)* - Custom storage persistence function
+- `options.key` *(optional)* - Custom key combinations (default: `Digit0-9`)
+- ...other `HotkeyOptions` from `@accelint/hotkey-manager`
+
+**Returns:** React hook function that must be called within a component to activate hotkeys
+
+**Behavior:**
+
+- **Hold** a number key (0-9) for the threshold duration → saves current viewport to that slot
+- **Tap** a number key → restores the viewport saved in that slot
+- Viewports persist to `localStorage` by default (key: `saved-viewports`)
+- Multiple map instances can use `uniqueIdentifier` to isolate their saved viewports
+
+### Types
+
+#### `SavedViewportOptions`
+
+```typescript
+type SavedViewportOptions = Partial<HotkeyOptions> & {
+  // Required callbacks
+  getCurrentViewport: () => MapViewState;
+  setCurrentViewport: (viewport: MapViewState) => void;
+  
+  // Optional configuration
+  uniqueIdentifier?: string;
+  threshold?: number;
+  
+  // Optional custom storage (must provide both or neither)
+  getSavedViewport?: (id: KeyCombinationId, uniqueIdentifier?: string) => MapViewState;
+  setSavedViewport?: (id: KeyCombinationId, viewport: MapViewState, uniqueIdentifier?: string) => void;
+}
+```
+
+## Examples
+
+### Basic Usage
+
+```tsx
+import { createSavedViewport } from '@accelint/map-toolkit/deckgl/saved-viewports';
+import { useState } from 'react';
+import { globalBind } from '@accelint/hotkey-manager';
+
+globalBind();
+
+const useSavedViewports = createSavedViewport({
+  getCurrentViewport: () => viewportState,
+  setCurrentViewport: (viewport) => setViewportState(viewport),
+  threshold: 1500, // Hold for 1.5 seconds to save
+});
+
+function MyMap() {
+  const [viewportState, setViewportState] = useState({
+    latitude: 37.8,
+    longitude: -122.4,
+    zoom: 10,
+  });
+  
+  useSavedViewports();
+  
+  return <BaseMap /* ... */ />;
+}
+```
+
+### Multiple Map Instances
+
+```tsx
+const MAP_1_ID = 'main-map';
+const MAP_2_ID = 'mini-map';
+
+const useSavedViewportsMain = createSavedViewport({
+  uniqueIdentifier: MAP_1_ID,
+  getCurrentViewport: () => mainViewport,
+  setCurrentViewport: setMainViewport,
+});
+
+const useSavedViewportsMini = createSavedViewport({
+  uniqueIdentifier: MAP_2_ID,
+  getCurrentViewport: () => miniViewport,
+  setCurrentViewport: setMiniViewport,
+});
+
+function DualMaps() {
+  useSavedViewportsMain();
+  useSavedViewportsMini();
+  
+  return (
+    <>
+      <BaseMap id={MAP_1_ID} /* ... */ />
+      <BaseMap id={MAP_2_ID} /* ... */ />
+    </>
+  );
+}
+```
+
+### Custom Storage
+
+```tsx
+import { createSavedViewport } from '@accelint/map-toolkit/deckgl/saved-viewports';
+
+// Custom storage using IndexedDB or API
+const useSavedViewports = createSavedViewport({
+  getCurrentViewport: () => currentViewport,
+  setCurrentViewport: setViewport,
+  getSavedViewport: async (id, namespace) => {
+    const data = await db.viewports.get({ id, namespace });
+    return data?.viewport;
+  },
+  setSavedViewport: async (id, viewport, namespace) => {
+    await db.viewports.put({ id, namespace, viewport });
+  },
+});
+```
+
+### Custom Hotkeys
+
+```tsx
+import { createSavedViewport } from '@accelint/map-toolkit/deckgl/saved-viewports';
+import { Keycode } from '@accelint/hotkey-manager';
+
+// Use F1-F4 instead of number keys
+const useSavedViewports = createSavedViewport({
+  key: [
+    { code: Keycode.F1 },
+    { code: Keycode.F2 },
+    { code: Keycode.F3 },
+    { code: Keycode.F4 },
+  ],
+  threshold: 800,
+  getCurrentViewport: () => viewport,
+  setCurrentViewport: setViewport,
+});
+```
+
+## Integration with Camera Store
+
+For type-safe integration with the camera store:
+
+```tsx
+import { createSavedViewport } from '@accelint/map-toolkit/deckgl/saved-viewports';
+import { useCamera, CameraEvents } from '@accelint/map-toolkit/camera';
+import { Broadcast } from '@accelint/bus';
+
+const MAP_ID = 'my-map';
+const cameraBus = Broadcast.getInstance();
+
+const useSavedViewports = createSavedViewport({
+  getCurrentViewport: () => {
+    const camera = useCamera.getState().cameras[MAP_ID];
+    return {
+      latitude: camera.latitude,
+      longitude: camera.longitude,
+      zoom: camera.zoom,
+      pitch: camera.pitch,
+      bearing: camera.bearing,
+    };
+  },
+  setCurrentViewport: (viewport) => {
+    cameraBus.emit(CameraEvents.setCenter, {
+      id: MAP_ID,
+      ...viewport,
+    });
+  },
+});
+```
+
+## Related
+
+- [camera](../camera.mdx) - Camera state management
+- [deckgl/base-map](./base-map.mdx) - Base map component
+- [@accelint/hotkey-manager](../../packages/hotkey-manager/index.mdx) - Hotkey registration system

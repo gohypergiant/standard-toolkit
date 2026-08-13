@@ -1,5 +1,265 @@
 # @accelint/design-toolkit
 
+## 9.13.0
+### Minor Changes
+
+- df79f57: Enhance Notice and NoticeList to consume metadata in action callbacks
+
+### Patch Changes
+
+- 884b370: - Add space to loading skeleton of flashcard
+  - Add space to the TimeField when rendering AM/PM
+
+## 9.12.0
+### Minor Changes
+
+- 00ce792: Adds new status options to StatusIndicator component: unknown and pending. Also adds a convenience option for adding a label.
+
+### Patch Changes
+
+- 7af5e73: Remove hover state from disabled outline button
+- b6b1064: changes SelectField component to be consistent height with other inputs
+
+## 9.11.3
+### Patch Changes
+
+- a76da93: Fix `CoordinateField` in controlled mode wiping all segments during edits. Emptying one segment (or entering an invalid coordinate) emits `onChange(null)`; when the parent echoed that `null` back into the `value` prop, the field re-synced from it and cleared every segment and any just-set validation error. The field now recognizes echoes of its own `onChange` emissions and leaves in-progress edits and validation errors intact.
+- 7dd620f: Fix four `NoticeList` bugs:
+  
+  - "Clear All" no longer throws (`queue.clear` was passed unbound, so `this` was `undefined` and clicking the button raised a TypeError without clearing anything).
+  - Per-notice `timeout` and `color` now take precedence over the list-level `defaultTimeout`/`defaultColor`, matching the documented behavior ("defaults for notices without explicit timeout/color"). Previously the list-level values silently overrode every notice.
+  - A `NoticeList` without an `id` no longer consumes notices that were explicitly targeted at another list, which previously caused targeted notices to render twice (once in the targeted list and once in every untargeted list).
+  - The internal queue subscription is now registered once with proper cleanup. Previously a new subscription was added on every render and never removed, leaking listeners for the life of the page.
+- 4b85982: Fix four `Sidenav` visual bugs:
+  
+  - `Sidenav` headings (`SidenavMenu` titles, the closed-state popover title, `SidenavAvatar` headings, and `SidenavContent` section headings) no longer render forced uppercase — heading content now renders verbatim.
+  - The `SidenavLink` external-link arrow (and the `SidenavHeader` collapse chevron) now hide reliably when the sidenav is collapsed. The `__transient` collapsed-state hide previously tied on specificity with `Icon`'s own `display`, leaking icons into the collapsed rail; it is now forced so it applies uniformly to text and icon children.
+  - The expanded `SidenavMenu` trigger title now uses `body-s` (12px), matching its own collapsed-state popover title and sibling nav items, instead of the smaller `body-xs` (10px) section-label size it previously inherited.
+  - The collapsed rail now honors `--sidenav-width` in push layouts (`DrawerLayout push`), matching overlay mode. Previously `--sidenav-width` only affected overlay mode (via the collapse transform) and push-mode rails were content-driven, so the collapsed width was inconsistent between the two layouts and not themeable in push mode.
+- Updated dependencies [a76da93]
+  - @accelint/geo@0.6.1
+
+## 9.11.2
+### Patch Changes
+
+- e2dce9f: Fix checkbox and switch scroll-into-view behavior. Prevents browser from automatically scrolling when clicking checkboxes or switches by overriding focus() to use preventScroll option.
+
+## 9.11.1
+
+### Patch Changes
+
+- bf5c161: Fix Drawer push layout: closed drawers no longer permanently reserve layout space. Each drawer's grid track collapses when closed and expands only when open, so content is pushed aside only while a drawer is open.
+- 27295c8: Fixed layout issue with drawer
+- ce8f3b2: Fix ComboBoxField clear button: clicking where the hidden clear button sits now focuses the input and opens the dropdown instead of doing nothing.
+- 0e8dbfc: Fixed MGRS coordinates input behavior. Also, enhanced some of the UX with the function
+
+## 9.11.0
+### Minor Changes
+
+- 348cc56: Update react-aria-components and simplify dependencies
+
+### Patch Changes
+
+- 3d1cdbd: Small performance improvements to Tree component and additional documentation
+- 537f9f7: adjusted floating card header styling so that the title does not interfere with the drag handle
+- Updated dependencies [38bc715]
+  - @accelint/design-foundation@3.2.0
+
+## 9.10.0
+### Minor Changes
+
+- 690fb19: Gantt component implementation feature branch. Makes component available to library consumers.
+- 7042d56: Add semantic cascade selection mode to Tree component. When enabled via `selectionCascade` prop on `useTreeState`, selecting a parent node automatically selects all descendants, and parent checkboxes show indeterminate state when partially selected. Includes performance optimizations for large trees and automatic cascade state synchronization after drag-and-drop operations.
+- 62c5a63: - Adds new design system animation tokens for duration and easing for consistent animation effects
+  - Adds light built-in animation to the following components: Accordion, Button, ComboboxField, Dialog, Drawer, Menu, Notice, Popover, Sidenav, Switch, Tooltip
+  - Guidelines and best practices documentation for using animation
+- 166bc49: Add floating card pinning feature and new placement props.
+  
+  - Cards can be pinned to disable dragging via a `'pin'` header action
+  - `togglePinCard` and `isPinned` added to the floating card context
+  - New `FloatingCardHeaderAction` type supports `'pin'` alongside existing `'divider'` and custom button actions
+  - `FloatingCardProvider` accepts `initialPinned` to pre-pin cards at mount time
+  - `FloatingCard` accepts `initialPosition` (`{ x, y }`) to set the starting coordinates of the panel
+  - `FloatingCard` accepts `initialDimensions` (`{ width, height }`) to set the starting size of the panel (defaults to `300 × 400`)
+- 118174a: Adds the Carousel component. Displays a timeline of navigatable items for display in one central viewing area.
+
+### Patch Changes
+
+- Updated dependencies [62c5a63]
+  - @accelint/design-foundation@3.1.0
+
+## 9.9.2
+### Patch Changes
+
+- 8070d19: Add new icons: Stop, JumpToStart, JumpToEnd, MercatorProjection, Wheel, EllipseTool. Rename TrackHistory > AirTrackHistory and add new TrackHistory icon to match CORE design system Figma.
+- Updated dependencies [8070d19]
+  - @accelint/icons@3.0.0
+
+## 9.9.1
+### Patch Changes
+
+- e7f0e42: Addresses a number of bugs in the Tree component
+  - Change the way Tree lines are drawn to be more accurate
+  - Fix text color for disabled Tree items
+  - Ensure checkbox can be seen on hover
+  - Reduce aggressive indentation of children
+  - Fix "visibility" button regression
+  - Create a more obvious visual signal for dropping between Tree items
+  - Enable all drag and drop reordering
+
+## 9.9.0
+### Minor Changes
+
+- 6d1c73e: Add label and isRequired prop to color picker component
+- 3407a27: Update the color picker values to accept RGBA values
+- a3a9650: Fix combobox select and clear issues. Add matched text highlighting to OptionsItemLabel when used inside a ComboBox, controllable via `highlight` prop (defaults to `true`).
+
+### Patch Changes
+
+- e2e4f72: Fix native date/time input icon color for dark mode
+- 9a3e62e: Fix color picker outline cutoffs
+- f62aaf1: Fix floating card header padding token
+- 1e97115: Add tooltip to the coordinate field format menu button
+- Updated dependencies [9a25205]
+  - @accelint/logger@1.1.0
+  - @accelint/converters@2.0.0
+  - @accelint/design-foundation@3.0.2
+  - @accelint/predicates@0.5.2
+
+## 9.8.0
+
+### Minor Changes
+- a70629c: Add labelPosition prop to radio and checkbox components
+
+  `RadioContext` has been split into `RadioGroupContext` and `RadioContext` to match the checkbox pattern. If you were importing `RadioContext` to configure a RadioGroup, update your import to `RadioGroupContext` instead.
+
+- 596c8ea: Summary: Added a new FloatingCard component.
+  
+  What's included:
+  
+  FloatingCard component for rendering draggable, resizable floating panels
+  FloatingCardProvider that manages the floating card layout engine
+  Customizable headers with optional icons and action buttons
+
+### Patch Changes
+
+- 5567348: Update logger implementation to prevent singleton pollution.
+- 9f7f039: Fix foreground hover color for 'info' options
+- 165cf29: Added missing "sideEffects" entry which was preventing tree shaking.
+- Updated dependencies [3153e74]
+- Updated dependencies [5567348]
+- Updated dependencies [162895c]
+- Updated dependencies [165cf29]
+  - @accelint/bus@4.0.0
+  - @accelint/logger@1.0.1
+  - @accelint/core@0.6.0
+  - @accelint/design-foundation@3.0.1
+
+## 9.7.0
+### Minor Changes
+
+- 774ee92: Tabs (& Tab) components now have two new props:
+  - `align` which changes the alignment of content within a tab
+  - `flex` which causes the tab to grow up to a maximum dimension of 200px
+
+### Patch Changes
+
+- c2d54b3: Removed support for child content or nesting of Skeleton components
+  
+  While this is technically a breaking change, it was never intended to be supported by design and was never allowed in the Figma version of the component
+- 8f76cc7: Fixes alignment for querybuilder text fields, addresses regression in combobox.
+- Updated dependencies [ed09ea6]
+  - @accelint/logger@1.0.0
+
+## 9.6.0
+### Minor Changes
+
+- d8a0168: Add video player component implemented using media-chrome
+
+### Patch Changes
+
+- 18f8fdc: BREAKING CHANGE: Restructured tokens and utilities to better utilize Tailwind patterns
+  
+  The vast majority of changes are non-breaking: All of the same utility classes for color, typography and spacing exist and should work without change
+  
+  However, in order to support the simplification of utilities, the structure of typography tokens had to be inverted. This means that if you were directly referencing a typography CSS var or TS token, the name / pathing has changed. Examples of how to migrate:
+  
+  `--typography-header-xxl-size` -> `--typography-size-header-xxl`
+  `tokens.typography.header.xxl.size` -> `tokens.typography.size.header.xxl`
+  
+  Additionally, all `classification` and `roe` colors have been structured under the `domain` key
+  
+  Finally, the `w-content` utility was removed in favor of the existing `w-fit` class from Tailwind
+  
+  NEW FEATURES: The color and spacing utilities have become more flexible
+  
+  The color utilities `bg`, `fg`, `icon` & `outline` now support more colors as well as alpha overrides.
+  
+  - `bg-` can now access `bg-*`, `domain-*`, `primitive-*` colors
+  - `fg-` can now access `fg-*`, `domain-*`, `primitive-*` colors
+  - `icon-` can now access `fg-*`, `domain-*`, `primitive-*` colors
+  - `outline-` can now access `outline-*`, `domain-*`, `primitive-*` colors
+  
+  And all of these utilities support the Tailwind alpha override pattern, which makes `bg-surface-default/50` possible
+  
+  The spacing utilities are now able to implement values outside of the labeled scale of `xxs` -> `oversized`. If needed, it is now possible to use `p-10` which would implement padding of `10px`
+  
+  CAVEAT!
+  
+  While we strive to enable easier use of our design system, we expect that the use of non-semantic color values and spacing values outside of the labeled scale should only be used during rapid prototyping / experimentation or in extreme edge cases where a style has gone beyond the prescribed design system approach
+  
+  Please continue to use the semantic tokens and labeled spacing tokens for the overwhelming majority of implementation to avoid stylistic drift
+- 50752b2: fixed a style bug where the table header kebab would disappear while open when persistHeaderKebabMenu: false
+- Updated dependencies [4fc6b36]
+- Updated dependencies [18f8fdc]
+- Updated dependencies [58bc0db]
+  - @accelint/design-foundation@3.0.0
+  - @accelint/geo@0.6.0
+
+## 9.5.0
+### Minor Changes
+
+- 77b277d: Add audio and media controls components implemented using media-chrome
+- 2101f3b: Added new component - <StatusIndicator />
+- b07b967: Added clear button functionality to ComboBoxField component. The clear button appears when the input has a value and allows users to quickly clear the input.
+  
+  New props:
+  - `isClearable` (boolean, default: true) - Controls whether the clear button is shown
+  
+  The clear button can be triggered by clicking the button or pressing Escape when the input is focused and not empty. The button is automatically hidden in read-only mode and respects the disabled state.
+  
+  Additionally, the Input component has been optimized to use a shared internal ClearButton component, reducing style overhead.
+
+### Patch Changes
+
+- 1889101: Add `isRequired`` to query selector combinator
+- 63d4e06: Fix hydration warning for <Clock /> component.
+- a829cc2: Added `select-none` utility to interactable elements to prevent accidental text selection.
+- Updated dependencies [77b277d]
+  - @accelint/icons@2.2.0
+
+## 9.4.1
+### Patch Changes
+
+- aa1b0d6: Adds SearchField for UI Icons story, fixes typo in Icon catalog.
+- 5fd10e7: - Allow case-insensitive input for CoordinateField component.
+  - Adjust height of CoordinateField for consistency with other input fields
+
+## 9.4.0
+### Minor Changes
+
+- a8ce0bc: Refactors existing implementation of DrawerClose event to now emit a new event tied to an ID, to allow for listening to bus for Drawer Open and Close. Previously, the viewstack would be cleared without emitting an event with a given id.
+
+### Patch Changes
+
+- ab729dc: Changed icon imports to use full path
+- 075f526: fix: Updates the outline color of text-area-field to correct color and fixes the right padding of the coordinate-field
+- 669a261: move some lingering inline utility classes to css modules
+- 975f690: chore: expose more drawer / drawer-layout props in their stories; update their docs for any missing props
+- f577fef: Fixed issue with Popover where dialogProps is not being passed down to child Dialog component
+- c73558a: Fix keyboard event trigger for coordinate field copy popover
+- c3f5b00: Update the default variant for toggle buttons from the incorrect `filled` to `flat`. Types exclude `filled` variant from ToggleButtons
+
 ## 9.3.0
 ### Minor Changes
 

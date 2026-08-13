@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -17,7 +17,7 @@ import {
   Breadcrumbs as AriaBreadcrumbs,
   type BreadcrumbProps,
   type BreadcrumbsProps,
-} from 'react-aria-components';
+} from 'react-aria-components/Breadcrumbs';
 import styles from './styles.module.css';
 
 /**
@@ -26,11 +26,18 @@ import styles from './styles.module.css';
  * Displays the user's location within an application hierarchy and provides
  * links back to parent pages. The final item represents the current page.
  *
+ * @param props - The breadcrumbs props.
+ * @param props.children - BreadcrumbItem components representing the navigation path.
+ * @param props.className - Additional CSS class names for styling.
+ * @returns The breadcrumbs navigation component.
+ *
  * @example
+ * ```tsx
  * <Breadcrumbs>
  *   <BreadcrumbItem linkProps={{ href: '/' }}>Home</BreadcrumbItem>
  *   <BreadcrumbItem>Current</BreadcrumbItem>
  * </Breadcrumbs>
+ * ```
  */
 export function Breadcrumbs({
   children,

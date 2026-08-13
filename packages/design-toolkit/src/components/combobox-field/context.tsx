@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -13,15 +13,31 @@
 
 import 'client-only';
 import { createContext } from 'react';
-import type { ContextValue } from 'react-aria-components';
+import type { ContextValue } from 'react-aria-components/slots';
 import type { ProviderProps } from '@/lib/types';
 import type { OptionsDataItem } from '../options/types';
 import type { ComboBoxFieldProps } from './types';
 
+/** React context for sharing ComboBoxField configuration across components. */
 export const ComboBoxFieldContext =
   // biome-ignore lint/suspicious/noExplicitAny: Setting a type would restrict it beyond what the component allows to extend to
   createContext<ContextValue<ComboBoxFieldProps<any>, HTMLDivElement>>(null);
 
+/**
+ * Context provider for setting default props across multiple ComboBoxField components.
+ *
+ * @param props - The provider props.
+ * @param props.children - Child components that will receive the combobox field context.
+ * @returns The combobox field context provider wrapping children.
+ *
+ * @example
+ * ```tsx
+ * <ComboBoxFieldProvider size="small">
+ *   <ComboBoxField defaultItems={items1}>{...}</ComboBoxField>
+ *   <ComboBoxField defaultItems={items2}>{...}</ComboBoxField>
+ * </ComboBoxFieldProvider>
+ * ```
+ */
 export function ComboBoxFieldProvider<T extends OptionsDataItem>({
   children,
   ...props

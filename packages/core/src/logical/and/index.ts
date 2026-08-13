@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -17,6 +17,7 @@
  * @template B - The type of the second input value.
  * @param a - The first value to compare.
  * @param b - The second value to compare.
+ * @returns true if both values are truthy, false otherwise.
  *
  * @see https://en.wikipedia.org/wiki/Logical_conjunction
  *
@@ -24,11 +25,13 @@
  * pure function
  *
  * @example
+ * ```typescript
  * and(true)(0);
  * // false
  *
  * and(true)(1);
  * // true
+ * ```
  */
 export const and =
   <A>(a: A) =>
@@ -41,9 +44,10 @@ export const and =
  * @template T - The type of the input value of the functions.
  * @template A - The return type of the first function.
  * @template B - The return type of the second function.
- * @param a The first function to compare the return of.
- * @param b The second function to compare the return of.
- * @param c The value to pass to both `a` and `b`.
+ * @param a - The first function to compare the return of.
+ * @param b - The second function to compare the return of.
+ * @param c - The value to pass to both `a` and `b`.
+ * @returns true if both function results are truthy, false otherwise.
  *
  * @see https://en.wikipedia.org/wiki/Logical_conjunction
  *
@@ -51,8 +55,10 @@ export const and =
  * pure function
  *
  * @example
+ * ```typescript
  * andFn((x) => x > 0)((x) => x < 10)(5);
  * // true
+ * ```
  */
 export const andFn =
   <T, A>(a: (x: T) => A) =>

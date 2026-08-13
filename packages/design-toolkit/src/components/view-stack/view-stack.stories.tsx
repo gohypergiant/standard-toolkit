@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -35,14 +35,7 @@ const meta = {
   },
   parameters: {
     docs: {
-      description: {
-        component: `
-          The ViewStack component allows you to manage a stack of views. Think of it as similar to the
-          functionality of tabs, but the triggers can be anywhere, even programmatic. The ViewStack
-          component provides a way to push and pop views from the stack as well as clear all or reset back
-          to the original view.
-        `,
-      },
+      subtitle: 'Stack-based navigation for managing multiple views',
     },
   },
 } satisfies Meta<typeof ViewStack>;

@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -10,6 +10,22 @@
  * governing permissions and limitations under the License.
  */
 
-/** A no operation function */
+/**
+ * A no-operation function that does nothing and returns nothing.
+ *
+ * @param _x - Optional parameter that is ignored.
+ * @returns void
+ *
+ * @example
+ * ```typescript
+ * import { noop } from '@accelint/core';
+ *
+ * noop();
+ * // Does nothing
+ *
+ * noop('ignored');
+ * // Still does nothing
+ * ```
+ */
 // biome-ignore lint/suspicious/noEmptyBlockStatements: It is intentional
 export const noop = (_x?: unknown) => {};

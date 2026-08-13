@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -10,8 +10,10 @@
  * governing permissions and limitations under the License.
  */
 
+/** Namespace for sidenav bus events. */
 export const SidenavEventNamespace = 'Sidenav';
 
+/** Event types for sidenav toggle, open, and close actions. */
 export const SidenavEventTypes = {
   toggle: `${SidenavEventNamespace}:toggle`,
   open: `${SidenavEventNamespace}:open`,

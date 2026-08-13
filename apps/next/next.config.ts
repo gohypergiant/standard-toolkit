@@ -12,18 +12,30 @@
 
 import type { NextConfig } from 'next';
 
+const withBundleAnalyzer = require('@next/bundle-analyzer')({
+  enabled: process.env.WEBPACK_ANALYZE === 'true',
+});
+
 const nextConfig: NextConfig = {
-  poweredByHeader: false,
+  cacheComponents: true,
   reactStrictMode: true,
+  poweredByHeader: false,
+  reactCompiler: false,
+
+  logging: {
+    fetches: {
+      fullUrl: true,
+    },
+    incomingRequests: true,
+  },
+
+  experimental: {
+    turbopackFileSystemCacheForDev: true,
+  },
+
   typescript: {
     ignoreBuildErrors: true,
   },
-  experimental: {
-    // optimizePackageImports: ['@accelint/*'],
-    // ppr: false, // enable once we are on next 16
-    // reactCompiler: false, // enable once we are on next 16
-    // cssChunking: 'strict', // triage side effects on css modules
-  },
 };
 
-export default nextConfig;
+export default withBundleAnalyzer(nextConfig);

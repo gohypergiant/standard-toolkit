@@ -1,6 +1,6 @@
 // __private-exports
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -17,6 +17,21 @@ import type {
   ValidationResult,
 } from 'react-querybuilder';
 
+/**
+ * Runs the validator on a rule and normalizes the result.
+ * Returns { valid: true } if no validator is provided.
+ *
+ * @example
+ * ```tsx
+ * const rule = { field: 'age', operator: 'greaterThan', value: 18 };
+ * const validator = (r) => r.value > 0;
+ * const result = getValidationResult(rule, validator); // { valid: true }
+ * ```
+ *
+ * @param rule - The rule to validate.
+ * @param validator - Optional validator function for the rule.
+ * @returns Normalized validation result with valid flag and optional reasons.
+ */
 export const getValidationResult = (
   rule: RuleType,
   validator?: RuleValidator,

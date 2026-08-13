@@ -9,6 +9,8 @@ Map Toolkit is a comprehensive library that provides:
 - **Deck.gl Components**: Pre-configured layers and components for rendering geospatial data, including symbol layers for military symbology (MIL-STD-2525)
 - **MapLibre Integration**: Components and utilities for working with MapLibre GL JS
 - **React Support**: React-friendly components with hooks and utilities via `@deckgl-fiber-renderer`
+- **Shapes System**: Draw, display, and edit geometric shapes (circles, ellipses, polygons, rectangles, lines, points) on the map with built-in styling, selection, and duplication
+- **Layer Extensions**: GPU-based visual effects like coffin corner selection/hover indicators, drawn via SDF shaders with no sprite sheet dependencies
 - **Geospatial Utilities**: Helper functions and decorators for common mapping tasks
 
 The package is organized by technology (e.g., `deckgl/`, `maplibre/`) with feature-specific exports, allowing you to import only what you need.
@@ -16,7 +18,7 @@ The package is organized by technology (e.g., `deckgl/`, `maplibre/`) with featu
 ## Installation
 
 ```sh
-npm install @accelint/map-toolkit
+pnpm add @accelint/map-toolkit
 ```
 
 ### Optional Dependencies
@@ -47,6 +49,9 @@ import { SymbolLayer } from '@accelint/map-toolkit/deckgl';
 
 // MapLibre components
 import { /* components */ } from '@accelint/map-toolkit/maplibre';
+
+// Layer extensions
+import { CoffinCornerExtension, useCoffinCorner } from '@accelint/map-toolkit/deckgl';
 
 // React/Fiber components
 import { /* components */ } from '@accelint/map-toolkit/deckgl/fiber';
@@ -100,6 +105,8 @@ pnpm --filter=@accelint/map-toolkit bench
 packages/map-toolkit/
   src/
     deckgl/           # Deck.gl layers and components
+      extensions/     # Layer extensions (coffin corners, etc.)
+      shapes/         # Shape drawing, display, editing, and utilities
     maplibre/         # MapLibre utilities and components
     decorators/       # Shared decorators and utilities
 ```

@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -20,8 +20,17 @@ import type { LinesProps } from './types';
  * Renders horizontal or vertical rule lines used for visual grouping and
  * tree branch connectors. Visibility and variant control the appearance.
  *
+ * @param props - {@link LinesProps}
+ * @param props.className - Optional CSS class name.
+ * @param props.size - Size variant for the lines.
+ * @param props.variant - Visual style variant for the connector line.
+ * @param props.isVisible - Whether the lines are visible.
+ * @returns The rendered Lines component.
+ *
  * @example
+ * ```tsx
  * <Lines variant="branch" />
+ * ```
  */
 export function Lines({
   className,

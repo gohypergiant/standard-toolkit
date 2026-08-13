@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -17,6 +17,7 @@
  * @template B - The type of the second input value.
  * @param a - The possible falsey value.
  * @param b - The value to fallback to.
+ * @returns true if either value is truthy, false otherwise.
  *
  * @see https://en.wikipedia.org/wiki/Logical_disjunction
  *
@@ -24,8 +25,10 @@
  * pure function
  *
  * @example
+ * ```typescript
  * or(true)(0);
  * // true
+ * ```
  */
 export const or =
   <A>(a: A) =>
@@ -41,6 +44,7 @@ export const or =
  * @param a - The function to get the, possibly falsey, return of.
  * @param b - The function to get the fallback return of.
  * @param c - The value to pass to both `a` and `b`.
+ * @returns true if either function result is truthy, false otherwise.
  *
  * @see https://en.wikipedia.org/wiki/Logical_disjunction
  *
@@ -48,8 +52,10 @@ export const or =
  * pure function
  *
  * @example
+ * ```typescript
  * orFn(s => s.trim())(s => s.trimEnd())('foo bar ');
  * // true
+ * ```
  */
 export const orFn =
   <T, A>(a: (x: T) => A) =>
@@ -64,6 +70,7 @@ export const orFn =
  * @template B - The type of the second input value.
  * @param a - The value to fallback to.
  * @param b - The possible falsey value.
+ * @returns true if either value is truthy, false otherwise.
  *
  * @see https://en.wikipedia.org/wiki/Logical_disjunction
  *
@@ -71,8 +78,10 @@ export const orFn =
  * pure function
  *
  * @example
+ * ```typescript
  * swappedOr(0)(true);
  * // true
+ * ```
  */
 export const swappedOr =
   <A>(a: A) =>
@@ -88,6 +97,7 @@ export const swappedOr =
  * @param a - The function to get the fallback return of.
  * @param b - The function to get the, possibly falsey, return of.
  * @param c - The value to pass to both `a` and `b`.
+ * @returns true if either function result is truthy, false otherwise.
  *
  * @see https://en.wikipedia.org/wiki/Logical_disjunction
  *
@@ -95,8 +105,10 @@ export const swappedOr =
  * pure function
  *
  * @example
+ * ```typescript
  * swappedOrFn(s => s.trimEnd())(s => s.trim())('foo bar ');
  * // true
+ * ```
  */
 export const swappedOrFn =
   <T, A>(a: (x: T) => A) =>

@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -10,8 +10,8 @@
  * governing permissions and limitations under the License.
  */
 
-import { UNSAFE_PortalProvider } from '@react-aria/overlays';
-import { useIsSSR } from '@react-aria/ssr';
+import { UNSAFE_PortalProvider } from 'react-aria/PortalProvider';
+import { useIsSSR } from 'react-aria/SSRProvider';
 import {
   type PropsWithChildren,
   type RefObject,
@@ -19,6 +19,15 @@ import {
   useState,
 } from 'react';
 
+/**
+ * Provides a portal container for rendering overlays and modals
+ *
+ * @param props - Component props.
+ * @param props.parentRef - Optional ref to parent element for portal attachment.
+ * @param props.inject - Optional element to inject as portal container.
+ * @param props.children - Content to render within the portal context.
+ * @returns The portal provider wrapping children.
+ */
 export function PortalProvider({
   parentRef,
   inject,

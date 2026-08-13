@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -11,14 +11,42 @@
  */
 'use client';
 
-import 'client-only';
 import { isUUID, type UniqueId } from '@accelint/core';
-import { Pressable } from '@react-aria/interactions';
+import { Pressable } from 'react-aria/Pressable';
+import 'client-only';
 import { useContext } from 'react';
 import { ViewStackContext } from '../view-stack/context';
 import { useDrawerEmit } from './context';
 import type { DrawerTriggerProps } from './types';
 
+/**
+ * DrawerTrigger - Programmatic trigger for drawer actions.
+ *
+ * The `for` prop controls the behavior:
+ * - `'open'`, `'toggle'`, `'close'`: Control drawer open state
+ * - `'back'`: Pop the current view from the stack
+ * - `UniqueId`: Push a specific view onto the stack
+ * - `'action:viewId'`: Combine action with view ID (e.g., `'open:${viewId}'`)
+ * - `Array`: Fire multiple events in sequence
+ *
+ * @param props - {@link DrawerTriggerProps}
+ * @param props.for - The event(s) to fire when the trigger is pressed.
+ * @returns The rendered DrawerTrigger component.
+ *
+ * @example
+ * ```tsx
+ * <DrawerTrigger for="close">
+ *   <Button>Close</Button>
+ * </DrawerTrigger>
+ * ```
+
+ * @example
+ * ```tsx
+ * <DrawerTrigger for={`open:${viewId}`}>
+ *   <Button>Open Settings</Button>
+ * </DrawerTrigger>
+ * ```
+ */
 export function DrawerTrigger({ for: events, ...rest }: DrawerTriggerProps) {
   const { parent } = useContext(ViewStackContext);
   const drawerEmit = useDrawerEmit();

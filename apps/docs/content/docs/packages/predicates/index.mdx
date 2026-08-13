@@ -1,0 +1,199 @@
+---
+title: "Overview"
+description: Type-safe predicate functions for runtime validation and array filtering
+---
+
+## Installation
+
+```bash
+pnpm add @accelint/predicates
+```
+
+## Categories
+
+### Type Guards
+
+Core type checking predicates:
+
+- [isString](./is-string/index.md) - Type guard for string values
+- [isNumber](./is-number/index.md) - Number type guards including finite checks
+- [isNothing](./is-nothing/index.md) - Check for null or undefined
+- [isSomething](./is-something/index.md) - Check for defined values
+
+### Boolean-like Values
+
+Parse and validate truthy/falsy string representations:
+
+- [is-noyes](./is-noyes/index.md) - Yes/no, on/off, true/false predicates
+  - `isTrue`, `isFalse`, `isYes`, `isNo`, `isOn`, `isOff`
+  - `isAnyTruthy`, `isAnyFalsy`
+
+### String Patterns
+
+Test strings for prefixes, suffixes, and patterns:
+
+- [does-start-with](./does-start-with/index.md) - String prefix/suffix predicates
+  - `doesStartWith`, `doesEndWith`
+  - `doesNotStartWith`, `doesNotEndWith`
+- [is-like](./is-like/index.md) - Pattern matching with RegExp
+  - `isLike`, `isNotLike`
+
+### Comparison
+
+Numeric and lexicographic comparisons:
+
+- [is-equal](./is-equal/index.md) - Comparison predicates
+  - `isEqual`, `isNotEqual`
+  - `isGreater`, `isGreaterEqual`
+  - `isLesser`, `isLesserEqual`
+- [is-between](./is-between/index.md) - Range validation
+  - `isBetween`, `isNotBetween`
+
+### Array Membership
+
+Test if values exist in arrays:
+
+- [is-in](./is-in/index.md) - Array membership predicates
+  - `isIn`, `isNotIn`
+
+### Colors
+
+Validate color format representations:
+
+- [is-hex-color](./is-hex-color/index.md) - Color format predicates
+  - `isHexColor` - Hex color strings
+  - `isCssRgbaString` - CSS rgb/rgba strings
+  - `isCssRgbaObject` - React Aria RGBA objects
+  - `isRgba255Tuple` - deck.gl RGBA tuples
+  - `isValid255Channel` - Channel validation
+
+### Geographic Coordinates
+
+Validate latitude, longitude, and bounding boxes:
+
+- [is-latitude](./is-latitude/index.md) - Geographic predicates
+  - `isLatitude` - Latitude validation (-90 to 90)
+  - `isLongitude` - Longitude validation (-180 to 180)
+  - `isBbox` - Bounding box validation
+
+### Web APIs
+
+Browser API instance checks:
+
+- [is-worker](./is-worker/index.md) - Web Worker predicates
+  - `isWorker` - Worker instance check
+  - `isSharedWorker` - SharedWorker instance check
+
+## Usage Patterns
+
+### Basic Usage
+
+```typescript
+import { isString, isNumber } from '@accelint/predicates';
+
+isString('hello'); // true
+isNumber(123);     // true
+```
+
+### Array Filtering
+
+```typescript
+import { isString, isNothing } from '@accelint/predicates';
+
+const mixed = ['hello', null, 42, 'world', undefined];
+const strings = mixed.filter(isString);
+// ['hello', 'world']
+
+const defined = mixed.filter(v => !isNothing(v));
+// ['hello', 42, 'world']
+```
+
+### Curried Predicates
+
+```typescript
+import { isGreater, isIn } from '@accelint/predicates';
+
+const isAdult = isGreater Equal(18);
+isAdult(21); // true
+isAdult(16); // false
+
+const isValidStatus = isIn(['pending', 'approved', 'rejected']);
+isValidStatus('pending'); // true
+isValidStatus('unknown'); // false
+```
+
+### Type Narrowing
+
+```typescript
+import { isNumber } from '@accelint/predicates';
+
+function processValue(val: unknown) {
+  if (isNumber(val)) {
+    // TypeScript knows val is number here
+    return val.toFixed(2);
+  }
+  throw new Error('Expected number');
+}
+```
+
+### Functional Composition
+
+```typescript
+import { isGreaterEqual, isLesserEqual } from '@accelint/predicates';
+import { andFn } from '@accelint/core';
+
+const isValidScore = andFn(
+  isGreaterEqual(0),
+  isLesserEqual(100)
+);
+
+isValidScore(50);  // true
+isValidScore(150); // false
+```
+
+## Design Principles
+
+### Pure Functions
+
+All predicates are pure functions with no side effects:
+
+```typescript
+const isEven = (n: number) => n % 2 === 0;
+isEven(4); // true (always returns same result for same input)
+```
+
+### Curried by Default
+
+Most predicates are curried for partial application:
+
+```typescript
+import { isGreater } from '@accelint/predicates';
+
+// Create specialized predicates
+const isAdult = isGreaterEqual(18);
+const isRetired = isGreaterEqual(65);
+
+ages.filter(isAdult);
+ages.filter(isRetired);
+```
+
+### Type Safety
+
+Predicates provide runtime validation and TypeScript type guards:
+
+```typescript
+import { isNumber } from '@accelint/predicates';
+
+function double(val: unknown): number {
+  if (!isNumber(val)) {
+    throw new Error('Expected number');
+  }
+  return val * 2; // TypeScript knows val is number
+}
+```
+
+## Related Packages
+
+- [@accelint/core](../core/index.md) - Functional utilities for composition
+- [@accelint/converters](../converters/index.md) - Type conversion utilities
+- [@accelint/constants](../constants/index.md) - Shared constants and regex patterns

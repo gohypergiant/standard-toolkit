@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -11,46 +11,118 @@
  */
 'use client';
 
-import { Cache } from '@/hooks/use-tree/actions/cache';
+import { Cache, type CacheTreeNode } from '@/hooks/use-tree/actions/cache';
 import type { Key, Selection } from '@react-types/shared';
 import 'client-only';
 import { clsx } from '@accelint/design-foundation/lib/utils';
-import { useMemo } from 'react';
+import { useCallback, useMemo } from 'react';
+import { composeRenderProps } from 'react-aria-components/composeRenderProps';
+import { Tree as AriaTree, type DropTarget } from 'react-aria-components/Tree';
 import {
-  Tree as AriaTree,
-  composeRenderProps,
   DropIndicator,
-  type DropTarget,
   useDragAndDrop,
-} from 'react-aria-components';
+} from 'react-aria-components/useDragAndDrop';
 import { TreeContext } from './context';
 import styles from './styles.module.css';
 import type { TreeProps } from './types';
+import { noop } from '@accelint/core';
 
-const defaultRenderDropIndicator = (target: DropTarget) => (
-  <DropIndicator target={target} className={styles.dropIndicator} />
-);
+const defaultRenderDropIndicator = (target: DropTarget) => {
+  const isBetweenItems =
+    target.type === 'item' &&
+    (target.dropPosition === 'before' || target.dropPosition === 'after');
+  return (
+    <DropIndicator
+      target={target}
+      className={
+        isBetweenItems ? styles.dropIndicatorBetween : styles.dropIndicator
+      }
+    />
+  );
+};
 
 /**
- * Tree - Hierarchical tree view with optional drag-and-drop and visibility
+ * Helper to collect node state keys from cache tree nodes.
+ * Reduces cognitive complexity by extracting the iteration logic.
+ */
+function collectNodeKeys<T>(
+  nodes: MapIterator<CacheTreeNode<T>>,
+  acc: {
+    disabledKeys?: Set<Key>;
+    expandedKeys?: Set<Key>;
+    selectedKeys?: Set<Key>;
+    visibleKeys?: Set<Key>;
+    visibilityComputedKeys: Set<Key>;
+    indeterminateKeys: Set<Key>;
+  },
+) {
+  for (const node of nodes) {
+    if (node.isDisabled) {
+      acc.disabledKeys?.add(node.key);
+    }
+    if (node.isExpanded) {
+      acc.expandedKeys?.add(node.key);
+    }
+    if (node.isSelected) {
+      acc.selectedKeys?.add(node.key);
+    }
+    if (node.isVisible) {
+      acc.visibleKeys?.add(node.key);
+    }
+    if (node.isVisibleComputed) {
+      acc.visibilityComputedKeys.add(node.key);
+    }
+    if (node.isIndeterminate) {
+      acc.indeterminateKeys.add(node.key);
+    }
+  }
+  return acc;
+}
+
+/**
+ * Tree - Hierarchical tree view with selection, visibility, and drag-and-drop
  *
- * Renders a selectable tree with support for nested items, drag-and-drop,
- * selection modes, and visibility controls. Use TreeItem to define nodes.
+ * Supports static or dynamic collections with keyboard navigation and accessibility.
+ *
+ * @template T - The type of custom values stored in tree nodes (accessed via `node.values`).
+ *
+ * @param props - {@link TreeProps}
+ * @param props.children - Tree items or render function for dynamic collections.
+ * @param props.className - CSS class for the tree container.
+ * @param props.disabledKeys - Set of disabled item keys.
+ * @param props.dragAndDropConfig - Configuration for drag and drop behavior.
+ * @param props.expandedKeys - Set of expanded item keys.
+ * @param props.items - Data source for dynamic collections.
+ * @param props.selectedKeys - Set of selected item keys.
+ * @param props.showRuleLines - Whether to show connecting lines between items.
+ * @param props.showVisibility - Whether to show visibility toggle buttons.
+ * @param props.selectionMode - Selection mode for the tree.
+ * @param props.variant - Visual density variant.
+ * @param props.visibleKeys - Set of visible item keys.
+ * @param props.onVisibilityChange - Callback when item visibility changes.
+ * @param props.onSelectionChange - Callback when selection changes.
+ * @returns The rendered Tree component.
  *
  * @example
+ * // Dynamic collection
+ * ```tsx
  * <Tree items={items} expandedKeys={expandedKeys}>
- *   {(node) => <Node key={node.key} node={node} />}
+ *   {(node) => <TreeItem key={node.key}>{node.label}</TreeItem>}
  * </Tree>
+ * ```
  *
  * @example
+ * ```tsx
+ * // Static collection
  * <Tree>
- *   <TreeItem id='one' textValue='one'>
+ *   <TreeItem id="one" textValue="one">
  *     <TreeItemContent>One</TreeItemContent>
- *     <TreeItem id='two' textValue='two'>
+ *     <TreeItem id="two" textValue="two">
  *       <TreeItemContent>Two</TreeItemContent>
  *     </TreeItem>
  *   </TreeItem>
  * </Tree>
+ * ```
  */
 export function Tree<T>({
   children,
@@ -110,6 +182,7 @@ export function Tree<T>({
     selectedKeys,
     visibleKeys,
     visibilityComputedKeys,
+    indeterminateKeys,
   } = useMemo(() => {
     const acc = {
       disabledKeys: nodes ? new Set<Key>() : disabledKeysProp,
@@ -117,43 +190,14 @@ export function Tree<T>({
       selectedKeys: nodes ? new Set<Key>() : selectedKeysProp,
       visibleKeys: nodes ? new Set<Key>() : visibleKeysProp,
       visibilityComputedKeys: new Set<Key>(),
+      indeterminateKeys: new Set<Key>(),
     };
 
     if (!nodes) {
       return acc;
     }
 
-    return nodes.reduce(
-      (
-        acc,
-        {
-          key,
-          isDisabled,
-          isExpanded,
-          isSelected,
-          isVisible,
-          isVisibleComputed,
-        },
-      ) => {
-        if (isDisabled) {
-          acc.disabledKeys?.add(key);
-        }
-        if (isExpanded) {
-          acc.expandedKeys?.add(key);
-        }
-        if (isSelected) {
-          acc.selectedKeys?.add(key);
-        }
-        if (isVisible) {
-          acc.visibleKeys?.add(key);
-        }
-        if (isVisibleComputed) {
-          acc.visibilityComputedKeys.add(key);
-        }
-        return acc;
-      },
-      acc,
-    );
+    return collectNodeKeys<T>(nodes, acc);
   }, [
     nodes,
     disabledKeysProp,
@@ -162,13 +206,14 @@ export function Tree<T>({
     visibleKeysProp,
   ]);
 
-  const handleSelectionChange = selectedKeys
-    ? (selection: Selection) => {
-        if (selection !== 'all') {
-          onSelectionChange?.(selection);
-        }
+  const handleSelectionChange = useCallback(
+    (selection: Selection) => {
+      if (selection !== 'all') {
+        onSelectionChange?.(selection);
       }
-    : undefined;
+    },
+    [onSelectionChange],
+  );
 
   return (
     <TreeContext.Provider
@@ -181,8 +226,9 @@ export function Tree<T>({
         variant,
         visibleKeys,
         visibilityComputedKeys,
+        indeterminateKeys,
         isStatic: typeof children !== 'function',
-        onVisibilityChange: onVisibilityChange ?? (() => undefined), // TODO: improve
+        onVisibilityChange: onVisibilityChange ?? noop,
       }}
     >
       <AriaTree
@@ -195,7 +241,7 @@ export function Tree<T>({
         expandedKeys={expandedKeys}
         items={items}
         selectedKeys={selectedKeys}
-        onSelectionChange={handleSelectionChange}
+        onSelectionChange={selectedKeys ? handleSelectionChange : undefined}
         selectionMode={selectionMode}
       >
         {children}

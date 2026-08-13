@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -11,16 +11,33 @@
  */
 
 import type { RefAttributes } from 'react';
+import type { FieldErrorProps } from 'react-aria-components/FieldError';
+import type { PopoverProps } from 'react-aria-components/Popover';
+import type { SelectProps as AriaSelectProps } from 'react-aria-components/Select';
 import type {
   ListLayoutOptions as AriaListLayoutOptions,
-  SelectProps as AriaSelectProps,
   VirtualizerProps as AriaVirtualizerProps,
-  FieldErrorProps,
-  PopoverProps,
-} from 'react-aria-components';
+} from 'react-aria-components/Virtualizer';
 import type { ButtonProps } from '../button/types';
 import type { LabelProps } from '../label/types';
 
+/**
+ * Props for SelectField component.
+ *
+ * Extends AriaSelectProps with form field features and virtualization.
+ * - `classNames.description` - CSS class for the description text.
+ * - `classNames.error` - CSS class for the error message.
+ * - `classNames.field` - CSS class for the field container.
+ * - `classNames.label` - CSS class for the label.
+ * - `classNames.trigger` - CSS class for the trigger button.
+ * - `classNames.value` - CSS class for the selected value display.
+ * - `classNames.popover` - CSS class for the dropdown popover.
+ * - `label` - Label text for the field.
+ * - `description` - Helper text below the field.
+ * - `errorMessage` - Error message displayed when invalid.
+ * - `isReadOnly` - Displays value without dropdown interaction.
+ * - `size` - Field size ('medium' or 'small').
+ */
 export type SelectFieldProps = Omit<AriaSelectProps, 'className'> &
   Pick<AriaVirtualizerProps<AriaListLayoutOptions>, 'layoutOptions'> &
   RefAttributes<HTMLDivElement> & {

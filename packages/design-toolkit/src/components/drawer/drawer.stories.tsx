@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -10,6 +10,8 @@
  * governing permissions and limitations under the License.
  */
 import { uuid } from '@accelint/core';
+import type { Meta, StoryObj } from '@storybook/react-vite';
+import type { ComponentProps } from 'react';
 import { Button } from '../button';
 import { Drawer } from './';
 import { DrawerClose } from './close';
@@ -23,10 +25,8 @@ import { DrawerMenu } from './menu';
 import { DrawerMenuItem } from './menu-item';
 import { DrawerPanel } from './panel';
 import { DrawerTrigger } from './trigger';
-import { DrawerView } from './view';
-import type { Meta, StoryObj } from '@storybook/react-vite';
-import type { ComponentProps } from 'react';
 import type { DrawerMenuProps } from './types';
+import { DrawerView } from './view';
 
 type DrawerStoryArgs = ComponentProps<typeof Drawer> &
   Pick<DrawerMenuProps, 'position'> & {
@@ -211,7 +211,7 @@ export const OpenCloseTrigger: Story = {
               <DrawerView id={ids.a}>
                 <DrawerHeader>
                   <DrawerHeaderTitle>Title A</DrawerHeaderTitle>
-                  <DrawerClose />
+                  <DrawerClose for={ids.a} />
                 </DrawerHeader>
                 <DrawerContent>Content A</DrawerContent>
                 <DrawerFooter>Footer A</DrawerFooter>

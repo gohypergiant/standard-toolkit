@@ -16,6 +16,26 @@ import { type Compass, type Format, SYMBOL_PATTERNS } from '../latlon/internal';
 import { parseUTM } from './parser';
 import type { CoordinateSystem } from '../latlon/internal/coordinate-system';
 
+/**
+ * Universal Transverse Mercator (UTM) coordinate system implementation.
+ *
+ * Provides parsing, conversion, and formatting for UTM coordinates. UTM divides
+ * the Earth into 60 zones, each 6 degrees of longitude wide, using a transverse
+ * Mercator projection. Coordinates are expressed as zone number, hemisphere (N/S),
+ * easting, and northing values.
+ *
+ * @example
+ * ```typescript
+ * systemUTM.parse(null, '18N 585628 4511644');
+ * // [['40.7128', '/', '-74.0060'], []]
+ * ```
+ *
+ * @example
+ * ```typescript
+ * systemUTM.toFormat('LATLON', [40.7128, -74.0060]);
+ * // '18N 585628 4511644'
+ * ```
+ */
 export const systemUTM: CoordinateSystem = {
   name: 'Universal Transverse Mercator',
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -21,6 +21,25 @@ import type { ViewStackViewProps } from './types';
  * ViewStackView - Individual view in a ViewStack
  *
  * Represents a single view that can be pushed onto the ViewStack
+ *
+ * @example
+ * ```tsx
+ * <ViewStack id="app-stack">
+ *   <ViewStackView id="home-view">
+ *     <h1>Home Screen</h1>
+ *     <p>Welcome to the app</p>
+ *   </ViewStackView>
+ *   <ViewStackView id="details-view">
+ *     <h1>Details Screen</h1>
+ *     <p>Detailed information</p>
+ *   </ViewStackView>
+ * </ViewStack>
+ * ```
+ *
+ * @param props - {@link ViewStackViewProps}
+ * @param props.id - Unique identifier for the view.
+ * @param props.children - View content to render when active.
+ * @returns The rendered view content if active, or null.
  */
 export function ViewStackView({ id, children }: ViewStackViewProps) {
   const { parent, view, register, unregister } = useContext(ViewStackContext);

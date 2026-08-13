@@ -17,6 +17,7 @@ export {
   PARAMETERS,
 } from './base-map/constants';
 export { MapEvents, MapEventsNamespace } from './base-map/events';
+export { CoffinCornerExtension } from './extensions/coffin-corner';
 export { createSavedViewport } from './saved-viewports';
 export {
   DASH_ARRAYS,
@@ -30,6 +31,9 @@ export {
   ShapeFeatureType,
 } from './shapes';
 export { SymbolLayer, type SymbolLayerProps } from './symbol-layer';
+export { HtmlOverlayWidget } from './widgets/html-overlay';
+export { HtmlOverlayItem } from './widgets/html-overlay/item';
+export { useHtmlOverlay } from './widgets/html-overlay/use-html-overlay';
 export type {
   BaseMapProps,
   MapClickEvent,
@@ -42,7 +46,12 @@ export type {
   MapEventType,
   MapHoverEvent,
   MapHoverPayload,
+  MapLibreOptions,
 } from './base-map/types';
+export type {
+  CoffinCornerExtensionProps,
+  EntityId,
+} from './extensions/coffin-corner';
 export type { SavedViewportOptions } from './saved-viewports';
 export type {
   CircleProperties,
@@ -53,9 +62,9 @@ export type {
   ShapeEventType,
   ShapeFeature,
   ShapeFeatureProperties,
-  ShapeFeatureTypeValues,
   ShapeId,
   StyledFeature,
   StyledFeatureProperties,
   StyleProperties,
 } from './shapes';
+export type { HtmlOverlayItemProps } from './widgets/html-overlay/item';

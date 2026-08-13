@@ -1,0 +1,152 @@
+---
+title: "Overview"
+description: Shared Biome configuration presets for linting, formatting, and code analysis
+source: tooling/biome-config/package.json
+source_sha: f9a42b09e0c10d44c29fdb83d7d93b8da0247fb0
+doc_sha: 73cb6d6a51b0a4af59d0a671e42ed217658f8b53
+deprecated: false
+updated: 2026-07-13
+---
+
+## Installation
+
+```bash
+pnpm add -D @accelint/biome-config
+```
+
+```bash
+npm install --save-dev @accelint/biome-config
+```
+
+```bash
+yarn add -D @accelint/biome-config
+```
+
+## Usage
+
+### Complete Configuration
+
+Import all configuration presets in your `biome.json`:
+
+```json
+{
+  "$schema": "https://biomejs.dev/schemas/2.3.8/schema.json",
+  "extends": [
+    "@accelint/biome-config/linter",
+    "@accelint/biome-config/formatter",
+    "@accelint/biome-config/analyzer"
+  ]
+}
+```
+
+### Selective Import
+
+Import only the presets you need:
+
+```json
+{
+  "$schema": "https://biomejs.dev/schemas/2.3.8/schema.json",
+  "extends": ["@accelint/biome-config/linter"]
+}
+```
+
+## Available Configurations
+
+### Linter
+
+Strict linting rules with cognitive complexity limits, naming conventions, and React hooks enforcement.
+
+See [Linter Configuration](./linter) for details.
+
+### Formatter
+
+Consistent code formatting settings including indentation, line width, semicolons, and quote styles.
+
+See [Formatter Configuration](./formatter) for details.
+
+### Analyzer
+
+Code analysis settings for import organization and better maintainability.
+
+See [Analyzer Configuration](./analyzer) for details.
+
+## Customization
+
+Override any rule in your project's `biome.json`:
+
+```json
+{
+  "extends": ["@accelint/biome-config/linter"],
+  "linter": {
+    "rules": {
+      "complexity": {
+        "noExcessiveCognitiveComplexity": {
+          "options": {
+            "maxAllowedComplexity": 20
+          }
+        }
+      }
+    }
+  }
+}
+```
+
+## Scripts
+
+Add these scripts to your `package.json`:
+
+```json
+{
+  "scripts": {
+    "lint": "biome lint .",
+    "lint:fix": "biome lint --write .",
+    "format": "biome format --write .",
+    "format:check": "biome format .",
+    "check": "biome check --write ."
+  }
+}
+```
+
+## Editor Integration
+
+### VSCode
+
+Install the [Biome VSCode extension](https://marketplace.visualstudio.com/items?itemName=biomejs.biome):
+
+```json
+{
+  "editor.defaultFormatter": "biomejs.biome",
+  "editor.formatOnSave": true,
+  "editor.codeActionsOnSave": {
+    "quickfix.biome": "explicit"
+  }
+}
+```
+
+### Other Editors
+
+See [Biome editor integrations](https://biomejs.dev/guides/integrate-in-editor/) for setup instructions.
+
+## CI/CD Integration
+
+### GitHub Actions
+
+```yaml
+- name: Check code quality
+  run: pnpm biome check .
+```
+
+### GitLab CI
+
+```yaml
+biome:
+  script:
+    - pnpm biome check .
+```
+
+## Related
+
+- [Biome Documentation](https://biomejs.dev/)
+- [ESLint Configuration](../eslint-config)
+- [Prettier Configuration](../prettier-config)
+- [TypeScript Configuration](../typescript-config)

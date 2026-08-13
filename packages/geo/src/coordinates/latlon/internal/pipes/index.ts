@@ -22,7 +22,18 @@ type Pipe = (t: Tokens, f?: Format) => [Tokens, boolean | string];
 
 export type PipeResult = ReturnType<Pipe>;
 
-/** Make a RegExp global. */
+/**
+ * Make a RegExp global.
+ *
+ * @param k - Key of the SYMBOL_PATTERNS object.
+ * @returns New global RegExp based on the pattern.
+ *
+ * @example
+ * ```typescript
+ * makeGlobal('NSEW');
+ * // /[NSEW]/g
+ * ```
+ */
 const makeGlobal = (k: keyof typeof SYMBOL_PATTERNS) =>
   new RegExp(SYMBOL_PATTERNS[k], 'g');
 
@@ -30,7 +41,21 @@ const makeGlobal = (k: keyof typeof SYMBOL_PATTERNS) =>
  * Consistently create a PipesResult array to return. Use this instead of
  * casting to PipesResult everywhere.
  *
- * @param e true = has error, false = no error
+ * @param t - Array of coordinate tokens.
+ * @param e - Error status: true = has error, false = no error, or error message string.
+ * @returns Pipe result tuple with tokens (empty if error) and error status.
+ *
+ * @example
+ * ```typescript
+ * pipesResult(['45', 'N', '/', '122', 'W'], false);
+ * // [['45', 'N', '/', '122', 'W'], false]
+ * ```
+ *
+ * @example
+ * ```typescript
+ * pipesResult(['45'], 'Too few numbers.');
+ * // [[], 'Too few numbers.']
+ * ```
  *
  * @remarks
  * pure function
@@ -41,7 +66,19 @@ export const pipesResult = (t: Tokens, e: boolean | string): PipeResult => [
   e,
 ];
 
-/** Check if there are more than 2 of something. */
+/**
+ * Check if there are more than 2 of something.
+ *
+ * @param p - Regular expression pattern to match.
+ * @returns Function that takes tokens and returns pipe result with error if >2 matches found.
+ *
+ * @example
+ * ```typescript
+ * const checkBearings = tooMany(/[NSEW]/g);
+ * checkBearings(['N', 'S', 'E', 'W']);
+ * // Returns error=true (more than 2 bearings)
+ * ```
+ */
 const tooMany = (p: RegExp) => (t: Tokens) =>
   pipesResult(t, (t.join('').match(p) ?? []).length > 2);
 
@@ -64,7 +101,23 @@ const pipes: [string, Pipe][] = [
  * Run the tokens through a preset pipeline of violations checks exiting the
  * process as early as possible when violations are found because violations
  * will make further violations checks less accurate and could return inaccurate
- * violations that could be misleading or hide the most important violation
+ * violations that could be misleading or hide the most important violation.
+ *
+ * @param tokens - Array of parsed coordinate tokens to validate and normalize.
+ * @param format - Optional coordinate format (LATLON or LONLAT) for inference.
+ * @returns Tuple of [processed tokens, array of error messages].
+ *
+ * @example
+ * ```typescript
+ * pipesRunner(['45', 'N', '/', '122', 'W'], 'LATLON');
+ * // [['45', 'N', '/', '122', 'W'], []]
+ * ```
+ *
+ * @example
+ * ```typescript
+ * pipesRunner(['45'], 'LATLON');
+ * // [[], ['Too few numbers.']]
+ * ```
  */
 export function pipesRunner(
   tokens: Tokens,

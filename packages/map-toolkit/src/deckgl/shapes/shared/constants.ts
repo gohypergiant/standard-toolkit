@@ -14,7 +14,8 @@
 
 import { DEFAULT_TEXT_STYLE } from '../../text-settings';
 import type { Color } from '@deck.gl/core';
-import type { StyleProperties } from './types';
+import type { FeatureCollection } from 'geojson';
+import type { LinePattern, StyleProperties } from './types';
 
 /**
  * Layer IDs for shape layers
@@ -94,7 +95,7 @@ export const DEFAULT_TENTATIVE_COLORS = {
 export const DEFAULT_STYLE_PROPERTIES: StyleProperties = {
   fillColor: DEFAULT_COLORS.fill,
   lineColor: DEFAULT_COLORS.line,
-  lineWidth: 2,
+  lineWidth: DEFAULT_LINE_WIDTH,
   linePattern: 'solid',
 };
 
@@ -111,27 +112,11 @@ export const LINE_PATTERNS = ['solid', 'dashed', 'dotted'] as const;
 /**
  * Dash array patterns for border/outline rendering
  */
-export const DASH_ARRAYS: Record<
-  'solid' | 'dashed' | 'dotted',
-  [number, number] | null
-> = {
+export const DASH_ARRAYS: Record<LinePattern, [number, number] | null> = {
   solid: null,
   dashed: [8, 4],
   dotted: [2, 4],
 };
-
-/**
- * Default tentative fill color (white at 8% opacity - rgba(255, 255, 255, 0.08))
- * Used when drawing new shapes before they're completed.
- * 0.08 * 255 ≈ 20
- */
-export const DEFAULT_TENTATIVE_FILL_COLOR: Color = [255, 255, 255, 20];
-
-/**
- * Default tentative border/outline color (outline-interactive-hover: #888a8f)
- * Used when drawing new shapes before they're completed.
- */
-export const DEFAULT_TENTATIVE_LINE_COLOR: Color = [136, 138, 143, 255];
 
 /**
  * Default edit handle color (white) - used by both draw and edit layers
@@ -144,12 +129,67 @@ export const DEFAULT_EDIT_HANDLE_COLOR: Color = [255, 255, 255, 255];
 export const DEFAULT_EDIT_HANDLE_OUTLINE_COLOR: Color = [0, 0, 0, 200];
 
 /**
+ * Color for scale corner handles on the polygon/line bounding box.
+ * Distinct from the white vertex handles so a polygon vertex sitting at
+ * a bbox corner reads as two separate things rather than one merged dot.
+ */
+export const SCALE_HANDLE_COLOR: Color = [40, 245, 190, 220];
+
+/**
+ * Color for the rotate handle. Warm amber so it reads as a different
+ * affordance from the (cool turquoise) scale corner handles and the
+ * (white) vertex handles, which is important because rotating vs.
+ * scaling are easy to mistake for each other when the rotate handle
+ * sits near a scale handle.
+ */
+export const ROTATE_HANDLE_COLOR: Color = [255, 188, 71, 230];
+
+/**
+ * Muted color for the polygon/line bounding box outline. Read as
+ * "scaffolding" rather than as part of the shape itself — lower alpha
+ * neutral gray with a hint of the highlight tint.
+ */
+export const VERTEX_BBOX_LINE_COLOR: Color = [200, 200, 210, 140];
+
+/**
+ * Dash pattern for the polygon/line bounding box outline (in pixels:
+ * `[dash, gap]`). Tighter than the standard dashed line pattern so the
+ * box reads clearly as scaffolding without dominating the view.
+ */
+export const VERTEX_BBOX_DASH_ARRAY: [number, number] = [6, 4];
+
+/**
+ * Default stroke width (in pixels) for the polygon/line bounding box
+ * outline. Mirrors deck.gl's default tentative line width but slightly
+ * thinner so the bbox reads as scaffolding rather than as primary
+ * geometry.
+ */
+export const DEFAULT_VERTEX_BBOX_LINE_WIDTH = 2;
+
+/**
+ * Default radius (in pixels) for an edit-handle dot (vertex, scale, or
+ * rotate). Matches the upstream EditableGeoJsonLayer default; can be
+ * overridden per-handle-type via {@link EditShapeStyle}.
+ */
+export const DEFAULT_EDIT_HANDLE_RADIUS = 6;
+
+/**
+ * Default outline thickness (in pixels) for the edit-handle dot's ring.
+ * Single value applies to all handle types — upstream
+ * `editHandlePointStrokeWidth` doesn't take a per-handle accessor.
+ */
+export const DEFAULT_EDIT_HANDLE_STROKE_WIDTH = 2;
+
+/**
  * Empty feature collection for initializing editable layers
  */
-export const EMPTY_FEATURE_COLLECTION: import('geojson').FeatureCollection = {
+export const EMPTY_FEATURE_COLLECTION: FeatureCollection = Object.freeze({
   type: 'FeatureCollection',
-  features: [],
-};
+  features: Object.freeze([]),
+}) as unknown as FeatureCollection;
+
+const ASCII_RANGE =
+  ' !"#$%&\'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~\x7f\x80';
 
 /**
  * Custom character set for deck.gl TextLayer used by tooltip rendering.
@@ -159,12 +199,11 @@ export const EMPTY_FEATURE_COLLECTION: import('geojson').FeatureCollection = {
  * like degree symbol (°) and superscript 2 (²) must be explicitly included
  * for tooltip text like "100.5 km²" to render correctly.
  */
-export const TOOLTIP_CHARACTER_SET: string[] = ['°', '²'];
-
-// Add standard ASCII characters (space through tilde + DEL)
-for (let i = 32; i <= 128; i++) {
-  TOOLTIP_CHARACTER_SET.push(String.fromCharCode(i));
-}
+export const TOOLTIP_CHARACTER_SET: string[] = [
+  '°',
+  '²',
+  ...ASCII_RANGE.split(''),
+];
 
 /**
  * Sublayer props for tooltip text rendering.
@@ -211,6 +250,10 @@ export const EDITABLE_LAYER_SUBLAYER_PROPS = {
  *
  * @param value - The distance value to format
  * @returns The formatted string with 2 decimal places
+ * @example
+ * ```typescript
+ * formatDistance(3.14159); // → "3.14"
+ * ```
  */
 export function formatDistance(value: number): string {
   return value.toFixed(2);
@@ -222,19 +265,42 @@ export function formatDistance(value: number): string {
 // These functions generate consistent tooltip text for both draw and edit modes.
 
 /**
- * Format circle tooltip text showing diameter and area.
+ * Format circle tooltip text showing radius and area.
  *
- * @param diameter - Circle diameter in the specified units
+ * @param radius - Circle radius in the specified units
  * @param area - Circle area in the specified units squared
  * @param unitAbbrev - Unit abbreviation (e.g., 'km', 'mi')
- * @returns Formatted tooltip text: "d: {diameter} {unit}\n{area} {unit}²"
+ * @returns Formatted tooltip text: "r: {radius} {unit}\n{area} {unit}²"
+ * @example
+ * ```typescript
+ * formatCircleTooltip(12.5, 490.87, 'km');
+ * // → "r: 12.50 km\n490.87 km²"
+ * ```
  */
 export function formatCircleTooltip(
-  diameter: number,
+  radius: number,
   area: number,
   unitAbbrev: string,
 ): string {
-  return `d: ${formatDistance(diameter)} ${unitAbbrev}\n${formatDistance(area)} ${unitAbbrev}²`;
+  return `r: ${formatDistance(radius)} ${unitAbbrev}\n${formatDistance(area)} ${unitAbbrev}²`;
+}
+
+/**
+ * Format a "{dim1} {unit} x {dim2} {unit}\n{area} {unit}²" tooltip string.
+ *
+ * @param dim1 - First dimension value
+ * @param dim2 - Second dimension value
+ * @param area - Area value
+ * @param unitAbbrev - Unit abbreviation (e.g., 'km', 'mi')
+ * @returns Formatted tooltip text
+ */
+function formatDimensionsTooltip(
+  dim1: number,
+  dim2: number,
+  area: number,
+  unitAbbrev: string,
+): string {
+  return `${formatDistance(dim1)} ${unitAbbrev} x ${formatDistance(dim2)} ${unitAbbrev}\n${formatDistance(area)} ${unitAbbrev}²`;
 }
 
 /**
@@ -245,6 +311,11 @@ export function formatCircleTooltip(
  * @param area - Rectangle area in the specified units squared
  * @param unitAbbrev - Unit abbreviation (e.g., 'km', 'mi')
  * @returns Formatted tooltip text: "{width} {unit} x {height} {unit}\n{area} {unit}²"
+ * @example
+ * ```typescript
+ * formatRectangleTooltip(5.0, 3.2, 16.0, 'km');
+ * // → "5.00 km x 3.20 km\n16.00 km²"
+ * ```
  */
 export function formatRectangleTooltip(
   width: number,
@@ -252,7 +323,7 @@ export function formatRectangleTooltip(
   area: number,
   unitAbbrev: string,
 ): string {
-  return `${formatDistance(width)} ${unitAbbrev} x ${formatDistance(height)} ${unitAbbrev}\n${formatDistance(area)} ${unitAbbrev}²`;
+  return formatDimensionsTooltip(width, height, area, unitAbbrev);
 }
 
 /**
@@ -263,6 +334,11 @@ export function formatRectangleTooltip(
  * @param area - Ellipse area in the specified units squared
  * @param unitAbbrev - Unit abbreviation (e.g., 'km', 'mi')
  * @returns Formatted tooltip text: "{major} {unit} x {minor} {unit}\n{area} {unit}²"
+ * @example
+ * ```typescript
+ * formatEllipseTooltip(10.0, 6.0, 47.12, 'km');
+ * // → "10.00 km x 6.00 km\n47.12 km²"
+ * ```
  */
 export function formatEllipseTooltip(
   majorAxis: number,
@@ -270,7 +346,7 @@ export function formatEllipseTooltip(
   area: number,
   unitAbbrev: string,
 ): string {
-  return `${formatDistance(majorAxis)} ${unitAbbrev} x ${formatDistance(minorAxis)} ${unitAbbrev}\n${formatDistance(area)} ${unitAbbrev}²`;
+  return formatDimensionsTooltip(majorAxis, minorAxis, area, unitAbbrev);
 }
 
 /**
@@ -279,6 +355,10 @@ export function formatEllipseTooltip(
  * @param distance - Distance value in the specified units
  * @param unitAbbrev - Unit abbreviation (e.g., 'km', 'mi')
  * @returns Formatted tooltip text: "{distance} {unit}"
+ * @example
+ * ```typescript
+ * formatDistanceTooltip(42.5, 'km'); // → "42.50 km"
+ * ```
  */
 export function formatDistanceTooltip(
   distance: number,
@@ -314,4 +394,5 @@ export const COMPLETION_EDIT_TYPES = new Set([
   'scaled',
   'rotated',
   'translated',
+  'resized',
 ]);

@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -13,11 +13,9 @@
 
 import 'client-only';
 import { clsx } from '@accelint/design-foundation/lib/utils';
-import {
-  composeRenderProps,
-  GridList,
-  useContextProps,
-} from 'react-aria-components';
+import { GridList } from 'react-aria-components/GridList';
+import { composeRenderProps } from 'react-aria-components/composeRenderProps';
+import { useContextProps } from 'react-aria-components/slots';
 import { IconProvider } from '../icon/context';
 import { ListContext } from './context';
 import styles from './styles.module.css';
@@ -31,6 +29,7 @@ import type { ListProps } from './types';
  * data tables, file lists, or any selectable grid interface.
  *
  * @example
+ * ```tsx
  * // Basic list view with sizing
  * <div className='h-[400px] w-[300px]'>
  *   <List className='h-full' aria-label='Items'>
@@ -41,6 +40,14 @@ import type { ListProps } from './types';
  *     </ListItem>
  *   </List>
  * </div>
+ * ```
+ *
+ * @param props - {@link ListProps}
+ * @param props.ref - Forwarded ref to the underlying GridList element.
+ * @param props.children - List item elements to render.
+ * @param props.className - Optional CSS class name.
+ * @param props.variant - Visual density variant for list items.
+ * @returns The rendered List component.
  */
 export function List<T extends object>({ ref, ...props }: ListProps<T>) {
   [props, ref] = useContextProps(props, ref ?? null, ListContext);

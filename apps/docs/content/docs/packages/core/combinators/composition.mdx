@@ -1,0 +1,134 @@
+---
+title: "composition"
+description: Composes two functions, passing the result of one to the other
+source: packages/core/src/combinators/composition/index.ts
+source_sha: 6ab46a3e4e7844bc685ffce08eb82135ae6f36c4
+doc_sha: b35dfa60c411d47df280c2f117c3f3118d8c7886
+deprecated: false
+updated: 2026-07-13
+---
+
+Composes two functions, applying the second function first and passing its result to the first function. Also known as the B combinator in lambda calculus.
+
+## Usage
+
+```typescript
+import { composition } from '@accelint/core';
+
+// Compose two functions
+const result = composition((x: number) => x + 8)((x: number) => x * 3)(4);
+// 20 (4 * 3 = 12, 12 + 8 = 20)
+
+// Partial application
+const multiplyThenAdd = composition((x: number) => x + 10);
+multiplyThenAdd((x: number) => x * 2)(5); // 20
+```
+
+## Reference
+
+```typescript
+function composition<A, B>(
+  f: (z: A) => B
+): <C>(g: (y: C) => A) => (x: C) => B
+```
+
+Lambda calculus: `λabc.a(bc)`  
+Type signature: `composition :: (a → b) → (c → a) → c → b`
+
+### Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `f` | `(z: A) => B` | The second function in the composition (applied last). |
+| `g` | `(y: C) => A` | The first function in the composition (applied first). |
+| `x` | `C` | The value to pass to `g`. |
+
+### Returns
+
+Returns the result of `f(g(x))`.
+
+### Type Parameters
+
+- `A` - The return type of `g` and input type of `f`
+- `B` - The return type of `f`
+- `C` - The input type of `g`
+
+## Examples
+
+### Example: Data transformation
+
+```typescript
+import { composition } from '@accelint/core';
+
+const trim = (s: string) => s.trim();
+const toUpperCase = (s: string) => s.toUpperCase();
+
+const trimAndUpper = composition(toUpperCase)(trim);
+trimAndUpper('  hello  '); // 'HELLO'
+```
+
+### Example: Mathematical operations
+
+```typescript
+import { composition } from '@accelint/core';
+
+const square = (x: number) => x * x;
+const increment = (x: number) => x + 1;
+
+// Square then increment
+const squareThenInc = composition(increment)(square);
+squareThenInc(5); // 26 (5² = 25, 25 + 1 = 26)
+
+// Increment then square
+const incThenSquare = composition(square)(increment);
+incThenSquare(5); // 36 (5 + 1 = 6, 6² = 36)
+```
+
+### Example: Object transformations
+
+```typescript
+import { composition } from '@accelint/core';
+
+interface User {
+  firstName: string;
+  lastName: string;
+}
+
+interface FullName {
+  fullName: string;
+}
+
+const getFullName = (u: User): string =>
+  `${u.firstName} ${u.lastName}`;
+
+const toNameObject = (name: string): FullName => ({ fullName: name });
+
+const transform = composition(toNameObject)(getFullName);
+
+const user: User = { firstName: 'John', lastName: 'Doe' };
+transform(user); // { fullName: 'John Doe' }
+```
+
+### Example: Validation pipeline
+
+```typescript
+import { composition } from '@accelint/core';
+
+const isNotEmpty = (s: string): boolean => s.length > 0;
+const hasMinLength = (min: number) => (s: string): boolean => s.length >= min;
+
+// Check string after trimming
+const validateAfterTrim = (min: number) =>
+  composition(hasMinLength(min))((s: string) => s.trim());
+
+validateAfterTrim(3)('  ab  '); // false (trimmed length is 2)
+validateAfterTrim(3)('  abc  '); // true (trimmed length is 3)
+```
+
+> **Good to know:** This combinator applies functions right-to-left (`f(g(x))`). For left-to-right composition, use [pipe](../../composition/pipe/index.md). For composing more than two functions, use [compose](../../composition/compose/index.md).
+
+## Related
+
+- [pipe](../../composition/pipe/index.md) - Compose functions left-to-right
+- [compose](../../composition/compose/index.md) - Compose multiple functions right-to-left
+- [apply](../apply/index.md) - Apply function to value

@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -14,7 +14,7 @@
 import 'client-only';
 import { useEmit } from '@accelint/bus/react';
 import { isUUID, type UniqueId } from '@accelint/core';
-import { Pressable } from 'react-aria-components';
+import { Pressable } from 'react-aria-components/Pressable';
 import { SidenavEventTypes } from './events';
 import type { SidenavEvent, SidenavTriggerProps } from './types';
 
@@ -22,6 +22,20 @@ import type { SidenavEvent, SidenavTriggerProps } from './types';
  * SidenavTrigger - Trigger component for sidenav
  *
  * Provides a trigger button to control the sidenav state
+ *
+ * @example
+ * ```tsx
+ * <SidenavTrigger for="toggle:sidenav-id">
+ *   <Button variant="icon">
+ *     <Icon><Menu /></Icon>
+ *   </Button>
+ * </SidenavTrigger>
+ * ```
+ *
+ * @param props - {@link SidenavTriggerProps}
+ * @param props.children - Trigger content (typically a Button with icon).
+ * @param props.for - Target sidenav ID or targeted event string.
+ * @returns The rendered SidenavTrigger component.
  */
 export function SidenavTrigger({
   children,

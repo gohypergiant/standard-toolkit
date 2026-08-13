@@ -1,6 +1,6 @@
 // __private-exports
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -15,7 +15,7 @@ import { clsx } from '@accelint/design-foundation/lib/utils';
 import ArrowDown from '@accelint/icons/arrow-down';
 import ArrowUp from '@accelint/icons/arrow-up';
 import Kebab from '@accelint/icons/kebab';
-import { flexRender, type Header } from '@tanstack/react-table';
+import { flexRender, type Header, type RowData } from '@tanstack/react-table';
 import { useContext, useState } from 'react';
 import { Button } from '../button';
 import { Icon } from '../icon';
@@ -30,9 +30,14 @@ import {
 } from './constants/table';
 import { TableContext } from './context';
 import styles from './styles.module.css';
+import type { TableFeatures } from './features';
 import type { TableHeaderCellProps } from './types';
 
-function HeaderCellMenu<T>({ header }: { header: Header<T, unknown> }) {
+function HeaderCellMenu<T extends RowData>({
+  header,
+}: {
+  header: Header<TableFeatures, T, unknown>;
+}) {
   const {
     enableColumnReordering,
     enableSorting,
@@ -143,7 +148,28 @@ function HeaderCellMenu<T>({ header }: { header: Header<T, unknown> }) {
   );
 }
 
-export function TableHeaderCell<T>({
+/**
+ * TableHeaderCell - Individual header cell (`<th>`) with optional sorting controls.
+ *
+ * @example
+ * ```tsx
+ * <TableHeader headerGroups={headerGroups}>
+ *   <tr>
+ *     {headerGroup.headers.map(header => (
+ *       <TableHeaderCell key={header.id} header={header} />
+ *     ))}
+ *   </tr>
+ * </TableHeader>
+ * ```
+ *
+ * @param props - {@link TableHeaderCellProps}
+ * @param props.ref - Ref to the th element.
+ * @param props.children - Custom children content.
+ * @param props.className - CSS class for the th element.
+ * @param props.header - TanStack table header object.
+ * @returns The rendered TableHeaderCell component.
+ */
+export function TableHeaderCell<T extends RowData>({
   ref,
   children,
   className,

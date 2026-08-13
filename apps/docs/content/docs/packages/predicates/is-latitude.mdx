@@ -1,0 +1,86 @@
+---
+title: "isLatitude"
+description: Type guard for validating latitude values between -90 and 90 degrees
+source: packages/predicates/src/is-latitude/index.ts
+source_sha: fb3de36f72c19522f2402aa94b2225752de7e253
+doc_sha: 63d913c3689d969e3829f2349778e988d807dc73
+deprecated: false
+updated: 2026-07-13
+---
+
+Validates latitude values between -90 and 90 degrees.
+
+## Usage
+
+```typescript
+import { isLatitude } from '@accelint/predicates';
+
+isLatitude(37.7749);  // true (San Francisco)
+isLatitude(-90);      // true (South Pole)
+isLatitude(100);      // false (out of range)
+```
+
+## Reference
+
+```typescript
+function isLatitude(val: unknown): boolean
+```
+
+Valid range: -90 to 90 (inclusive)
+
+## Examples
+
+```typescript
+import { isLatitude } from '@accelint/predicates/is-latitude';
+
+isLatitude(-90);   // true (South Pole)
+isLatitude(0);     // true (Equator)
+isLatitude(90);    // true (North Pole)
+isLatitude(37.7749); // true (San Francisco)
+isLatitude(-100);  // false (out of range)
+isLatitude(NaN);   // false
+```
+
+### Example: Coordinate validation
+
+```typescript
+import { isLatitude } from '@accelint/predicates/is-latitude';
+
+interface Coordinate {
+  lat: number;
+  lon: number;
+}
+
+function validateLatitude(coord: Coordinate): boolean {
+  return isLatitude(coord.lat);
+}
+
+validateLatitude({ lat: 37.7749, lon: -122.4194 }); // true
+validateLatitude({ lat: 100, lon: -122.4194 });     // false
+```
+
+## Real-World Example: Location validation
+
+```typescript
+import { isLatitude } from '@accelint/predicates/is-latitude';
+import { isLongitude } from '@accelint/predicates/is-longitude';
+
+interface Location {
+  latitude: number;
+  longitude: number;
+}
+
+function isValidLocation(loc: Location): boolean {
+  return isLatitude(loc.latitude) && isLongitude(loc.longitude);
+}
+
+const sanFrancisco: Location = { latitude: 37.7749, longitude: -122.4194 };
+isValidLocation(sanFrancisco); // true
+```
+
+## Related
+
+- [isLongitude](./is-longitude) - Validates longitude values
+- [isBbox](./is-bbox) - Validates bounding box arrays
+- [isBetween](../is-between/index.md) - Range validation for numbers
+- [isNumber](../is-number/index.md) - Type guard for numbers

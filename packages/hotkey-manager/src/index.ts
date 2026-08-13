@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -23,8 +23,8 @@ export type { HotkeyAction } from '@/types/hotkey-action';
 export type { HotkeyConfig } from '@/types/hotkey-config';
 export type { HotkeyEvents } from '@/types/hotkey-events';
 export type { HotkeyExtra } from '@/types/hotkey-extra';
-export type { HotkeyHook } from '@/types/hotkey-hook';
 export type { HotkeyId } from '@/types/hotkey-id';
+export type { HotkeyManager } from '@/types/hotkey-manager';
 export type { HotkeyOptions } from '@/types/hotkey-options';
 export type { KeyCombination } from '@/types/key-combination';
 export type { KeyCombinationId } from '@/types/key-combination-id';

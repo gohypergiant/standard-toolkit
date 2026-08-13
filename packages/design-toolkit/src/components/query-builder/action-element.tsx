@@ -1,6 +1,6 @@
 // __private-exports
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -17,6 +17,23 @@ import { useMemo } from 'react';
 import { Button } from '../button';
 import type { ActionProps } from 'react-querybuilder';
 
+/**
+ * ActionElement - Base button component for rule and group actions
+ *
+ * Renders a text-labeled button with support for disabled state translations.
+ *
+ * @example
+ * ```tsx
+ * <ActionElement
+ *   title="Add Rule"
+ *   handleOnClick={() => console.log('clicked')}
+ *   disabled={false}
+ * />
+ * ```
+ *
+ * @param props - ActionProps from react-querybuilder.
+ * @returns The rendered ActionElement button.
+ */
 export function ActionElement({
   disabled,
   disabledTranslation,

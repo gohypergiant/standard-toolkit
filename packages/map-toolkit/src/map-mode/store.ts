@@ -36,7 +36,7 @@
 
 import { Broadcast } from '@accelint/bus';
 import { uuid } from '@accelint/core';
-import { getLogger } from '@accelint/logger';
+import { createLoggerDomain } from '@/shared/logger';
 import {
   createMapStore,
   mapClear,
@@ -48,15 +48,25 @@ import type { UniqueId } from '@accelint/core';
 import type { StoreHelpers } from '../shared/create-map-store';
 import type { MapModeEventType, ModeChangeDecisionPayload } from './types';
 
-const logger = getLogger({
-  enabled:
-    process.env.NODE_ENV !== 'production' && process.env.NODE_ENV !== 'test',
-  level: 'warn',
-  prefix: '[MapMode]',
-  pretty: true,
-});
+const logger = createLoggerDomain('[MapMode]');
 
-const DEFAULT_MODE = 'default';
+/**
+ * Mode name a map instance carries when no owner has claimed a mode.
+ * `as const` locks the literal so it can be referenced as a type via `DefaultMode`.
+ *
+ * @internal Not re-exported from the package barrel — callers should change
+ *   modes through `useMapMode` / `requestModeChange` rather than referencing
+ *   this constant directly.
+ */
+export const DEFAULT_MODE = 'default' as const;
+
+/**
+ * Type alias for the always-present default mode literal. Used in
+ * `UseMapModeReturn` to ensure `'default'` is part of `mode`'s type.
+ *
+ * @internal Not re-exported from the package barrel.
+ */
+export type DefaultMode = typeof DEFAULT_MODE;
 
 /**
  * Typed event bus instance for map mode events.
@@ -91,7 +101,18 @@ type MapModeActions = {
 };
 
 /**
- * Determine if a mode change request should be auto-accepted without authorization
+ * Determine if a mode change request should be auto-accepted without authorization.
+ *
+ * Auto-accept conditions:
+ * - Owner returning to default mode
+ * - Owner switching between their own modes
+ * - No ownership conflicts exist
+ * - Entering an owned mode from default mode
+ *
+ * @param state - Current mode state
+ * @param desiredMode - The mode being requested
+ * @param requestOwner - The component requesting the mode change
+ * @returns True if the request should be auto-accepted
  */
 function shouldAutoAcceptRequest(
   state: MapModeState,
@@ -468,22 +489,42 @@ export const modeStore = createMapStore<MapModeState, MapModeActions>({
 // =============================================================================
 
 /**
- * Get the current mode for a map instance
+ * Get the current mode for a map instance.
+ *
+ * @param mapId - Unique identifier for the map instance
+ * @returns The current active mode string
+ *
+ * @example
+ * ```typescript
+ * import { getMode } from '@accelint/map-toolkit/map-mode';
+ *
+ * const currentMode = getMode(mapId);
+ * console.log('Current mode:', currentMode); // 'default', 'drawing', etc.
+ * ```
  */
 export function getMode(mapId: UniqueId): string {
   return modeStore.get(mapId).mode;
 }
 
 /**
- * Hook for current mode value
+ * Hook for current mode value.
+ *
+ * **Internal use only** - not exported from the public API.
+ * Use `useMapMode` instead for better ergonomics and MapContext integration.
+ *
+ * @param mapId - Unique identifier for the map instance
+ * @returns The current active mode string
  */
 export function useMode(mapId: UniqueId): string {
   return modeStore.useSelector(mapId, (state) => state.mode);
 }
 
 /**
- * Get the owner of the current mode for a given map instance
+ * Get the owner of the current mode for a given map instance.
+ *
  * @internal - For internal map-toolkit use only
+ * @param instanceId - Unique identifier for the map instance
+ * @returns The owner ID of the current mode, or undefined if unowned
  */
 export function getCurrentModeOwner(instanceId: UniqueId): string | undefined {
   const state = modeStore.get(instanceId);
@@ -493,7 +534,11 @@ export function getCurrentModeOwner(instanceId: UniqueId): string | undefined {
 /**
  * Check if a given owner is registered as the owner of any mode.
  * This includes both active mode owners and pending mode requests.
+ *
  * @internal - For internal map-toolkit use only
+ * @param instanceId - Unique identifier for the map instance
+ * @param owner - The owner ID to check
+ * @returns True if the owner is registered for any mode
  */
 export function isRegisteredModeOwner(
   instanceId: UniqueId,
@@ -517,7 +562,22 @@ export function isRegisteredModeOwner(
 }
 
 /**
- * Manually clear map mode state for a specific instanceId.
+ * Manually clear map mode state for a specific map instance.
+ *
+ * Removes all mode ownership data, pending requests, and resets to default state.
+ * This is typically not needed as cleanup happens automatically.
+ * Use only in advanced scenarios where manual cleanup is required.
+ *
+ * @param instanceId - Unique identifier for the map instance to clear
+ * @returns void
+ *
+ * @example
+ * ```typescript
+ * import { clearMapModeState } from '@accelint/map-toolkit/map-mode';
+ *
+ * // Manual cleanup when destroying a map
+ * clearMapModeState(mapId);
+ * ```
  */
 export function clearMapModeState(instanceId: UniqueId): void {
   modeStore.clear(instanceId);

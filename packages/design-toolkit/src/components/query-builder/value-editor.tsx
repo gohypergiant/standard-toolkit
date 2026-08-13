@@ -1,6 +1,6 @@
 // __private-exports
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -201,6 +201,26 @@ const valueEditors: QueryBuilderValueEditors = {
   textarea: TextareaValueEditor,
 };
 
+/**
+ * ValueEditor - Input component for editing rule values
+ *
+ * Renders appropriate editor based on field type: text, checkbox, radio, select, switch, or textarea.
+ * Supports multi-value operators (between, notBetween) with start/end inputs.
+ *
+ * @example
+ * ```tsx
+ * <ValueEditor
+ *   fieldData={{ name: 'age', valueEditorType: 'text' }}
+ *   operator="greaterThan"
+ *   value="18"
+ *   handleOnChange={(value) => console.log(value)}
+ *   rule={{ field: 'age', operator: 'greaterThan', value: '18' }}
+ * />
+ * ```
+ *
+ * @param props - ValueEditorProps from react-querybuilder.
+ * @returns The rendered value editor, or null for null/notNull operators.
+ */
 export function ValueEditor(props: ValueEditorProps) {
   const {
     fieldData: { name, valueEditorType },
@@ -261,9 +281,5 @@ export function ValueEditor(props: ValueEditorProps) {
     );
   }
 
-  return (
-    <div>
-      <Editor {...props} />
-    </div>
-  );
+  return <Editor {...props} />;
 }

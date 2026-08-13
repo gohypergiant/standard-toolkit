@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -17,6 +17,7 @@
  * @template R - The return type of given function.
  * @param f - The function to apply to the value.
  * @param x - The value to pass to the function.
+ * @returns The result of applying the function to the value.
  *
  * @remarks
  * A combinator
@@ -28,8 +29,10 @@
  * pure function
  *
  * @example
+ * ```typescript
  * apply((a) => a + 6)(3);
  * // 9
+ * ```
  */
 export const apply =
   // Types renamed to avoid confusion with the combinator

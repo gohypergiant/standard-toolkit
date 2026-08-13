@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -17,6 +17,21 @@ type IteratorCallback<T> = () => IteratorResult<T>;
  *
  * @template T - The type of IteratorCallback.
  * @param iterCb - The `next` callback for an Iterator.
+ * @returns An iterable iterator object.
+ *
+ * @example
+ * ```typescript
+ * import { createIterable } from '@accelint/core';
+ *
+ * let count = 0;
+ * const counter = createIterable(() =>
+ *   count < 3 ? { value: count++, done: false } : { value: undefined, done: true }
+ * );
+ *
+ * for (const num of counter) {
+ *   console.log(num); // 0, 1, 2
+ * }
+ * ```
  */
 export function createIterable<T>(
   iterCb: IteratorCallback<T>,

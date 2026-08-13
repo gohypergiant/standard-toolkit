@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -41,13 +41,14 @@ export type KeyCombination = {
    *
    * @default false
    */
-  shift: boolean /**
+  shift: boolean;
+  /**
    * When `true` requires the Windows key to be press. This setting is not recommended.
    *
    * If `autoMacStyle` is `true` then this will switch to the control key otherwise this will be the command key.
    *
    * @default false
-   */;
+   */
   meta: boolean;
   /**
    * Automatically convert the hotkey to the common macOS style, e.g. `ctl+shift+g` becomes `cmd+shift+g` to better

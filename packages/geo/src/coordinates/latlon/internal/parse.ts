@@ -35,8 +35,10 @@ export type ParseResults = [Tokens, Errors];
  * pure function
  *
  * @example
+ * ```typescript
  * const input = '1 2 3 / 4 5 6'
  * parse(input); // [['1', '2', '3', '/', '4', '5', '6'], []]
+ * ```
  *
  * @description
  * __Assumptions/Specification__
@@ -55,6 +57,14 @@ export type ParseResults = [Tokens, Errors];
 export function parse(input: string, format?: Format): ParseResults {
   if (!input?.length) {
     return [[], [violation('No input.')]];
+  }
+
+  // Find isolated letters (not part of a larger word)
+  const isolatedLetters = input.match(/(?<![a-z])[a-z](?![a-z])/gi);
+
+  // Reject if any isolated letter is not a valid cardinal direction (N, S, E, W)
+  if (isolatedLetters?.some((ch) => !/^[nsew]$/i.test(ch))) {
+    return [[], [violation('Unrecognized characters in input.')]];
   }
 
   const [tokens, errors] = pipesRunner(lexer(input), format);

@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -12,14 +12,25 @@
 
 import { clsx } from '@accelint/design-foundation/lib/utils';
 import { useContext } from 'react';
-import { Text, type TextProps } from 'react-aria-components';
+import { Text, type TextProps } from 'react-aria-components/Text';
 import { TreeContext } from './context';
 import styles from './styles.module.css';
 
 /**
- * ItemDescription - Description for a tree item
+ * TreeItemDescription - Secondary descriptive text for a tree item
  *
- * Renders secondary descriptive text for a tree item
+ * @example
+ * ```tsx
+ * <TreeItemContent>
+ *   <TreeItemLabel>Project Files</TreeItemLabel>
+ *   <TreeItemDescription>Last modified 2 hours ago</TreeItemDescription>
+ * </TreeItemContent>
+ * ```
+ *
+ * @param props - TextProps from react-aria-components.
+ * @param props.children - Description text content.
+ * @param props.className - CSS class for the description.
+ * @returns The rendered TreeItemDescription component, or null if variant is 'crammed'.
  */
 export function TreeItemDescription({ children, className }: TextProps) {
   const { variant } = useContext(TreeContext);

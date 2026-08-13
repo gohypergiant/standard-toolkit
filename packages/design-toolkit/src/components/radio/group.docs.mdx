@@ -1,0 +1,69 @@
+import { Canvas, Meta } from '@storybook/addon-docs/blocks';
+
+import * as RadioGroupStories from './group.stories';
+
+<Meta of={RadioGroupStories} />
+
+# Radio Group
+Groups multiple radio buttons with shared state and configuration. Supports vertical and horizontal layouts with automatic spacing.
+
+## Example Usage
+
+```tsx
+<RadioGroup label="Select an option">
+  <Radio value="1">Option 1</Radio>
+  <Radio value="2">Option 2</Radio>
+  <Radio value="3">Option 3</Radio>
+</RadioGroup>
+```
+<Canvas of={RadioGroupStories.Default} />
+
+### Horizontal Layout
+```tsx
+<RadioGroup label="Size" orientation="horizontal">
+  <Radio value="small">Small</Radio>
+  <Radio value="medium">Medium</Radio>
+  <Radio value="large">Large</Radio>
+</RadioGroup>
+```
+
+### Controlled
+```tsx
+const [value, setValue] = useState('medium');
+
+<RadioGroup label="Size" value={value} onChange={setValue}>
+  <Radio value="small">Small</Radio>
+  <Radio value="medium">Medium</Radio>
+  <Radio value="large">Large</Radio>
+</RadioGroup>
+```
+
+## Props
+Extends all [`RadioGroup` props](https://react-spectrum.adobe.com/react-aria/RadioGroup.html#props) from react-aria-components.
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `label` | `string` | — | Group label displayed above radio buttons |
+| `orientation` | `'vertical' \| 'horizontal'` | `'vertical'` | Layout direction |
+| `value` | `string` | — | Controlled selected value |
+| `defaultValue` | `string` | — | Default selected value |
+| `onChange` | `(value: string) => void` | — | Called when selection changes |
+| `isDisabled` | `boolean` | `false` | Disables all radio options |
+| `isRequired` | `boolean` | `false` | Whether selection is required |
+| `labelPosition` | `'start' \| 'end'` | `'end'` | Position of labels for all child Radios. Individual Radio `labelPosition` overrides this. |
+| `classNames` | `object` | — | Custom class names (see below) |
+
+**classNames:**
+| Key | Description |
+|-----|-------------|
+| `group` | Applied to the group container |
+| `label` | Applied to the group label |
+
+## Implementation Notes
+- Wraps `RadioGroup` from react-aria-components
+- Horizontal orientation wraps when space is constrained
+- Label component shows required indicator when `isRequired` is true
+
+**Related:**
+- [React Aria RadioGroup](https://react-spectrum.adobe.com/react-aria/RadioGroup.html)
+- [Radio](?path=/docs/components-radio--playground)

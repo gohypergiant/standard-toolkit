@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -43,7 +43,10 @@ export default {
       { name: 'expand-window', icon: <Icon.ExpandWindow /> },
       { name: 'expand', icon: <Icon.Expand /> },
       { name: 'explore-data', icon: <Icon.ExploreData /> },
+      { name: 'fast-forward', icon: <Icon.FastForward /> },
+      { name: 'fast-rewind', icon: <Icon.FastRewind /> },
       { name: 'filter', icon: <Icon.Filter /> },
+      { name: 'full-screen', icon: <Icon.FullScreen /> },
       { name: 'flag', icon: <Icon.Flag /> },
       { name: 'focus', icon: <Icon.Focus /> },
       { name: 'global-share', icon: <Icon.GlobalShare /> },
@@ -52,6 +55,8 @@ export default {
       { name: 'import', icon: <Icon.Import /> },
       { name: 'insert-chart', icon: <Icon.InsertChart /> },
       { name: 'jump-to', icon: <Icon.JumpTo /> },
+      { name: 'jump-to-start', icon: <Icon.JumpToStart /> },
+      { name: 'jump-to-end', icon: <Icon.JumpToEnd /> },
       { name: 'lasso', icon: <Icon.Lasso /> },
       { name: 'link', icon: <Icon.Link /> },
       { name: 'lock-fill', icon: <Icon.LockFill /> },
@@ -80,8 +85,11 @@ export default {
       { name: 'search', icon: <Icon.Search /> },
       { name: 'share', icon: <Icon.Share /> },
       { name: 'show', icon: <Icon.Show /> },
+      { name: 'sound-audible', icon: <Icon.SoundAudible /> },
+      { name: 'sound-mute', icon: <Icon.SoundMute /> },
       { name: 'stack-cards', icon: <Icon.StackCards /> },
       { name: 'stack', icon: <Icon.Stack /> },
+      { name: 'stop', icon: <Icon.Stop /> },
       { name: 'tether', icon: <Icon.Tether /> },
       { name: 'track-changes', icon: <Icon.TrackChanges /> },
       { name: 'undo', icon: <Icon.Undo /> },
@@ -93,6 +101,7 @@ export default {
   symbols: {
     description: 'These icons mainly represent an object or concept.',
     icons: [
+      { name: 'air-track-history', icon: <Icon.AirTrackHistory /> },
       { name: 'airspaces', icon: <Icon.Airspaces /> },
       { name: 'appearance', icon: <Icon.Appearance /> },
       { name: 'arrow', icon: <Icon.Arrow /> },
@@ -118,6 +127,7 @@ export default {
         name: 'electromagnetic-spectrum',
         icon: <Icon.ElectromagneticSpectrum />,
       },
+      { name: 'ellipse-tool', icon: <Icon.EllipseTool /> },
       { name: 'feed', icon: <Icon.Feed /> },
       { name: 'flight-plan', icon: <Icon.FlightPlan /> },
       { name: 'gantt', icon: <Icon.Gantt /> },
@@ -133,6 +143,7 @@ export default {
       { name: 'line-tool', icon: <Icon.LineTool /> },
       { name: 'location-fill', icon: <Icon.LocationFill /> },
       { name: 'location-stroke', icon: <Icon.LocationStroke /> },
+      { name: 'mercator-projection', icon: <Icon.MercatorProjection /> },
       { name: 'message', icon: <Icon.Message /> },
       { name: 'mode', icon: <Icon.Mode /> },
       { name: 'newspaper', icon: <Icon.Newspaper /> },
@@ -167,6 +178,7 @@ export default {
       },
       { name: 'user-manual', icon: <Icon.UserManual /> },
       { name: 'watch-tower', icon: <Icon.WatchTower /> },
+      { name: 'wheel', icon: <Icon.Wheel /> },
       { name: 'wind', icon: <Icon.Wind /> },
     ],
   },
@@ -245,7 +257,7 @@ export default {
       { name: 'arrow-northwest', icon: <Icon.ArrowNorthwest /> },
       { name: 'arrow-right', icon: <Icon.ArrowRight /> },
       { name: 'arrow-southeast', icon: <Icon.ArrowSoutheast /> },
-      { name: 'arrow-southeast', icon: <Icon.ArrowSouthwest /> },
+      { name: 'arrow-southwest', icon: <Icon.ArrowSouthwest /> },
       { name: 'arrow-up', icon: <Icon.ArrowUp /> },
       { name: 'arrow-keys', icon: <Icon.ArrowKeys /> },
       { name: 'arrow', icon: <Icon.Arrow /> },

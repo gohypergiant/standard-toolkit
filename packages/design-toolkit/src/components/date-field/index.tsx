@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -19,10 +19,10 @@ import {
   DateField as AriaDateField,
   DateInput as AriaDateInput,
   Text as AriaText,
-  composeRenderProps,
   DateSegment,
   FieldError,
-} from 'react-aria-components';
+} from 'react-aria-components/DateField';
+import { composeRenderProps } from 'react-aria-components/composeRenderProps';
 import { Icon } from '../icon';
 import { Label } from '../label';
 import styles from './styles.module.css';
@@ -51,11 +51,29 @@ const months = [
  * month, and year. Includes calendar icon, validation states, and international
  * date format support with keyboard navigation between segments.
  *
- * @example
- * // Basic date field
- * <DateField label="Birth Date" />
+ * @param props - The date field props.
+ * @param props.classNames - Custom class names for sub-elements.
+ * @param props.description - Helper text displayed below the field.
+ * @param props.errorMessage - Error message displayed when invalid.
+ * @param props.inputProps - Additional props for the date input element.
+ * @param props.label - Label text displayed above the field.
+ * @param props.size - Size variant of the field.
+ * @param props.shortMonth - When true, displays 3-letter month abbreviation when not editing.
+ * @param props.shouldForceLeadingZeros - Whether to force leading zeros in segments.
+ * @param props.isDisabled - Whether the field is disabled.
+ * @param props.isInvalid - Whether the field is in an invalid state.
+ * @param props.isRequired - Whether the field is required.
+ * @param props.isReadOnly - Whether the field is read-only.
+ * @returns The date field component.
  *
  * @example
+ * ```tsx
+ * // Basic date field
+ * <DateField label="Birth Date" />
+ * ```
+ *
+ * @example
+ * ```tsx
  * // Date field with validation
  * <DateField
  *   label="Event Date"
@@ -63,30 +81,37 @@ const months = [
  *   isInvalid={hasError}
  *   errorMessage="Please select a valid date"
  * />
+ * ```
  *
  * @example
+ * ```tsx
  * // Date field with custom formatting
  * <DateField
  *   label="Meeting Date"
  *   shortMonth={false}
  *   placeholder="Select meeting date"
  * />
+ * ```
  *
  * @example
+ * ```tsx
  * // Compact date field
  * <DateField
  *   label="Due Date"
  *   size="small"
  *   description="When is this task due?"
  * />
+ * ```
  *
  * @example
+ * ```tsx
  * // Controlled date field
  * <DateField
  *   label="Selected Date"
  *   value={selectedDate}
  *   onChange={setSelectedDate}
  * />
+ * ```
  */
 export function DateField<T extends DateValue>({
   classNames,

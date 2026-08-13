@@ -24,14 +24,15 @@ Closes <!-- Github issue # here -->
 
 ## 🤖 AI Usage
 
-- [ ] No, AI was not used in this PR
-- [ ] Yes, AI was used in this PR
+<!-- If any AI is used use the AI label, if the work was 100% human use the Human label -->
+- [ ] Added corresponding label (ai / human) to PR:
 
-If yes, select all that apply:
+If ai was used, select all that apply:
 - [ ] Ideation / brainstorming
 - [ ] Documentation
 - [ ] Testing
 - [ ] Implementation
+
 
 <!-- Optionally describe how AI was used and which tools (e.g., Claude, Copilot, ChatGPT) -->
 

@@ -1,0 +1,135 @@
+---
+title: "constant"
+description: Returns the first of two arguments, ignoring the second
+source: packages/core/src/combinators/constant/index.ts
+source_sha: c5e63260a5d0b65e2088967e8b5e2add6f3c473b
+doc_sha: 81841de40693cec32bc12b4b816fa32f5b2afd07
+deprecated: false
+updated: 2026-07-13
+---
+
+Takes two arguments and always returns the first, ignoring the second. Corresponds to the encoding of `true` in lambda calculus. Also known as the K combinator.
+
+## Usage
+
+```typescript
+import { constant } from '@accelint/core';
+
+// Always returns first argument
+const result = constant(1)(2);
+// 1
+
+// Partial application - create a constant function
+const alwaysFive = constant(5);
+alwaysFive(10); // 5
+alwaysFive('hello'); // 5
+```
+
+## Reference
+
+```typescript
+function constant<A>(
+  a: A
+): <B>(_: B) => A
+```
+
+Lambda calculus: `λab.a`  
+Type signature: `constant :: a → b → a`
+
+### Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `a` | `A` | The value to return. |
+| `_` | `B` | The value to ignore. |
+
+### Returns
+
+Returns the first argument, regardless of the second.
+
+### Type Parameters
+
+- `A` - The type of the returned value
+- `B` - The type of the ignored value
+
+## Examples
+
+### Example: Default values
+
+```typescript
+import { constant } from '@accelint/core';
+
+const defaultConfig = { timeout: 5000, retries: 3 };
+
+// Always return default config
+const getConfig = constant(defaultConfig);
+getConfig(null); // { timeout: 5000, retries: 3 }
+getConfig(undefined); // { timeout: 5000, retries: 3 }
+```
+
+### Example: Mapping to constant
+
+```typescript
+import { constant, map } from '@accelint/core';
+
+const items = ['a', 'b', 'c', 'd'];
+
+// Map all elements to the same value
+const zeros = map(constant(0))(items);
+// [0, 0, 0, 0]
+```
+
+### Example: Boolean logic (true encoding)
+
+```typescript
+import { constant, inverseConstant } from '@accelint/core';
+
+// In lambda calculus, constant represents "true"
+const ifThenElse = <T>(condition: boolean) =>
+  condition ? constant<T> : inverseConstant<T>;
+
+const chooseFirst = ifThenElse<number>(true);
+chooseFirst(10)(20); // 10
+
+const chooseSecond = ifThenElse<number>(false);
+chooseSecond(10)(20); // 20
+```
+
+### Example: Ignoring function results
+
+```typescript
+import { constant } from '@accelint/core';
+
+interface Logger {
+  log: (message: string) => void;
+}
+
+// Create a no-op logger that always returns undefined
+const noopLogger: Logger = {
+  log: constant(undefined)
+};
+
+noopLogger.log('This is ignored'); // undefined
+```
+
+### Example: Fixed responses
+
+```typescript
+import { constant } from '@accelint/core';
+
+type Handler<T> = (req: unknown) => T;
+
+const notFoundHandler: Handler<{ error: string }> =
+  constant({ error: 'Not Found' });
+
+notFoundHandler({}); // { error: 'Not Found' }
+notFoundHandler({ id: 123 }); // { error: 'Not Found' }
+```
+
+> **Good to know:** This combinator is fundamental in lambda calculus and represents the boolean value `true`. Its inverse, [inverseConstant](../inverse-constant/index.md), represents `false`.
+
+## Related
+
+- [inverseConstant](../inverse-constant/index.md) - Return second argument (false)
+- [identity](../identity/index.md) - Return value unchanged
+- [noop](../../utility/noop/index.md) - No-operation function

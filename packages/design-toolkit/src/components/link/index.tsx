@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -13,12 +13,9 @@
 
 import 'client-only';
 import { clsx } from '@accelint/design-foundation/lib/utils';
-import {
-  Link as AriaLink,
-  composeRenderProps,
-  LinkContext,
-  useContextProps,
-} from 'react-aria-components';
+import { Link as AriaLink, LinkContext } from 'react-aria-components/Link';
+import { composeRenderProps } from 'react-aria-components/composeRenderProps';
+import { useContextProps } from 'react-aria-components/slots';
 import styles from './styles.module.css';
 import type { LinkProps } from './types';
 
@@ -28,8 +25,17 @@ import type { LinkProps } from './types';
  * A flexible link component that handles visited state, external anchors, and
  * icon integration while providing ARIA-compatible behavior.
  *
+ * @param props - {@link LinkProps}
+ * @param props.ref - Ref to the anchor element.
+ * @param props.allowsVisited - Whether the link shows visited styling when visited.
+ * @param props.className - Optional CSS class name.
+ * @param props.isVisited - Whether the link is in a visited state.
+ * @returns The rendered Link component.
+ *
  * @example
+ * ```tsx
  * <Link href="/dashboard">Go to Dashboard</Link>
+ * ```
  */
 export function Link({ ref, ...props }: LinkProps) {
   [props, ref] = useContextProps(props, ref ?? null, LinkContext);

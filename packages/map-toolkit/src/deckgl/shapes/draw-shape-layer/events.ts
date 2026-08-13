@@ -13,36 +13,19 @@
 /**
  * Draw Shape Events
  *
- * Note on event payload structure:
- * These events define explicit payload types rather than using the `Payload<T, P>` helper
- * from @accelint/bus. This is because the `Shape` type contains GeoJSON `Feature` objects
- * from the `geojson` package, which don't satisfy TypeScript's `StructuredCloneable` type
- * constraint used by the bus.
- *
- * The issue: `StructuredCloneable` (from type-fest) requires objects to have an index
- * signature `[key: string]: StructuredCloneable`, but GeoJSON interfaces define strict
- * property types without index signatures. At runtime, GeoJSON data IS structurally
- * cloneable (can be passed through postMessage, stored in IndexedDB, etc.), but
- * TypeScript can't verify this statically.
- *
- * Events that only contain primitive values (like ShapeId, mapId) can use the `Payload`
- * helper directly - see shared/events.ts for examples.
- *
- * When emitting these events via the bus, use type assertions:
- * @example
- * ```ts
- * bus.emit('shapes:drawn', {
- *   type: 'shapes:drawn',
- *   payload: { shape, mapId },
- *   source: componentId,
- * } as unknown as Payload);
- * ```
+ * `ShapeDrawnPayload` is wrapped with `BusCloneable<T>` (see shared/types.ts)
+ * because it carries a `Shape` (which contains a GeoJSON `Feature`); GeoJSON
+ * data is cloneable at runtime but lacks the index signature type-fest's
+ * `StructuredCloneable` requires. Payloads that only carry primitives don't
+ * need the wrapper. Events restricted to primitive values can use the
+ * `Payload<T, P>` helper from `@accelint/bus` directly (see shared/events.ts).
  */
 
 'use client';
 
 import type { UniqueId } from '@accelint/core';
-import type { Shape, ShapeFeatureType } from '../shared/types';
+import type { BusCloneable, Shape } from '../shared/types';
+import type { DrawableShapeType } from './types';
 
 /**
  * Drawing lifecycle events
@@ -64,7 +47,7 @@ export type DrawShapeEventType =
  */
 export type ShapeDrawingPayload = {
   /** The shape type being drawn */
-  shapeType: ShapeFeatureType;
+  shapeType: DrawableShapeType;
   /** Map instance ID for multi-map event isolation */
   mapId: UniqueId;
 };
@@ -83,12 +66,12 @@ export type ShapeDrawingEvent = {
 /**
  * Payload for shapes:drawn event.
  */
-export type ShapeDrawnPayload = {
+export type ShapeDrawnPayload = BusCloneable<{
   /** The completed shape */
   shape: Shape;
   /** Map instance ID for multi-map event isolation */
   mapId: UniqueId;
-};
+}>;
 
 /**
  * Event payload for shapes:drawn
@@ -106,7 +89,7 @@ export type ShapeDrawnEvent = {
  */
 export type ShapeDrawCanceledPayload = {
   /** The shape type that was being drawn */
-  shapeType: ShapeFeatureType;
+  shapeType: DrawableShapeType;
   /** Map instance ID for multi-map event isolation */
   mapId: UniqueId;
 };

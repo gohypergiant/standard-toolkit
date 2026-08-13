@@ -88,7 +88,7 @@ describe('ViewportSize', () => {
     });
 
     await waitFor(() => {
-      expect(screen.getByTestId('viewport-size').textContent).toMatch(/KM$/);
+      expect(screen.getByTestId('viewport-size').textContent).toMatch(/km$/);
     });
   });
 

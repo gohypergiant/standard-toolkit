@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -11,10 +11,21 @@
  */
 
 import { clsx } from '@accelint/design-foundation/lib/utils';
-import { Text } from 'react-aria-components';
+import { Text, type TextProps } from 'react-aria-components/Text';
 import styles from './styles.module.css';
-import type { TextProps } from 'react-aria-components';
 
+/**
+ * OptionsItemDescription - Secondary text description for an options item
+ *
+ * @example
+ * ```tsx
+ * <OptionsItemDescription>Additional details about this option</OptionsItemDescription>
+ * ```
+ *
+ * @param props - TextProps from react-aria-components.
+ * @param props.className - Optional CSS class name.
+ * @returns The rendered OptionsItemDescription component.
+ */
 export function OptionsItemDescription({ className, ...rest }: TextProps) {
   return (
     <Text

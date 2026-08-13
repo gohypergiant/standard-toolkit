@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -127,6 +127,7 @@ type Pipeable<Fn extends PipeArray> = Fn extends readonly [
  * @template Fns - The list of functions starting with one that can be n-ary, followed by unary functions.
  * @param fns - The functions to pipe.
  * @param args - The arguments to give to the first function in the pipe.
+ * @returns A piped function that executes left-to-right.
  *
  * @remarks
  * The implementation follows left-to-right pipe semantics:
@@ -135,6 +136,7 @@ type Pipeable<Fn extends PipeArray> = Fn extends readonly [
  * 3. The rightmost function's result becomes the final output
  *
  * @example
+ * ```typescript
  * const getActiveUsers = pipe(
  *   filterActive,
  *   sortUserNames,
@@ -142,6 +144,7 @@ type Pipeable<Fn extends PipeArray> = Fn extends readonly [
  * );
  *
  * const activeUsers = getActiveUsers(users, currentPage);
+ * ```
  */
 export const pipe =
   <Fns extends PipeArray>(...fns: Pipeable<Fns>) =>

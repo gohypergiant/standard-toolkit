@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -17,6 +17,25 @@ import { useColumnInteractions } from '../../hooks/kanban';
 import styles from './styles.module.css';
 import type { KanbanColProps } from './types';
 
+/**
+ * KanbanColumn - Individual column that contains cards
+ *
+ * Handles drop target highlighting and card positioning.
+ *
+ * @param props - {@link KanbanColProps}
+ * @param props.children - Column content (header, cards).
+ * @param props.className - Optional CSS class name.
+ * @param props.column - Column data.
+ * @returns The rendered KanbanColumn component.
+ *
+ * @example
+ * ```tsx
+ * <KanbanColumn column={columnData}>
+ *   <KanbanColumnHeader>...</KanbanColumnHeader>
+ *   <KanbanColumnContent column={columnData}>...</KanbanColumnContent>
+ * </KanbanColumn>
+ * ```
+ */
 export function KanbanColumn({
   children,
   className,

@@ -1,6 +1,6 @@
 // __private-exports
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -15,7 +15,12 @@ import { useEffect, useRef } from 'react';
 import { Broadcast } from '../broadcast';
 import { useEffectEvent } from './ponyfill';
 import type { StructuredCloneable } from 'type-fest';
-import type { EmitOptions, ExtractEvent, Payload } from '../broadcast/types';
+import type {
+  BasicPayload,
+  EmitOptions,
+  ExtractEvent,
+  Payload,
+} from '../broadcast/types';
 
 export { useEffectEvent } from './ponyfill';
 
@@ -23,7 +28,7 @@ export { useEffectEvent } from './ponyfill';
  * A convenience wrapper for useEmit & useOn, to pass down types instead of having
  * to reimplement generics each time.
  *
- * @template P - The union of all payload types for the bus.
+ * @template Events - The union of all payload types for the bus.
  * @param options - Emit options that will be applied for all emits of all events.
  * @returns An object containing type-safe useEmit, useOn, and useOnce hooks.
  *
@@ -36,12 +41,9 @@ export { useEffectEvent } from './ponyfill';
  * ```
  */
 export function useBus<
-  P extends { type: string; payload?: unknown } = Payload<
-    string,
-    StructuredCloneable
-  >,
+  Events extends BasicPayload = Payload<string, StructuredCloneable>,
 >(options?: EmitOptions | null) {
-  const bus = useRef(Broadcast.getInstance<P>());
+  const bus = useRef(Broadcast.getInstance<Events>());
 
   useEffect(() => {
     if (options !== undefined) {
@@ -51,17 +53,17 @@ export function useBus<
 
   // Casting here because we lose inference on the type parameter
   return {
-    useEmit: useEmit as <T extends P['type']>(
-      type: T,
+    useEmit: useEmit as <Type extends Events['type']>(
+      type: Type,
       options?: EmitOptions | null,
-    ) => ReturnType<typeof useEmit<P, T>>,
-    useOn: useOn as <T extends P['type']>(
-      type: T,
-      callback: (data: ExtractEvent<P, T>) => void,
+    ) => ReturnType<typeof useEmit<Events, Type>>,
+    useOn: useOn as <Type extends Events['type']>(
+      type: Type,
+      callback: (data: ExtractEvent<Events, Type>) => void,
     ) => void,
-    useOnce: useOnce as <T extends P['type']>(
-      type: T,
-      callback: (data: ExtractEvent<P, T>) => void,
+    useOnce: useOnce as <Type extends Events['type']>(
+      type: Type,
+      callback: (data: ExtractEvent<Events, Type>) => void,
     ) => void,
   };
 }
@@ -69,8 +71,8 @@ export function useBus<
 /**
  * React hook to enable render-safe emitting of event with payload that is type safe.
  *
- * @template P - Union of event types.
- * @template T - Type of event.
+ * @template Events - Union of event types.
+ * @template Type - Type of event.
  * @param type - Event type, one of the event types in the union.
  * @param options - Emit options that will be applied for all emits of this event.
  * @returns Callback that will accept the corresponding payload to the previously entered event type; callback will accept options as well that are not applied to all emits of this event type.
@@ -83,15 +85,15 @@ export function useBus<
  */
 export function useEmit<
   // biome-ignore lint/suspicious/noExplicitAny: intentional
-  P extends { type: string; payload?: unknown } = Payload<string, any>,
-  T extends P['type'] = P['type'],
+  Events extends BasicPayload = Payload<string, any>,
+  Type extends Events['type'] = Events['type'],
 >(
-  type: T,
+  type: Type,
   options?: EmitOptions | null,
-): ExtractEvent<P, T> extends { payload: infer Data }
+): ExtractEvent<Events, Type> extends { payload: infer Data }
   ? (payload: Data, options?: EmitOptions) => void
   : (payload?: undefined, options?: EmitOptions) => void {
-  const bus = useRef(Broadcast.getInstance<P>());
+  const bus = useRef(Broadcast.getInstance<Events>());
 
   useEffect(() => {
     if (options !== undefined) {
@@ -101,21 +103,21 @@ export function useEmit<
 
   return useEffectEvent(
     (
-      payload: ExtractEvent<P, T> extends { payload: infer Data }
+      payload: ExtractEvent<Events, Type> extends { payload: infer Data }
         ? Data
         : never,
       options?: EmitOptions,
     ) => {
       bus.current.emit(type, payload, options);
     },
-  ) as ReturnType<typeof useEmit<P, T>>;
+  ) as ReturnType<typeof useEmit<Events, Type>>;
 }
 
 /**
  * React hook to attach event bus listener with type safe callback.
  *
- * @template P - Union of event types.
- * @template T - Type of event.
+ * @template Events - Union of event types.
+ * @template Type - Type of event.
  * @param type - Event type.
  * @param callback - Handler that matches event type and receives corresponding payload.
  *
@@ -127,13 +129,10 @@ export function useEmit<
  * ```
  */
 export function useOn<
-  P extends { type: string; payload?: unknown } = Payload<
-    string,
-    StructuredCloneable
-  >,
-  T extends P['type'] = P['type'],
->(type: T, callback: (data: ExtractEvent<P, T>) => void) {
-  const bus = useRef(Broadcast.getInstance<P>());
+  Events extends BasicPayload = Payload<string, StructuredCloneable>,
+  Type extends Events['type'] = Events['type'],
+>(type: Type, callback: (data: ExtractEvent<Events, Type>) => void) {
+  const bus = useRef(Broadcast.getInstance<Events>());
   const onCallback = useEffectEvent(callback);
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: onCallback is stable
@@ -143,8 +142,8 @@ export function useOn<
 /**
  * React hook to attach event bus listener with type safe callback that executes only once.
  *
- * @template P - Union of event types.
- * @template T - Type of event.
+ * @template Events - Union of event types.
+ * @template Type - Type of event.
  * @param type - Event type.
  * @param callback - Handler that matches event type and receives corresponding payload.
  *
@@ -156,13 +155,10 @@ export function useOn<
  * ```
  */
 export function useOnce<
-  P extends { type: string; payload?: unknown } = Payload<
-    string,
-    StructuredCloneable
-  >,
-  T extends P['type'] = P['type'],
->(type: T, callback: (data: ExtractEvent<P, T>) => void) {
-  const bus = useRef(Broadcast.getInstance<P>());
+  Events extends BasicPayload = Payload<string, StructuredCloneable>,
+  Type extends Events['type'] = Events['type'],
+>(type: Type, callback: (data: ExtractEvent<Events, Type>) => void) {
+  const bus = useRef(Broadcast.getInstance<Events>());
   const onCallback = useEffectEvent(callback);
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: onCallback is stable

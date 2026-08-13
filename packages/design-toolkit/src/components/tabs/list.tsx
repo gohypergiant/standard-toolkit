@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -14,17 +14,32 @@
 
 import 'client-only';
 import { clsx } from '@accelint/design-foundation/lib/utils';
+import { composeRenderProps } from 'react-aria-components/composeRenderProps';
 import {
   TabList as AriaTabList,
-  composeRenderProps,
   type TabListProps,
-} from 'react-aria-components';
+} from 'react-aria-components/Tabs';
 import styles from './styles.module.css';
 
 /**
- * TabList - Container for tabs
+ * TabList - Container for Tab components.
  *
- * Contains and manages a group of Tab components
+ * @example
+ * ```tsx
+ * <Tabs>
+ *   <TabList>
+ *     <Tab id="profile">Profile</Tab>
+ *     <Tab id="settings">Settings</Tab>
+ *   </TabList>
+ *   <TabPanel id="profile">Profile content</TabPanel>
+ *   <TabPanel id="settings">Settings content</TabPanel>
+ * </Tabs>
+ * ```
+ *
+ * @param props - TabListProps from react-aria-components.
+ * @param props.children - Tab components to render.
+ * @param props.className - CSS class for the tab list.
+ * @returns The rendered TabList component.
  */
 export function TabList<T extends object>({
   children,

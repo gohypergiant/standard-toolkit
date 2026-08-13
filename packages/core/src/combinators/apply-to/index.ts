@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -18,6 +18,7 @@
  * @template B - The return type of given function.
  * @param a - The value to pass to the function.
  * @param b - The function to apply to the value.
+ * @returns The result of applying the function to the value.
  *
  * @remarks
  * Th combinator
@@ -29,8 +30,10 @@
  * pure function
  *
  * @example
+ * ```typescript
  * applyTo(6)(x => x * 2);
  * // 12
+ * ```
  */
 export const applyTo =
   <A>(a: A) =>

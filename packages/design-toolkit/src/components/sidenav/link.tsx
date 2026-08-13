@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -14,12 +14,10 @@ import 'client-only';
 import { clsx } from '@accelint/design-foundation/lib/utils';
 import ArrowNortheast from '@accelint/icons/arrow-northeast';
 import { useContext, useRef } from 'react';
-import {
-  composeRenderProps,
-  Link,
-  Provider,
-  TextContext,
-} from 'react-aria-components';
+import { composeRenderProps } from 'react-aria-components/composeRenderProps';
+import { Link } from 'react-aria-components/Link';
+import { Provider } from 'react-aria-components/slots';
+import { TextContext } from 'react-aria-components/Text';
 import { Icon } from '../icon';
 import { Tooltip } from '../tooltip';
 import { TooltipTrigger } from '../tooltip/trigger';
@@ -31,6 +29,20 @@ import type { SidenavLinkProps } from './types';
  * SidenavLink - Link component for sidenav
  *
  * Provides a link with tooltip for the sidenav
+ *
+ * @example
+ * ```tsx
+ * <SidenavLink href="https://example.com" textValue="External Link">
+ *   <Icon><Link /></Icon>
+ *   <Text>External Link</Text>
+ * </SidenavLink>
+ * ```
+ *
+ * @param props - {@link SidenavLinkProps}
+ * @param props.children - Link content (icon and text).
+ * @param props.classNames - Custom CSS class names for link elements.
+ * @param props.textValue - Text displayed in tooltip when collapsed.
+ * @returns The rendered SidenavLink component.
  */
 export function SidenavLink({
   children,

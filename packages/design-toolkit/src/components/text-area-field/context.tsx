@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -14,22 +14,32 @@
 
 import 'client-only';
 import { createContext } from 'react';
-import type { ContextValue } from 'react-aria-components';
+import type { ContextValue } from 'react-aria-components/slots';
 import type { ProviderProps } from '@/lib/types';
 import type { TextAreaFieldProps } from './types';
 
-/**
- * Context for TextAreaField component
- *
- * Provides context for TextAreaField component to share props
- */
+/** Context for sharing props across TextAreaField components */
 export const TextAreaFieldContext =
   createContext<ContextValue<TextAreaFieldProps, HTMLDivElement>>(null);
 
 /**
- * Provider for TextAreaField component
+ * Sets default props for all TextAreaField components within.
  *
- * Allows setting default props for all TextAreaField components within
+ * @example
+ * ```tsx
+ * <TextAreaFieldProvider isRequired>
+ *   <TextAreaField label="Bio">
+ *     <TextArea placeholder="Tell us about yourself" />
+ *   </TextAreaField>
+ *   <TextAreaField label="Comments">
+ *     <TextArea placeholder="Additional comments" />
+ *   </TextAreaField>
+ * </TextAreaFieldProvider>
+ * ```
+ *
+ * @param props - ProviderProps with TextAreaFieldProps.
+ * @param props.children - Child components that receive the context.
+ * @returns The TextAreaFieldContext provider wrapping children.
  */
 export function TextAreaFieldProvider({
   children,

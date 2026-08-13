@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -12,33 +12,25 @@
 'use client';
 
 import 'client-only';
-import {
-  type FocusableProviderProps,
-  useFocusable,
-} from '@react-aria/interactions';
-import { mergeProps, mergeRefs, useObjectRef } from '@react-aria/utils';
+import { useFocusable } from 'react-aria/useFocusable';
+import { mergeProps } from 'react-aria/mergeProps';
+import { useObjectRef } from 'react-aria/useObjectRef';
+import { mergeRefs } from 'react-aria/mergeRefs';
 import {
   Children,
   cloneElement,
   type DOMAttributes,
   type ReactElement,
   type ReactNode,
-  type RefAttributes,
   version,
 } from 'react';
-import {
-  TooltipTrigger as AriaTooltipTrigger,
-  useContextProps,
-} from 'react-aria-components';
+import { TooltipTrigger as AriaTooltipTrigger } from 'react-aria-components/Tooltip';
+import { useContextProps } from 'react-aria-components/slots';
 import { TooltipContext } from './context';
 import type { FocusableElement } from '@react-types/shared';
-import type { TooltipTriggerProps } from './types';
+import type { TooltipFocusableProps, TooltipTriggerProps } from './types';
 
-function TooltipFocusable({
-  children,
-  ref,
-  ...props
-}: FocusableProviderProps & RefAttributes<FocusableElement>) {
+function TooltipFocusable({ children, ref, ...props }: TooltipFocusableProps) {
   ref = useObjectRef(ref);
 
   const { focusableProps } = useFocusable(props, ref);
@@ -63,6 +55,25 @@ function TooltipFocusable({
   );
 }
 
+/**
+ * TooltipTrigger - Wrapper that manages tooltip display on hover or focus
+ *
+ * @example
+ * ```tsx
+ * <TooltipTrigger delay={500}>
+ *   <Button>
+ *     <Icon><Info /></Icon>
+ *   </Button>
+ *   <Tooltip>Additional information about this action</Tooltip>
+ * </TooltipTrigger>
+ * ```
+ *
+ * @param props - {@link TooltipTriggerProps}
+ * @param props.ref - Ref to the focusable trigger element.
+ * @param props.children - Trigger element and Tooltip content.
+ * @param props.delay - Delay in milliseconds before showing the tooltip.
+ * @returns The rendered TooltipTrigger component.
+ */
 export function TooltipTrigger({ ref, ...props }: TooltipTriggerProps) {
   [props, ref] = useContextProps(props, ref ?? null, TooltipContext);
 

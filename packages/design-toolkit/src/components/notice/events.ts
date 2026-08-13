@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -10,8 +10,17 @@
  * governing permissions and limitations under the License.
  */
 
+/** Event namespace for Notice-related bus events */
 export const NoticeEventNamespace = 'Notice';
 
+/**
+ * Event types for Notice queue management via the bus system.
+ * - queue: Add a notice to the queue
+ * - dequeue: Remove notices matching criteria
+ * - actionPrimary: Primary button was pressed
+ * - actionSecondary: Secondary button was pressed
+ * - close: Notice was closed/dismissed
+ */
 export const NoticeEventTypes = {
   queue: `${NoticeEventNamespace}:queue`,
   dequeue: `${NoticeEventNamespace}:dequeue`,

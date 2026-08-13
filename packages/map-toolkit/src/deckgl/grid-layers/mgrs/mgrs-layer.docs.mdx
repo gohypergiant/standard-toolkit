@@ -1,0 +1,194 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+import * as MGRSLayerStories from './layer.stories';
+
+<Meta of={MGRSLayerStories} />
+
+# MGRS Layer
+
+A deck.gl composite layer that renders MGRS (Military Grid Reference System) grid cells at four precision levels. Grid Zone Designators (GZD) remain visible at all zoom levels while finer grids activate progressively, giving operators continuous spatial orientation. Cell interactions are emitted through `@accelint/bus`.
+
+## Features
+
+- **Four precision levels**: GZD, 100km, 10km, and 1km cells with overlapping zoom ranges
+- **Coarser grids persist**: GZD boundaries remain visible even when 1km grids are active
+- **Fine-to-coarse draw order**: GZD lines render on top so they remain visually prominent
+- **Zone-based geometry**: Geometry is generated per MGRS zone using GridZones for correctness
+- **Antimeridian support**: `wrapLongitude` is enabled for correct rendering near ±180°
+- **Cell labels**: MGRS coordinate identifiers with configurable zoom thresholds
+- **Per-type style overrides**: Customize line color, width, label color, font, and background per precision level
+- **Event bus integration**: Emits hover and click events via `@accelint/bus` with cell ID, grid type, and bounds
+- **React Fiber support**: Use as `<mgrsLayer />` JSX in React Fiber-based deck.gl apps
+- **Multi-map support**: Events include `mapId` for isolation in multi-map deployments
+
+## Dependencies
+
+**Required:**
+- [`@accelint/bus`](https://github.com/gohypergiant/standard-toolkit/tree/main/packages/bus) — Event bus for grid interaction events
+- [`@deck.gl/core`](https://deck.gl/) — CompositeLayer base class
+- [`@deck.gl/layers`](https://deck.gl/) — PathLayer, TextLayer, PolygonLayer
+- `react` — React 19.0.0 or higher (for Fiber usage)
+
+**Optional (peer):**
+- [`@ngageoint/mgrs-js`](https://www.npmjs.com/package/@ngageoint/mgrs-js) — MGRS geometry generation (required at runtime)
+- [`@ngageoint/grid-js`](https://www.npmjs.com/package/@ngageoint/gars-js) — Grid geometry generation (required at runtime)
+
+**Installation:**
+
+```bash
+pnpm add @accelint/map-toolkit @accelint/bus @ngageoint/mgrs-js @ngageoint/grid-js
+```
+
+## Basic Usage
+
+### With Fiber Renderer (Recommended)
+
+```tsx
+import { BaseMap } from '@accelint/map-toolkit/deckgl/base-map';
+import '@accelint/map-toolkit/deckgl/grid-layers/mgrs/fiber';
+import { uuid } from '@accelint/core';
+
+const MAP_ID = uuid();
+
+function MapWithMGRS() {
+  return (
+    <BaseMap id={MAP_ID}>
+      <mgrsLayer
+        id="mgrs"
+        mapId={MAP_ID}
+        showLabels={true}
+      />
+    </BaseMap>
+  );
+}
+```
+
+### Direct Layer Usage
+
+```tsx
+import { Deck } from '@deck.gl/core';
+import { MgrsLayer } from '@accelint/map-toolkit/deckgl/grid-layers/mgrs';
+import { uuid } from '@accelint/core';
+
+const MAP_ID = uuid();
+
+new Deck({
+  initialViewState: { longitude: -84, latitude: 37, zoom: 12 },
+  controller: true,
+  layers: [
+    new MgrsLayer({
+      id: 'mgrs',
+      mapId: MAP_ID,
+      showLabels: true,
+    }),
+  ],
+});
+```
+
+## Style Overrides
+
+Customize each precision level independently. Any property omitted falls back to the default style.
+
+```tsx
+<mgrsLayer
+  id="mgrs"
+  showLabels={true}
+  gzdStyle={{
+    lineColor: [255, 200, 0, 255],
+    lineWidth: 3,
+    labelColor: [255, 255, 255, 255],
+    backgroundColor: [80, 60, 0, 200],
+  }}
+  grid100kmStyle={{
+    lineColor: [255, 200, 0, 200],
+    lineWidth: 2,
+  }}
+  grid10kmStyle={{
+    lineColor: [255, 200, 0, 150],
+    lineWidth: 1,
+  }}
+  grid1kmStyle={{
+    lineColor: [255, 200, 0, 100],
+    lineWidth: 0.8,
+  }}
+/>
+```
+
+## Event Bus Integration
+
+The layer emits events automatically when `enableInteractivity` is true (the default is false).
+
+```tsx
+import { useOn } from '@accelint/bus/react';
+import {
+  GridCellEvents,
+  type GridCellHoverEvent,
+  type GridCellClickEvent,
+} from '@accelint/map-toolkit/deckgl/grid-layers';
+
+function MyComponent() {
+  useOn<GridCellHoverEvent>(GridCellEvents.hover, (event) => {
+    if (event.payload.mapId !== MAP_ID) return;
+    console.log('Hovering cell:', event.payload.cellId);
+    console.log('Cell bounds:', event.payload.bounds);
+  });
+
+  useOn<GridCellClickEvent>(GridCellEvents.click, (event) => {
+    if (event.payload.mapId !== MAP_ID) return;
+    console.log('Clicked cell:', event.payload.cellId, 'at', event.payload.coords);
+  });
+}
+```
+
+## Custom Zoom Ranges
+
+Override the default zoom ranges per precision level. Ranges should overlap if you want coarser grids to remain visible alongside finer ones.
+
+```tsx
+import { MGRS_ZOOM_RANGES } from '@accelint/map-toolkit/deckgl/grid-layers/mgrs/definition';
+
+<mgrsLayer
+  id="mgrs"
+  zoomRanges={[
+    ...MGRS_ZOOM_RANGES,
+    // Show 1km grids earlier
+    { type: 'GRID_1KM', key: '1km', minZoom: 10, maxZoom: 20, labelMinZoom: 11 },
+  ]}
+/>
+```
+
+An error is thrown at construction if `minZoom > maxZoom` for any range.
+
+## API Reference
+
+### MGRSLayerProps
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `id` | `string` | *required* | Unique layer ID |
+| `mapId` | `string` | `'default'` | Map instance ID for event isolation in multi-map deployments |
+| `showLabels` | `boolean` | `true` | Render MGRS cell identifier labels |
+| `enableInteractivity` | `boolean` | `false` | Enable hover/click events and polygon pick surface |
+| `selectedCell` | `string` | `undefined` | Cell ID to highlight with `selectedColor` |
+| `zoomRanges` | `GridZoomRange[]` | `MGRS_ZOOM_RANGES` | Override default zoom ranges per precision level |
+| `gzdStyle` | `Partial<GridStyleConfig>` | — | Style overrides for GZD cells |
+| `grid100kmStyle` | `Partial<GridStyleConfig>` | — | Style overrides for 100km cells |
+| `grid10kmStyle` | `Partial<GridStyleConfig>` | — | Style overrides for 10km cells |
+| `grid1kmStyle` | `Partial<GridStyleConfig>` | — | Style overrides for 1km cells |
+
+### GridStyleConfig
+
+| Property | Type | Description |
+|----------|------|-------------|
+| `lineColor` | `Color` | Grid line color (RGBA array, hex, or named color) |
+| `lineWidth` | `number` | Grid line width in pixels |
+| `labelColor` | `Color` | Label text color |
+| `labelSize` | `number` | Label font size in pixels |
+| `fontFamily` | `string` | Label font family |
+| `fontWeight` | `number \| string` | Label font weight |
+| `textAnchor` | `'start' \| 'middle' \| 'end'` | Label horizontal anchor |
+| `alignmentBaseline` | `'top' \| 'center' \| 'bottom'` | Label vertical baseline |
+| `backgroundColor` | `Color` | Label background color |
+| `backgroundPadding` | `[number, number]` | Label background paddingi in [x,y] pixels |
+| `hoverColor` | `Color` | RGBA fill color applied to a cell polygon on hover |
+| `selectedColor` | `Color` | RGBA fill color applied to a cell polygon when selected |

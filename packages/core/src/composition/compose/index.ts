@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -127,6 +127,7 @@ type Composable<Fn extends CompositionArray> = Fn extends readonly [
  * @template Fns - The list of unary functions.
  * @param fns - The functions to compose.
  * @param args - The arguments to give to the first function in the composition.
+ * @returns A composed function that executes right-to-left.
  *
  * @remarks
  * The implementation follows right-to-left composition semantics:
@@ -135,6 +136,7 @@ type Composable<Fn extends CompositionArray> = Fn extends readonly [
  * 3. The leftmost function's result becomes the final output
  *
  * @example
+ * ```typescript
  * const getActiveUsers = compose(
  *   displayPage,
  *   sortUserNames,
@@ -142,6 +144,7 @@ type Composable<Fn extends CompositionArray> = Fn extends readonly [
  * );
  *
  * const activeUsers = getActiveUsersByPage(users);
+ * ```
  */
 export const compose =
   <Fns extends CompositionArray>(...fns: Composable<Fns>) =>

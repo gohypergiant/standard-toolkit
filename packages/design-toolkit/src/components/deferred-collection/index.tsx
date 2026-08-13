@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -20,7 +20,14 @@ import type { DeferredCollectionProps } from './types';
  * virtualization begins. This component defers the collection render by a few
  * animation frames, allowing a fallback to display first.
  *
+ * @param props - The deferred collection props.
+ * @param props.children - Content to render once ready (ReactNode or function returning ReactNode).
+ * @param props.fallback - Fallback element to show while deferring render.
+ * @param props.deferFrames - Number of animation frames to defer before rendering.
+ * @returns The deferred collection component with fallback or children.
+ *
  * @example
+ * ```tsx
  * <DeferredCollection fallback={<LoadingState />}>
  *   {() => (
  *     <Virtualizer>
@@ -30,6 +37,7 @@ import type { DeferredCollectionProps } from './types';
  *     </Virtualizer>
  *   )}
  * </DeferredCollection>
+ * ```
  */
 export function DeferredCollection({
   children,

@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -13,7 +13,7 @@
 
 import 'client-only';
 import { clsx } from '@accelint/design-foundation/lib/utils';
-import { useContextProps } from 'react-aria-components';
+import { useContextProps } from 'react-aria-components/slots';
 import { ClassificationBadgeContext } from './context';
 import styles from './styles.module.css';
 import type { ClassificationBadgeProps } from './types';
@@ -29,19 +29,36 @@ const fallbackContent = {
 } as const;
 
 /**
- * ClassificationBadge - A specialized badge for security and data classification
+ * ClassificationBadge - Displays security classification levels for documents and data.
  *
- * Provides standardized visual indicators for data classification levels such as
- * confidential, secret, or public information. Designed for compliance with
- * security standards and information governance requirements.
+ * Provides standardized visual indicators for classification levels such as
+ * unclassified, confidential, secret, and top-secret. Designed for compliance
+ * with security standards in government and secure environments.
+ *
+ * @param props - The classification badge props.
+ * @param props.ref - Reference to the badge element.
+ * @param props.children - Custom text content (defaults to variant label).
+ * @param props.className - Additional CSS class names for styling.
+ * @param props.size - Size of the badge.
+ * @param props.variant - Classification level variant.
+ * @returns The classification badge component.
  *
  * @example
- * // Basic classification badge
- * <ClassificationBadge level="confidential" />
+ * ```tsx
+ * <ClassificationBadge variant="secret" />
+ * ```
  *
  * @example
- * // Classification with custom styling
- * <ClassificationBadge level="secret" />
+ * ```tsx
+ * // With custom text
+ * <ClassificationBadge variant="top-secret">TOP SECRET//NOFORN</ClassificationBadge>
+ * ```
+ *
+ * @example
+ * ```tsx
+ * // Different sizes
+ * <ClassificationBadge variant="confidential" size="small" />
+ * ```
  */
 export function ClassificationBadge({
   ref,

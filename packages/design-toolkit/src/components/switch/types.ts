@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -11,14 +11,19 @@
  */
 
 import type { RefAttributes } from 'react';
-import type { SwitchProps as AriaSwitchProps } from 'react-aria-components';
+import type { SwitchProps as AriaSwitchProps } from 'react-aria-components/Switch';
 
+/**
+ * Props for the Switch component.
+ */
 export type SwitchProps = Omit<AriaSwitchProps, 'className'> &
   RefAttributes<HTMLLabelElement> & {
+    /** Custom CSS class names for switch elements. */
     classNames?: {
       switch?: AriaSwitchProps['className'];
       control?: string;
       label?: string;
     };
+    /** Position of the label relative to the switch control. */
     labelPosition?: 'start' | 'end';
   };

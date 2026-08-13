@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -13,47 +13,47 @@
 
 import 'client-only';
 import { clsx } from '@accelint/design-foundation/lib/utils';
-import { Radio as AriaRadio, composeRenderProps } from 'react-aria-components';
+import { Radio as AriaRadio } from 'react-aria-components/RadioGroup';
+import { composeRenderProps } from 'react-aria-components/composeRenderProps';
+import { useContextProps } from 'react-aria-components/slots';
+import { RadioContext } from './context';
 import styles from './styles.module.css';
 import type { RadioProps } from './types';
 
 /**
- * Radio - A form control for exclusive selection within a group of options
+ * Radio - Individual radio button option within a RadioGroup
  *
- * Provides accessible radio button functionality where only one option can be
- * selected at a time within a group. Includes proper labeling, keyboard navigation,
- * and visual feedback for selection states.
+ * Renders a selectable radio button with label. Must be used inside a RadioGroup.
  *
- * @example
- * // Basic radio group
- * <RadioGroup label="Choose size">
- *   <Radio value="small">Small</Radio>
- *   <Radio value="medium">Medium</Radio>
- *   <Radio value="large">Large</Radio>
- * </RadioGroup>
+ * @param props - {@link RadioProps}
+ * @param props.classNames - Custom CSS class names for radio, control, and label.
+ * @param props.children - Label content for the radio button.
+ * @returns The rendered Radio component.
  *
  * @example
- * // Radio group with default selection
- * <RadioGroup defaultValue="medium" label="Size preference">
- *   <Radio value="small">Small (S)</Radio>
- *   <Radio value="medium">Medium (M)</Radio>
- *   <Radio value="large">Large (L)</Radio>
+ * ```tsx
+ * <RadioGroup label="Favorite color">
+ *   <Radio value="red">Red</Radio>
+ *   <Radio value="blue">Blue</Radio>
  * </RadioGroup>
- *
- * @example
- * // Disabled radio options
- * <RadioGroup label="Shipping options">
- *   <Radio value="standard">Standard shipping</Radio>
- *   <Radio value="express">Express shipping</Radio>
- *   <Radio value="overnight" isDisabled>Overnight (unavailable)</Radio>
- * </RadioGroup>
+ * ```
  */
-export function Radio({ classNames, children, ...rest }: RadioProps) {
+export function Radio({ ref, ...props }: RadioProps) {
+  [props, ref] = useContextProps(props, ref ?? null, RadioContext);
+
+  const { classNames, children, labelPosition = 'end', ...rest } = props;
+
   return (
     <AriaRadio
       {...rest}
+      ref={ref}
       className={composeRenderProps(classNames?.radio, (className) =>
-        clsx('group/radio', styles.radio, className),
+        clsx(
+          'group/radio',
+          styles.radio,
+          labelPosition === 'start' && styles.labelStart,
+          className,
+        ),
       )}
     >
       {composeRenderProps(children, (children) => (

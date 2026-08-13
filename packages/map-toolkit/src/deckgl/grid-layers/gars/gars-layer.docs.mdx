@@ -1,0 +1,207 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+import * as GARSLayerStories from './layer.stories';
+
+<Meta of={GARSLayerStories} />
+
+# GARS Layer
+
+A deck.gl composite layer that renders GARS (Global Area Reference System) grid cells at three precision levels. Grid lines and labels automatically appear and disappear based on zoom level, and cell interactions are emitted through `@accelint/bus`.
+
+## Features
+
+- **Three precision levels**: 30-minute, 15-minute, and 5-minute cells with overlapping zoom ranges
+- **Automatic zoom filtering**: Each precision level activates at the appropriate zoom threshold
+- **Cell labels**: GARS coordinate identifiers (e.g. `006AG39`) with configurable zoom thresholds
+- **Per-type style overrides**: Customize line color, line width, label color, font, and background per precision level
+- **Event bus integration**: Emits hover and click events via `@accelint/bus` with cell ID, grid type, and bounds
+- **Hover and selection highlighting**: Transparent polygon overlay brightens on hover or when a cell is selected
+- **React Fiber support**: Use as `<garsLayer />` JSX in React Fiber-based deck.gl apps
+- **Multi-map support**: Events include `mapId` for isolation in multi-map deployments
+- **Antimeridian note**: Rendering near ±180° is a known limitation — GARS does not enable `wrapLongitude`
+
+## Dependencies
+
+**Required:**
+- [`@accelint/bus`](https://github.com/gohypergiant/standard-toolkit/tree/main/packages/bus) — Event bus for grid interaction events
+- [`@deck.gl/core`](https://deck.gl/) — CompositeLayer base class
+- [`@deck.gl/layers`](https://deck.gl/) — PathLayer, TextLayer, PolygonLayer
+- `react` — React 19.0.0 or higher (for Fiber usage)
+
+**Optional (peer):**
+- [`@ngageoint/gars-js`](https://www.npmjs.com/package/@ngageoint/gars-js) — GARS geometry generation (required at runtime)
+- [`@ngageoint/grid-js`](https://www.npmjs.com/package/@ngageoint/gars-js) — Grid geometry generation (required at runtime)
+
+**Installation:**
+
+```bash
+pnpm add @accelint/map-toolkit @accelint/bus @ngageoint/gars-js @ngageoint/grid-js
+```
+
+## Basic Usage
+
+### With Fiber Renderer (Recommended)
+
+```tsx
+import { BaseMap } from '@accelint/map-toolkit/deckgl/base-map';
+import '@accelint/map-toolkit/deckgl/grid-layers/gars/fiber';
+import { uuid } from '@accelint/core';
+
+const MAP_ID = uuid();
+
+function MapWithGARS() {
+  return (
+    <BaseMap id={MAP_ID}>
+      <garsLayer
+        id="gars"
+        mapId={MAP_ID}
+        showLabels={true}
+      />
+    </BaseMap>
+  );
+}
+```
+
+### Direct Layer Usage
+
+```tsx
+import { Deck } from '@deck.gl/core';
+import { GarsLayer } from '@accelint/map-toolkit/deckgl/grid-layers/gars';
+import { uuid } from '@accelint/core';
+
+const MAP_ID = uuid();
+
+new Deck({
+  initialViewState: { longitude: 0, latitude: 30, zoom: 6 },
+  controller: true,
+  layers: [
+    new GarsLayer({
+      id: 'gars',
+      mapId: MAP_ID,
+      showLabels: true,
+    }),
+  ],
+});
+```
+
+## Style Overrides
+
+Customize each precision level independently. Any property omitted falls back to the default style.
+
+```tsx
+<garsLayer
+  id="gars"
+  showLabels={true}
+  thirtyMinuteStyle={{
+    lineColor: [255, 200, 0, 220],
+    lineWidth: 2,
+    labelColor: [255, 255, 255, 255],
+    backgroundColor: [80, 60, 0, 180],
+  }}
+  fifteenMinuteStyle={{
+    lineColor: [255, 200, 0, 160],
+    lineWidth: 1,
+  }}
+  fiveMinuteStyle={{
+    lineColor: [255, 200, 0, 100],
+    lineWidth: 0.8,
+  }}
+/>
+```
+
+## Event Bus Integration
+
+The layer emits events automatically when `enableInteractivity` is true (the default is false).
+
+```tsx
+import { useOn } from '@accelint/bus/react';
+import {
+  GridCellEvents,
+  type GridCellHoverEvent,
+  type GridCellClickEvent,
+} from '@accelint/map-toolkit/deckgl/grid-layers';
+
+function MyComponent() {
+  useOn<GridCellHoverEvent>(GridCellEvents.hover, (event) => {
+    if (event.payload.mapId !== MAP_ID) return;
+    console.log('Hovering cell:', event.payload.cellId);
+    console.log('Cell bounds:', event.payload.bounds);
+  });
+
+  useOn<GridCellClickEvent>(GridCellEvents.click, (event) => {
+    if (event.payload.mapId !== MAP_ID) return;
+    console.log('Clicked cell:', event.payload.cellId, 'at', event.payload.coords);
+  });
+}
+```
+
+### Cell Selection
+
+Pass `selectedCell` to highlight a specific cell. The layer renders a semi-transparent overlay in the grid type's `selectedColor`.
+
+```tsx
+const [selectedCell, setSelectedCell] = useState<string>();
+
+useOn<GridCellClickEvent>(GridCellEvents.click, (event) => {
+  if (event.payload.mapId !== MAP_ID) return;
+  setSelectedCell(event.payload.cellId);
+});
+
+<garsLayer
+  id="gars"
+  mapId={MAP_ID}
+  selectedCell={selectedCell}
+/>
+```
+
+## Custom Zoom Ranges
+
+Override the default zoom ranges per precision level. Ranges can overlap — all visible levels render simultaneously.
+
+```tsx
+import { GARS_ZOOM_RANGES } from '@accelint/map-toolkit/deckgl/grid-layers/gars/definition';
+
+<garsLayer
+  id="gars"
+  zoomRanges={[
+    ...GARS_ZOOM_RANGES,
+    // Tighten the 5-minute range for performance
+    { type: 'FIVE_MINUTE', key: '5min', minZoom: 13, maxZoom: 20, labelMinZoom: 14 },
+  ]}
+/>
+```
+
+An error is thrown at construction if `minZoom > maxZoom` for any range.
+
+## API Reference
+
+### GARSLayerProps
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `id` | `string` | *required* | Unique layer ID |
+| `mapId` | `string` | `'default'` | Map instance ID for event isolation in multi-map deployments |
+| `showLabels` | `boolean` | `true` | Render MGRS cell identifier labels |
+| `enableInteractivity` | `boolean` | `false` | Enable hover/click events and polygon pick surface |
+| `selectedCell` | `string` | `undefined` | Cell ID to highlight with `selectedColor` |
+| `zoomRanges` | `GridZoomRange[]` | `GARS_ZOOM_RANGES` | Override default zoom ranges per precision level |
+| `thirtyMinuteStyle` | `Partial<GridStyleConfig>` | — | Style overrides for 30-minute cells |
+| `fifteenMinuteStyle` | `Partial<GridStyleConfig>` | — | Style overrides for 15-minute cells |
+| `fiveMinuteStyle` | `Partial<GridStyleConfig>` | — | Style overrides for 5-minute cells |
+
+### GridStyleConfig
+
+| Property | Type | Description |
+|----------|------|-------------|
+| `lineColor` | `Color` | Grid line color (RGBA array, hex, or named color) |
+| `lineWidth` | `number` | Grid line width in pixels |
+| `labelColor` | `Color` | Label text color |
+| `labelSize` | `number` | Label font size in pixels |
+| `fontFamily` | `string` | Label font family |
+| `fontWeight` | `number \| string` | Label font weight |
+| `textAnchor` | `'start' \| 'middle' \| 'end'` | Label horizontal anchor |
+| `alignmentBaseline` | `'top' \| 'center' \| 'bottom'` | Label vertical baseline |
+| `backgroundColor` | `Color` | Label background color |
+| `backgroundPadding` | `[number, number]` | Label background paddingi in [x,y] pixels |
+| `hoverColor` | `Color` | RGBA fill color applied to a cell polygon on hover |
+| `selectedColor` | `Color` | RGBA fill color applied to a cell polygon when selected |

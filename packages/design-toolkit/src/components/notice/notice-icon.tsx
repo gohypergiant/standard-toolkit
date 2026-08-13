@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -21,6 +21,25 @@ import Warning from '@accelint/icons/warning';
 import { Icon } from '../icon';
 import type { NoticeIconProps } from './types';
 
+/**
+ * NoticeIcon - Color-mapped icon for Notice components
+ *
+ * Automatically renders the appropriate icon based on color variant:
+ * - info/advisory: Information icon
+ * - normal: Success icon
+ * - serious: Warning icon
+ * - critical: Problem icon
+ *
+ * @example
+ * ```tsx
+ * <NoticeIcon color="serious" size="small" />
+ * ```
+ *
+ * @param props - {@link NoticeIconProps}
+ * @param props.color - Color variant determining which icon to display.
+ * @param props.size - Size of the icon.
+ * @returns The rendered NoticeIcon component.
+ */
 export function NoticeIcon({ color = 'info', size }: NoticeIconProps) {
   return (
     <Icon size={size === 'small' ? 'medium' : 'large'}>

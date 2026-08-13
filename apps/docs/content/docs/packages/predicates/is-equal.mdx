@@ -1,0 +1,43 @@
+---
+title: "isEqual"
+description: Curried predicate that determines if a value is strictly equal to a reference value
+source: packages/predicates/src/is-equal/index.ts
+source_sha: dc5cdee83db775ee88aa2e4cffa1bd0d39663cba
+doc_sha: 0c856f8a6ba209c0047a006e3d8b731dc5b62ef0
+deprecated: false
+updated: 2026-07-13
+---
+
+Creates a predicate that determines if a value is strictly equal to a reference value.
+
+## Reference
+
+```typescript
+function isEqual<T>(reference: T): (value: T) => boolean
+```
+
+## Examples
+
+```typescript
+import { isEqual } from '@accelint/predicates';
+
+const isZero = isEqual(0);
+isZero(0);   // true
+isZero('0'); // false (strict equality)
+
+// Array filtering
+const numbers = [1, 2, 3, 2, 4];
+const twos = numbers.filter(isEqual(2)); // [2, 2]
+```
+
+> **Good to know:** This uses strict equality (`===`). For value equality of objects, use a deep equality function instead.
+
+## Related
+
+- [isNotEqual](./is-not-equal) - Check if value is not equal to reference
+- [isGreater](./is-greater) - Check if value is greater than threshold
+- [isGreaterEqual](./is-greater-equal) - Check if value is greater than or equal to threshold
+- [isLesser](./is-lesser) - Check if value is less than threshold
+- [isLesserEqual](./is-lesser-equal) - Check if value is less than or equal to threshold
+- [isIn](./is-in) - Check if value exists in an array
+- [isNotIn](./is-not-in) - Check if value doesn't exist in an array

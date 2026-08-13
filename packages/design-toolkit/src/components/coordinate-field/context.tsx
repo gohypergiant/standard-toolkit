@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -13,7 +13,7 @@
 'use client';
 
 import { createContext, useContext } from 'react';
-import type { ContextValue } from 'react-aria-components';
+import type { ContextValue } from 'react-aria-components/slots';
 import type { ProviderProps } from '@/lib/types';
 import type { CoordinateFieldProps, CoordinateFieldState } from './types';
 
@@ -74,6 +74,10 @@ export const CoordinateFieldStateContext =
 /**
  * Provider component for CoordinateField context
  * Wraps children with CoordinateFieldContext
+ *
+ * @param props - The provider props.
+ * @param props.children - Child components that will receive the coordinate field context.
+ * @returns The coordinate field context provider wrapping children.
  */
 export function CoordinateFieldProvider({
   children,
@@ -89,6 +93,11 @@ export function CoordinateFieldProvider({
 /**
  * Provider component for CoordinateField state context
  * Wraps children with CoordinateFieldStateContext
+ *
+ * @param props - The provider props.
+ * @param props.children - Child components that will receive the state context.
+ * @param props.value - The coordinate field state to provide.
+ * @returns The coordinate field state context provider wrapping children.
  */
 export function CoordinateFieldStateProvider({
   children,

@@ -1,6 +1,6 @@
 ## React Tips and Tricks
 
-Use this prompt to create help guide the content of the `.agents/react.md` document.
+Use this prompt to help guide the content of the `.agents/react.md` document.
 
 Models previously used:
 

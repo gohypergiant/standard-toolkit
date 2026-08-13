@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -13,7 +13,7 @@
 
 import 'client-only';
 import { clsx } from '@accelint/design-foundation/lib/utils';
-import { Provider } from 'react-aria-components';
+import { Provider } from 'react-aria-components/slots';
 import { DividerContext } from '../divider/context';
 import styles from './styles.module.css';
 import type { SidenavContentProps } from './types';
@@ -22,6 +22,26 @@ import type { SidenavContentProps } from './types';
  * SidenavContent - Container for sidenav content
  *
  * Provides a container for sidenav content with proper styling
+ *
+ * @example
+ * ```tsx
+ * <Sidenav>
+ *   <SidenavContent>
+ *     <SidenavItem textValue="Dashboard">
+ *       <Icon><Home /></Icon>
+ *       <Text>Dashboard</Text>
+ *     </SidenavItem>
+ *     <SidenavMenu icon={<Settings />} title="Settings">
+ *       <SidenavMenuItem>Profile</SidenavMenuItem>
+ *     </SidenavMenu>
+ *   </SidenavContent>
+ * </Sidenav>
+ * ```
+ *
+ * @param props - {@link SidenavContentProps}
+ * @param props.className - CSS class for the content container.
+ * @param props.children - Content items (items, menus, dividers).
+ * @returns The rendered SidenavContent component.
  */
 export function SidenavContent({
   className,

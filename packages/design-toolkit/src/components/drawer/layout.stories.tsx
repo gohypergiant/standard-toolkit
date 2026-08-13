@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -17,7 +17,10 @@ import {
   ChevronUp,
   Placeholder,
 } from '@accelint/icons';
+import type { Meta, StoryObj } from '@storybook/react-vite';
+import type { CSSProperties } from 'react';
 import { Drawer } from './';
+import { DrawerClose } from './close';
 import { DrawerContent } from './content';
 import { DrawerHeader } from './header';
 import { DrawerHeaderTitle } from './header-title';
@@ -26,10 +29,8 @@ import { DrawerLayoutMain } from './layout-main';
 import { DrawerMenu } from './menu';
 import { DrawerMenuItem } from './menu-item';
 import { DrawerPanel } from './panel';
-import { DrawerView } from './view';
-import type { Meta, StoryObj } from '@storybook/react-vite';
-import type { CSSProperties } from 'react';
 import type { DrawerLayoutProps } from './types';
+import { DrawerView } from './view';
 
 const ids = {
   top: {
@@ -161,6 +162,7 @@ export const Default: Story = {
           <DrawerPanel>
             <DrawerHeader>
               <DrawerHeaderTitle>Top</DrawerHeaderTitle>
+              <DrawerClose for={ids.top.views.a} />
             </DrawerHeader>
             <DrawerContent>
               {Object.entries(ids.top.views).map(([_, id]) => (
@@ -195,6 +197,7 @@ export const Default: Story = {
           <DrawerPanel>
             <DrawerHeader>
               <DrawerHeaderTitle>Bottom</DrawerHeaderTitle>
+              <DrawerClose for={ids.bottom.views.a} />
             </DrawerHeader>
             <DrawerContent>
               {Object.entries(ids.bottom.views).map(([_, id]) => (
@@ -229,6 +232,7 @@ export const Default: Story = {
           <DrawerPanel>
             <DrawerHeader>
               <DrawerHeaderTitle>Left</DrawerHeaderTitle>
+              <DrawerClose for={ids.left.views.a} />
             </DrawerHeader>
             <DrawerContent>
               {Object.entries(ids.left.views).map(([_, id]) => (
@@ -263,12 +267,127 @@ export const Default: Story = {
           <DrawerPanel>
             <DrawerHeader>
               <DrawerHeaderTitle>Right</DrawerHeaderTitle>
+              <DrawerClose for={ids.right.views.a} />
             </DrawerHeader>
             <DrawerContent>
               {Object.entries(ids.right.views).map(([_, id]) => (
                 <DrawerView id={id} key={id} />
               ))}
             </DrawerContent>
+          </DrawerPanel>
+        </Drawer>
+      </DrawerLayout>
+    </div>
+  ),
+};
+
+export const MixedSizes: Story = {
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'Four drawers open at once, each with a different `size`. Every edge sizes its own grid track independently, so the large left drawer and small right drawer render at their own widths with no cross-talk between edges.',
+      },
+    },
+  },
+  render: () => (
+    <div className='h-screen w-full'>
+      <DrawerLayout extend='left right' push='left right top bottom'>
+        <DrawerLayoutMain>
+          <div className='flex h-full items-center justify-center bg-surface-overlay'>
+            <p>Main content is pushed by each open drawer.</p>
+          </div>
+        </DrawerLayoutMain>
+
+        <Drawer
+          id={ids.left.drawer}
+          className='bg-[#ffd90087]'
+          placement='left'
+          size='large'
+          defaultView={ids.left.views.a}
+        >
+          <DrawerMenu position='center'>
+            <DrawerMenuItem toggle for={ids.left.views.a} textValue='Left'>
+              <ChevronRight className='fg-primary-bold cursor-pointer group-open/drawer:rotate-180' />
+            </DrawerMenuItem>
+          </DrawerMenu>
+          <DrawerPanel>
+            <DrawerView id={ids.left.views.a}>
+              <DrawerHeader>
+                <DrawerHeaderTitle>Left (large)</DrawerHeaderTitle>
+                <DrawerClose for={ids.left.views.a} />
+              </DrawerHeader>
+              <DrawerContent>Large drawer</DrawerContent>
+            </DrawerView>
+          </DrawerPanel>
+        </Drawer>
+
+        <Drawer
+          id={ids.right.drawer}
+          className='bg-[#00800084]'
+          placement='right'
+          size='small'
+          defaultView={ids.right.views.a}
+        >
+          <DrawerMenu position='center'>
+            <DrawerMenuItem toggle for={ids.right.views.a} textValue='Right'>
+              <ChevronLeft className='fg-primary-bold cursor-pointer group-open/drawer:rotate-180' />
+            </DrawerMenuItem>
+          </DrawerMenu>
+          <DrawerPanel>
+            <DrawerView id={ids.right.views.a}>
+              <DrawerHeader>
+                <DrawerHeaderTitle>Right (small)</DrawerHeaderTitle>
+                <DrawerClose for={ids.right.views.a} />
+              </DrawerHeader>
+              <DrawerContent>Small drawer</DrawerContent>
+            </DrawerView>
+          </DrawerPanel>
+        </Drawer>
+
+        <Drawer
+          id={ids.top.drawer}
+          className='bg-[#ff00008b]'
+          placement='top'
+          size='medium'
+          defaultView={ids.top.views.a}
+        >
+          <DrawerMenu position='center'>
+            <DrawerMenuItem toggle for={ids.top.views.a} textValue='Top'>
+              <ChevronDown className='fg-primary-bold cursor-pointer group-open/drawer:rotate-180' />
+            </DrawerMenuItem>
+          </DrawerMenu>
+          <DrawerPanel>
+            <DrawerView id={ids.top.views.a}>
+              <DrawerHeader>
+                <DrawerHeaderTitle>Top (medium)</DrawerHeaderTitle>
+                <DrawerClose for={ids.top.views.a} />
+              </DrawerHeader>
+              <DrawerContent>Medium drawer</DrawerContent>
+            </DrawerView>
+          </DrawerPanel>
+        </Drawer>
+
+        <Drawer
+          id={ids.bottom.drawer}
+          className='bg-[#0000ff8a]'
+          placement='bottom'
+          size='large'
+          defaultView={ids.bottom.views.a}
+        >
+          <DrawerMenu position='center'>
+            <DrawerMenuItem toggle for={ids.bottom.views.a} textValue='Bottom'>
+              <ChevronUp className='fg-primary-bold cursor-pointer group-open/drawer:rotate-180' />
+            </DrawerMenuItem>
+          </DrawerMenu>
+          <DrawerPanel>
+            <DrawerView id={ids.bottom.views.a}>
+              <DrawerHeader>
+                <DrawerHeaderTitle>Bottom (large)</DrawerHeaderTitle>
+                <DrawerClose for={ids.bottom.views.a} />
+              </DrawerHeader>
+              <DrawerContent>Large drawer</DrawerContent>
+            </DrawerView>
           </DrawerPanel>
         </Drawer>
       </DrawerLayout>

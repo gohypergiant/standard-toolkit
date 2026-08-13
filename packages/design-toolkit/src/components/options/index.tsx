@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -13,11 +13,9 @@
 
 import 'client-only';
 import { clsx } from '@accelint/design-foundation/lib/utils';
-import {
-  composeRenderProps,
-  ListBox,
-  useContextProps,
-} from 'react-aria-components';
+import { ListBox } from 'react-aria-components/ListBox';
+import { composeRenderProps } from 'react-aria-components/composeRenderProps';
+import { useContextProps } from 'react-aria-components/slots';
 import { OptionsContext } from './context';
 import styles from './styles.module.css';
 import type { OptionsDataItem, OptionsProps } from './types';
@@ -30,6 +28,7 @@ import type { OptionsDataItem, OptionsProps } from './types';
  * dropdown lists, menu items, or any selectable list interface.
  *
  * @example
+ * ```tsx
  * // Basic options list
  * <Options>
  *   <OptionsItem>
@@ -39,8 +38,10 @@ import type { OptionsDataItem, OptionsProps } from './types';
  *     <OptionsItemLabel>Option 2</OptionsItemLabel>
  *   </OptionsItem>
  * </Options>
+ * ```
  *
  * @example
+ * ```tsx
  * // Options with descriptions and icons
  * <Options>
  *   <OptionsItem>
@@ -51,8 +52,10 @@ import type { OptionsDataItem, OptionsProps } from './types';
  *     </OptionsItemContent>
  *   </OptionsItem>
  * </Options>
+ * ```
  *
  * @example
+ * ```tsx
  * // Sectioned options
  * <Options>
  *   <OptionsSection header="Recent">
@@ -62,6 +65,14 @@ import type { OptionsDataItem, OptionsProps } from './types';
  *     <OptionsItem>All Items 1</OptionsItem>
  *   </OptionsSection>
  * </Options>
+ * ```
+ *
+ * @param props - {@link OptionsProps}
+ * @param props.ref - Forwarded ref to the underlying ListBox element.
+ * @param props.children - Options items and sections to render.
+ * @param props.className - Optional CSS class name.
+ * @param props.size - Size variant for the options list.
+ * @returns The rendered Options component.
  */
 export function Options<T extends OptionsDataItem>({
   ref,

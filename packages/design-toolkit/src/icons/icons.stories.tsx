@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -11,9 +11,15 @@
  */
 
 import { title } from 'radashi';
+import { useState } from 'react';
 import { Icon } from '../components/icon';
+import { SearchField } from '../components/search-field';
 import { default as catalog } from './catalog';
 import type { Meta, StoryObj } from '@storybook/react-vite';
+
+const formatInput = (input: string) => {
+  return input.toLocaleLowerCase().split(' ').join('-');
+};
 
 const meta = {
   title: 'Foundation/Icons',
@@ -24,10 +30,41 @@ type Story = StoryObj<typeof meta>;
 
 export const UIIcons: Story = {
   render: () => {
+    const [filteredCatalog, setFilteredCatalog] = useState(
+      Object.entries(catalog),
+    );
+
+    const handleSearch = (input: string) => {
+      if (!input) {
+        handleClear();
+        return;
+      }
+
+      const searchTerm = formatInput(input);
+      setFilteredCatalog(() => {
+        return Object.entries(catalog).map(([header, items]) => {
+          return [
+            header,
+            {
+              ...items,
+              icons: items.icons.filter((icon) =>
+                icon.name.includes(searchTerm),
+              ),
+            },
+          ];
+        });
+      });
+    };
+
+    const handleClear = () => {
+      setFilteredCatalog(Object.entries(catalog));
+    };
+
     return (
       <>
-        {Object.entries(catalog).map(([section, meta]) => (
-          <div key={section} className='flex flex-col gap-xl'>
+        <SearchField onChange={handleSearch} onClear={handleClear} />
+        {filteredCatalog.map(([section, meta]) => (
+          <div key={section} className='flex w-full flex-col gap-xl'>
             <h1 className='fg-primary-bold mt-xl text-header-xl'>
               {title(section)}
             </h1>

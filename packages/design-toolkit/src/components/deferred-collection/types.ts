@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -12,11 +12,14 @@
 
 import type { ReactNode } from 'react';
 
+/**
+ * Props for the DeferredCollection component.
+ */
 export interface DeferredCollectionProps {
-  /** The content to render once ready - can be ReactNode or a function returning ReactNode for deferred creation */
+  /** The content to render once ready - can be ReactNode or a function returning ReactNode for deferred creation. */
   children: ReactNode | (() => ReactNode);
-  /** Fallback element to show while deferring render */
+  /** Fallback element to show while deferring render. */
   fallback?: ReactNode;
-  /** Number of animation frames to defer before rendering (default: 2) */
+  /** Number of animation frames to defer before rendering (default: 2). */
   deferFrames?: number;
 }

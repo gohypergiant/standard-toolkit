@@ -12,10 +12,52 @@
 
 'use client';
 
+import type { DistanceUnit } from '@accelint/constants/units';
 import type { UniqueId } from '@accelint/core';
 import type { Color } from '@deck.gl/core';
-import type { Feature, LineString, Point, Polygon } from 'geojson';
-import type { DistanceUnit } from '@/shared/units';
+import type {
+  Feature,
+  Geometry,
+  GeometryCollection,
+  LineString,
+  MultiLineString,
+  MultiPoint,
+  MultiPolygon,
+  Point,
+  Polygon,
+} from 'geojson';
+import type { StructuredCloneable } from 'type-fest';
+
+/**
+ * Type-level claim that an event payload is structured-cloneable so it
+ * satisfies `@accelint/bus`'s `BasicPayload` constraint.
+ *
+ * @remarks
+ * GeoJSON `Feature` and the `Shape` types built on top of it are *runtime-*
+ * cloneable (no functions, no class instances — just plain data), but they
+ * lack the explicit `[key: string]: StructuredCloneable` index signature that
+ * type-fest's `StructuredCloneable` requires of plain object types. Wrapping
+ * a payload in `BusCloneable<T>` adds the index signature via intersection so
+ * TypeScript accepts the payload at the bus boundary without re-verifying
+ * each named property.
+ *
+ * The bus's strictness is intentional — it catches non-cloneable values like
+ * functions or class instances that would silently break `postMessage`. This
+ * helper bridges the gap between that runtime safety contract and GeoJSON's
+ * type definitions; only apply it to payloads whose contents you've verified
+ * are actually cloneable at runtime.
+ *
+ * @example
+ * ```ts
+ * export type ShapeUpdatedPayload = BusCloneable<{
+ *   shape: Shape;
+ *   mapId: UniqueId;
+ * }>;
+ * ```
+ */
+export type BusCloneable<T> = T & {
+  readonly [key: string]: StructuredCloneable;
+};
 
 /**
  * Supported shape types
@@ -27,8 +69,10 @@ export const ShapeFeatureType = {
   Rectangle: 'Rectangle',
   LineString: 'LineString',
   Point: 'Point',
+  WagonWheel: 'WagonWheel',
 } as const;
 
+/** Union of all supported shape feature type string literals. */
 export type ShapeFeatureType =
   (typeof ShapeFeatureType)[keyof typeof ShapeFeatureType];
 
@@ -52,7 +96,7 @@ export type LinePattern = 'solid' | 'dashed' | 'dotted';
 /**
  * Style properties for rendering shapes
  */
-export interface StyleProperties {
+export type StyleProperties = {
   /** Fill color as RGBA array [r, g, b, a] where each value is 0-255 */
   fillColor: Color;
   /** Border/outline color as RGBA array [r, g, b, a] where each value is 0-255 */
@@ -91,15 +135,23 @@ export interface StyleProperties {
     | 'right'
     | 'bottom'
     | 'left';
-}
+};
+
+/**
+ * Geographic position as [longitude, latitude] with optional elevation.
+ *
+ * Similar to GeoJSON's `Position` (`number[]`) but with stricter typing
+ * that guarantees at least two elements.
+ */
+export type GeoPosition = [number, number] | [number, number, number];
 
 /**
  * Circle-specific properties for precise rendering
  * Stored alongside the polygon approximation
  */
-export interface CircleProperties {
-  /** Center point as [longitude, latitude] */
-  center: [number, number];
+export type CircleProperties = {
+  /** Center point as [longitude, latitude] or [longitude, latitude, elevation] */
+  center: GeoPosition;
   /** Radius with value and units */
   radius: {
     /** Radius value */
@@ -107,15 +159,15 @@ export interface CircleProperties {
     /** Units for the radius measurement */
     units: DistanceUnit;
   };
-}
+};
 
 /**
  * Ellipse-specific properties for precise rendering
  * Stored alongside the polygon approximation
  */
-export interface EllipseProperties {
-  /** Center point as [longitude, latitude] */
-  center: [number, number];
+export type EllipseProperties = {
+  /** Center point as [longitude, latitude] or [longitude, latitude, elevation] */
+  center: GeoPosition;
   /** X semi-axis (horizontal radius) with value and units */
   xSemiAxis: {
     /** X semi-axis value */
@@ -132,21 +184,47 @@ export interface EllipseProperties {
   };
   /** Rotation angle in degrees */
   angle: number;
-}
+};
 
 /**
- * Custom geometry types supported
+ * Wagon wheel-specific properties for defining segmented circular airspace.
+ *
+ * A wagon wheel consists of a center point, outer radius, radial spokes
+ * that divide the circle into sectors, and optional range rings that
+ * create concentric bands within the circle.
  */
-export type CustomGeometry = Point | LineString | Polygon;
+export type WagonWheelProperties = {
+  /** Center point as [longitude, latitude] or [longitude, latitude, elevation] */
+  center: GeoPosition;
+  /** Outer radius of the entire wagon wheel */
+  radius: {
+    /** Radius value */
+    value: number;
+    /** Units for the radius measurement */
+    units: DistanceUnit;
+  };
+  /** Number of spokes (radial dividers). Divides the circle into this many sectors. */
+  spokes: number;
+  /** Orientation in degrees (true north, clockwise) */
+  orientation: number;
+  /** Additional concentric range ring radii inside the outer radius. Each must be less than the outer radius and greater than 0. */
+  rangeRings: Array<{
+    /** Range ring radius value */
+    value: number;
+    /** Units for the measurement */
+    units: DistanceUnit;
+  }>;
+};
 
 /**
  * Properties for styled features.
  *
- * Note: circleProperties and ellipseProperties are optional at the type level
- * but are guaranteed to be present for their respective shape types.
- * Use the type guards (isCircleShape, isEllipseShape) for type narrowing.
+ * Note: circleProperties, ellipseProperties, and wagonWheelProperties are
+ * optional at the type level but are guaranteed to be present for their
+ * respective shape types. Use the type guards (isCircleShape, isEllipseShape,
+ * isWagonWheelShape) for type narrowing.
  */
-export interface StyledFeatureProperties {
+export type StyledFeatureProperties = {
   /** Style properties for rendering */
   styleProperties: StyleProperties;
   /** Shape ID for correlation */
@@ -155,37 +233,52 @@ export interface StyledFeatureProperties {
   circleProperties?: CircleProperties;
   /** Ellipse properties (present for Ellipse shapes) */
   ellipseProperties?: EllipseProperties;
-}
+  /** Wagon wheel properties (present for WagonWheel shapes) */
+  wagonWheelProperties?: WagonWheelProperties;
+  /** Minimum elevation in meters (optional) */
+  minElevation?: number;
+  /** Maximum elevation in meters (optional) */
+  maxElevation?: number;
+};
 
 /**
  * Feature properties for Circle shapes (circleProperties required).
  * Used by CircleShape for better type narrowing.
  */
-export interface CircleFeatureProperties extends StyledFeatureProperties {
+export type CircleFeatureProperties = StyledFeatureProperties & {
   /** Circle properties (required for Circle shapes) */
   circleProperties: CircleProperties;
-}
+};
 
 /**
  * Feature properties for Ellipse shapes (ellipseProperties required).
  * Used by EllipseShape for better type narrowing.
  */
-export interface EllipseFeatureProperties extends StyledFeatureProperties {
+export type EllipseFeatureProperties = StyledFeatureProperties & {
   /** Ellipse properties (required for Ellipse shapes) */
   ellipseProperties: EllipseProperties;
-}
+};
+
+/**
+ * Feature properties for WagonWheel shapes (wagonWheelProperties required).
+ * Used by WagonWheelShape for better type narrowing.
+ */
+export type WagonWheelFeatureProperties = StyledFeatureProperties & {
+  /** Wagon wheel properties (required for WagonWheel shapes) */
+  wagonWheelProperties: WagonWheelProperties;
+};
 
 /**
  * GeoJSON Feature with style properties
  */
-export interface StyledFeature extends Feature {
+export type StyledFeature = Feature & {
   properties: StyledFeatureProperties;
-}
+};
 
 /**
- * Base shape properties shared by all shapes
+ * Base shape properties shared by all shapes.
  */
-interface BaseShape {
+type BaseShape = {
   /** Unique identifier */
   id: ShapeId;
   /** Full shape name used internally and in UI */
@@ -205,62 +298,70 @@ interface BaseShape {
    * Locked shapes cannot be modified due to data restrictions or user preference
    */
   locked?: boolean;
-}
+};
 
 /**
  * Circle shape with required circleProperties
  */
-export interface CircleShape extends BaseShape {
+export type CircleShape = BaseShape & {
   shape: typeof ShapeFeatureType.Circle;
   feature: StyledFeature & { properties: CircleFeatureProperties };
-}
+};
 
 /**
  * Ellipse shape with required ellipseProperties
  */
-export interface EllipseShape extends BaseShape {
+export type EllipseShape = BaseShape & {
   shape: typeof ShapeFeatureType.Ellipse;
   feature: StyledFeature & { properties: EllipseFeatureProperties };
-}
+};
 
 /**
  * Polygon shape
  */
-export interface PolygonShape extends BaseShape {
+export type PolygonShape = BaseShape & {
   shape: typeof ShapeFeatureType.Polygon;
   feature: StyledFeature;
-}
+};
 
 /**
  * Rectangle shape
  */
-export interface RectangleShape extends BaseShape {
+export type RectangleShape = BaseShape & {
   shape: typeof ShapeFeatureType.Rectangle;
   feature: StyledFeature;
-}
+};
 
 /**
  * LineString shape
  */
-export interface LineStringShape extends BaseShape {
+export type LineStringShape = BaseShape & {
   shape: typeof ShapeFeatureType.LineString;
   feature: StyledFeature;
-}
+};
 
 /**
  * Point shape
  */
-export interface PointShape extends BaseShape {
+export type PointShape = BaseShape & {
   shape: typeof ShapeFeatureType.Point;
   feature: StyledFeature;
-}
+};
+
+/**
+ * Wagon wheel shape with required wagonWheelProperties
+ */
+export type WagonWheelShape = BaseShape & {
+  shape: typeof ShapeFeatureType.WagonWheel;
+  feature: StyledFeature & { properties: WagonWheelFeatureProperties };
+};
 
 /**
  * Discriminated union of all shape types.
  *
  * Use this for type narrowing based on shape:
  * @example
- * ```ts
+ * ```typescript
  * function handleShape(shape: Shape) {
  *   if (shape.shape === 'Circle') {
  *     // TypeScript knows shape.feature.properties.circleProperties exists
@@ -275,12 +376,8 @@ export type Shape =
   | PolygonShape
   | RectangleShape
   | LineStringShape
-  | PointShape;
-
-/**
- * Alias for ShapeFeatureType values
- */
-export type ShapeFeatureTypeValues = ShapeFeatureType;
+  | PointShape
+  | WagonWheelShape;
 
 /**
  * Alias for StyledFeature (shape feature)
@@ -297,17 +394,6 @@ export type ShapeFeatureProperties = StyledFeature['properties'];
  */
 export type CircleRadius = CircleProperties['radius'];
 
-/**
- * Coordinate as [longitude, latitude]
- */
-export type Coordinate = [number, number];
-
-/**
- * Function type for subscription (useSyncExternalStore pattern).
- * Used by draw-shape-layer and edit-shape-layer stores.
- */
-export type Subscription = (onStoreChange: () => void) => () => void;
-
 // =============================================================================
 // Type Guards
 // =============================================================================
@@ -315,8 +401,11 @@ export type Subscription = (onStoreChange: () => void) => () => void;
 /**
  * Type guard for Circle shapes.
  *
+ * @param shape - The shape to test.
+ * @returns True if shape is a CircleShape.
+ *
  * @example
- * ```ts
+ * ```typescript
  * if (isCircleShape(shape)) {
  *   // shape.feature.properties.circleProperties is available
  *   const { center, radius } = shape.feature.properties.circleProperties;
@@ -330,8 +419,11 @@ export function isCircleShape(shape: Shape): shape is CircleShape {
 /**
  * Type guard for Ellipse shapes.
  *
+ * @param shape - The shape to test.
+ * @returns True if shape is an EllipseShape.
+ *
  * @example
- * ```ts
+ * ```typescript
  * if (isEllipseShape(shape)) {
  *   // shape.feature.properties.ellipseProperties is available
  *   const { center, xSemiAxis, ySemiAxis } = shape.feature.properties.ellipseProperties;
@@ -344,6 +436,15 @@ export function isEllipseShape(shape: Shape): shape is EllipseShape {
 
 /**
  * Type guard for Polygon shapes.
+ *
+ * @param shape - The shape to test
+ * @returns True if shape is a PolygonShape
+ * @example
+ * ```typescript
+ * if (isPolygonShape(shape)) {
+ *   // TypeScript narrows shape to PolygonShape
+ * }
+ * ```
  */
 export function isPolygonShape(shape: Shape): shape is PolygonShape {
   return shape.shape === ShapeFeatureType.Polygon;
@@ -351,6 +452,15 @@ export function isPolygonShape(shape: Shape): shape is PolygonShape {
 
 /**
  * Type guard for Rectangle shapes.
+ *
+ * @param shape - The shape to test
+ * @returns True if shape is a RectangleShape
+ * @example
+ * ```typescript
+ * if (isRectangleShape(shape)) {
+ *   // TypeScript narrows shape to RectangleShape
+ * }
+ * ```
  */
 export function isRectangleShape(shape: Shape): shape is RectangleShape {
   return shape.shape === ShapeFeatureType.Rectangle;
@@ -358,6 +468,15 @@ export function isRectangleShape(shape: Shape): shape is RectangleShape {
 
 /**
  * Type guard for LineString shapes.
+ *
+ * @param shape - The shape to test
+ * @returns True if shape is a LineStringShape
+ * @example
+ * ```typescript
+ * if (isLineStringShape(shape)) {
+ *   // TypeScript narrows shape to LineStringShape
+ * }
+ * ```
  */
 export function isLineStringShape(shape: Shape): shape is LineStringShape {
   return shape.shape === ShapeFeatureType.LineString;
@@ -365,7 +484,177 @@ export function isLineStringShape(shape: Shape): shape is LineStringShape {
 
 /**
  * Type guard for Point shapes.
+ *
+ * @param shape - The shape to test
+ * @returns True if shape is a PointShape
+ * @example
+ * ```typescript
+ * if (isPointShape(shape)) {
+ *   // TypeScript narrows shape to PointShape
+ * }
+ * ```
  */
 export function isPointShape(shape: Shape): shape is PointShape {
   return shape.shape === ShapeFeatureType.Point;
+}
+
+/**
+ * Type guard for WagonWheel shapes.
+ *
+ * @param shape - The shape to test.
+ * @returns True if shape is a WagonWheelShape.
+ *
+ * @example
+ * ```typescript
+ * if (isWagonWheelShape(shape)) {
+ *   // shape.feature.properties.wagonWheelProperties is available
+ *   const { center, radius, spokes } = shape.feature.properties.wagonWheelProperties;
+ * }
+ * ```
+ */
+export function isWagonWheelShape(shape: Shape): shape is WagonWheelShape {
+  return shape.shape === ShapeFeatureType.WagonWheel;
+}
+
+// =============================================================================
+// Geometry Type Predicates
+// =============================================================================
+// These narrow GeoJSON Geometry unions (e.g. Polygon, MultiPolygon),
+// distinct from the Shape type guards above which check shape.shape ('Circle', etc.).
+
+// --- Granular geometry predicates (single GeoJSON type) ---
+
+/**
+ * Narrow a GeoJSON geometry to the Point type.
+ *
+ * @param geometry - The GeoJSON geometry to test.
+ * @returns True if the geometry is a Point.
+ */
+export function isPointType(geometry: Geometry): geometry is Point {
+  return geometry.type === 'Point';
+}
+
+/**
+ * Narrow a GeoJSON geometry to the MultiPoint type.
+ *
+ * @param geometry - The GeoJSON geometry to test.
+ * @returns True if the geometry is a MultiPoint.
+ */
+export function isMultiPointType(geometry: Geometry): geometry is MultiPoint {
+  return geometry.type === 'MultiPoint';
+}
+
+/**
+ * Narrow a GeoJSON geometry to the LineString type.
+ *
+ * @param geometry - The GeoJSON geometry to test.
+ * @returns True if the geometry is a LineString.
+ */
+export function isLineStringType(geometry: Geometry): geometry is LineString {
+  return geometry.type === 'LineString';
+}
+
+/**
+ * Narrow a GeoJSON geometry to the MultiLineString type.
+ *
+ * @param geometry - The GeoJSON geometry to test.
+ * @returns True if the geometry is a MultiLineString.
+ */
+export function isMultiLineStringType(
+  geometry: Geometry,
+): geometry is MultiLineString {
+  return geometry.type === 'MultiLineString';
+}
+
+/**
+ * Narrow a GeoJSON geometry to the Polygon type.
+ *
+ * @param geometry - The GeoJSON geometry to test.
+ * @returns True if the geometry is a Polygon.
+ */
+export function isPolygonType(geometry: Geometry): geometry is Polygon {
+  return geometry.type === 'Polygon';
+}
+
+/**
+ * Narrow a GeoJSON geometry to the MultiPolygon type.
+ *
+ * @param geometry - The GeoJSON geometry to test.
+ * @returns True if the geometry is a MultiPolygon.
+ */
+export function isMultiPolygonType(
+  geometry: Geometry,
+): geometry is MultiPolygon {
+  return geometry.type === 'MultiPolygon';
+}
+
+/**
+ * Narrow a GeoJSON geometry to the GeometryCollection type.
+ *
+ * @param geometry - The GeoJSON geometry to test.
+ * @returns True if the geometry is a GeometryCollection.
+ */
+export function isGeometryCollectionType(
+  geometry: Geometry,
+): geometry is GeometryCollection {
+  return geometry.type === 'GeometryCollection';
+}
+
+// --- Composite geometry predicates (multiple GeoJSON types) ---
+
+/**
+ * Narrow a GeoJSON geometry to polygon-like types (Polygon or MultiPolygon).
+ *
+ * @param geometry - The GeoJSON geometry to test.
+ * @returns True if the geometry is a Polygon or MultiPolygon.
+ *
+ * @example
+ * ```typescript
+ * if (isPolygonGeometry(feature.geometry)) {
+ *   // geometry narrowed to Polygon | MultiPolygon
+ * }
+ * ```
+ */
+export function isPolygonGeometry(
+  geometry: Geometry,
+): geometry is Polygon | MultiPolygon {
+  return geometry.type === 'Polygon' || geometry.type === 'MultiPolygon';
+}
+
+/**
+ * Narrow a GeoJSON geometry to line-like types (LineString or MultiLineString).
+ *
+ * @param geometry - The GeoJSON geometry to test.
+ * @returns True if the geometry is a LineString or MultiLineString.
+ *
+ * @example
+ * ```typescript
+ * if (isLineGeometry(feature.geometry)) {
+ *   // geometry narrowed to LineString | MultiLineString
+ * }
+ * ```
+ */
+export function isLineGeometry(
+  geometry: Geometry,
+): geometry is LineString | MultiLineString {
+  return geometry.type === 'LineString' || geometry.type === 'MultiLineString';
+}
+
+/**
+ * Narrow a GeoJSON geometry to point-like types (Point or MultiPoint).
+ *
+ * @param geometry - The GeoJSON geometry to test.
+ * @returns True if the geometry is a Point or MultiPoint.
+ *
+ * @example
+ * ```typescript
+ * if (isPointGeometry(feature.geometry)) {
+ *   // geometry narrowed to Point | MultiPoint
+ * }
+ * ```
+ */
+export function isPointGeometry(
+  geometry: Geometry,
+): geometry is Point | MultiPoint {
+  return geometry.type === 'Point' || geometry.type === 'MultiPoint';
 }

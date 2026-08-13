@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -15,7 +15,7 @@
 import 'client-only';
 import { clsx } from '@accelint/design-foundation/lib/utils';
 import { useContext, useRef } from 'react';
-import { composeRenderProps } from 'react-aria-components';
+import { composeRenderProps } from 'react-aria-components/composeRenderProps';
 import { ToggleButton } from '../button/toggle';
 import { Icon } from '../icon';
 import { Tooltip } from '../tooltip';
@@ -33,6 +33,28 @@ const tooltipPlacementMap = {
   bottom: 'top',
 } as const;
 
+/**
+ * DrawerMenuItem - Individual navigation item within DrawerMenu.
+ *
+ * Renders as a toggle button with an icon and tooltip.
+ * The `for` prop specifies which view to navigate to.
+ * Use `toggle` prop to toggle the view open/closed instead of just opening.
+ *
+ * @param props - {@link DrawerMenuItemProps}
+ * @param props.for - The unique ID of the view to navigate to.
+ * @param props.children - Icon content to render inside the button.
+ * @param props.classNames - Optional class names for item and tooltip.
+ * @param props.toggle - Whether to toggle the view open/closed.
+ * @param props.textValue - Text for the tooltip.
+ * @returns The rendered DrawerMenuItem component, or null if outside a Drawer.
+ *
+ * @example
+ * ```tsx
+ * <DrawerMenuItem for={viewId} textValue="Settings">
+ *   <SettingsIcon />
+ * </DrawerMenuItem>
+ * ```
+ */
 export function DrawerMenuItem({
   for: id,
   children,

@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -12,27 +12,48 @@
 
 import type { Orientation } from '@react-types/shared';
 import type { RefAttributes } from 'react';
-import type {
-  CheckboxGroupProps as AriaCheckboxGroupProps,
-  CheckboxProps as AriaCheckboxProps,
-} from 'react-aria-components';
+import type { CheckboxGroupProps as AriaCheckboxGroupProps } from 'react-aria-components/CheckboxGroup';
+import type { CheckboxProps as AriaCheckboxProps } from 'react-aria-components/Checkbox';
 import type { LabelProps } from '../label/types';
 
+/**
+ * Props for the CheckboxGroup component.
+ *
+ * Extends React Aria CheckboxGroup with label, orientation, and custom class names.
+ */
 export type CheckboxGroupProps = Omit<AriaCheckboxGroupProps, 'className'> &
   RefAttributes<HTMLDivElement> & {
+    /** Custom class names for checkbox group sub-elements. */
     classNames?: {
+      /** Class name for the group container. */
       group?: AriaCheckboxGroupProps['className'];
+      /** Class name for the group label. */
       label?: LabelProps['className'];
     };
+    /** Label text displayed above the checkbox group. */
     label?: string;
+    /** Position of labels for all child Checkboxes. Individual Checkbox `labelPosition` overrides this. */
+    labelPosition?: 'start' | 'end';
+    /** Layout orientation for the checkboxes. */
     orientation?: Orientation;
   };
 
+/**
+ * Props for the Checkbox component.
+ *
+ * Extends React Aria Checkbox with custom class names for sub-elements.
+ */
 export type CheckboxProps = Omit<AriaCheckboxProps, 'className'> &
   RefAttributes<HTMLLabelElement> & {
+    /** Custom class names for checkbox sub-elements. */
     classNames?: {
+      /** Class name for the checkbox wrapper. */
       checkbox?: AriaCheckboxProps['className'];
+      /** Class name for the checkbox control indicator. */
       control?: string;
+      /** Class name for the label text. */
       label?: string;
     };
+    /** Position of the label relative to the checkbox control. */
+    labelPosition?: 'start' | 'end';
   };

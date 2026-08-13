@@ -118,7 +118,16 @@ function isRegisteredOwner(mapId: UniqueId, owner: string): boolean {
 }
 
 /**
- * Calculate effective cursor based on priority
+ * Calculate effective cursor based on priority.
+ *
+ * Priority order:
+ * 1. Mode owner's cursor (if mode is owned)
+ * 2. Most recent cursor request (if owner still has entry)
+ * 3. Default cursor
+ *
+ * @param mapId - Unique identifier for the map instance
+ * @param state - Current cursor state
+ * @returns The effective cursor to display
  */
 function getEffectiveCursor(
   mapId: UniqueId,
@@ -320,7 +329,21 @@ export const cursorStore = createMapStore<CursorState, CursorActions>({
 // =============================================================================
 
 /**
- * Get effective cursor (computed from state)
+ * Get effective cursor value for a map instance.
+ *
+ * Computes the effective cursor from the current state by applying
+ * the priority system (mode owner > most recent > default).
+ *
+ * @param mapId - Unique identifier for the map instance
+ * @returns The effective cursor to display
+ *
+ * @example
+ * ```typescript
+ * import { getCursor } from '@accelint/map-toolkit/map-cursor';
+ *
+ * const currentCursor = getCursor(mapId);
+ * console.log('Current cursor:', currentCursor); // 'default', 'pointer', etc.
+ * ```
  */
 export function getCursor(mapId: UniqueId): CSSCursorType {
   return getEffectiveCursor(mapId, cursorStore.get(mapId));
@@ -336,6 +359,9 @@ export function getCursor(mapId: UniqueId): CSSCursorType {
  * - Better ergonomics for consumers
  *
  * This hook exists for internal composition (used by useMapCursor).
+ *
+ * @param mapId - Unique identifier for the map instance
+ * @returns The effective cursor to display
  */
 export function useCursor(mapId: UniqueId): CSSCursorType {
   return cursorStore.useSelector(mapId, (state) =>
@@ -344,7 +370,22 @@ export function useCursor(mapId: UniqueId): CSSCursorType {
 }
 
 /**
- * Clear cursor state
+ * Clear cursor state for a specific map instance.
+ *
+ * Removes all cursor ownership data and resets to default state.
+ * This is typically not needed as cleanup happens automatically.
+ * Use only in advanced scenarios where manual cleanup is required.
+ *
+ * @param mapId - Unique identifier for the map instance to clear
+ * @returns void
+ *
+ * @example
+ * ```typescript
+ * import { clearCursorState } from '@accelint/map-toolkit/map-cursor';
+ *
+ * // Manual cleanup when destroying a map
+ * clearCursorState(mapId);
+ * ```
  */
 export function clearCursorState(mapId: UniqueId): void {
   cursorStore.clear(mapId);

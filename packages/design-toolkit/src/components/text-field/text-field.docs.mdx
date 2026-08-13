@@ -5,129 +5,93 @@ import * as TextFieldStories from './text-field.stories';
 <Meta of={TextFieldStories} />
 
 # TextField
-The TextField component provides a single-line text input with integrated label, description, and error handling. It's built on React Aria Components and provides excellent accessibility out of the box. Text fields are commonly used in forms for short text input such as names, emails, usernames, and any single-line content that requires user input.
 
-It is composed of the following components:
+Single-line text input with integrated label, description, and error handling.
 
-- **TextField** - Complete form field with label, input, and validation
-- **TextFieldProvider** - Context provider for setting default text field props
-
-## Example usage
 ```tsx
 // Basic text field
-<TextField
-  label="Username"
-  inputProps={{
-    placeholder: "Enter your username",
-    type: "text"
-  }}
-/>
+<TextField label="Username" />
 
-// With description and validation
+// With validation
 <TextField
   label="Email"
-  description="We'll never share your email with anyone else"
-  errorMessage="Please enter a valid email address"
-  isInvalid={true}
-  isRequired={true}
-  inputProps={{
-    type: "email",
-    placeholder: "example@email.com"
-  }}
+  description="We'll never share your email"
+  errorMessage="Please enter a valid email"
+  isInvalid
+  isRequired
+  inputProps={{ type: "email", placeholder: "example@email.com" }}
 />
 
-// Small size variant
+// With prefix and suffix
 <TextField
-  label="Nickname"
-  size="small"
-  inputProps={{
-    placeholder: "Enter nickname",
-    isClearable: true
-  }}
+  label="Price"
+  inputProps={{ type: "number", prefix: "$", suffix: "USD" }}
 />
 
-// Using context provider for default props
-<TextFieldProvider size="small">
-  <TextField label="Field 1" />
-  <TextField label="Field 2" />
-</TextFieldProvider>
-
-// With custom input props
+// Small size with clearable input
 <TextField
   label="Search"
-  inputProps={{
-    type: "search",
-    placeholder: "Search...",
-    isClearable: true
-  }}
+  size="small"
+  inputProps={{ type: "search", isClearable: true }}
 />
 
 // Readonly
 <TextField
   label="Username"
   isReadOnly
-  inputProps={{
-    value: 'some string',
-    type: "text"
-  }}
+  inputProps={{ value: "readonly value" }}
 />
 ```
-
-## Sizes
-
-* **medium** - Standard size with full label and description support (default)
-* **small** - Compact size with minimal label display and reduced text size
-
-The size can be controlled via the `size` prop or set globally using the `TextFieldProvider` component.
 
 <Canvas of={TextFieldStories.Default} />
 
 ## Props
 
-* **`label`** - Text label displayed above the text field
-* **`description`** - Helper text displayed below the text field
-* **`errorMessage`** - Error text displayed when validation fails
-* **`size`** - Size variant: `'medium'` (default) | `'small'`
-* **`isDisabled`** - Disables the text field
-* **`isRequired`** - Marks the text field as required
-* **`isReadOnly`** - Marks the text field as readonly
-* **`isInvalid`** - Marks the text field as invalid
-* **`inputProps`** - Additional props passed to the underlying [Input](?path=/docs/components-input--playground#props) component:
-  * `type` - Input type (text, email, password, search, etc.)
-  * `placeholder` - Placeholder text
-  * `isClearable` - Shows a clear button when input has value
-  * `onChange` - Change event handler
-  * `onFocus` - Focus event handler
-  * `onBlur` - Blur event handler
-  * `value` - Controlled input value
-  * `defaultValue` - Default input value
-* **`classNames`** - Custom class names for styling:
-  * `field` - Applied to the text field container
-  * `label` - Applied to the label element
-  * `input` - Applied to the input element
-  * `description` - Applied to the description text
-  * `error` - Applied to the error message
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `label` | `string` | — | Label text |
+| `description` | `string` | — | Helper text below the input |
+| `errorMessage` | `ReactNode` | — | Error text when invalid |
+| `size` | `'medium' \| 'small'` | `'medium'` | Size variant |
+| `isDisabled` | `boolean` | — | Whether the field is disabled |
+| `isReadOnly` | `boolean` | — | Whether the field is readonly |
+| `isRequired` | `boolean` | — | Whether the field is required |
+| `isInvalid` | `boolean` | — | Whether the field is invalid |
+| `inputProps` | `InputProps` | — | Props passed to the input element |
+| `classNames` | `object` | — | Custom classes for internal elements |
 
-## Implementation Notes
-The `TextField` component wraps the `TextField` component from `react-aria-components` and integrates with the `Input` component.
+Extends React Aria [TextField](https://react-spectrum.adobe.com/react-aria/TextField.html) props.
 
-[Docs](https://react-spectrum.adobe.com/react-aria/TextField.html)
+### classNames
 
-[Github Source](https://github.com/gohypergiant/standard-toolkit/tree/main/packages/design-toolkit/src/components/text-field)
+| Key | Description |
+|-----|-------------|
+| `field` | Field container |
+| `label` | Label element |
+| `input` | Input element (accepts Input classNames object) |
+| `description` | Description text |
+| `error` | Error message |
 
-The underlying elements are:
-- `div` for the text field container
-- `label` for the field label
-- `input` for the single-line text input
-- `div` for the description text
-- `div` for the error message
+## TextFieldProvider
 
-The component automatically handles accessibility features including:
+Sets default props for all TextField components within. Any TextField prop can be passed and will apply to all children unless overridden.
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `children` | `ReactNode` | — | TextField components |
+| `size` | `'medium' \| 'small'` | `'medium'` | Default size |
+| `isDisabled` | `boolean` | — | Default disabled state |
+| `classNames` | `object` | — | Default custom classes |
+
+## Accessibility
+
 - ARIA attributes for screen readers
 - Keyboard navigation and focus management
-- Form integration and validation
 - Error state announcements
 - Required field indicators
 - Proper labeling and descriptions
 
-The component includes responsive styling that adapts to different sizes and states, with appropriate visual feedback for focus, hover, error, and disabled states. The input field provides smooth transitions between states and supports various input types for different use cases.
+## Related
+
+- [React Aria TextField](https://react-spectrum.adobe.com/react-aria/TextField.html)
+- [GitHub Source](https://github.com/gohypergiant/standard-toolkit/tree/main/packages/design-toolkit/src/components/text-field)

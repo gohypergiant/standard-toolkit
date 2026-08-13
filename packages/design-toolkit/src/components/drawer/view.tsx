@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -19,6 +19,28 @@ import { DrawerContext } from './context';
 import styles from './styles.module.css';
 import type { ViewStackViewProps } from '../view-stack/types';
 
+/**
+ * DrawerView - Content region for a specific drawer view.
+ *
+ * Each view is identified by a unique `id` and displayed when that
+ * view is active in the stack. Contains DrawerHeader, DrawerContent,
+ * and optionally DrawerFooter.
+ *
+ * @param props - ViewStackViewProps & ComponentPropsWithRef<'div'>
+ * @param props.id - Unique identifier for the view.
+ * @param props.children - Content to render inside the view.
+ * @param props.className - Optional CSS class name.
+ * @returns The rendered DrawerView component.
+ *
+ * @example
+ * ```tsx
+ * <DrawerView id={viewId}>
+ *   <DrawerHeader title="Settings" />
+ *   <DrawerContent>View content here</DrawerContent>
+ *   <DrawerFooter>Footer actions</DrawerFooter>
+ * </DrawerView>
+ * ```
+ */
 export function DrawerView({
   id,
   children,

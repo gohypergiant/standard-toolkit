@@ -12,13 +12,14 @@
 
 import { useMapViewport } from './store';
 import { getViewportSize } from './utils';
+import type { DistanceUnitSymbol } from '@accelint/constants/units';
 import type { UniqueId } from '@accelint/core';
 import type { ComponentPropsWithRef } from 'react';
-import type { SupportedDistanceUnit } from './types';
 
+/** Props for {@link ViewportSize}. */
 export type ViewportSizeProps = ComponentPropsWithRef<'span'> & {
   instanceId: UniqueId;
-  unit?: SupportedDistanceUnit;
+  unit?: DistanceUnitSymbol;
 };
 
 /**
@@ -29,7 +30,7 @@ export type ViewportSizeProps = ComponentPropsWithRef<'span'> & {
  *
  * @param props - Extends `<span>` props
  * @param props.instanceId - The id of the view to subscribe to
- * @param props.unit - Measure of distance: `km | m | nm | mi | ft`. Defaults to `nm`
+ * @param props.unit - Measure of distance: `km | m | NM | mi | ft`. Defaults to `NM`
  * @param props.className - CSS classes for styling
  *
  * @example
@@ -47,7 +48,7 @@ export type ViewportSizeProps = ComponentPropsWithRef<'span'> & {
  */
 export function ViewportSize({
   instanceId,
-  unit = 'nm',
+  unit = 'NM',
   ...rest
 }: ViewportSizeProps) {
   const { bounds, zoom, width, height } = useMapViewport(instanceId);

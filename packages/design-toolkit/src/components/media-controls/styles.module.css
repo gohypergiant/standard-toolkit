@@ -1,0 +1,145 @@
+/*
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
+ * This file is licensed to you under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License. You may obtain a copy
+ * of the License at https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under
+ * the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS
+ * OF ANY KIND, either express or implied. See the License for the specific language
+ * governing permissions and limitations under the License.
+ */
+
+@reference '@accelint/design-foundation/styles';
+
+@layer components.l1 {
+  .mediaControls {
+    @apply p-s flex items-center;
+
+    @variant disabled {
+      @apply opacity-50;
+    }
+  }
+
+  .volumeSlider {
+    @apply gap-s flex items-center;
+
+    @variant disabled {
+      @apply cursor-not-allowed opacity-50;
+    }
+  }
+
+  .volumeLabel {
+    @apply fg-primary-muted text-body-s;
+  }
+
+  .volumeRange {
+    @apply h-xxs w-full;
+    --media-range-track-height: 2px;
+    --media-range-track-border-radius: 2px;
+    --media-range-padding: 0;
+
+    /* Filled track (accent color) */
+    --media-range-bar-color: var(--bg-accent-primary-bold);
+
+    /* Thumb styling */
+    --media-range-thumb-height: 12px;
+    --media-range-thumb-width: 12px;
+    --media-range-thumb-border-radius: var(--radius-round);
+    --media-range-thumb-background: var(--fg-accent-primary-bold);
+
+    &::part(thumb) {
+      transition: transform 150ms ease;
+
+      &:hover {
+        transform: scale(1.2);
+      }
+    }
+
+    @variant disabled {
+      --media-range-bar-color: var(--bg-disabled-bold);
+      --media-range-thumb-background: var(--fg-disabled-secondary);
+    }
+  }
+
+  .timeRange {
+    @apply flex w-full grow items-center;
+  }
+
+  .timeRangeInput {
+    @apply w-full;
+
+    /* Track */
+    --media-control-background: var(--bg-surface-raised);
+    --media-control-hover-background: var(--bg-surface-raised);
+    --media-range-track-height: 4px;
+    --media-range-track-border-radius: 2px;
+    --media-range-bar-color: var(--bg-accent-primary-bold);
+    --media-range-padding: 0;
+
+    /* Thumb (playhead) */
+    --media-range-thumb-height: 16px;
+    --media-range-thumb-width: 4px;
+    --media-range-thumb-border-radius: var(--radius-round);
+    --media-range-thumb-background: var(--fg-accent-primary-bold);
+
+    /* Hide built-in preview tooltip */
+    --media-preview-box-display: none;
+    --media-box-arrow-display: none;
+    --media-text-color: var(--fg-primary-bold);
+    --media-primary-color: var(--fg-primary-bold);
+
+    &::part(thumb) {
+      &:hover {
+        background-color: var(--fg-accent-primary-hover);
+      }
+
+      &:focus-visible {
+        background-color: var(--fg-accent-primary-hover);
+        outline: 2px solid var(--outline-interactive-hover);
+        outline-offset: 2px;
+      }
+
+      &:active {
+        background-color: var(--fg-accent-primary-pressed);
+      }
+    }
+
+    &[disabled]::part(thumb) {
+      background-color: var(--fg-disabled);
+      cursor: not-allowed;
+    }
+  }
+
+  .timeDisplay {
+    --media-text-background: var(--bg-surface-raised);
+    @apply flex items-center;
+
+    @variant disabled {
+      @apply opacity-50;
+    }
+  }
+
+  .timeDisplayText {
+    @apply fg-primary-bold text-body-s tabular-nums;
+  }
+
+  .playbackRate {
+    @apply flex items-center;
+  }
+
+  .playbackRateText {
+    @apply fg-primary-muted text-body-s tabular-nums;
+  }
+
+  .currentTimeDisplay {
+    @apply text-body-xs fg-primary-bold tabular-nums opacity-0 transition-opacity duration-150;
+    --media-time-display-background: var(--bg-surface-raised);
+    --media-time-display-padding: var(--spacing-xs) var(--spacing-s);
+    --media-time-display-border-radius: var(--radius-s);
+
+    .timeRangeInput:hover & {
+      @apply opacity-100;
+    }
+  }
+}

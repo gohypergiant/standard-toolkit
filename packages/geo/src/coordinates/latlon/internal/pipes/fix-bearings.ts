@@ -38,6 +38,22 @@ const conflict = ([a, b]: Tokens) =>
  * Normalize bearings - negative and positive numeric values to NSEW - and
  * positioning of bearings - after the numeric values - and fill in any missing
  * bearings if only one is provided.
+ *
+ * @param tokens - Array of parsed coordinate tokens containing a divider.
+ * @param format - Optional coordinate format (LATLON or LONLAT) to infer missing bearings.
+ * @returns Pipe result with normalized tokens and error status.
+ *
+ * @example
+ * ```typescript
+ * fixBearings(['45', 'N', '/', '122', 'W'], 'LATLON');
+ * // Returns ['45', 'N', '/', '122', 'W'] with error=false
+ * ```
+ *
+ * @example
+ * ```typescript
+ * fixBearings(['-45', '/', '122'], 'LATLON');
+ * // Returns ['45', 'S', '/', '122', 'E'] with error=false
+ * ```
  */
 export function fixBearings(tokens: Tokens, format?: Format): PipeResult {
   const [left, right] = [
@@ -100,6 +116,21 @@ export function fixBearings(tokens: Tokens, format?: Format): PipeResult {
  * module only - so that it is easier to work with; moving a bearing to the
  * "head" allows for `push()` of subsequent number processing will keep the
  * order of the numeric values intact.
+ *
+ * @param coord - Array of tokens for one coordinate half (before or after divider).
+ * @returns New array with bearing moved to first position.
+ *
+ * @example
+ * ```typescript
+ * moveBearingsToHead(['45', '30', 'N']);
+ * // ['N', '45', '30']
+ * ```
+ *
+ * @example
+ * ```typescript
+ * moveBearingsToHead(['122', '15']);
+ * // ['122', '15']
+ * ```
  */
 function moveBearingsToHead(coord: Tokens) {
   return coord.reduce((acc, t) => {

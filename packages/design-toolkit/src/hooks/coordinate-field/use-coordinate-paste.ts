@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -22,22 +22,85 @@ import type {
   ParsedCoordinateMatch,
 } from '../../components/coordinate-field/types';
 
+/** Options for the useCoordinatePaste hook */
 export interface UseCoordinatePasteOptions {
+  /** Callback when a coordinate value is successfully parsed and applied */
   onValueApplied: (value: CoordinateValue) => void;
+  /** Optional error callback for invalid paste attempts */
   onError?: (message: string, context?: Record<string, unknown>) => void;
 }
 
+/** Return value from the useCoordinatePaste hook */
 export interface UseCoordinatePasteResult {
+  /** Array of parsed coordinate matches for disambiguation */
   disambiguationMatches: ParsedCoordinateMatch[];
+  /** Whether the disambiguation modal is visible */
   showDisambiguationModal: boolean;
+  /** Currently selected format in disambiguation modal */
   selectedDisambiguationFormat: CoordinateSystem | null;
+  /** Paste event handler for coordinate input */
   handleInputPaste: (e: React.ClipboardEvent<HTMLDivElement>) => void;
+  /** Confirm selection in disambiguation modal */
   handleDisambiguationSelect: () => void;
+  /** Control disambiguation modal visibility */
   setShowDisambiguationModal: (show: boolean) => void;
+  /** Set the selected format in disambiguation modal */
   setSelectedDisambiguationFormat: (format: CoordinateSystem | null) => void;
+  /** Reset disambiguation modal state */
   cleanupDisambiguationModal: () => void;
 }
 
+/**
+ * Handles paste events with coordinate parsing and disambiguation when multiple formats match
+ *
+ * @example
+ * ```tsx
+ * function CoordinateFieldWithPaste() {
+ *   const [value, setValue] = useState<CoordinateValue | null>(null);
+ *
+ *   const {
+ *     disambiguationMatches,
+ *     showDisambiguationModal,
+ *     selectedDisambiguationFormat,
+ *     handleInputPaste,
+ *     handleDisambiguationSelect,
+ *     setShowDisambiguationModal,
+ *     setSelectedDisambiguationFormat,
+ *   } = useCoordinatePaste({
+ *     onValueApplied: setValue,
+ *     onError: (msg) => console.error(msg),
+ *   });
+ *
+ *   return (
+ *     <>
+ *       <div onPaste={handleInputPaste}>
+ *         // ...Coordinate input segments
+ *       </div>
+ *       {showDisambiguationModal && (
+ *         <Dialog onClose={() => setShowDisambiguationModal(false)}>
+ *           {disambiguationMatches.map((match) => (
+ *             <Radio
+ *               key={match.format}
+ *               value={match.format}
+ *               isSelected={selectedDisambiguationFormat === match.format}
+ *               onChange={() => setSelectedDisambiguationFormat(match.format)}
+ *             >
+ *               {match.format}: {match.matched}
+ *             </Radio>
+ *           ))}
+ *           <Button onPress={handleDisambiguationSelect}>Confirm</Button>
+ *         </Dialog>
+ *       )}
+ *     </>
+ *   );
+ * }
+ * ```
+ *
+ * @param options - {@link UseCoordinatePasteOptions}
+ * @param options.onValueApplied - Callback when a coordinate value is successfully parsed and applied.
+ * @param options.onError - Optional error callback for invalid paste attempts.
+ * @returns {@link UseCoordinatePasteResult} Paste handling utilities and disambiguation state.
+ */
 export function useCoordinatePaste({
   onValueApplied,
   onError,
@@ -73,6 +136,33 @@ export function useCoordinatePaste({
     setShowDisambiguationModal(true);
   };
 
+  /**
+   * Normalizes MGRS coordinate input to a standard format.
+   *
+   * - Converts all letters to uppercase
+   * - Adds leading zero to single-digit grid zones (e.g., "6R" → "06R")
+   * - Handles both spaced ("6R YP 12345 67890") and compact ("6RYP1234567890") formats
+   *
+   * @param input - Raw MGRS coordinate string
+   * @returns Normalized MGRS coordinate string
+   *
+   * @example
+   * normalizeMgrsInput("6r yp 12345 67890") // → "06R YP 12345 67890"
+   * normalizeMgrsInput("6ryp1234567890")    // → "06RYP1234567890"
+   */
+  const normalizeMgrsInput = (input: string): string => {
+    let normalized = input.toUpperCase();
+
+    const match = normalized.match(/^(\d)([A-Z])/);
+
+    if (match?.[1]) {
+      // Add leading zero to single-digit grid zones
+      normalized = match[1].padStart(2, '0') + normalized.slice(1);
+    }
+
+    return normalized;
+  };
+
   const handleCoordinatePaste = (pastedText: string) => {
     const allMatches = parseCoordinatePaste(pastedText);
 
@@ -92,10 +182,14 @@ export function useCoordinatePaste({
   };
 
   const handleInputPaste = (e: React.ClipboardEvent<HTMLDivElement>) => {
-    const pastedText = e.clipboardData?.getData('text/plain');
-    if (pastedText && isCompleteCoordinate(pastedText)) {
-      e.preventDefault();
-      handleCoordinatePaste(pastedText);
+    const rawPastedText = e.clipboardData?.getData('text/plain');
+    if (rawPastedText) {
+      const pastedText = normalizeMgrsInput(rawPastedText);
+
+      if (isCompleteCoordinate(pastedText)) {
+        e.preventDefault();
+        handleCoordinatePaste(pastedText);
+      }
     }
   };
 

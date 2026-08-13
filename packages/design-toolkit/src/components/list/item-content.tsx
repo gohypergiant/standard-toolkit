@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -23,10 +23,16 @@ import type { ListItemContentProps } from './types';
  * Should contain ListItemTitle and optionally ListItemDescription components.
  *
  * @example
+ * ```tsx
  * <ListItemContent>
  *   <ListItemTitle>Item Title</ListItemTitle>
  *   <ListItemDescription>Optional description text</ListItemDescription>
  * </ListItemContent>
+ * ```
+ *
+ * @param props - {@link ListItemContentProps}
+ * @param props.className - Optional CSS class name.
+ * @returns The rendered ListItemContent component.
  */
 export function ListItemContent({ className, ...rest }: ListItemContentProps) {
   return <div {...rest} className={clsx(styles.content, className)} />;

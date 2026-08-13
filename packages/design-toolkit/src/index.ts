@@ -32,6 +32,8 @@ export type {
 } from './components/accordion/types';
 export { ActionBar } from './components/action-bar';
 export type { ActionBarProps } from './components/action-bar/types';
+export { Audio } from './components/audio';
+export type { AudioProps } from './components/audio/types';
 export { AvatarContext, AvatarProvider } from './components/avatar/context';
 export { Avatar } from './components/avatar';
 export type { AvatarProps } from './components/avatar/types';
@@ -59,6 +61,26 @@ export type {
   ToggleButtonProps,
   ToggleButtonStyleVariants,
 } from './components/button/types';
+export {
+  CarouselContext,
+  CarouselProvider,
+} from './components/carousel/context';
+export { CarouselGallery } from './components/carousel/gallery';
+export { Carousel } from './components/carousel';
+export {
+  CarouselNext,
+  CarouselPrevious,
+} from './components/carousel/navigation';
+export { CarouselPosition } from './components/carousel/position';
+export { CarouselSelect } from './components/carousel/select';
+export type {
+  CarouselData,
+  CarouselGalleryProps,
+  CarouselProps,
+  CarouselSelectProps,
+  CarouselViewerProps,
+} from './components/carousel/types';
+export { CarouselViewer } from './components/carousel/viewer';
 export {
   CheckboxContext,
   CheckboxGroupContext,
@@ -210,6 +232,9 @@ export { DrawerMenu } from './components/drawer/menu';
 export { DrawerPanel } from './components/drawer/panel';
 export { DrawerTrigger } from './components/drawer/trigger';
 export type {
+  ChainedEvents,
+  DrawerCloseEvent,
+  DrawerCloseProps,
   DrawerContextValue,
   DrawerEvent,
   DrawerLayoutProps,
@@ -220,6 +245,8 @@ export type {
   DrawerTitleProps,
   DrawerToggleEvent,
   DrawerTriggerProps,
+  SimpleEvents,
+  TargetedEvents,
 } from './components/drawer/types';
 export { DrawerView } from './components/drawer/view';
 export {
@@ -236,6 +263,36 @@ export type {
   FlashcardDetailsListProps,
   FlashcardProps,
 } from './components/flashcard/types';
+export { FloatingCard } from './components/floating-card';
+export { FloatingCardProvider } from './components/floating-card/provider';
+export type {
+  FloatingCardContextValue,
+  FloatingCardHeaderAction,
+  FloatingCardProps,
+  FloatingCardProviderProps,
+} from './components/floating-card/types';
+export { GanttContentContainer } from './components/gantt/components/containers/external/gantt-content-container';
+export { GanttPanelContainer } from './components/gantt/components/containers/external/gantt-panel-container';
+export { GanttBlock } from './components/gantt/components/content-row/block';
+export {
+  GanttBracketClose,
+  GanttBracketOpen,
+} from './components/gantt/components/content-row/bracket';
+export { GanttIconMarker } from './components/gantt/components/content-row/icon-marker';
+export { GanttContentRow } from './components/gantt/components/content-row';
+export { GanttMarker } from './components/gantt/components/content-row/marker';
+export { GanttSpacer } from './components/gantt/components/content-row/spacer';
+export type { GanttSpacerProps } from './components/gantt/components/content-row/spacer';
+export { GanttPanelRow } from './components/gantt/components/panel-row';
+export { Gantt } from './components/gantt/gantt';
+export type {
+  GanttMetThresholdData,
+  GanttProviderProps,
+  GanttRowElementColorProp,
+  GanttThreshold,
+  GanttThresholdProps,
+  GanttTimescale,
+} from './components/gantt/public-types';
 export { HeroContext } from './components/hero/context';
 export { Hero } from './components/hero';
 export { HeroSubtitle } from './components/hero/subtitle';
@@ -324,6 +381,34 @@ export type {
   ListItemVariant,
   ListProps,
 } from './components/list/types';
+export {
+  MediaControlsContext,
+  MediaControlsProvider,
+  useMediaControlsDisabled,
+  useMediaProviderGuard,
+} from './components/media-controls/context';
+export { FullscreenButton } from './components/media-controls/fullscreen-button';
+export { MediaControls } from './components/media-controls';
+export { MuteButton } from './components/media-controls/mute-button';
+export { PlayButton } from './components/media-controls/play-button';
+export { PlaybackRateButton } from './components/media-controls/playback-rate';
+export { SeekButton } from './components/media-controls/seek-button';
+export { TimeDisplay } from './components/media-controls/time-display';
+export { TimeRange } from './components/media-controls/time-range';
+export type {
+  FullscreenButtonProps,
+  MediaControlsContextValue,
+  MediaControlsProps,
+  MuteButtonProps,
+  PlayButtonProps,
+  PlaybackRateButtonProps,
+  SeekButtonProps,
+  TimeDisplayMode,
+  TimeDisplayProps,
+  TimeRangeProps,
+  VolumeSliderProps,
+} from './components/media-controls/types';
+export { VolumeSlider } from './components/media-controls/volume-slider';
 export { MenuContext } from './components/menu/context';
 export { Menu } from './components/menu';
 export { MenuItemDescription } from './components/menu/item-description';
@@ -355,7 +440,10 @@ export type {
   NoticeProps,
   NoticeQueueEvent,
 } from './components/notice/types';
-export { matchesMetadata } from './components/notice/utils';
+export {
+  matchesDequeueFilter,
+  matchesMetadata,
+} from './components/notice/utils';
 export { OptionsContext } from './components/options/context';
 export { Options } from './components/options';
 export { OptionsItemContent } from './components/options/item-content';
@@ -406,7 +494,7 @@ export type {
   QueryBuilderValueEditors,
   RuleGroupType,
 } from './components/query-builder/types';
-export { RadioContext } from './components/radio/context';
+export { RadioContext, RadioGroupContext } from './components/radio/context';
 export { RadioGroup } from './components/radio/group';
 export { Radio } from './components/radio';
 export type { RadioGroupProps, RadioProps } from './components/radio/types';
@@ -463,6 +551,8 @@ export type {
   SliderMarkersConfig,
   SliderProps,
 } from './components/slider/types';
+export { StatusIndicator } from './components/status-indicator';
+export type { StatusIndicatorProps } from './components/status-indicator/types';
 export { SwitchContext, SwitchProvider } from './components/switch/context';
 export { Switch } from './components/switch';
 export type { SwitchProps } from './components/switch/types';
@@ -477,7 +567,20 @@ export type {
   SortDirectionState,
 } from './components/table/constants/table';
 export { TableContext } from './components/table/context';
+export {
+  createTableColumnHelper,
+  tableFeatures,
+} from './components/table/features';
+export type { TableFeatures } from './components/table/features';
 export { Table } from './components/table';
+export { rowOrderingFeature } from './components/table/row-ordering-feature';
+export type {
+  RowOrderingRowApis,
+  RowOrderingState,
+  RowOrderingTableApis,
+  RowOrderingTableOptions,
+  RowOrderingTableState,
+} from './components/table/row-ordering-feature';
 export type {
   TableBodyProps,
   TableCellProps,
@@ -487,12 +590,22 @@ export type {
   TableProps,
   TableRowProps,
 } from './components/table/types';
-export { TabsContext, TabsProvider } from './components/tabs/context';
+export { TabStyleDefaults } from './components/tabs/constants';
+export {
+  TabContext,
+  TabProvider,
+  TabsContext,
+  TabsProvider,
+} from './components/tabs/context';
 export { Tabs } from './components/tabs';
 export { TabList } from './components/tabs/list';
 export { TabPanel } from './components/tabs/panel';
 export { Tab } from './components/tabs/tab';
-export type { TabsProps } from './components/tabs/types';
+export type {
+  TabProps,
+  TabStyleProps,
+  TabsProps,
+} from './components/tabs/types';
 export {
   TextAreaFieldContext,
   TextAreaFieldProvider,
@@ -511,6 +624,7 @@ export { TooltipContext } from './components/tooltip/context';
 export { Tooltip } from './components/tooltip';
 export { TooltipTrigger } from './components/tooltip/trigger';
 export type {
+  TooltipFocusableProps,
   TooltipProps,
   TooltipTriggerProps,
 } from './components/tooltip/types';
@@ -532,6 +646,8 @@ export type {
   TreeProps,
   TreeStyleVariant,
 } from './components/tree/types';
+export { Video } from './components/video';
+export type { VideoProps } from './components/video/types';
 export {
   ViewStackContext,
   ViewStackEventHandlers,
@@ -585,6 +701,7 @@ export type {
   UseFrameDelayOptions,
   UseFrameDelayResult,
 } from './hooks/use-frame-delay';
+export { usePreventScrollFocus } from './hooks/use-prevent-scroll-focus';
 export { useTreeActions } from './hooks/use-tree/actions';
 export { useTreeState } from './hooks/use-tree/state';
 export type {

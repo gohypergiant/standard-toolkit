@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -17,9 +17,24 @@ import { clsx } from '@accelint/design-foundation/lib/utils';
 import {
   Heading as AriaHeading,
   type HeadingProps,
-} from 'react-aria-components';
+} from 'react-aria-components/Heading';
 import styles from './styles.module.css';
 
+/**
+ * PopoverTitle - Semantic heading for the popover
+ *
+ * @example
+ * ```tsx
+ * <Popover>
+ *   <PopoverTitle>User Settings</PopoverTitle>
+ *   <PopoverContent>Settings content</PopoverContent>
+ * </Popover>
+ * ```
+ *
+ * @param props - HeadingProps from react-aria-components.
+ * @param props.className - Optional CSS class name.
+ * @returns The rendered PopoverTitle component.
+ */
 export function PopoverTitle({ className, ...rest }: HeadingProps) {
   return (
     <AriaHeading

@@ -12,10 +12,10 @@
 
 import {
   type DraggingEvent,
-  type FeatureCollection,
   ImmutableFeatureCollection,
   type ModeProps,
   RotateMode,
+  type SimpleFeatureCollection,
   type StopDraggingEvent,
 } from '@deck.gl-community/editable-layers';
 import { bearing, centroid, transformRotate } from '@turf/turf';
@@ -52,11 +52,40 @@ function snapAngle(angle: number, interval: number): number {
 /**
  * Extends RotateMode to support snapping rotation to 45° intervals.
  *
- * Features:
- * - Default: Free rotation
- * - With modeConfig.snapRotation = true: Snap to 45° intervals (0°, 45°, 90°, etc.)
+ * ## Features
+ * - **Default**: Free rotation (smooth, continuous angles)
+ * - **With Shift**: Snap to 45° intervals (0°, 45°, 90°, 135°, 180°, etc.)
  *
- * This allows precise alignment of shapes to common angles.
+ * This allows precise alignment of shapes to common angles, making it easy to
+ * create axis-aligned or diagonally-aligned shapes.
+ *
+ * ## Implementation
+ * The snap behavior is controlled by the `modeConfig.snapRotation` property,
+ * which is set by BaseTransformMode when the Shift key is held. This class
+ * calculates the rotation angle and rounds it to the nearest 45° interval
+ * when snapping is enabled.
+ *
+ * ## Snap Interval
+ * The snap interval is fixed at 45° (8 positions around the circle), providing
+ * these angles: 0°, 45°, 90°, 135°, 180°, 225°, 270°, 315°.
+ *
+ * @example
+ * ```typescript
+ * import { RotateModeWithSnap } from '@accelint/map-toolkit/deckgl/shapes/edit-shape-layer/modes/rotate-mode-with-snap';
+ * import { EditableGeoJsonLayer } from '@deck.gl-community/editable-layers';
+ *
+ * const mode = new RotateModeWithSnap();
+ *
+ * const layer = new EditableGeoJsonLayer({
+ *   mode,
+ *   data: featureCollection,
+ *   selectedFeatureIndexes: [0],
+ *   onEdit: handleEdit,
+ *   modeConfig: {
+ *     snapRotation: true, // Enable 45° snapping
+ *   },
+ * });
+ * ```
  */
 export class RotateModeWithSnap extends RotateMode {
   /**
@@ -66,16 +95,8 @@ export class RotateModeWithSnap extends RotateMode {
    */
   override handleDragging(
     event: DraggingEvent,
-    props: ModeProps<FeatureCollection>,
+    props: ModeProps<SimpleFeatureCollection>,
   ) {
-    const snapRotation = props.modeConfig?.snapRotation ?? false;
-
-    // If not snapping, use parent's rotation logic
-    if (!snapRotation) {
-      super.handleDragging(event, props);
-      return;
-    }
-
     // biome-ignore lint/suspicious/noExplicitAny: Accessing private properties from parent class
     const self = this as any;
 
@@ -83,6 +104,9 @@ export class RotateModeWithSnap extends RotateMode {
       return;
     }
 
+    // Always use our custom rotation path (which stores rotationAngle
+    // on the feature properties). Snap is applied inside getRotateActionWithSnap
+    // when snapRotation is enabled.
     const rotateAction = this.getRotateActionWithSnap(
       event.pointerDownMapCoords,
       event.mapCoords,
@@ -103,16 +127,8 @@ export class RotateModeWithSnap extends RotateMode {
    */
   override handleStopDragging(
     event: StopDraggingEvent,
-    props: ModeProps<FeatureCollection>,
+    props: ModeProps<SimpleFeatureCollection>,
   ) {
-    const snapRotation = props.modeConfig?.snapRotation ?? false;
-
-    // If not snapping, use parent's rotation logic
-    if (!snapRotation) {
-      super.handleStopDragging(event, props);
-      return;
-    }
-
     // biome-ignore lint/suspicious/noExplicitAny: Accessing private properties from parent class
     const self = this as any;
 
@@ -142,7 +158,7 @@ export class RotateModeWithSnap extends RotateMode {
     startDragPoint: Position,
     currentPoint: Position,
     editType: string,
-    props: ModeProps<FeatureCollection>,
+    props: ModeProps<SimpleFeatureCollection>,
   ) {
     // biome-ignore lint/suspicious/noExplicitAny: Accessing private properties from parent class
     const self = this as any;
@@ -151,8 +167,7 @@ export class RotateModeWithSnap extends RotateMode {
       return null;
     }
 
-    const geometry = self._geometryBeingRotated as FeatureCollection;
-    // @ts-expect-error turf types differ from editable-layers types
+    const geometry = self._geometryBeingRotated as SimpleFeatureCollection;
     const centerFeature = centroid(geometry);
 
     // Calculate the rotation angle (pass centroid Feature to match parent RotateMode)
@@ -165,9 +180,7 @@ export class RotateModeWithSnap extends RotateMode {
     }
 
     // Apply the rotation using turf (use centroid Feature as pivot to match parent)
-    // @ts-expect-error turf types differ from editable-layers types
-    const rotatedFeatures: FeatureCollection = transformRotate(
-      // @ts-expect-error turf types differ from editable-layers types
+    const rotatedFeatures: SimpleFeatureCollection = transformRotate(
       geometry,
       angle,
       {
@@ -190,8 +203,25 @@ export class RotateModeWithSnap extends RotateMode {
       }
     }
 
+    // Mutate the cloned feature in-place to set/strip rotationAngle.
+    // updatedObj is a fresh clone from ImmutableFeatureCollection.getObject(),
+    // so mutation is safe and avoids .map() + IIFE + destructure allocations
+    // that would otherwise run on every drag frame (~60 calls/sec).
+    const updatedObj = updatedData.getObject();
+    const featureIdx = selectedIndexes[0] ?? 0;
+    const targetFeature = updatedObj.features[featureIdx];
+    if (targetFeature?.properties) {
+      if (editType === 'rotated') {
+        // On completion, strip rotationAngle so consumers detect drag end
+        // via `rotationAngle != null`.
+        delete targetFeature.properties.rotationAngle;
+      } else {
+        targetFeature.properties.rotationAngle = angle;
+      }
+    }
+
     return {
-      updatedData: updatedData.getObject(),
+      updatedData: updatedObj,
       editType,
       editContext: {
         featureIndexes: selectedIndexes,

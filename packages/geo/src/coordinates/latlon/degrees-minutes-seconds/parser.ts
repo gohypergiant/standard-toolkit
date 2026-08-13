@@ -32,7 +32,11 @@ type DegreesMinutesSeconds = {
 
 const checks = {
   deg: (deg: string, limit: number) => {
-    if (Number.parseFloat(deg) > limit) {
+    const num = Number.parseFloat(deg);
+    if (Number.isNaN(num)) {
+      return `Degrees value (${deg}) is not a valid number.`;
+    }
+    if (num > limit) {
       return `Degrees value (${deg}) exceeds max value (${limit}).`;
     }
 
@@ -55,6 +59,22 @@ const formats = {
   ),
 };
 
+/**
+ * Creates an error identification function for degrees minutes seconds coordinates.
+ *
+ * Validates that degree values are integers, minutes are in range 0-59,
+ * seconds are in range 0-59.999..., and all components are properly formatted.
+ *
+ * @param format - The coordinate format (LATLON or LONLAT).
+ * @returns Function that validates coordinate components and returns parse results.
+ *
+ * @example
+ * ```typescript
+ * const validator = identifyErrors('LATLON');
+ * const result = validator({ deg: '91', min: '0', sec: '0', bear: 'N' }, 0);
+ * // [[], ['Degrees value (91) exceeds max value (90).']]
+ * ```
+ */
 function identifyErrors(format: Format) {
   return (arg: DegreesMinutesSeconds | undefined, i: number) => {
     if (!arg) {
@@ -89,6 +109,27 @@ function identifyErrors(format: Format) {
   };
 }
 
+/**
+ * Identifies and organizes coordinate components from parsed tokens.
+ *
+ * Separates bearing indicators (N/S/E/W), degree values, minute values, and second values from tokens.
+ * Uses symbol patterns to identify component types and positional logic as fallback.
+ *
+ * @param half - Array of tokens representing one coordinate component.
+ * @returns Object with `bear`, `deg`, `min`, and `sec` properties, or undefined if invalid.
+ *
+ * @example
+ * ```typescript
+ * identifyPieces(['45', '30', '15.23', 'N']);
+ * // { bear: 'N', deg: '45', min: '30', sec: '15.23' }
+ * ```
+ *
+ * @example
+ * ```typescript
+ * identifyPieces(['122°', '25'', '9.84″', 'W']);
+ * // { bear: 'W', deg: '122', min: '25', sec: '9.84' }
+ * ```
+ */
 function identifyPieces(half: string[]) {
   if (half.length < 1 || half.length > 4) {
     return;
@@ -100,7 +141,10 @@ function identifyPieces(half: string[]) {
   const test = (r: RegExp, b: boolean, v: string) =>
     r.test(v) || (r.test(asString) && b);
 
-  return half.reduce((acc, token, i, { length }) => {
+  return half.reduce<typeof places | undefined>((acc, token, i, { length }) => {
+    if (!acc) {
+      return undefined;
+    }
     if (test(SYMBOL_PATTERNS.NSEW, i === length - 1, token)) {
       acc.bear ||= token;
     } else if (test(SYMBOL_PATTERNS.DEGREES, i === 0, token)) {
@@ -111,17 +155,43 @@ function identifyPieces(half: string[]) {
       acc.sec ||= token;
     } else {
       const key = keys.find((k) => !acc[k]);
-
-      acc[key as keyof typeof acc] = token;
+      if (!key) {
+        return undefined;
+      }
+      acc[key] = token;
     }
 
     return acc;
   }, places);
 }
 
-/** Parse a Degrees Minutes Seconds coordinate. */
+/**
+ * Parses a Degrees Minutes Seconds coordinate string.
+ *
+ * Accepts coordinates in degrees minutes seconds format with bearing indicators.
+ * Validates that degrees are integers, minutes are in range 0-59,
+ * seconds are in range 0-59.999..., and all components are properly formatted.
+ *
+ * @param input - Raw coordinate string to parse.
+ * @param format - Expected format (LATLON or LONLAT).
+ * @returns Parsed coordinate values or errors.
+ *
+ * @example
+ * ```typescript
+ * parseDegreesMinutesSeconds('37° 46' 29.64″ N / 122° 25' 9.84″ W', 'LATLON');
+ * // [[37.7749, -122.4194], []]
+ * ```
+ *
+ * @example
+ * ```typescript
+ * parseDegreesMinutesSeconds('45 30 15.23 N, 122 25 9.84 W');
+ * // [[45.504231, -122.419400], []]
+ * ```
+ */
 export const parseDegreesMinutesSeconds = createParser<DegreesMinutesSeconds>({
   formats,
   identifyErrors,
   identifyPieces,
 });
+
+export { identifyErrors as _identifyErrors, identifyPieces as _identifyPieces };

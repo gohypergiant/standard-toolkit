@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -17,13 +17,16 @@
  * @template R - The return type of the given function.
  * @param fn - The function to call, passing the given value.
  * @param val - The value to pass to the function and then return.
+ * @returns The input value unchanged.
  *
  * @remarks
  * tap :: (a -> b) -> a -> a
  *
  * @example
+ * ```typescript
  * tap(console.log)('foobar');
  * // foobar
+ * ```
  */
 export const tap =
   <T, R>(fn: (v: T) => R) =>

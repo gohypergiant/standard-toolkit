@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -14,12 +14,28 @@
 import type { ProviderProps } from '@/lib/types';
 import 'client-only';
 import { createContext } from 'react';
-import type { ContextValue } from 'react-aria-components';
+import type { ContextValue } from 'react-aria-components/slots';
 import type { ClassificationBadgeProps } from './types';
 
+/** React context for sharing ClassificationBadge configuration across components. */
 export const ClassificationBadgeContext =
   createContext<ContextValue<ClassificationBadgeProps, HTMLSpanElement>>(null);
 
+/**
+ * Context provider for setting default props across multiple ClassificationBadge components.
+ *
+ * @param props - The provider props.
+ * @param props.children - Child components that will receive the classification badge context.
+ * @returns The classification badge context provider wrapping children.
+ *
+ * @example
+ * ```tsx
+ * <ClassificationBadgeProvider variant="secret" size="small">
+ *   <ClassificationBadge />
+ *   <ClassificationBadge />
+ * </ClassificationBadgeProvider>
+ * ```
+ */
 export function ClassificationBadgeProvider({
   children,
   ...props

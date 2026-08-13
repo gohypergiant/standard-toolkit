@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -12,12 +12,21 @@
 
 import type { ComponentPropsWithRef } from 'react';
 
+/**
+ * Props for the Hero component.
+ */
 export type HeroProps = Omit<ComponentPropsWithRef<'header'>, 'className'> & {
+  /** Class names for Hero sub-elements. */
   classNames?: {
+    /** Class name for the hero container. */
     hero?: string;
+    /** Class name for the icon. */
     icon?: string;
+    /** Class name for the title. */
     title?: string;
+    /** Class name for the subtitle. */
     subtitle?: string;
   };
+  /** Whether to use compact grid layout instead of stacked layout. */
   compact?: boolean;
 };

@@ -6,185 +6,151 @@ import * as SidenavStories from './sidenav.stories';
 
 # Sidenav
 
-A navigation component that provides a collapsible side panel for hierarchical navigation in applications. The Sidenav component must be used within a `DrawerLayout` to enable push/overlay functionality and proper layout management.
-
-## Layout Requirements
-
-The Sidenav component requires specific layout configuration to function properly:
-
-1. Must be wrapped in a `DrawerLayout` component
-2. The trigger button should be placed within `DrawerLayoutMain`
-3. The Sidenav itself should be a direct child of `DrawerLayout`
-
-## Components
-
-It is composed of the following components:
-- **Sidenav** - Root component that manages the navigation state and layout
-- **SidenavTrigger** - Button component that controls the expansion/collapse of the sidenav
-- **SidenavHeader** - Container for the navigation header, typically containing a logo and application title
-- **SidenavAvatar** - Icon display component with icon, heading, and text
-- **SidenavItem** - Interactive navigation item that can be selected, disabled, or contain nested items
-- **SidenavLink** - Interactive navigation item that can be selected, disabled, or contain nested items
-- **SidenavMenu** - Expandable menu component that contains nested navigation items
-- **SidenavMenuItem** - Individual navigation item within a SidenavMenu
-- **SidenavContent** - Container for content
-- **SidenavFooter** - Container for footer content
-
-## Example Usage
+A collapsible side navigation panel for hierarchical navigation. Must be used within a `DrawerLayout`.
 
 ```tsx
-<div className="h-screen bg-surface-raised">
-  <DrawerLayout push="left">
-    <DrawerLayoutMain className="col-start-2">
-      <SidenavTrigger>
-        <Button variant="icon" size="large">
-          <Icon>
-            <MenuIcon />
-          </Icon>
-        </Button>
-      </SidenavTrigger>
-    </DrawerLayoutMain>
+<DrawerLayout push="left">
+  <DrawerLayoutMain>
+    <SidenavTrigger for={sidenavId}>
+      <Button variant="icon" size="large">
+        <Icon><MenuIcon /></Icon>
+      </Button>
+    </SidenavTrigger>
+  </DrawerLayoutMain>
 
-    <Sidenav>
-      <SidenavHeader>
-        <SidenavAvatar>
-          <Icon><AppLogo /></Icon>
-          <Heading>Application Header</Heading>
-          <Text>subheader</Text>
-        </SidenavAvatar>
-      </SidenavHeader>
+  <Sidenav id={sidenavId}>
+    <SidenavHeader>
+      <SidenavAvatar>
+        <Icon><AppLogo /></Icon>
+        <Heading>App Name</Heading>
+        <Text>subheader</Text>
+      </SidenavAvatar>
+    </SidenavHeader>
 
-      <SidenavContent>
-        <Heading>Navigation</Heading>
-        <SidenavItem>
-          <Icon><HomeIcon /></Icon>
-          <Text>Home</Text>
-        </SidenavItem>
-        <Divider />
-        <SidenavItem isSelected>
-          <Icon><SettingsIcon /></Icon>
-          <Text>Settings</Text>
-        </SidenavItem>
-        <Divider />
-        <SidenavMenu title="More Options" icon={<Icon><MenuIcon /></Icon>}>
-          <SidenavMenuItem>
-            <Text>Sub Item 1</Text>
-          </SidenavMenuItem>
-          <SidenavMenuItem>
-            <Text>Sub Item 2</Text>
-          </SidenavMenuItem>
-        </SidenavMenu>
-      </SidenavContent>
+    <SidenavContent>
+      <SidenavItem isSelected textValue="Home">
+        <Icon><HomeIcon /></Icon>
+        <Text>Home</Text>
+      </SidenavItem>
+      <SidenavMenu title="More" icon={<Icon><MenuIcon /></Icon>}>
+        <SidenavMenuItem><Text>Sub Item</Text></SidenavMenuItem>
+      </SidenavMenu>
+    </SidenavContent>
 
-      <SidenavFooter>
-        <SidenavAvatar>
-          <Icon><UserIcon /></Icon>
-          <Heading>User Name</Heading>
-          <Text>john@example.com</Text>
-        </SidenavAvatar>
-      </SidenavFooter>
-    </Sidenav>
-  </DrawerLayout>
-</div>
+    <SidenavFooter>
+      <SidenavAvatar>
+        <Avatar imageProps={{ alt: 'User', src: '/avatar.jpg' }} />
+        <Heading>User Name</Heading>
+        <Text>email@example.com</Text>
+      </SidenavAvatar>
+    </SidenavFooter>
+  </Sidenav>
+</DrawerLayout>
 ```
+
+<Canvas of={SidenavStories.Default} />
+
+## Component Structure
+
+- **Sidenav**: Root navigation container
+- **SidenavTrigger**: Button to toggle sidenav open/closed
+- **SidenavHeader**: Header section with toggle button
+- **SidenavAvatar**: Avatar display with icon, heading, and text
+- **SidenavContent**: Main content container
+- **SidenavItem**: Selectable navigation item with tooltip
+- **SidenavLink**: External link with tooltip
+- **SidenavMenu**: Collapsible menu with nested items
+- **SidenavMenuItem**: Item within a SidenavMenu
+- **SidenavFooter**: Footer section
 
 ## Props
 
-### DrawerLayout Props
-- **`push`** `"left"` - Enables push behavior for the sidenav. When not specified, the sidenav will overlay content instead
+### Sidenav
 
-### Sidenav Props
-- **`hidden`** `boolean` - Controls the visibility of the navigation panel
-- **`children`** `ReactNode` - Must contain exactly one `SidenavHeader`, `SidenavContent`, and `SidenavFooter`
-- **`className`** `string` - Custom CSS class name for the root element
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `id` | `UniqueId` | Required | Unique identifier for event targeting |
+| `isHiddenWhenClosed` | `boolean` | `false` | Unmount when closed |
+| `className` | `string` | — | Custom CSS class |
 
-### SidenavHeader Props
-- **`children`** `ReactNode` - Content to be rendered in the header section
-- **`classNames`** `object` - Optional CSS class names for styling different parts of the header
-  - **`header`** `string` - Class name for the header element
-  - **`button`** `string` - Class name for the button element
-  - **`container`** `string` - Class name for the container element
-  - **`icon`** `string` - Class name for the icon element
+### SidenavTrigger
 
-### SidenavItem Props
-Supports all the `ToggleButton` [props and events](?path=/story/components-button--toggle).
-- **`classNames`** `object` - Optional CSS class names for styling
-  - **`button`** `string` - Class name for the button element
-  - **`icon`** `string` - Class name for the icon element
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `for` | `UniqueId \| 'open:id' \| 'close:id' \| 'toggle:id'` | Required | Target sidenav and action |
+| `children` | `ReactNode` | — | Trigger button content |
 
-### SidenavLink Props
-Supports all the `LinkButton` [props and events](?path=/story/components-button--link).
+### SidenavHeader
 
-### SidenavMenu Props
-- **`title`** `string` - Required title text displayed in the menu button and panel header
-- **`icon`** `ReactNode` - Required icon displayed in the menu button
-- **`children`** `ReactNode` - Menu items to be rendered within the expandable panel
-- **`classNames`** `object` - Optional CSS class names for styling different parts of the menu
-  - **`menu`** `string` - Class name for the disclosure container
-  - **`button`** `string` - Class name for the menu trigger button
-  - **`icon`** `string` - Class name for the chevron icon
-  - **`panel`** `string` - Class name for the disclosure panel
-  - **`panelContent`** `string` - Class name for the panel content container
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `children` | `ReactNode` | — | Header content |
+| `classNames` | `object` | — | Custom classes: `header`, `button`, `container`, `icon` |
 
-### SidenavMenuItem Props
-Supports all the `ToggleButton` [props and events](?path=/story/components-button--toggle).
-- **`className`** `string` - Class name for the menu item
+### SidenavItem
 
-### SidenavAvatar Props
-- **`children`** `ReactNode` - Must contain exactly one `Icon` or `Avatar` with a `Heading`, and `Text` component
-- **`className`** `string` - Class name for the avatar container
+Extends [ToggleButton](?path=/docs/components-button--playground) props.
 
-### SidenavContent Props
-- **`children`** `ReactNode` - Content to be rendered in the footer section
-- **`className`** `string` - Class name for the footer container
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `textValue` | `string` | — | Tooltip text when collapsed |
+| `classNames` | `object` | — | Custom classes: `button`, `icon` |
 
-### SidenavFooter Props
-- **`children`** `ReactNode` - Content to be rendered in the footer section
-- **`className`** `string` - Class name for the footer container
+### SidenavLink
 
-## States and Styling
+Extends [Link](?path=/docs/components-link--playground) props.
 
-The Sidenav uses the following style variants and states:
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `textValue` | `string` | Required | Tooltip text when collapsed |
+| `classNames` | `object` | — | Custom classes: `button`, `icon` |
 
-### Layout States
-- `group-closed/sidenav` - Applied when sidenav is closed
-- `group-open/sidenav` - Applied when sidenav is open
+### SidenavMenu
 
-### Item States
-- Default: Basic navigation item styling
-- Hover: `enabled:hover:bg-interactive-bold-hover`
-- Selected: `enabled:selected:bg-accent-primary-bold`
-- Disabled: Prevents interaction and applies muted styling
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `title` | `string` | Required | Menu title |
+| `icon` | `ReactNode` | Required | Menu icon |
+| `children` | `ReactNode` | — | Menu items |
+| `classNames` | `object` | — | Custom classes: `menu`, `button`, `icon`, `disclosurePanel`, `popoverPanel`, `panelContent` |
 
-### Link States
-- Default: Basic navigation item styling
-- Hover: `enabled:hover:bg-interactive-muted-hover`
-- Disabled: Prevents interaction and applies muted styling
+### SidenavMenuItem
 
-### Menu States
-- Default: Basic menu button styling with chevron icon
-- Hover: `enabled:hover:bg-interactive-muted-hover`
+Extends [ToggleButton](?path=/docs/components-button--playground) props.
 
-### MenuItem States
-- Default: Basic navigation item styling within menu panel
-- Hover: `enabled:hover:bg-interactive-muted-hover`
-- Selected: `enabled:selected:bg-accent-primary-bold`
-- Disabled: Prevents interaction and applies muted styling
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `className` | `string` | — | Custom CSS class |
+
+### SidenavAvatar
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `children` | `ReactNode` | — | Icon/Avatar + Heading + Text |
+| `className` | `string` | — | Custom CSS class |
+
+### SidenavContent / SidenavFooter
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `children` | `ReactNode` | — | Content |
+| `className` | `string` | — | Custom CSS class |
+
+## Layout Requirements
+
+1. Wrap in `DrawerLayout` with `push="left"` for push behavior (omit for overlay)
+2. Place `SidenavTrigger` in `DrawerLayoutMain`
+3. Place `Sidenav` as direct child of `DrawerLayout`
 
 ## Accessibility
 
-The Sidenav component implements the following accessibility features:
 - ARIA landmarks for navigation regions
-- Keyboard navigation support (Tab, Arrow keys)
+- Keyboard navigation (Tab, Arrow keys)
 - Focus management for navigation items
 - Screen reader announcements for state changes
-- ARIA attributes for selected and disabled states
+- Tooltips appear when sidenav is collapsed
 
-## Examples
+## Related
 
-### Default Sidenav
-<Canvas of={SidenavStories.Default} />
-
-[Github Source](https://github.com/gohypergiant/standard-toolkit/tree/main/packages/design-toolkit/src/components/sidenav)
-
-
+- [DrawerLayout](?path=/docs/components-drawerlayout--playground)
+- [GitHub Source](https://github.com/gohypergiant/standard-toolkit/tree/main/packages/design-toolkit/src/components/sidenav)

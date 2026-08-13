@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -15,15 +15,18 @@
  *
  * @template T - The type of array elements.
  * @param arr - The array to reverse the order of.
+ * @returns A new array with elements in reversed order.
  *
  * @remarks
  * pure function
  *
  * @example
+ * ```typescript
  * import { reverse } from '@accelint/core';
  *
  * reverse([1, 2, 3, 4, 5]);
  * // [5, 4, 3, 2, 1]
+ * ```
  */
 export const reverse = <T>(arr: T[]) => {
   const len = arr.length;

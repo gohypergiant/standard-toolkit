@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -15,13 +15,31 @@
 import 'client-only';
 import { clsx } from '@accelint/design-foundation/lib/utils';
 import { useContext, useMemo } from 'react';
-import { composeRenderProps } from 'react-aria-components';
+import { composeRenderProps } from 'react-aria-components/composeRenderProps';
 import { ToggleButton } from '../button/toggle';
 import { PaginationContext } from './context';
 import styles from './styles.module.css';
 import { getPaginationRange, range } from './utils';
 import type { PaginationPagesProps } from './types';
 
+/**
+ * PaginationPages - Page number toggle buttons
+ *
+ * Renders up to 5 page numbers, automatically adjusting the
+ * visible range based on current page position.
+ *
+ * @example
+ * ```tsx
+ * <Pagination page={3} total={20}>
+ *   <PaginationPages onPress={(page) => console.log('Go to page:', page)} />
+ * </Pagination>
+ * ```
+ *
+ * @param props - {@link PaginationPagesProps}
+ * @param props.className - Optional CSS class name.
+ * @param props.onPress - Handler called when a page button is pressed.
+ * @returns The rendered PaginationPages component, or null if invalid state.
+ */
 export function PaginationPages({ className, onPress }: PaginationPagesProps) {
   const { page, total, isLoading, setPage } = useContext(PaginationContext);
   const { minRange, maxRange } = useMemo(

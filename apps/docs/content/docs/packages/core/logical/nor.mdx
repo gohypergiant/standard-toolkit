@@ -1,0 +1,133 @@
+---
+title: "nor"
+description: Logical NOR (NOT OR) for values and function results
+source: logical/nor/index.ts
+source_sha: 0266dbaab4fe16e00146469deb4dd2567931428e
+doc_sha: 5e3145f96d1fce0fd4a1eec9010fc782bae8922b
+deprecated: false
+updated: 2026-07-13
+---
+
+## Usage
+
+```typescript
+import { nor, norFn } from '@accelint/core';
+
+// Value-based NOR
+nor(false)(false);
+// true
+
+nor(true)(false);
+// false
+
+// Function-based NOR
+const isEmpty = (arr: unknown[]) => arr.length === 0;
+const isNull = (arr: unknown[] | null) => arr === null;
+
+norFn(isEmpty)(isNull)([1, 2, 3]);
+// false (first is false, second is false, so NOR is false)
+
+norFn(isEmpty)(isNull)([]);
+// false (first is true, so NOR is false)
+```
+
+## Reference
+
+### nor
+
+```typescript
+function nor<A>(a: A): <B>(b: B) => boolean
+```
+
+#### Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `a` | `A` | The first value to compare |
+
+#### Returns
+
+Returns a curried function that accepts a second value and returns `true` if neither value is truthy, `false` if either is truthy.
+
+#### Type Parameters
+
+- `A` - The type of the first input value
+- `B` - The type of the second input value
+
+### norFn
+
+```typescript
+function norFn<T, A>(
+  a: (x: T) => A
+): <B>(b: (y: T) => B) => (c: T) => boolean
+```
+
+#### Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `a` | `(x: T) => A` | The first function to evaluate |
+
+#### Returns
+
+Returns a curried function that accepts a second function, then accepts a value to pass to both functions, returning `true` if neither function result is truthy, `false` if either is truthy.
+
+#### Type Parameters
+
+- `T` - The type of the input value passed to both functions
+- `A` - The return type of the first function
+- `B` - The return type of the second function
+
+## Examples
+
+### Example: Absence validation
+
+```typescript
+import { nor } from '@accelint/core';
+
+const hasEmail = false;
+const hasPhone = false;
+
+// User has neither contact method
+const noContactInfo = nor(hasEmail)(hasPhone);
+// true
+```
+
+### Example: Checking for empty states
+
+```typescript
+import { norFn } from '@accelint/core';
+
+const hasItems = (cart: Cart) => cart.items.length > 0;
+const hasCoupon = (cart: Cart) => Boolean(cart.coupon);
+
+// Cart is completely empty (no items and no coupon)
+const isEmptyCart = norFn(hasItems)(hasCoupon);
+
+isEmptyCart({ items: [], coupon: null });
+// true
+
+isEmptyCart({ items: [], coupon: 'SAVE10' });
+// false (has coupon)
+```
+
+### Example: NOR truth table
+
+```typescript
+import { nor } from '@accelint/core';
+
+// NOR truth table (opposite of OR)
+nor(false)(false); // true
+nor(false)(true);  // false
+nor(true)(false);  // false
+nor(true)(true);   // false
+```
+
+> **Good to know:** NOR is the logical inverse of OR. It's functionally complete—all other logical operations can be constructed from NOR alone. This implementation uses `not(or(a)(b))` internally.
+
+## Related
+
+- [or](../or/index.md) - Logical disjunction (||)
+- [nand](../nand/index.md) - Logical NAND (!(a && b))
+- [not](../not/index.md) - Logical negation (!)
+- [and](../and/index.md) - Logical conjunction (&&)

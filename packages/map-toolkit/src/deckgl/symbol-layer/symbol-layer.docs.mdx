@@ -6,7 +6,7 @@ import * as SymbolLayerStories from './symbol-layer.stories';
 
 # Symbol Layer
 
-Adds support for rendering MIL-STD-2525 and others standard symbologies as a Deck.gl layer. This layer is an extension of the [IconLayer](https://deck.gl/docs/api-reference/layers/icon-layer) but swaps the `getIcon` function for a the `getSidc` function.
+Adds support for rendering MIL-STD-2525 and other standard symbologies as a Deck.gl layer. This layer is an extension of the [IconLayer](https://deck.gl/docs/api-reference/layers/icon-layer) but swaps the `getIcon` function for the `getSidc` function.
 
 ## Supported Symbology
 
@@ -20,7 +20,7 @@ _By default the SIDC will be used to determine which symbology to use._
 
 ```typescript
 import { Deck } from '@deck.gl/core';
-import { SymbolLayer } from '@accelint/map-toolkit/deckgl-layer-symbol';
+import { SymbolLayer } from '@accelint/map-toolkit/deckgl/symbol-layer';
 
 const layer = new SymbolLayer({
   id: 'SymbolLayer',
@@ -49,7 +49,7 @@ new Deck({
 This allows for easy integration with the [DeckGL Fiber Renderer](https://github.com/deckgl-fiber-renderer/fiber.gl/tree/main).
 
 ```typescript
-import '@accelint/map-toolkit/deckgl-layer-symbol/fiber';
+import '@accelint/map-toolkit/deckgl/symbol-layer/fiber';
 
 export function AssetsLayer() {
   const data = useAssetData();
@@ -69,6 +69,58 @@ export function AssetsLayer() {
   )
 }
 ```
+
+### With Coffin Corners (Selection / Hover Indicators)
+
+The `CoffinCornerExtension` renders GPU-driven bracket indicators around selected and hovered symbols. Pass `selectedEntityIds` and `hoveredEntityIds` Sets to control which entities show brackets.
+
+```tsx
+import '@accelint/map-toolkit/deckgl/symbol-layer/fiber';
+import { uuid } from '@accelint/core';
+import { useState, useCallback } from 'react';
+import { BaseMap } from '@accelint/map-toolkit/deckgl';
+import { CoffinCornerExtension } from '@accelint/map-toolkit/deckgl/extensions/coffin-corner';
+import type { EntityId } from '@accelint/map-toolkit/deckgl/extensions/coffin-corner';
+
+const MAP_ID = uuid();
+const coffinCornerExtension = new CoffinCornerExtension();
+
+export function SelectableSymbols() {
+  const [selected, setSelected] = useState<Set<EntityId>>(() => new Set());
+  const [hovered, setHovered] = useState<Set<EntityId>>(() => new Set());
+
+  const handleClick = useCallback((info) => {
+    if (!info.object) { setSelected(new Set()); return; }
+    const id = info.object.id;
+    setSelected((prev) => prev.has(id) ? new Set() : new Set([id]));
+  }, []);
+
+  const handleHover = useCallback((info) => {
+    setHovered(info.object ? new Set([info.object.id]) : new Set());
+  }, []);
+
+  return (
+    <BaseMap id={MAP_ID} onClick={handleClick} onHover={handleHover}>
+      <symbolLayer
+        id="symbols"
+        data={data}
+        getSidc={d => d.sidc}
+        getPosition={d => d.position}
+        selectedEntityIds={selected}
+        hoveredEntityIds={hovered}
+        extensions={[coffinCornerExtension]}
+        pickable
+      />
+    </BaseMap>
+  );
+}
+```
+
+| Prop | Type | Description |
+|------|------|-------------|
+| `selectedEntityIds` | `ReadonlySet<EntityId> \| undefined` | Set of selected entity IDs (bracket + fill indicator) |
+| `hoveredEntityIds` | `ReadonlySet<EntityId> \| undefined` | Set of hovered entity IDs (bracket indicator) |
+| `selectedCoffinCornerColor` | `[R, G, B, A]` (0–255) | Coffin corner color override when selected (default: `[57, 183, 250, 255]`) |
 
 ## API
 

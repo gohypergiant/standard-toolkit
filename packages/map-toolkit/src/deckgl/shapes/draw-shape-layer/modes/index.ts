@@ -17,6 +17,7 @@ import { DrawEllipseModeWithTooltip } from './draw-ellipse-mode-with-tooltip';
 import { DrawLineStringModeWithTooltip } from './draw-line-string-mode-with-tooltip';
 import { DrawPolygonModeWithTooltip } from './draw-polygon-mode-with-tooltip';
 import { DrawRectangleModeWithTooltip } from './draw-rectangle-mode-with-tooltip';
+import type { DrawableShapeType } from '../types';
 
 export { DrawCircleModeWithTooltip } from './draw-circle-mode-with-tooltip';
 export { DrawEllipseModeWithTooltip } from './draw-ellipse-mode-with-tooltip';
@@ -44,41 +45,57 @@ const MODE_INSTANCES = {
 /**
  * Get the cached mode instance for a shape type.
  *
+ * Returns the pre-instantiated drawing mode for the specified shape type.
+ * Modes are cached at module level to prevent deck.gl assertion failures
+ * that occur when creating new mode instances on each render.
+ *
  * @param shapeType - The shape type to get the mode for
  * @returns The cached mode instance for drawing that shape type
+ *
+ * @example
+ * ```typescript
+ * import { getModeInstance } from '@accelint/map-toolkit/deckgl/shapes/draw-shape-layer/modes';
+ * import { ShapeFeatureType } from '@accelint/map-toolkit/deckgl/shapes/shared/types';
+ *
+ * // Get the mode for drawing circles
+ * const circleMode = getModeInstance(ShapeFeatureType.Circle);
+ *
+ * // Use with EditableGeoJsonLayer
+ * const layer = new EditableGeoJsonLayer({
+ *   mode: circleMode,
+ *   // ... other props
+ * });
+ * ```
  */
 export function getModeInstance(
-  shapeType: ShapeFeatureType,
-): (typeof MODE_INSTANCES)[ShapeFeatureType] {
+  shapeType: DrawableShapeType,
+): (typeof MODE_INSTANCES)[DrawableShapeType] {
   return MODE_INSTANCES[shapeType];
 }
 
 /**
  * Get the view mode instance (for when not drawing).
  *
+ * Returns the pre-instantiated ViewMode which is the default mode when
+ * no drawing operation is active. This mode allows viewing and interacting
+ * with the map without drawing new shapes.
+ *
  * @returns The cached ViewMode instance
+ *
+ * @example
+ * ```typescript
+ * import { getViewModeInstance } from '@accelint/map-toolkit/deckgl/shapes/draw-shape-layer/modes';
+ *
+ * // Get the view mode (default when not drawing)
+ * const viewMode = getViewModeInstance();
+ *
+ * // Use with EditableGeoJsonLayer
+ * const layer = new EditableGeoJsonLayer({
+ *   mode: viewMode,
+ *   // ... other props
+ * });
+ * ```
  */
 export function getViewModeInstance(): ViewMode {
   return MODE_INSTANCES.view;
-}
-
-/**
- * Trigger double-click finish on the active mode.
- * This is a workaround for @deck.gl-community/editable-layers ~9.1 which doesn't
- * register 'dblclick' in EVENT_TYPES. We listen for dblclick at the DOM level
- * and call this function to finish drawing.
- *
- * @param shapeType - The shape type currently being drawn
- * @see https://github.com/visgl/deck.gl-community/pull/225
- */
-export function triggerDoubleClickFinish(shapeType: ShapeFeatureType): void {
-  const mode = MODE_INSTANCES[shapeType];
-
-  // Only Polygon and LineString modes support double-click to finish
-  if (
-    mode instanceof DrawPolygonModeWithTooltip ||
-    mode instanceof DrawLineStringModeWithTooltip
-  ) {
-    mode.handleDoubleClick();
-  }
 }

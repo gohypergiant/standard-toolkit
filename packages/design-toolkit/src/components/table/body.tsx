@@ -1,6 +1,6 @@
 // __private-exports
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -13,9 +13,28 @@
 
 import { clsx } from '@accelint/design-foundation/lib/utils';
 import { TableRow } from './row';
+import type { RowData } from '@tanstack/react-table';
 import type { TableBodyProps } from './types';
 
-export function TableBody<T>({
+/**
+ * TableBody - Renders the table body section (`<tbody>`).
+ *
+ * @example
+ * ```tsx
+ * <Table>
+ *   <TableHeader headerGroups={table.getHeaderGroups()} />
+ *   <TableBody rows={table.getRowModel().rows} />
+ * </Table>
+ * ```
+ *
+ * @param props - {@link TableBodyProps}
+ * @param props.children - Custom children content.
+ * @param props.className - CSS class for the tbody element.
+ * @param props.ref - Ref to the tbody element.
+ * @param props.rows - Array of TanStack table rows to render.
+ * @returns The rendered TableBody component.
+ */
+export function TableBody<T extends RowData>({
   children,
   className,
   ref,

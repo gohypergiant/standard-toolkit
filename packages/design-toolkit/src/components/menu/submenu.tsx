@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -13,6 +13,22 @@
 'use client';
 
 import 'client-only';
-import { SubmenuTrigger } from 'react-aria-components';
+import { SubmenuTrigger } from 'react-aria-components/Menu';
 
+/**
+ * MenuSubmenu - Trigger for nested submenu flyouts
+ *
+ * Wraps a MenuItem and nested Menu to create hierarchical navigation.
+ *
+ * @example
+ * ```tsx
+ * <MenuSubmenu>
+ *   <MenuItem>Export</MenuItem>
+ *   <Menu>
+ *     <MenuItem>Export as PDF</MenuItem>
+ *     <MenuItem>Export as CSV</MenuItem>
+ *   </Menu>
+ * </MenuSubmenu>
+ * ```
+ */
 export const MenuSubmenu = SubmenuTrigger;

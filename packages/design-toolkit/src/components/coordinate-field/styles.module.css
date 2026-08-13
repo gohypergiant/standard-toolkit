@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -23,11 +23,11 @@
     min-width: var(--min-width, unset);
 
     @variant group-size-medium/coordinate-field {
-      @apply text-body-m;
+      @apply text-body-s;
     }
 
     @variant group-size-small/coordinate-field {
-      @apply text-body-s;
+      @apply text-body-xs;
     }
 
     @variant group-disabled/coordinate-field {
@@ -64,7 +64,7 @@
   }
 
   .segment {
-    @apply shrink-0 text-right transition-[width] duration-150 ease-in-out outline-none;
+    @apply shrink-0 text-right uppercase transition-[width] duration-150 ease-in-out outline-none;
 
     @variant placeholder-shown {
       @apply fg-primary-muted;
@@ -143,6 +143,10 @@
 }
 
 @layer components.l2 {
+  .formatButton {
+    @apply py-0;
+  }
+
   .formatOptions {
     @apply mb-m gap-xs flex flex-col;
   }

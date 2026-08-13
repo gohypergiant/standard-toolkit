@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -13,14 +13,26 @@
 import type { ComponentPropsWithRef, PropsWithChildren } from 'react';
 import type { DetailsListProps } from '../details-list/types';
 
+/**
+ * Base props for Flashcard child components.
+ */
 export type FlashcardComponentProps = PropsWithChildren &
   ComponentPropsWithRef<'div'>;
 
+/**
+ * Props for the Flashcard component.
+ */
 export type FlashcardProps = FlashcardComponentProps & {
+  /** Whether the flashcard is in a loading state. */
   isLoading?: boolean;
+  /** Primary header text displayed in the hero section. */
   header: string;
+  /** Secondary text displayed below the header. */
   subheader: string;
 };
 
+/**
+ * Props for the FlashcardDetailsList component.
+ */
 export type FlashcardDetailsListProps = FlashcardComponentProps &
   Partial<DetailsListProps>;

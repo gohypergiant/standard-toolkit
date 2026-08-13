@@ -19,10 +19,12 @@ ignore:
   - .git
   - .github
   - .claude
+  - .windsurf
   - .turbo
   - .vscode
   - .agents
   - node_modules
+  - 'apps/docs'
   - '**/.next'
   - '**/.ladle'
   - '**/.storybook'

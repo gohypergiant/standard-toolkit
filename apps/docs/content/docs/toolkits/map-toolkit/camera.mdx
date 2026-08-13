@@ -1,0 +1,414 @@
+---
+title: Camera
+description: Manages camera state (position, zoom, pitch, rotation, projection, view) per map instance with support for 2D, 2.5D, and 3D views.
+source: packages/map-toolkit/src/camera/index.ts
+source_sha: a8f3cf4fc1d1a37e9e23a625a8a430659f55baa9
+doc_sha: cf344ddc7d3336ca771eef4f230c61e284e3c3b3
+deprecated: false
+updated: 2026-07-13
+---
+
+## cameraStore
+
+Global store managing camera state for all map instances. Listens to camera bus events and provides reactive state updates.
+
+### Usage
+
+```tsx
+import { cameraStore } from '@accelint/map-toolkit/camera';
+
+function CameraInfo({ mapId }: { mapId: string }) {
+  const { state, setCameraState } = cameraStore.use(mapId);
+  
+  return (
+    <div>
+      Position: {state.latitude.toFixed(2)}, {state.longitude.toFixed(2)}
+      Zoom: {state.zoom}
+    </div>
+  );
+}
+```
+
+### Reference
+
+```typescript
+const cameraStore: MapStore<CameraState, CameraActions>;
+
+type CameraState = CameraState2D | CameraState3D | CameraState2Point5D;
+
+type CameraState2D = {
+  latitude: number;
+  longitude: number;
+  zoom: number;
+  pitch: 0;
+  rotation: number;
+  projection: 'mercator';
+  view: '2D';
+};
+
+type CameraState3D = {
+  latitude: number;
+  longitude: number;
+  zoom: number;
+  pitch: 0;
+  rotation: number;
+  projection: 'globe';
+  view: '3D';
+};
+
+type CameraState2Point5D = {
+  latitude: number;
+  longitude: number;
+  zoom: number;
+  pitch: number;
+  rotation: number;
+  projection: 'mercator';
+  view: '2.5D';
+};
+```
+
+Camera state is a discriminated union based on the view mode. Each view mode has different constraints for pitch and projection.
+
+### Examples
+
+#### Example: Monitoring camera state
+
+```tsx
+import { cameraStore } from '@accelint/map-toolkit/camera';
+
+function CameraDebug({ mapId }: { mapId: string }) {
+  const { state } = cameraStore.use(mapId);
+  
+  return (
+    <pre>
+      {JSON.stringify(state, null, 2)}
+    </pre>
+  );
+}
+```
+
+## useMapCamera
+
+Hook to subscribe to camera state changes and access camera controls for a specific map.
+
+### Usage
+
+```tsx
+import { useMapCamera } from '@accelint/map-toolkit/camera';
+
+function MapControls({ mapId }: { mapId: string }) {
+  const { cameraState, setCameraState } = useMapCamera(mapId, {
+    latitude: 37.7749,
+    longitude: -122.4194,
+    zoom: 10,
+  });
+  
+  return (
+    <button onClick={() => setCameraState({ zoom: cameraState.zoom + 1 })}>
+      Zoom In
+    </button>
+  );
+}
+```
+
+### Reference
+
+```typescript
+function useMapCamera(
+  mapId: UniqueId,
+  initialCameraState?: CameraStateInput
+): {
+  cameraState: CameraState;
+  setCameraState: (state: Partial<CameraState>) => void;
+}
+
+type CameraStateInput = {
+  latitude?: number;
+  longitude?: number;
+  zoom?: number;
+  pitch?: number;
+  rotation?: number;
+  projection?: ProjectionType;
+  view?: ViewType;
+};
+```
+
+#### Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `mapId` | `UniqueId` | Unique identifier for the map instance |
+| `initialCameraState` | `CameraStateInput` | Optional initial camera state (only used on first call) |
+
+#### Returns
+
+Returns an object with:
+- `cameraState` - Current camera state matching one of the discriminated union variants
+- `setCameraState` - Function to update camera state directly
+
+### Examples
+
+#### Example: Initializing with custom position
+
+```tsx
+import { useMapCamera } from '@accelint/map-toolkit/camera';
+
+function Map() {
+  const mapId = 'map-1';
+  const { cameraState } = useMapCamera(mapId, {
+    latitude: 40.7128,
+    longitude: -74.0060,
+    zoom: 12,
+    view: '2D',
+  });
+  
+  return <div>Camera initialized at New York City</div>;
+}
+```
+
+#### Example: Implementing zoom controls
+
+```tsx
+import { useMapCamera } from '@accelint/map-toolkit/camera';
+
+function ZoomControls({ mapId }: { mapId: string }) {
+  const { cameraState, setCameraState } = useMapCamera(mapId);
+  
+  const zoomIn = () => setCameraState({ zoom: cameraState.zoom + 1 });
+  const zoomOut = () => setCameraState({ zoom: cameraState.zoom - 1 });
+  
+  return (
+    <div>
+      <button onClick={zoomIn}>+</button>
+      <span>Zoom: {cameraState.zoom.toFixed(1)}</span>
+      <button onClick={zoomOut}>-</button>
+    </div>
+  );
+}
+```
+
+#### Example: Switching between view modes
+
+```tsx
+import { useMapCamera } from '@accelint/map-toolkit/camera';
+
+function ViewModeSelector({ mapId }: { mapId: string }) {
+  const { cameraState, setCameraState } = useMapCamera(mapId);
+  
+  return (
+    <div>
+      <button onClick={() => setCameraState({ view: '2D' })}>
+        2D View
+      </button>
+      <button onClick={() => setCameraState({ view: '2.5D', pitch: 45 })}>
+        2.5D View
+      </button>
+      <button onClick={() => setCameraState({ view: '3D' })}>
+        3D Globe
+      </button>
+      <div>Current: {cameraState.view}</div>
+    </div>
+  );
+}
+```
+
+> **Good to know:** Initializing camera state before subscribing prevents MapLibre from rendering at default (0,0,0) and firing onMove events that would overwrite the initialized state.
+
+## CameraEventTypes
+
+Event type constants for camera operations via the broadcast bus.
+
+### Usage
+
+```typescript
+import { Broadcast } from '@accelint/bus';
+import { CameraEventTypes } from '@accelint/map-toolkit/camera';
+import type { CameraEvent } from '@accelint/map-toolkit/camera';
+
+const bus = Broadcast.getInstance<CameraEvent>();
+
+// Set camera center
+bus.emit(CameraEventTypes.setCenter, {
+  id: 'map-1',
+  latitude: 37.7749,
+  longitude: -122.4194,
+  zoom: 10,
+});
+```
+
+### Reference
+
+```typescript
+const CameraEventTypes = {
+  setView: 'camera:setView',
+  setProjection: 'camera:setProjection',
+  setZoom: 'camera:setZoom',
+  setRotation: 'camera:setRotation',
+  setPitch: 'camera:setPitch',
+  setCenter: 'camera:setCenter',
+  fitBounds: 'camera:fitBounds',
+  reset: 'camera:reset',
+} as const;
+```
+
+### Examples
+
+#### Example: Setting camera center
+
+```typescript
+import { Broadcast } from '@accelint/bus';
+import { CameraEventTypes } from '@accelint/map-toolkit/camera';
+import type { CameraEvent } from '@accelint/map-toolkit/camera';
+
+const bus = Broadcast.getInstance<CameraEvent>();
+
+bus.emit(CameraEventTypes.setCenter, {
+  id: 'map-1',
+  latitude: 37.7749,
+  longitude: -122.4194,
+  zoom: 10,
+  heading: 45,
+});
+```
+
+#### Example: Fitting to bounds
+
+```typescript
+import { Broadcast } from '@accelint/bus';
+import { CameraEventTypes } from '@accelint/map-toolkit/camera';
+import type { CameraEvent } from '@accelint/map-toolkit/camera';
+
+const bus = Broadcast.getInstance<CameraEvent>();
+
+// Fit camera to show San Francisco Bay Area
+bus.emit(CameraEventTypes.fitBounds, {
+  id: 'map-1',
+  bounds: [-122.5, 37.7, -122.3, 37.9],
+  width: 800,
+  height: 600,
+  padding: 20,
+});
+```
+
+#### Example: Changing view mode
+
+```typescript
+import { Broadcast } from '@accelint/bus';
+import { CameraEventTypes } from '@accelint/map-toolkit/camera';
+import type { CameraEvent } from '@accelint/map-toolkit/camera';
+
+const bus = Broadcast.getInstance<CameraEvent>();
+
+// Switch to 2.5D tilted view
+bus.emit(CameraEventTypes.setView, {
+  id: 'map-1',
+  view: '2.5D',
+});
+```
+
+#### Example: Resetting camera
+
+```typescript
+import { Broadcast } from '@accelint/bus';
+import { CameraEventTypes } from '@accelint/map-toolkit/camera';
+import type { CameraEvent } from '@accelint/map-toolkit/camera';
+
+const bus = Broadcast.getInstance<CameraEvent>();
+
+// Full reset to initial state
+bus.emit(CameraEventTypes.reset, {
+  id: 'map-1',
+});
+
+// Reset but preserve current zoom
+bus.emit(CameraEventTypes.reset, {
+  id: 'map-1',
+  zoom: false,
+});
+```
+
+> **Good to know:** Camera events are processed asynchronously through the broadcast bus, enabling decoupled control of camera state from anywhere in your application.
+
+## clearCameraState
+
+Manually clears camera state for a specific map instance, removing all cached state and subscription tracking.
+
+### Usage
+
+```typescript
+import { clearCameraState } from '@accelint/map-toolkit/camera';
+
+// Clean up when removing a map
+clearCameraState('map-1');
+```
+
+### Reference
+
+```typescript
+function clearCameraState(mapId: UniqueId): void
+```
+
+#### Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `mapId` | `UniqueId` | The unique identifier for the map instance to clear |
+
+### Examples
+
+#### Example: Cleanup in tests
+
+```typescript
+import { clearCameraState } from '@accelint/map-toolkit/camera';
+import { afterEach } from 'vitest';
+
+afterEach(() => {
+  clearCameraState('test-map-id');
+});
+```
+
+#### Example: Dynamic map removal
+
+```typescript
+import { clearCameraState } from '@accelint/map-toolkit/camera';
+
+function removeMap(mapId: UniqueId) {
+  clearCameraState(mapId);
+  // ... remove map component
+}
+```
+
+> **Good to know:** In most cases, cleanup happens automatically when all subscribers unmount. Use this function only for manual cleanup when dynamically destroying map instances or in test environments.
+
+## ViewType
+
+Camera view modes defining perspective and interaction capabilities.
+
+### Reference
+
+```typescript
+type ViewType = '2D' | '2.5D' | '3D';
+```
+
+- `'2D'` - Traditional flat map view with rotation (mercator projection)
+- `'2.5D'` - Tilted perspective view with pitch and rotation (mercator projection)
+- `'3D'` - Globe view with fixed orientation (globe projection)
+
+## ProjectionType
+
+Map projection types supported by the camera system.
+
+### Reference
+
+```typescript
+type ProjectionType = 'mercator' | 'globe';
+```
+
+- `'mercator'` - Web Mercator projection for 2D and 2.5D views
+- `'globe'` - Spherical globe projection for 3D views
+
+## Related
+
+- [Viewport](../viewport/index.md) - Viewport state management (bounds, dimensions)
+- [MapEvents](../deckgl/base-map/events.md) - Event types for map interactions
+- [createMapStore](../shared/create-map-store.md) - Underlying store pattern

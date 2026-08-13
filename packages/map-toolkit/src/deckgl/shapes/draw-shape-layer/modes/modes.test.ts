@@ -10,18 +10,14 @@
  * governing permissions and limitations under the License.
  */
 
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { beforeEach, describe, expect, it } from 'vitest';
 import { ShapeFeatureType } from '../../shared/types';
 import { DrawCircleModeWithTooltip } from './draw-circle-mode-with-tooltip';
 import { DrawEllipseModeWithTooltip } from './draw-ellipse-mode-with-tooltip';
 import { DrawLineStringModeWithTooltip } from './draw-line-string-mode-with-tooltip';
 import { DrawPolygonModeWithTooltip } from './draw-polygon-mode-with-tooltip';
 import { DrawRectangleModeWithTooltip } from './draw-rectangle-mode-with-tooltip';
-import {
-  getModeInstance,
-  getViewModeInstance,
-  triggerDoubleClickFinish,
-} from './index';
+import { getModeInstance, getViewModeInstance } from './index';
 
 describe('Draw Mode Classes', () => {
   describe('DrawCircleModeWithTooltip', () => {
@@ -64,11 +60,6 @@ describe('Draw Mode Classes', () => {
 
     it('has handleDoubleClick method for finish workaround', () => {
       expect(typeof mode.handleDoubleClick).toBe('function');
-    });
-
-    it('handleDoubleClick does nothing when no props stored', () => {
-      // Should not throw when called without prior handleClick
-      expect(() => mode.handleDoubleClick()).not.toThrow();
     });
   });
 
@@ -134,6 +125,40 @@ describe('Draw Mode Classes', () => {
   });
 });
 
+describe('Tooltip lifecycle', () => {
+  /**
+   * Mode instances are cached and reused across draw sessions, so the
+   * private `tooltip` field would otherwise leak from one session into the
+   * next render frame. The `resetClickSequence` override clears it.
+   *
+   * We poke the private field directly because the alternative (driving a
+   * full `handlePointerMove` cycle with synthetic event/props) tests more
+   * than the override and adds significant setup; the field is the exact
+   * lifecycle state under test.
+   */
+  type WithPrivateTooltip = {
+    tooltip: { position: [number, number]; text: string } | null;
+  };
+
+  it.each([
+    ['Circle', () => new DrawCircleModeWithTooltip()],
+    ['Polygon', () => new DrawPolygonModeWithTooltip()],
+    ['LineString', () => new DrawLineStringModeWithTooltip()],
+    ['Rectangle', () => new DrawRectangleModeWithTooltip()],
+    ['Ellipse', () => new DrawEllipseModeWithTooltip()],
+  ])('%s clears tooltip when click sequence is reset', (_label, factory) => {
+    const mode = factory();
+    const stale = { position: [0, 0] as [number, number], text: 'stale' };
+
+    (mode as unknown as WithPrivateTooltip).tooltip = stale;
+    expect(mode.getTooltips()).toEqual([stale]);
+
+    mode.resetClickSequence();
+
+    expect(mode.getTooltips()).toEqual([]);
+  });
+});
+
 describe('Mode Instance Functions', () => {
   describe('getModeInstance', () => {
     it('returns cached mode instance for Circle', () => {
@@ -183,44 +208,6 @@ describe('Mode Instance Functions', () => {
       const mode2 = getViewModeInstance();
 
       expect(mode1).toBe(mode2);
-    });
-  });
-
-  describe('triggerDoubleClickFinish', () => {
-    it('calls handleDoubleClick on Polygon mode', () => {
-      const polygonMode = getModeInstance(
-        ShapeFeatureType.Polygon,
-      ) as DrawPolygonModeWithTooltip;
-      const spy = vi.spyOn(polygonMode, 'handleDoubleClick');
-
-      triggerDoubleClickFinish(ShapeFeatureType.Polygon);
-
-      expect(spy).toHaveBeenCalled();
-      spy.mockRestore();
-    });
-
-    it('calls handleDoubleClick on LineString mode', () => {
-      const lineMode = getModeInstance(
-        ShapeFeatureType.LineString,
-      ) as DrawLineStringModeWithTooltip;
-      const spy = vi.spyOn(lineMode, 'handleDoubleClick');
-
-      triggerDoubleClickFinish(ShapeFeatureType.LineString);
-
-      expect(spy).toHaveBeenCalled();
-      spy.mockRestore();
-    });
-
-    it('does not throw for Circle mode (no double-click finish)', () => {
-      expect(() => {
-        triggerDoubleClickFinish(ShapeFeatureType.Circle);
-      }).not.toThrow();
-    });
-
-    it('does not throw for Rectangle mode (no double-click finish)', () => {
-      expect(() => {
-        triggerDoubleClickFinish(ShapeFeatureType.Rectangle);
-      }).not.toThrow();
     });
   });
 });

@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -16,9 +16,20 @@ import styles from './styles.module.css';
 import type { IconProps } from '../icon/types';
 
 /**
- * ItemIcon - Icon for a tree item
+ * TreeItemPrefixIcon - Icon displayed before the tree item label
  *
- * Renders an icon for a tree item
+ * @example
+ * ```tsx
+ * <TreeItemContent>
+ *   <TreeItemPrefixIcon><Folder /></TreeItemPrefixIcon>
+ *   <TreeItemLabel>My Documents</TreeItemLabel>
+ * </TreeItemContent>
+ * ```
+ *
+ * @param props - {@link IconProps}
+ * @param props.children - Icon element to render.
+ * @param props.className - CSS class for the icon container.
+ * @returns The rendered TreeItemPrefixIcon component.
  */
 export function TreeItemPrefixIcon({ children, className }: IconProps) {
   return <Icon className={clsx(styles.icon, className)}>{children}</Icon>;

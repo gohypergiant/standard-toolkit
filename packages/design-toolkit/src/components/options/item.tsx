@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -13,12 +13,34 @@
 
 import 'client-only';
 import { clsx } from '@accelint/design-foundation/lib/utils';
-import { composeRenderProps, ListBoxItem } from 'react-aria-components';
+import { ListBoxItem } from 'react-aria-components/ListBox';
+import { composeRenderProps } from 'react-aria-components/composeRenderProps';
 import { IconProvider } from '../icon/context';
 import { OptionsItemLabel } from './item-label';
 import styles from './styles.module.css';
 import type { OptionsDataItem, OptionsItemProps } from './types';
 
+/**
+ * OptionsItem - Individual selectable item within an Options list
+ *
+ * Supports icons, labels, descriptions, and color variants.
+ * String children are automatically wrapped in OptionsItemLabel.
+ *
+ * @example
+ * ```tsx
+ * <OptionsItem textValue="Edit">
+ *   <Icon><Edit /></Icon>
+ *   <OptionsItemLabel>Edit</OptionsItemLabel>
+ * </OptionsItem>
+ * ```
+ *
+ * @param props - {@link OptionsItemProps}
+ * @param props.children - Content to render inside the item.
+ * @param props.classNames - CSS class names for item elements.
+ * @param props.color - Color variant for the item.
+ * @param props.textValue - Accessible text value for the item.
+ * @returns The rendered OptionsItem component.
+ */
 export function OptionsItem<T extends OptionsDataItem>({
   children,
   classNames,

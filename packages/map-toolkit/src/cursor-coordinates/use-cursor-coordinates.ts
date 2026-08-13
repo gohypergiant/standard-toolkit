@@ -11,7 +11,6 @@
  */
 'use client';
 
-import 'client-only';
 import {
   coordinateSystems,
   createCoordinate,
@@ -19,11 +18,18 @@ import {
   formatDegreesDecimalMinutes,
   formatDegreesMinutesSeconds,
 } from '@accelint/geo';
-import { getLogger } from '@accelint/logger';
-import { useContext, useMemo } from 'react';
-import { MapContext } from '../deckgl/base-map/provider';
-import { cursorCoordinateStore } from './store';
 import type { UniqueId } from '@accelint/core';
+import 'client-only';
+import { useContext, useMemo } from 'react';
+import { createLoggerDomain } from '@/shared/logger';
+import { MapContext } from '../deckgl/base-map/provider';
+import {
+  DEFAULT_LATLON_COORDS,
+  DEFAULT_MGRS_UTM_COORDS,
+  LONGITUDE_RANGE,
+  MAX_LONGITUDE,
+} from './constants';
+import { cursorCoordinateStore } from './store';
 import type {
   CoordinateFormatTypes,
   RawCoordinate,
@@ -31,17 +37,7 @@ import type {
   UseCursorCoordinatesReturn,
 } from './types';
 
-const logger = getLogger({
-  enabled:
-    process.env.NODE_ENV !== 'production' && process.env.NODE_ENV !== 'test',
-  level: 'warn',
-  prefix: '[CursorCoordinates]',
-  pretty: true,
-});
-
-const MAX_LONGITUDE = 180;
-const LONGITUDE_RANGE = 360;
-const DEFAULT_COORDINATE = '--, --';
+const logger = createLoggerDomain('[CursorCoordinates]');
 
 /**
  * Normalizes longitude to -180 to 180 range.
@@ -87,6 +83,11 @@ function buildRawCoordinate(coord: [number, number] | null): RawCoordinate {
  * @param coord - Coordinate tuple [longitude, latitude]
  * @param format - Coordinate format type
  * @returns Formatted coordinate string
+ *  *
+ * @remarks
+ * **UTM/MGRS Limitations:** UTM and MGRS coordinate systems are only valid between 80°S and 84°N.
+ * Coordinates outside this range (e.g., polar regions) will return the default placeholder `--, --`.
+ * Other formats (DD, DDM, DMS) work correctly at all latitudes.
  */
 function formatCoordinate(
   coord: [number, number],
@@ -120,11 +121,18 @@ function formatCoordinate(
       });
     case 'mgrs':
     case 'utm': {
+      // UTM and MGRS are only valid between 80°S and 84°N
       // Use createCoordinate for grid-based formats
       // Input format: "lon E / lat N" for LONLAT (matching geo package DD tests)
       // Limit to 10 decimal places (geo parser max) and avoid floating point precision issues
       const lat = latLon[0];
       const lon = latLon[1];
+
+      // Check if coordinate is within valid UTM/MGRS range
+      if (lat < -80 || lat > 84) {
+        return DEFAULT_MGRS_UTM_COORDS;
+      }
+
       const latOrdinal = lat >= 0 ? 'N' : 'S';
       const lonOrdinal = lon >= 0 ? 'E' : 'W';
       // Use LONLAT format: longitude first, then latitude
@@ -135,6 +143,14 @@ function formatCoordinate(
         coordinateSystems.dd,
         'LONLAT',
       )(formattedInput);
+
+      // Validate the coordinate was created successfully
+      if (!geoCoord.valid) {
+        logger.error(
+          `Failed to create coordinate for ${format}: ${geoCoord.errors.join(', ')}`,
+        );
+        return DEFAULT_MGRS_UTM_COORDS;
+      }
 
       return geoCoord[format]();
     }
@@ -154,6 +170,11 @@ function formatCoordinate(
  * @param options - Optional configuration options
  * @returns Object containing the formatted coordinate string, raw coordinate, format setter, and current format
  * @throws {Error} When no id is provided and hook is used outside MapProvider context
+ *
+ * @remarks
+ * **UTM/MGRS Limitations:** UTM and MGRS coordinate systems are only valid between 80°S and 84°N.
+ * Coordinates outside this range (e.g., polar regions) will display the default placeholder `--, --`.
+ * Other formats (DD, DDM, DMS) work correctly at all latitudes.
  *
  * @example
  * Basic usage:
@@ -240,8 +261,14 @@ export function useCursorCoordinates(
 
   // Compute formatted coordinate string
   const formattedCoord = useMemo(() => {
-    if (!rawCoord) {
-      return DEFAULT_COORDINATE;
+    // Return default coords based on current format.
+    const getDefaultCoords = () =>
+      state.format === 'mgrs' || state.format === 'utm'
+        ? DEFAULT_MGRS_UTM_COORDS
+        : DEFAULT_LATLON_COORDS;
+
+    if (!(rawCoord && state.coordinate)) {
+      return getDefaultCoords();
     }
 
     // Use custom formatter if provided
@@ -249,15 +276,13 @@ export function useCursorCoordinates(
       try {
         return customFormatter(rawCoord);
       } catch (error) {
-        logger.error(
-          `Custom formatter failed: ${error instanceof Error ? error.message : String(error)}`,
-        );
-        return DEFAULT_COORDINATE;
+        logger.withError(error).error('Custom formatter failed');
+        return getDefaultCoords();
       }
     }
 
     // Use built-in formatter
-    return formatCoordinate(state.coordinate!, state.format);
+    return formatCoordinate(state.coordinate, state.format);
   }, [rawCoord, customFormatter, state.format, state.coordinate]);
 
   // Memoize the return value to prevent unnecessary re-renders

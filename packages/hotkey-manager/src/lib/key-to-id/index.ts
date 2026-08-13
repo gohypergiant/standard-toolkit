@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -17,10 +17,27 @@ import type { KeyCombinationId } from '@/types/key-combination-id';
 /**
  * Converts a key combination to a standard key id.
  *
- * Handles auto mac style
+ * Handles auto mac style.
  *
  * @internal
- * @param key Key combination
+ * @param key - Key combination.
+ * @returns The standard key combination id.
+ *
+ * @example
+ * ```typescript
+ * import { keyToId } from '@/lib/key-to-id';
+ *
+ * const id = keyToId({
+ *   code: 'KeyA',
+ *   alt: false,
+ *   ctrl: false,
+ *   meta: true,
+ *   shift: false,
+ *   autoMacStyle: false,
+ *   id: 'KeyA_meta',
+ * });
+ * console.log(id); // "KeyA|no-alt|no-ctrl|meta|no-shift"
+ * ```
  */
 export function keyToId(key: KeyCombination): KeyCombinationId {
   const ctrl =

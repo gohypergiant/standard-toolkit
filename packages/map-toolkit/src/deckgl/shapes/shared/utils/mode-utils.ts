@@ -10,8 +10,6 @@
  * governing permissions and limitations under the License.
  */
 
-'use client';
-
 import { Broadcast } from '@accelint/bus';
 import { MapCursorEvents } from '@/map-cursor/events';
 import { cursorStore } from '@/map-cursor/store';
@@ -26,15 +24,23 @@ import type { MapModeEventType } from '@/map-mode/types';
 const mapModeBus = Broadcast.getInstance<MapModeEventType>();
 const mapCursorBus = Broadcast.getInstance<MapCursorEventType>();
 
+/** The idle mode name used when releasing ownership. */
+const DEFAULT_MODE = 'default';
+
 /**
  * Request a map mode change.
  *
  * Emits a mode change request through the event bus. The mode store will
  * handle authorization and apply the change if approved.
  *
- * @param mapId - The map instance ID
- * @param desiredMode - The mode to switch to
- * @param owner - The identifier of the component requesting the change
+ * @param mapId - The map instance ID.
+ * @param desiredMode - The mode to switch to.
+ * @param owner - The identifier of the component requesting the change.
+ *
+ * @example
+ * ```typescript
+ * requestModeChange(mapId, 'draw', 'draw-shape-layer');
+ * ```
  */
 export function requestModeChange(
   mapId: UniqueId,
@@ -53,11 +59,16 @@ export function requestModeChange(
  *
  * Convenience function to request a mode change back to 'default'.
  *
- * @param mapId - The map instance ID
- * @param owner - The identifier of the component releasing the mode
+ * @param mapId - The map instance ID.
+ * @param owner - The identifier of the component releasing the mode.
+ *
+ * @example
+ * ```typescript
+ * releaseMode(mapId, 'draw-shape-layer');
+ * ```
  */
 export function releaseMode(mapId: UniqueId, owner: string): void {
-  requestModeChange(mapId, 'default', owner);
+  requestModeChange(mapId, DEFAULT_MODE, owner);
 }
 
 /**
@@ -65,9 +76,14 @@ export function releaseMode(mapId: UniqueId, owner: string): void {
  *
  * Emits a cursor change request through the event bus.
  *
- * @param mapId - The map instance ID
- * @param cursor - The CSS cursor type to set
- * @param owner - The identifier of the component requesting the change
+ * @param mapId - The map instance ID.
+ * @param cursor - The CSS cursor type to set.
+ * @param owner - The identifier of the component requesting the change.
+ *
+ * @example
+ * ```typescript
+ * requestCursorChange(mapId, 'crosshair', 'draw-shape-layer');
+ * ```
  */
 export function requestCursorChange(
   mapId: UniqueId,
@@ -86,8 +102,13 @@ export function requestCursorChange(
  *
  * Uses the cursor store's clear function to release the cursor.
  *
- * @param mapId - The map instance ID
- * @param owner - The identifier of the component releasing the cursor
+ * @param mapId - The map instance ID.
+ * @param owner - The identifier of the component releasing the cursor.
+ *
+ * @example
+ * ```typescript
+ * releaseCursor(mapId, 'draw-shape-layer');
+ * ```
  */
 export function releaseCursor(mapId: UniqueId, owner: string): void {
   cursorStore.actions(mapId).clearCursor(owner);
@@ -100,10 +121,15 @@ export function releaseCursor(mapId: UniqueId, owner: string): void {
  * requires authorization. When the mode change is approved, the cursor
  * will be automatically applied via getEffectiveCursor.
  *
- * @param mapId - The map instance ID
- * @param desiredMode - The mode to switch to
- * @param cursor - The CSS cursor type to set
- * @param owner - The identifier of the component requesting the changes
+ * @param mapId - The map instance ID.
+ * @param desiredMode - The mode to switch to.
+ * @param cursor - The CSS cursor type to set.
+ * @param owner - The identifier of the component requesting the changes.
+ *
+ * @example
+ * ```typescript
+ * requestModeAndCursor(mapId, 'draw', 'crosshair', 'draw-shape-layer');
+ * ```
  */
 export function requestModeAndCursor(
   mapId: UniqueId,
@@ -120,8 +146,13 @@ export function requestModeAndCursor(
  *
  * Common pattern when ending an operation.
  *
- * @param mapId - The map instance ID
- * @param owner - The identifier of the component releasing mode and cursor
+ * @param mapId - The map instance ID.
+ * @param owner - The identifier of the component releasing mode and cursor.
+ *
+ * @example
+ * ```typescript
+ * releaseModeAndCursor(mapId, 'draw-shape-layer');
+ * ```
  */
 export function releaseModeAndCursor(mapId: UniqueId, owner: string): void {
   releaseMode(mapId, owner);

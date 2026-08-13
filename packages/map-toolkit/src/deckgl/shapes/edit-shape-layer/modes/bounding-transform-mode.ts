@@ -11,6 +11,10 @@
  */
 
 import {
+  DISTANCE_UNIT_SYMBOLS,
+  type DistanceUnit,
+} from '@accelint/constants/units';
+import {
   type DraggingEvent,
   type FeatureCollection,
   type GeoJsonEditMode,
@@ -19,10 +23,7 @@ import {
   TranslateMode,
 } from '@deck.gl-community/editable-layers';
 import { featureCollection } from '@turf/helpers';
-import {
-  DEFAULT_DISTANCE_UNITS,
-  getDistanceUnitAbbreviation,
-} from '@/shared/units';
+import { DEFAULT_DISTANCE_UNITS } from '@/shared/units';
 import {
   formatEllipseTooltip,
   formatRectangleTooltip,
@@ -43,6 +44,7 @@ import type { Feature, Polygon } from 'geojson';
  * editing is not meaningful or desired. Instead, shapes are manipulated via their
  * bounding box handles.
  *
+ * ## Capabilities
  * This composite mode provides:
  * - **Translation** (TranslateMode): Drag the shape body to move it
  * - **Scaling** (ScaleModeWithFreeTransform): Drag corner handles to resize
@@ -53,12 +55,33 @@ import type { Feature, Polygon } from 'geojson';
  *   - With Shift: Snap to 45° intervals
  * - **Live tooltip**: Shows dimensions and area during scaling
  *
+ * ## Differences from VertexTransformMode
  * Unlike VertexTransformMode, this mode does NOT include vertex editing handles.
+ * This prevents accidental distortion of shapes that have specific geometric constraints
+ * (e.g., ellipses must maintain their elliptical shape, rectangles must maintain right angles).
  *
- * Priority logic:
- * - If hovering over a scale handle, scaling takes priority
- * - If hovering over the rotate handle, rotation takes priority
- * - Otherwise, dragging the shape body translates it
+ * ## Handle Priority Logic
+ * When drag starts, modes are evaluated in this priority order:
+ * 1. If hovering over a scale handle → scaling takes priority
+ * 2. If hovering over the rotate handle → rotation takes priority
+ * 3. Otherwise → dragging the shape body translates it
+ *
+ * @example
+ * ```typescript
+ * import { BoundingTransformMode } from '@accelint/map-toolkit/deckgl/shapes/edit-shape-layer/modes/bounding-transform-mode';
+ * import { EditableGeoJsonLayer } from '@deck.gl-community/editable-layers';
+ *
+ * // Used internally by EditShapeLayer for rectangles and ellipses
+ * const mode = new BoundingTransformMode();
+ *
+ * const layer = new EditableGeoJsonLayer({
+ *   mode,
+ *   data: rectangleFeatureCollection,
+ *   selectedFeatureIndexes: [0],
+ *   onEdit: handleEdit,
+ *   // ... other props
+ * });
+ * ```
  */
 export class BoundingTransformMode extends BaseTransformMode {
   private translateMode: TranslateMode;
@@ -103,7 +126,8 @@ export class BoundingTransformMode extends BaseTransformMode {
   }
 
   protected override getDefaultMode(): GeoJsonEditMode {
-    return this.translateMode;
+    // biome-ignore lint/suspicious/noExplicitAny: Library type inconsistency — see HandleMatcher JSDoc in base-transform-mode
+    return this.translateMode as any;
   }
 
   /**
@@ -165,7 +189,8 @@ export class BoundingTransformMode extends BaseTransformMode {
   ) {
     const { mapCoords } = event;
     const distanceUnits =
-      props.modeConfig?.distanceUnits ?? DEFAULT_DISTANCE_UNITS;
+      (props.modeConfig?.distanceUnits as DistanceUnit) ??
+      DEFAULT_DISTANCE_UNITS;
 
     // Get the selected feature
     const selectedIndexes = props.selectedIndexes;
@@ -193,7 +218,7 @@ export class BoundingTransformMode extends BaseTransformMode {
     const isRectangle = feature.properties?.shape === 'Rectangle';
 
     let text: string;
-    const unitAbbrev = getDistanceUnitAbbreviation(distanceUnits);
+    const unitAbbrev = DISTANCE_UNIT_SYMBOLS[distanceUnits];
 
     if (isRectangle) {
       // Rectangle: calculate width and height from corners

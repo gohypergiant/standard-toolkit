@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -15,15 +15,12 @@ import 'client-only';
 import { clsx } from '@accelint/design-foundation/lib/utils';
 import ChevronDown from '@accelint/icons/chevron-down';
 import { useContext, useRef } from 'react';
-import {
-  Button,
-  composeRenderProps,
-  DialogTrigger,
-  Disclosure,
-  DisclosurePanel,
-  Heading,
-  Popover,
-} from 'react-aria-components';
+import { Button } from 'react-aria-components/Button';
+import { composeRenderProps } from 'react-aria-components/composeRenderProps';
+import { DialogTrigger } from 'react-aria-components/Dialog';
+import { Disclosure, DisclosurePanel } from 'react-aria-components/Disclosure';
+import { Heading } from 'react-aria-components/Heading';
+import { Popover } from 'react-aria-components/Popover';
 import { Icon } from '../icon';
 import { Tooltip } from '../tooltip';
 import { TooltipTrigger } from '../tooltip/trigger';
@@ -35,6 +32,22 @@ import type { SidenavMenuProps } from './types';
  * SidenavMenu - Menu component for sidenav
  *
  * Provides a collapsible menu with items for the sidenav
+ *
+ * @example
+ * ```tsx
+ * <SidenavMenu icon={<Icon><Settings /></Icon>} title="Settings">
+ *   <SidenavMenuItem>Profile</SidenavMenuItem>
+ *   <SidenavMenuItem>Preferences</SidenavMenuItem>
+ *   <SidenavMenuItem>Security</SidenavMenuItem>
+ * </SidenavMenu>
+ * ```
+ *
+ * @param props - {@link SidenavMenuProps}
+ * @param props.icon - Icon displayed before the menu title.
+ * @param props.title - Menu title text.
+ * @param props.classNames - Custom CSS class names for menu elements.
+ * @param props.children - Menu items (SidenavMenuItem components).
+ * @returns The rendered SidenavMenu component.
  */
 export function SidenavMenu({
   icon,

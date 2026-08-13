@@ -1,6 +1,6 @@
 // __private-exports
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -12,14 +12,33 @@
  */
 
 import { clsx } from '@accelint/design-foundation/lib/utils';
-import { flexRender } from '@tanstack/react-table';
+import { flexRender, type RowData } from '@tanstack/react-table';
 import { useContext } from 'react';
 import { HeaderColumnAction } from './constants/table';
 import { TableContext } from './context';
 import styles from './styles.module.css';
 import type { TableCellProps } from './types';
 
-export function TableCell<T>({
+/**
+ * TableCell - Data cell (`<td>`) within a table row.
+ *
+ * @example
+ * ```tsx
+ * <TableRow row={row}>
+ *   {row.getAllCells().map(cell => (
+ *     <TableCell key={cell.id} cell={cell} />
+ *   ))}
+ * </TableRow>
+ * ```
+ *
+ * @param props - {@link TableCellProps}
+ * @param props.children - Custom children content.
+ * @param props.ref - Ref to the td element.
+ * @param props.className - CSS class for the td element.
+ * @param props.cell - TanStack table cell object.
+ * @returns The rendered TableCell component.
+ */
+export function TableCell<T extends RowData>({
   children,
   ref,
   className,

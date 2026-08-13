@@ -1,0 +1,180 @@
+---
+title: parseUTM
+description: Parses Universal Transverse Mercator (UTM) coordinate strings into latitude/longitude values.
+source: packages/geo/src/coordinates/utm/parser.ts
+source_sha: 1f1f0f82bf98a8a3ab3f6a4e8dd2776e4ee12334
+doc_sha: d65b9e6f4810e6f13de240dc92a3663c5eb94f79
+deprecated: false
+updated: 2026-07-13
+---
+
+Parses Universal Transverse Mercator (UTM) coordinate strings and converts them to latitude/longitude decimal degrees with detailed validation.
+
+## Usage
+
+```typescript
+import { parseUTM } from '@accelint/geo';
+
+// Parse UTM coordinate
+const [coords, errors] = parseUTM(null, '18 N 585628 4511322');
+// coords: ['40.74839601188732', 'N', '/', '73.98570490632135', 'W']
+// errors: []
+```
+
+## Reference
+
+```typescript
+function parseUTM(
+  _format: any,
+  input: string
+): [tokens: string[], errors: string[]]
+```
+
+### Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `_format` | `any` | Unused format parameter (kept for interface compatibility) |
+| `input` | `string` | UTM coordinate string to parse (e.g., '18 N 585628 4511322') |
+
+### Returns
+
+Returns a tuple containing:
+- `tokens`: Array with latitude/longitude values and bearing indicators
+- `errors`: Array of validation error messages (empty if valid)
+
+### UTM Format
+
+UTM coordinates consist of:
+1. **Zone Number** (1-60): UTM longitudinal zone
+2. **Hemisphere** (N or S): North or South hemisphere
+3. **Easting** (0-999999): Meters east from zone's central meridian
+4. **Northing** (0-9999999): Meters north from equator (N) or south from 10,000km (S)
+
+Expected format: `ZZ N|S EEEEE NNNNN`
+
+Example: `18 N 585628 4511322`
+
+### Validation Rules
+
+Validates that:
+- Zone number is between 1 and 60
+- Hemisphere letter is N (North) or S (South)
+- Easting is a valid non-negative number
+- Northing is a valid non-negative number
+
+## Examples
+
+### Example: Valid UTM coordinate (New York City)
+
+```typescript
+import { parseUTM } from '@accelint/geo';
+
+const [coords, errors] = parseUTM(null, '18 N 585628 4511322');
+// coords: ['40.74839601188732', 'N', '/', '73.98570490632135', 'W']
+// errors: []
+```
+
+### Example: London coordinates
+
+```typescript
+import { parseUTM } from '@accelint/geo';
+
+const [coords, errors] = parseUTM(null, '30 N 585358 5669660');
+// coords: ['51.17199279600467', 'N', '/', '1.7790080009934', 'W']
+// errors: []
+```
+
+### Example: Southern hemisphere
+
+```typescript
+import { parseUTM } from '@accelint/geo';
+
+const [coords, errors] = parseUTM(null, '56 S 334786 6252080');
+// coords: ['33.8688', 'S', '/', '151.2093', 'E']
+// errors: []
+```
+
+### Example: Without spaces (automatic normalization)
+
+```typescript
+import { parseUTM } from '@accelint/geo';
+
+const [coords, errors] = parseUTM(null, '18N 585628 4511322');
+// Automatically normalized to '18 N 585628 4511322'
+// coords: ['40.74839601188732', 'N', '/', '73.98570490632135', 'W']
+// errors: []
+```
+
+### Example: Invalid zone number
+
+```typescript
+import { parseUTM } from '@accelint/geo';
+
+const [coords, errors] = parseUTM(null, '65 N 585628 4511322');
+// coords: []
+// errors: ['[ERROR] Invalid Zone number (65) found; expected format ZZ N|S DDD DDD.']
+```
+
+### Example: Zone too low
+
+```typescript
+import { parseUTM } from '@accelint/geo';
+
+const [coords, errors] = parseUTM(null, '-1 N 585628 4511322');
+// coords: []
+// errors: ['[ERROR] Invalid Zone number (-1) found; expected format ZZ N|S DDD DDD.']
+```
+
+### Example: Invalid hemisphere
+
+```typescript
+import { parseUTM } from '@accelint/geo';
+
+const [coords, errors] = parseUTM(null, '18 X 585628 4511322');
+// coords: []
+// errors: ['[ERROR] Invalid Latitude band letter (X) found; expected format ZZ N|S DDD DDD.']
+```
+
+### Example: Missing easting
+
+```typescript
+import { parseUTM } from '@accelint/geo';
+
+const [coords, errors] = parseUTM(null, '18 N');
+// coords: []
+// errors: ['[ERROR] Invalid Easting number () found; expected format ZZ N|S DDD DDD.']
+```
+
+### Example: Missing northing
+
+```typescript
+import { parseUTM } from '@accelint/geo';
+
+const [coords, errors] = parseUTM(null, '18 N 585628');
+// coords: []
+// errors: ['[ERROR] Invalid Northing number () found; expected format ZZ N|S DDD DDD.']
+```
+
+### Example: Empty input
+
+```typescript
+import { parseUTM } from '@accelint/geo';
+
+const [coords, errors] = parseUTM(null, '');
+// coords: []
+// errors: ['[ERROR] Invalid Zone number () found; expected format ZZ N|S DDD DDD.']
+```
+
+> **Good to know:** UTM divides the Earth into 60 longitudinal zones, each 6° wide. Zone 1 starts at 180° West. The parser automatically normalizes input by ensuring proper spacing between zone and hemisphere.
+
+> **Good to know:** UTM uses the geodesy library for conversion. The coordinate system handles zone-specific calculations and converts to precise latitude/longitude values.
+
+> **Good to know:** The parser accepts both `18N` and `18 N` formats (with or without space between zone and hemisphere). Internally, it normalizes to the format expected by the geodesy library.
+
+## Related
+
+- [parseMGRS](../mgrs/parser.md) - Parse Military Grid Reference System coordinates
+- [parseDecimalDegrees](../latlon/decimal-degrees/parser.md) - Parse Decimal Degrees coordinates
+- [createCoordinate](../coordinate.md) - Create coordinate with automatic parsing
+- [coordinateSystems](../coordinate.md#coordinatesystems) - Available coordinate systems

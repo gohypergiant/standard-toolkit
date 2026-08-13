@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -21,9 +21,7 @@ import type { ViewStackContextValue, ViewStackEvent } from './types';
 
 const bus = Broadcast.getInstance<ViewStackEvent>();
 
-/**
- * Context for ViewStack component
- */
+/** Context for sharing state across ViewStack components */
 export const ViewStackContext = createContext<ViewStackContextValue>({
   parent: null,
   stack: [],
@@ -32,9 +30,7 @@ export const ViewStackContext = createContext<ViewStackContextValue>({
   unregister: () => undefined,
 });
 
-/**
- * Event handlers for ViewStack events
- */
+/** Event handlers for ViewStack events */
 export const ViewStackEventHandlers = {
   back: (stack: UniqueId) => bus.emit(ViewStackEventTypes.back, { stack }),
   clear: (stack: UniqueId) => bus.emit(ViewStackEventTypes.clear, { stack }),
@@ -43,7 +39,22 @@ export const ViewStackEventHandlers = {
 } as const;
 
 /**
- * Hook for emitting ViewStack events
+ * Hook for programmatic ViewStack control from anywhere in the application
+ *
+ * @example
+ * ```tsx
+ * function MyComponent() {
+ *   const viewStack = useViewStackEmit();
+ *
+ *   return (
+ *     <Button onPress={() => viewStack.push('view-id')}>
+ *       Navigate to View
+ *     </Button>
+ *   );
+ * }
+ * ```
+ *
+ * @returns Object with emit functions for back, clear, push, and reset actions.
  */
 export function useViewStackEmit() {
   const emitBack = useEmit<ViewStackEvent>(ViewStackEventTypes.back);

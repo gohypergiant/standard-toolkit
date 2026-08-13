@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -12,10 +12,28 @@
 'use client';
 
 import 'client-only';
-import { LinkContext } from 'react-aria-components';
+import { LinkContext } from 'react-aria-components/Link';
 import type { ProviderProps } from '@/lib/types';
 import type { LinkProps } from './types';
 
+/**
+ * LinkProvider - Context provider for setting default Link props.
+ *
+ * Use this to configure shared allowsVisited and className across
+ * multiple Link components.
+ *
+ * @param props - ProviderProps<LinkProps>
+ * @param props.children - Child components to receive context.
+ * @returns The rendered LinkProvider component.
+ *
+ * @example
+ * ```tsx
+ * <LinkProvider allowsVisited className="visited:underline">
+ *   <Link href="/link1">Link One</Link>
+ *   <Link href="/link2">Link Two</Link>
+ * </LinkProvider>
+ * ```
+ */
 export function LinkProvider({ children, ...props }: ProviderProps<LinkProps>) {
   return <LinkContext.Provider value={props}>{children}</LinkContext.Provider>;
 }

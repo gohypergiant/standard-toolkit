@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -20,8 +20,15 @@ import { callNextSecond, remainder } from './utils';
  * @returns A function to clear the timeout.
  *
  * @example
+ * ```typescript
+ * import { setClockInterval } from '@accelint/temporal/timers';
+ *
  * const cleanup = setClockInterval(() => console.log('hi'), 250);
- * // will log hi every 250ms starting on next clock second
+ * // Will log "hi" every 250ms starting on next clock second
+ *
+ * // Later, cleanup when done
+ * cleanup();
+ * ```
  */
 export function setClockInterval(cb: () => void, ms: number) {
   let timeout: number | undefined;
@@ -52,8 +59,15 @@ export function setClockInterval(cb: () => void, ms: number) {
  * @returns A function to clear the timeout.
  *
  * @example
+ * ```typescript
+ * import { setClockTimeout } from '@accelint/temporal/timers';
+ *
  * const cleanup = setClockTimeout(() => console.log('hi'), 250);
- * // will log hi after 250ms starting on next clock second
+ * // Will log "hi" after 250ms starting on next clock second
+ *
+ * // Later, cleanup if needed
+ * cleanup();
+ * ```
  */
 export function setClockTimeout(cb: () => void, ms: number) {
   let timeout: number | undefined;
