@@ -31,7 +31,9 @@ Cards stay inside the provider element by default. Set `bounds` to `viewport` to
 
 ### With Header Actions
 
-Custom icons and action buttons can be added to the card header via the provider. Alongside custom `{ icon, onClick }` buttons, two string shorthands are available: `'divider'` inserts a vertical separator, and `'pin'` adds the built-in pin toggle. A close button is always appended last.
+Custom icons and action buttons can be added to the card header via the provider. Alongside custom `{ icon, label, onClick }` buttons, two string shorthands are available: `'divider'` inserts a vertical separator, and `'pin'` adds the built-in pin toggle. A close button is always appended last.
+
+Action buttons render an icon with no visible text, so give each one a `label` — it becomes the button's accessible name.
 
 ```tsx
 <FloatingCardProvider
@@ -52,7 +54,7 @@ Custom icons and action buttons can be added to the card header via the provider
 
 ### Pinning
 
-The `'pin'` action adds a toggle that locks a card in place — a pinned card can no longer be dragged. Use `initialPinned` on the provider to pin cards at mount.
+The `'pin'` action adds a toggle that locks a card in place — a pinned card can no longer be dragged or resized. Use `initialPinned` on the provider to pin cards at mount.
 
 ```tsx
 <FloatingCardProvider headerActions={['pin']} initialPinned={[cardId]}>
@@ -180,10 +182,10 @@ const pinned = useSyncExternalStore(
 | Prop | Type | Default | Description |
 |------|------|---------|-------------|
 | `id` | `UniqueId` | — | Unique identifier for the floating card |
-| `title` | `string` | — | Title displayed in the card header. Falls back to `id` when omitted |
+| `title` | `string` | — | Title displayed in the card header. When omitted the header shows no title and the card is announced as "Floating card" |
 | `isOpen` | `boolean` | `true` | Whether the card is rendered |
-| `initialDimensions` | `{ width: number; height: number }` | `{ width: 300, height: 400 }` | Initial size of the card. Read once at mount |
-| `initialPosition` | `{ x: number; y: number }` | — | Initial coordinates of the card. Read once at mount |
+| `initialDimensions` | `{ width: number; height: number }` | `{ width: 300, height: 400 }` | Initial size of the card. Applied each time it opens; ignored while it stays open |
+| `initialPosition` | `{ x: number; y: number }` | `{ x: 100, y: 100 }` | Initial coordinates of the card. Applied each time it opens; ignored while it stays open |
 | `children` | `ReactNode` | — | Content rendered inside the card via a portal |
 
 ### FloatingCardProvider
@@ -205,7 +207,7 @@ Each entry is either a custom button object or one of two string shorthands.
 |-------|-------------|
 | `{ icon, onClick }` | Custom icon button. `icon` is a `ReactNode`, `onClick` is a `() => void` handler |
 | `'divider'` | Vertical divider separating action groups |
-| `'pin'` | Built-in pin toggle. Pinning a card disables dragging |
+| `'pin'` | Built-in pin toggle. Pinning a card disables dragging and resizing |
 
 ### useFloatingCard
 
@@ -218,7 +220,6 @@ Returns the provider's context value. Throws if called outside a `FloatingCardPr
 | `togglePinCard` | `(id: UniqueId) => void` | Toggles a card's pin state |
 | `isPinned` | `(id: UniqueId) => boolean` | Reads a card's current pin state |
 | `subscribeToPinState` | `(callback: () => void) => () => void` | Subscribes to pin changes; returns an unsubscribe function |
-| `openCard` / `addRef` / `removeRef` | — | Internal registration, managed by `FloatingCard` |
 
 ## Accessibility
 

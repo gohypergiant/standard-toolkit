@@ -23,7 +23,8 @@ import {
 import { Button } from '../button';
 import { Divider } from '../divider';
 import { Icon } from '../icon';
-import { FloatingCardContext } from './context';
+import { FloatingCardContext, FloatingCardRegistryContext } from './context';
+import type { FloatingCardRegistryValue } from './context';
 import { useCardLayout } from './hooks/use-card-layout';
 import { FloatingCardPanel } from './panel';
 import styles from './styles.module.css';
@@ -101,6 +102,7 @@ function CardHeaderActions({
 
         return (
           <Button
+            aria-label={action.label}
             // biome-ignore lint/suspicious/noArrayIndexKey: Using index as key is acceptable here because the order of actions is unlikely to change.
             key={`${id}-action-${index}`}
             onPress={action.onClick}
@@ -138,7 +140,8 @@ function CardHeaderActions({
  * @remarks
  * - Manages registration and cleanup of floating card DOM references
  * - Exposes closeCard, togglePinCard, and isPinned via context
- * - Cards are bounded within the provider element
+ * - Cards are bounded within the provider element by default; `bounds='viewport'`
+ *   lets them move anywhere on screen
  * - Cards are dragged by their header; pinning a card freezes drag and resize
  *
  * @example
@@ -167,10 +170,6 @@ export function FloatingCardProvider({
 }: FloatingCardProviderProps) {
   const rootRef = useRef<HTMLDivElement | null>(null);
   const [cards, setCards] = useState<Record<UniqueId, HTMLDivElement>>({});
-  const [titles, setTitles] = useState<Record<UniqueId, string | undefined>>(
-    {},
-  );
-  const [openCards, setOpenCards] = useState<UniqueId[]>([]);
 
   const pinnedRef = useRef<Set<UniqueId>>(new Set(initialPinned));
   const pinListenersRef = useRef<Set<() => void>>(new Set());
@@ -251,34 +250,10 @@ export function FloatingCardProvider({
 
   const closeCard = useCallback(
     (id: UniqueId) => {
-      setOpenCards((current) => current.filter((cardId) => cardId !== id));
       unregisterCard(id);
       removeRef(id);
     },
     [removeRef, unregisterCard],
-  );
-
-  /**
-   * Called by each FloatingCard on mount and whenever its identity or initial
-   * geometry changes. The provider owns the card list so that panels can render
-   * above the application content rather than inside it.
-   */
-  const openCard = useCallback(
-    (
-      id: UniqueId,
-      title: string | undefined,
-      position: Position,
-      dimensions: Dimensions,
-    ) => {
-      setOpenCards((current) =>
-        current.includes(id) ? current : [...current, id],
-      );
-      setTitles((current) =>
-        current[id] === title ? current : { ...current, [id]: title },
-      );
-      registerCard(id, position, dimensions);
-    },
-    [registerCard],
   );
 
   const getBounds = useCallback((): Bounds => {
@@ -307,42 +282,29 @@ export function FloatingCardProvider({
   const contextValue = useMemo<FloatingCardContextValue>(
     () => ({
       cards,
-      addRef,
-      removeRef,
       closeCard,
       togglePinCard,
       isPinned,
       subscribeToPinState,
-      openCard,
     }),
-    [
-      cards,
-      addRef,
-      removeRef,
-      closeCard,
-      togglePinCard,
-      isPinned,
-      subscribeToPinState,
-      openCard,
-    ],
+    [cards, closeCard, togglePinCard, isPinned, subscribeToPinState],
+  );
+
+  const registryValue = useMemo<FloatingCardRegistryValue>(
+    () => ({ openCard: registerCard, addRef }),
+    [registerCard, addRef],
   );
 
   return (
     <FloatingCardContext.Provider value={contextValue}>
-      <div className={clsx(styles.providerRoot, className)} ref={rootRef}>
-        {openCards.map((id) => {
-          const layout = layouts[id];
-
-          if (!layout) {
-            return null;
-          }
-
-          return (
+      <FloatingCardRegistryContext.Provider value={registryValue}>
+        <div className={clsx(styles.providerRoot, className)} ref={rootRef}>
+          {Object.entries(layouts).map(([id, layout]) => (
             <CardPanel
               actions={resolveMaybeFactory(headerActions, id)}
               getBounds={getBounds}
               icon={resolveMaybeFactory(icon, id)}
-              id={id}
+              id={id as UniqueId}
               isPinned={isPinned}
               key={id}
               layout={layout}
@@ -353,12 +315,11 @@ export function FloatingCardProvider({
               onResize={resizeCard}
               onTogglePin={togglePinCard}
               subscribeToPinState={subscribeToPinState}
-              title={titles[id]}
             />
-          );
-        })}
-        {children}
-      </div>
+          ))}
+          {children}
+        </div>
+      </FloatingCardRegistryContext.Provider>
     </FloatingCardContext.Provider>
   );
 }
@@ -377,7 +338,6 @@ type CardPanelProps = {
   onResize: (id: UniqueId, dimensions: Dimensions, position: Position) => void;
   onTogglePin: (id: UniqueId) => void;
   subscribeToPinState: (callback: () => void) => () => void;
-  title: string | undefined;
 };
 
 /**
@@ -403,8 +363,9 @@ function CardPanel({
   onResize,
   onTogglePin,
   subscribeToPinState,
-  title,
 }: CardPanelProps) {
+  const { title } = layout;
+
   const pinned = useSyncExternalStore(
     subscribeToPinState,
     () => isPinned(id),
@@ -434,7 +395,9 @@ function CardPanel({
       header={<CardHeaderStart icon={icon} title={title} />}
       id={id}
       isPinned={pinned}
-      label={title ?? id}
+      // Ids are typically uuids, which read as noise to a screen reader, so an
+      // untitled card gets a generic name instead.
+      label={title ?? 'Floating card'}
       layout={layout}
       onFocus={() => onFocus(id)}
       onMove={(position) => onMove(id, position)}

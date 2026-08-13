@@ -1,3 +1,4 @@
+// __private-exports
 /*
  * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
@@ -10,6 +11,7 @@
  * governing permissions and limitations under the License.
  */
 
+import { clamp } from 'radashi';
 import { useRef } from 'react';
 import { DRAG_THRESHOLD } from '../constants';
 import { useMouseInteraction } from './use-mouse-interaction';
@@ -46,21 +48,14 @@ export function constrainPosition(
   dimensions: Dimensions,
   bounds: Bounds,
 ): Position {
+  // A card wider than its bounds has no valid range, so the far edge is pinned
+  // to the near one and the card rests against the top-left corner.
+  const maxX = Math.max(bounds.left, bounds.right - dimensions.width);
+  const maxY = Math.max(bounds.top, bounds.bottom - dimensions.height);
+
   return {
-    x: Math.max(
-      bounds.left,
-      Math.min(
-        position.x,
-        Math.max(bounds.left, bounds.right - dimensions.width),
-      ),
-    ),
-    y: Math.max(
-      bounds.top,
-      Math.min(
-        position.y,
-        Math.max(bounds.top, bounds.bottom - dimensions.height),
-      ),
-    ),
+    x: clamp(position.x, bounds.left, maxX),
+    y: clamp(position.y, bounds.top, maxY),
   };
 }
 
@@ -146,7 +141,6 @@ export function useDrag({
         ),
       );
     },
-    onEnd: () => undefined,
   });
 
   return { handleStart };

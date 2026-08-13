@@ -1,3 +1,4 @@
+// __private-exports
 /*
  * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
@@ -10,6 +11,7 @@
  * governing permissions and limitations under the License.
  */
 
+import { clamp } from 'radashi';
 import { useCallback, useRef } from 'react';
 import { MIN_DIMENSIONS } from '../constants';
 import { useMouseInteraction } from './use-mouse-interaction';
@@ -62,13 +64,9 @@ export function useResize({
   const latest = useRef({ position, dimensions, disabled });
   latest.current = { position, dimensions, disabled };
 
-  // Which handle is active is only known at pointerdown, so it is stashed here
-  // for the shared session to read.
-  const handleRef = useRef<ResizeHandle>('se');
-
-  const { handleStart } = useMouseInteraction<ResizeSession>({
+  const { handleStart } = useMouseInteraction<ResizeSession, ResizeHandle>({
     shouldStart: (event) => !latest.current.disabled && event.button === 0,
-    onStart: (event) => {
+    onStart: (event, handle) => {
       onResizeStart?.();
 
       return {
@@ -76,7 +74,7 @@ export function useResize({
         pointerY: event.clientY,
         origin: latest.current.position,
         size: latest.current.dimensions,
-        handle: handleRef.current,
+        handle,
         bounds: getBounds(),
       };
     },
@@ -88,30 +86,35 @@ export function useResize({
       let { x, y } = origin;
       let { width, height } = size;
 
+      // A card that already extends past its bounds must still be resizable, so
+      // the limit never falls below the size the gesture started at -- otherwise
+      // the first pointermove would snap it inward.
       if (handle.includes('e')) {
-        width = Math.min(size.width + deltaX, bounds.right - origin.x);
+        const limit = Math.max(bounds.right - origin.x, size.width);
+
+        width = Math.min(size.width + deltaX, limit);
       }
 
       if (handle.includes('s')) {
-        height = Math.min(size.height + deltaY, bounds.bottom - origin.y);
+        const limit = Math.max(bounds.bottom - origin.y, size.height);
+
+        height = Math.min(size.height + deltaY, limit);
       }
 
       if (handle.includes('w')) {
         // Clamping x first keeps the right edge fixed while honouring bounds.
         const right = origin.x + size.width;
-        x = Math.min(
-          Math.max(origin.x + deltaX, bounds.left),
-          right - MIN_DIMENSIONS.width,
-        );
+        const limit = Math.min(bounds.left, origin.x);
+
+        x = clamp(origin.x + deltaX, limit, right - MIN_DIMENSIONS.width);
         width = right - x;
       }
 
       if (handle.includes('n')) {
         const bottom = origin.y + size.height;
-        y = Math.min(
-          Math.max(origin.y + deltaY, bounds.top),
-          bottom - MIN_DIMENSIONS.height,
-        );
+        const limit = Math.min(bounds.top, origin.y);
+
+        y = clamp(origin.y + deltaY, limit, bottom - MIN_DIMENSIONS.height);
         height = bottom - y;
       }
 
@@ -123,14 +126,12 @@ export function useResize({
         { x, y },
       );
     },
-    onEnd: () => undefined,
   });
 
   const getHandleProps = useCallback(
     (handle: ResizeHandle) => ({
       onPointerDown: (event: React.PointerEvent) => {
-        handleRef.current = handle;
-        handleStart(event.nativeEvent);
+        handleStart(event.nativeEvent, handle);
       },
     }),
     [handleStart],

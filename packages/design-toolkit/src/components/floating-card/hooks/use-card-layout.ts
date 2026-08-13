@@ -1,3 +1,4 @@
+// __private-exports
 /*
  * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
@@ -30,10 +31,21 @@ export function useCardLayout() {
   );
 
   const registerCard = useCallback(
-    (id: UniqueId, position: Position, dimensions: Dimensions) => {
+    (
+      id: UniqueId,
+      title: string | undefined,
+      position: Position,
+      dimensions: Dimensions,
+    ) => {
       setLayouts((current) => {
-        if (current[id]) {
-          return current;
+        const existing = current[id];
+
+        // An open card keeps the geometry it has, so a re-register cannot undo
+        // a drag or resize. Only the title stays live.
+        if (existing) {
+          return existing.title === title
+            ? current
+            : { ...current, [id]: { ...existing, title } };
         }
 
         const highest = Object.values(current).reduce(
@@ -43,7 +55,7 @@ export function useCardLayout() {
 
         return {
           ...current,
-          [id]: { position, dimensions, zIndex: highest + 1 },
+          [id]: { title, position, dimensions, zIndex: highest + 1 },
         };
       });
     },
@@ -101,7 +113,22 @@ export function useCardLayout() {
         return current;
       }
 
-      return { ...current, [id]: { ...target, zIndex: highest + 1 } };
+      // Renumber from the bottom rather than incrementing past the previous
+      // top. Alternating focus between two cards would otherwise climb without
+      // limit and eventually paint over application chrome.
+      const ordered = Object.entries(current)
+        .filter(([cardId]) => cardId !== id)
+        .sort(([, a], [, b]) => a.zIndex - b.zIndex);
+
+      const next = { ...current };
+
+      ordered.forEach(([cardId, layout], index) => {
+        next[cardId as UniqueId] = { ...layout, zIndex: BASE_Z_INDEX + index };
+      });
+
+      next[id] = { ...target, zIndex: BASE_Z_INDEX + ordered.length };
+
+      return next;
     });
   }, []);
 

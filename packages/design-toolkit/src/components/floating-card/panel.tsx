@@ -1,3 +1,4 @@
+// __private-exports
 /*
  * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
@@ -128,6 +129,9 @@ export function FloatingCardPanel({
     // biome-ignore lint/a11y/useKeyWithClickEvents: pointerdown only raises the card; every control inside stays keyboard reachable.
     <div
       aria-label={label}
+      // Cards coexist with the rest of the application rather than blocking it,
+      // so the dialog is explicitly non-modal.
+      aria-modal='false'
       className={styles.panel}
       data-pinned={isPinned || undefined}
       onPointerDown={onFocus}

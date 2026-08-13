@@ -91,6 +91,7 @@ export const WithHeaderActions: Story = {
           headerActions={[
             {
               icon: <span className='text-lg'>⚙️</span>,
+              label: 'Action',
               onClick: () => alert('Action clicked'),
             },
           ]}
@@ -209,20 +210,24 @@ export const WithHeaderActionDividers: Story = {
           headerActions={[
             {
               icon: <span>📌</span>,
+              label: 'Pin',
               onClick: () => alert('Pin clicked'),
             },
             {
               icon: <span className='text-lg'>🔗</span>,
+              label: 'Share',
               onClick: () => alert('Share clicked'),
             },
             'divider',
             {
               icon: <span className='text-lg'>⚙️</span>,
+              label: 'Settings',
               onClick: () => alert('Settings clicked'),
             },
             'divider',
             {
               icon: <span className='text-lg'>🗑️</span>,
+              label: 'Delete',
               onClick: () => alert('Delete clicked'),
             },
           ]}

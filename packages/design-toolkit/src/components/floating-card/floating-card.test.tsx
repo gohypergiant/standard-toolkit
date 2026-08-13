@@ -61,14 +61,17 @@ describe('FloatingCard', () => {
     expect(screen.getByText('Panel body')).toBeInTheDocument();
   });
 
-  it('should fall back to the id when no title is given', () => {
+  it('should use a generic accessible name when no title is given', () => {
     renderProvider(
       <FloatingCard id={cardId}>
         <p>Panel body</p>
       </FloatingCard>,
     );
 
-    expect(screen.getByRole('dialog', { name: cardId })).toBeInTheDocument();
+    // The id is a uuid, so it would read as noise rather than a name.
+    expect(
+      screen.getByRole('dialog', { name: 'Floating card' }),
+    ).toBeInTheDocument();
   });
 
   it('should update the accessible name when the title changes', () => {

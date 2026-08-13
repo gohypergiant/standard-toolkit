@@ -13,9 +13,13 @@ BREAKING CHANGES:
 - The `dockview-react` peer dependency has been removed. Applications that
   installed it only for `FloatingCard` can drop it.
 - `useFloatingCard()` no longer returns `api`. It previously exposed the
-  underlying `DockviewApi` instance, which no longer exists. The rest of the
-  context is unchanged: `cards`, `closeCard`, `togglePinCard`, `isPinned`,
-  `subscribeToPinState`, `addRef`, and `removeRef`.
+  underlying `DockviewApi` instance, which no longer exists.
+- `useFloatingCard()` no longer returns `addRef` or `removeRef`. Registering a
+  card is internal wiring between `FloatingCard` and its provider, so it moved
+  off the value applications consume. Nothing else called them.
+
+`useFloatingCard()` still returns `cards`, `closeCard`, `togglePinCard`,
+`isPinned`, and `subscribeToPinState`, all unchanged.
 
 Every existing `FloatingCard` and `FloatingCardProvider` prop keeps its
 behavior, so applications that do not read `api` need no code changes.

@@ -13,7 +13,7 @@
 import { type PropsWithChildren, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { DEFAULT_DIMENSIONS, DEFAULT_POSITION } from './constants';
-import { useFloatingCard } from './context';
+import { useFloatingCard, useFloatingCardRegistry } from './context';
 import type { FloatingCardProps } from './types';
 
 /**
@@ -33,8 +33,10 @@ import type { FloatingCardProps } from './types';
  * @remarks
  * - Requires `FloatingCardProvider` as an ancestor.
  * - The floating card is only rendered if a valid DOM reference exists for the given `id`.
- * - `initialDimensions` and `initialPosition` are applied when the card opens;
- *   later changes are ignored so a user's own drag or resize is never overridden.
+ * - `initialDimensions` and `initialPosition` are applied each time the card
+ *   opens. While it stays open, later changes to them are ignored so a user's
+ *   own drag or resize is never overridden; closing and reopening starts the
+ *   card from those values again.
  *
  * @example
  * ```tsx
@@ -67,7 +69,8 @@ export function FloatingCard({
   initialDimensions,
   initialPosition,
 }: PropsWithChildren<FloatingCardProps>) {
-  const { cards, openCard, closeCard } = useFloatingCard();
+  const { cards, closeCard } = useFloatingCard();
+  const { openCard } = useFloatingCardRegistry();
 
   const { width, height } = initialDimensions ?? DEFAULT_DIMENSIONS;
   const { x, y } = initialPosition ?? DEFAULT_POSITION;

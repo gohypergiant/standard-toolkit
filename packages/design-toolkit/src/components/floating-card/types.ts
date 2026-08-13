@@ -31,8 +31,9 @@ export type Bounds = {
 /** Edge or corner a resize gesture pulls from. */
 export type ResizeHandle = 'n' | 's' | 'e' | 'w' | 'ne' | 'nw' | 'se' | 'sw';
 
-/** Geometry and stacking for one card, tracked by the provider. */
+/** Geometry, title, and stacking for one card, tracked by the provider. */
 export type FloatingCardLayout = {
+  title: string | undefined;
   position: Position;
   dimensions: Dimensions;
   zIndex: number;
@@ -48,28 +49,15 @@ export type FloatingCardContextValue = {
   /** Registry mapping card IDs to their rendered DOM containers */
   cards: Record<UniqueId, HTMLDivElement>;
 
-  /** Registers a DOM ref for a card container after it mounts */
-  addRef: (id: UniqueId, ref: HTMLDivElement | null) => void;
-
-  /** Unregisters a card's DOM ref when it's removed */
-  removeRef: (view: UniqueId) => void;
-
-  /** Programmatically closes a floating card by ID */
+  /**
+   * Programmatically closes a floating card by ID.
+   *
+   * @remarks Closing clears the card's pin state, so a pinned card that closes
+   * reopens unpinned.
+   */
   closeCard: (id: UniqueId) => void;
 
-  /**
-   * Registers a card with the provider so it renders as a panel.
-   *
-   * @remarks Called by `FloatingCard`; applications use that component instead.
-   */
-  openCard: (
-    id: UniqueId,
-    title: string | undefined,
-    position: Position,
-    dimensions: Dimensions,
-  ) => void;
-
-  /** Toggles pin state for a floating card, disabling drag when pinned */
+  /** Toggles pin state for a floating card, disabling drag and resize when pinned */
   togglePinCard: (id: UniqueId) => void;
 
   /** Checks if a floating card is currently pinned */
@@ -144,6 +132,13 @@ export type FloatingCardHeaderAction =
   | {
       /** Icon to display in the action button */
       icon: ReactNode;
+      /**
+       * Accessible name for the button.
+       *
+       * @remarks The button renders an icon with no visible text, so without a
+       * label screen readers announce it only as "button".
+       */
+      label?: string;
       /** Handler called when the action button is clicked */
       onClick: () => void;
     }

@@ -1,3 +1,4 @@
+// __private-exports
 /*
  * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
@@ -17,13 +18,24 @@ import { useCallback, useEffect, useRef } from 'react';
  *
  * @template Session - Mutable state carried through a single interaction.
  */
-export type MouseInteractionConfig<Session> = {
-  /** Called on pointerdown. Return the session state, or null to abort. */
-  onStart: (event: PointerEvent) => Session | null;
-  /** Called on each pointermove while a session is active. */
+export type MouseInteractionConfig<Session, Payload = void> = {
+  /**
+   * Called on pointerdown. Return the session state, or null to abort.
+   *
+   * @remarks `payload` carries whatever the caller passed to `handleStart`,
+   * which lets one element's handler describe what it started -- a resize
+   * handle naming its direction, for instance.
+   */
+  onStart: (event: PointerEvent, payload: Payload) => Session | null;
+  /**
+   * Called on each pointermove while a session is active.
+   *
+   * @remarks The session object persists across the whole gesture and may be
+   * mutated in place to carry state between moves.
+   */
   onMove: (event: PointerEvent, session: Session) => void;
-  /** Called on pointerup or pointercancel, ending the session. */
-  onEnd: (event: PointerEvent, session: Session) => void;
+  /** Optional. Called on pointerup or pointercancel, ending the session. */
+  onEnd?: (event: PointerEvent, session: Session) => void;
   /** Optional guard run before onStart; return false to ignore the event. */
   shouldStart?: (event: PointerEvent) => boolean;
 };
@@ -48,12 +60,12 @@ export type MouseInteractionConfig<Session> = {
  * });
  * ```
  */
-export function useMouseInteraction<Session>({
+export function useMouseInteraction<Session, Payload = void>({
   onStart,
   onMove,
   onEnd,
   shouldStart,
-}: MouseInteractionConfig<Session>) {
+}: MouseInteractionConfig<Session, Payload>) {
   const sessionRef = useRef<Session | null>(null);
   const abortRef = useRef<AbortController | null>(null);
 
@@ -69,16 +81,21 @@ export function useMouseInteraction<Session>({
   }, []);
 
   const handleStart = useCallback(
-    (event: PointerEvent) => {
+    (event: PointerEvent, payload: Payload) => {
       if (handlers.current.shouldStart?.(event) === false) {
         return;
       }
 
-      const session = handlers.current.onStart(event);
+      const session = handlers.current.onStart(event, payload);
 
       if (session === null) {
         return;
       }
+
+      // A second press before the first releases -- a lost pointerup, or a
+      // resize handle pressed mid-drag -- would otherwise strand the previous
+      // controller's listeners, leaving two sessions driving the same card.
+      abortRef.current?.abort();
 
       sessionRef.current = session;
       event.preventDefault();
@@ -99,7 +116,7 @@ export function useMouseInteraction<Session>({
           return;
         }
 
-        handlers.current.onEnd(endEvent, sessionRef.current);
+        handlers.current.onEnd?.(endEvent, sessionRef.current);
         endSession();
       };
 

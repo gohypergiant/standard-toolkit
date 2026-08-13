@@ -12,6 +12,7 @@
 
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { useState } from 'react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { FloatingCard } from '.';
 import { DRAG_THRESHOLD } from './constants';
@@ -19,7 +20,7 @@ import { FloatingCardProvider } from './provider';
 import type { UniqueId } from '@accelint/core/utility/uuid';
 import type { UserEvent } from '@testing-library/user-event';
 import type { ReactNode } from 'react';
-import type { FloatingCardProviderProps } from './types';
+import type { FloatingCardProps, FloatingCardProviderProps } from './types';
 
 vi.mock('@accelint/design-toolkit/components/icon', () => ({
   Icon: ({ children }: { children: ReactNode }) => <span>{children}</span>,
@@ -83,7 +84,10 @@ function drag(
   ]);
 }
 
-function renderCard(props: Partial<FloatingCardProviderProps> = {}) {
+function renderCard(
+  props: Partial<FloatingCardProviderProps> = {},
+  cardProps: Partial<FloatingCardProps> = {},
+) {
   render(
     <FloatingCardProvider {...props}>
       <FloatingCard
@@ -91,6 +95,7 @@ function renderCard(props: Partial<FloatingCardProviderProps> = {}) {
         title='Details'
         initialDimensions={{ width: 300, height: 400 }}
         initialPosition={{ x: 100, y: 100 }}
+        {...cardProps}
       >
         <p>Panel body</p>
       </FloatingCard>
@@ -175,6 +180,24 @@ describe('dragging a card', () => {
     expect(Number.parseInt(card.style.left, 10)).toBeGreaterThan(
       CONTAINER.width - 300,
     );
+  });
+
+  it('should rest a card larger than its container against the top-left', async () => {
+    const { card, header, user } = renderCard(
+      {},
+      {
+        initialDimensions: {
+          width: CONTAINER.width + 100,
+          height: CONTAINER.height + 100,
+        },
+      },
+    );
+
+    // There is no in-bounds position for an oversized card, so the clamp has to
+    // collapse to the near edge rather than invert.
+    await drag(user, header, { x: 150, y: 110 }, { x: 400, y: 400 });
+
+    expect(card).toHaveStyle({ left: '0px', top: '0px' });
   });
 
   it('should not drag when the press starts on a header button', async () => {
@@ -297,6 +320,64 @@ describe('resizing a card', () => {
     });
   });
 
+  it('should not shift a card that already starts left of the container', async () => {
+    const { card, user } = renderCard(
+      {},
+      { initialPosition: { x: -50, y: 100 } },
+    );
+
+    // The west handle must respect where the card actually is, not snap it to
+    // the container edge on the first move.
+    await drag(user, handleFor(card, 'w'), { x: 0, y: 300 }, { x: 0, y: 300 });
+
+    expect(card).toHaveStyle({ left: '-50px', width: '300px' });
+  });
+
+  it('should not shift a card that already starts above the container', async () => {
+    const { card, user } = renderCard(
+      {},
+      { initialPosition: { x: 100, y: -50 } },
+    );
+
+    await drag(user, handleFor(card, 'n'), { x: 250, y: 0 }, { x: 250, y: 0 });
+
+    expect(card).toHaveStyle({ top: '-50px', height: '400px' });
+  });
+
+  it('should not shrink a card that already extends past the right edge', async () => {
+    const { card, user } = renderCard(
+      {},
+      { initialPosition: { x: CONTAINER.width - 50, y: 100 } },
+    );
+
+    // A zero-distance gesture must leave the card alone, even though its right
+    // edge sits outside the bounds.
+    await drag(
+      user,
+      handleFor(card, 'e'),
+      { x: 400, y: 300 },
+      { x: 400, y: 300 },
+    );
+
+    expect(card).toHaveStyle({ width: '300px' });
+  });
+
+  it('should not shrink a card that already extends past the bottom edge', async () => {
+    const { card, user } = renderCard(
+      {},
+      { initialPosition: { x: 100, y: CONTAINER.height - 50 } },
+    );
+
+    await drag(
+      user,
+      handleFor(card, 's'),
+      { x: 250, y: 500 },
+      { x: 250, y: 500 },
+    );
+
+    expect(card).toHaveStyle({ height: '400px' });
+  });
+
   it('should not render resize handles while pinned', () => {
     const { card } = renderCard({
       headerActions: ['pin'],
@@ -304,6 +385,50 @@ describe('resizing a card', () => {
     });
 
     expect(card.querySelectorAll('[data-handle]')).toHaveLength(0);
+  });
+});
+
+describe('re-registration', () => {
+  function Renameable() {
+    const [title, setTitle] = useState('Before');
+
+    return (
+      <FloatingCardProvider>
+        <button onClick={() => setTitle('After')} type='button'>
+          rename
+        </button>
+        <FloatingCard
+          id={cardId}
+          title={title}
+          initialDimensions={{ width: 300, height: 400 }}
+          initialPosition={{ x: 100, y: 100 }}
+        >
+          <p>Panel body</p>
+        </FloatingCard>
+      </FloatingCardProvider>
+    );
+  }
+
+  it('should keep a dragged position when the title changes', async () => {
+    const user = userEvent.setup();
+
+    render(<Renameable />);
+
+    const card = screen.getByRole('dialog', { name: 'Before' });
+    const header = card.firstElementChild as HTMLElement;
+
+    await drag(user, header, { x: 150, y: 110 }, { x: 250, y: 210 });
+
+    expect(card).toHaveStyle({ left: '200px', top: '200px' });
+
+    // Renaming re-registers the card; its geometry must survive so the rename
+    // cannot undo the user's drag.
+    await user.click(screen.getByRole('button', { name: 'rename' }));
+
+    expect(screen.getByRole('dialog', { name: 'After' })).toHaveStyle({
+      left: '200px',
+      top: '200px',
+    });
   });
 });
 
@@ -335,5 +460,35 @@ describe('stacking order', () => {
     expect(Number(first.style.zIndex)).toBeGreaterThan(
       Number(second.style.zIndex),
     );
+  });
+
+  it('should keep stacking values bounded as focus alternates', async () => {
+    const user = userEvent.setup();
+
+    render(
+      <FloatingCardProvider>
+        <FloatingCard id={'first' as UniqueId} title='First'>
+          <p>Body A</p>
+        </FloatingCard>
+        <FloatingCard id={'second' as UniqueId} title='Second'>
+          <p>Body B</p>
+        </FloatingCard>
+      </FloatingCardProvider>,
+    );
+
+    const first = screen.getByRole('dialog', { name: 'First' });
+    const second = screen.getByRole('dialog', { name: 'Second' });
+
+    for (let round = 0; round < 10; round++) {
+      await user.pointer({
+        keys: '[MouseLeft]',
+        target: round % 2 === 0 ? first : second,
+      });
+    }
+
+    // Two cards can only ever occupy the two lowest slots; an ever-incrementing
+    // counter would climb past the application's own layering by now.
+    expect(Number(first.style.zIndex)).toBeLessThanOrEqual(2);
+    expect(Number(second.style.zIndex)).toBeLessThanOrEqual(2);
   });
 });

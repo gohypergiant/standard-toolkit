@@ -171,7 +171,6 @@
     "./components/floating-card": "./dist/components/floating-card/index.js",
     "./components/floating-card/constants": "./dist/components/floating-card/constants.js",
     "./components/floating-card/context": "./dist/components/floating-card/context.js",
-    "./components/floating-card/hooks/throttle": "./dist/components/floating-card/hooks/throttle.js",
     "./components/floating-card/hooks/use-card-layout": "./dist/components/floating-card/hooks/use-card-layout.js",
     "./components/floating-card/hooks/use-drag": "./dist/components/floating-card/hooks/use-drag.js",
     "./components/floating-card/hooks/use-mouse-interaction": "./dist/components/floating-card/hooks/use-mouse-interaction.js",
