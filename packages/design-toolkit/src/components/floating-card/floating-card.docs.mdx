@@ -6,11 +6,12 @@ import * as FloatingCardStories from './floating-card.stories';
 
 # FloatingCard
 
-Draggable, resizable floating panels rendered via React portals. Built on top of [dockview](https://dockview.dev/) to provide a lightweight windowing system for overlay content such as detail views, inspectors, and contextual tooling.
+Draggable, resizable floating panels rendered via React portals. Provides a lightweight windowing system for overlay content such as detail views, inspectors, and contextual tooling.
 
 Components:
 - **FloatingCard** - Portal-based card that registers with the floating card engine
-- **FloatingCardProvider** - Context provider that manages card layout, lifecycle, and the dockview instance
+- **FloatingCardProvider** - Context provider that manages card layout, lifecycle, and stacking order
+- **useFloatingCard** - Hook for programmatic control of cards from anywhere inside the provider
 
 ## Example Usage
 
@@ -24,17 +25,21 @@ Components:
 </FloatingCardProvider>
 ```
 
+Cards stay inside the provider element by default. Set `bounds` to `viewport` to let them move anywhere on screen — toggle the control below and drag the card past the outlined box to compare.
+
 <Canvas of={FloatingCardStories.Default} />
 
 ### With Header Actions
 
-Custom icons and action buttons can be added to the card header via the provider.
+Custom icons and action buttons can be added to the card header via the provider. Alongside custom `{ icon, onClick }` buttons, two string shorthands are available: `'divider'` inserts a vertical separator, and `'pin'` adds the built-in pin toggle. A close button is always appended last.
 
 ```tsx
 <FloatingCardProvider
   icon={() => <span>🌟</span>}
   headerActions={[
     { icon: <span>⚙️</span>, onClick: () => console.log('action') },
+    'divider',
+    'pin',
   ]}
 >
   <FloatingCard id={cardId} title="Settings">
@@ -45,23 +50,46 @@ Custom icons and action buttons can be added to the card header via the provider
 
 <Canvas of={FloatingCardStories.WithHeaderActions} />
 
-### Multiple Cards
+### Pinning
 
-Multiple floating cards can coexist within the same provider. Each card is independently draggable and resizable.
+The `'pin'` action adds a toggle that locks a card in place — a pinned card can no longer be dragged. Use `initialPinned` on the provider to pin cards at mount.
 
 ```tsx
-<FloatingCardProvider>
-  <FloatingCard id={idA} title="Card A">Content A</FloatingCard>
-  <FloatingCard id={idB} title="Card B">Content B</FloatingCard>
-  <FloatingCard id={idC} title="Card C">Content C</FloatingCard>
+<FloatingCardProvider headerActions={['pin']} initialPinned={[cardId]}>
+  <FloatingCard id={cardId} title="Pinnable Card">
+    Dragging is disabled while pinned
+  </FloatingCard>
+</FloatingCardProvider>
+```
+
+<Canvas of={FloatingCardStories.Pinnable} />
+
+### Multiple Cards
+
+Multiple floating cards can coexist within the same provider, each independently draggable and resizable. Give each one an `initialPosition` so they do not all open on the same spot.
+
+Both `icon` and `headerActions` accept a factory function that receives the card ID, so each card can have its own header configuration — below, only Card A gets a pin button.
+
+```tsx
+<FloatingCardProvider
+  headerActions={(cardId) => (cardId === idA ? ['pin'] : [])}
+>
+  <FloatingCard id={idA} title="Card A" initialPosition={{ x: 24, y: 24 }}>
+    Has a pin button
+  </FloatingCard>
+  <FloatingCard id={idB} title="Card B" initialPosition={{ x: 132, y: 260 }}>
+    Close button only
+  </FloatingCard>
 </FloatingCardProvider>
 ```
 
 <Canvas of={FloatingCardStories.MultipleCards} />
 
-### Custom Dimensions
+### Custom Dimensions and Position
 
-Override the default panel size with `initialDimensions`.
+Override the default panel size with `initialDimensions`, and its starting coordinates with `initialPosition`. Both are read once when the card mounts; changing them afterwards has no effect, since the user is free to move and resize the card from there.
+
+Cards that do not set `initialPosition` all start at the same default spot, so give each one a position when several open at once.
 
 ```tsx
 <FloatingCardProvider>
@@ -69,6 +97,7 @@ Override the default panel size with `initialDimensions`.
     id={cardId}
     title="Compact"
     initialDimensions={{ width: 250, height: 200 }}
+    initialPosition={{ x: 24, y: 24 }}
   >
     Smaller panel
   </FloatingCard>
@@ -79,7 +108,7 @@ Override the default panel size with `initialDimensions`.
 
 ### Controlled Visibility
 
-Toggle a card open or closed with the `isOpen` prop. Closed cards are removed from the layout but can be quickly reopened without remounting.
+Toggle a card open or closed with the `isOpen` prop. Closing removes the panel and unmounts its content, and reopening mounts it again at its initial size and position — so any state held inside the card is lost. Lift state you need to survive a close above the `FloatingCard`.
 
 ```tsx
 const [isOpen, setIsOpen] = useState(true);
@@ -93,6 +122,57 @@ const [isOpen, setIsOpen] = useState(true);
 
 <Canvas of={FloatingCardStories.ControlledVisibility} />
 
+### Scrollable Content
+
+Cards do not scroll their own content. Make the content container scrollable when it can overflow the card's height.
+
+```tsx
+<FloatingCardProvider>
+  <FloatingCard id={cardId} title="Log">
+    <div className="h-full overflow-auto p-m">
+      {lines.map((line) => (
+        <p key={line.id}>{line.text}</p>
+      ))}
+    </div>
+  </FloatingCard>
+</FloatingCardProvider>
+```
+
+<Canvas of={FloatingCardStories.WithScrollableContent} />
+
+### Programmatic Control
+
+`useFloatingCard` exposes the card registry and control methods to any component rendered inside the provider. It throws if called outside one.
+
+```tsx
+import { useFloatingCard } from '@accelint/design-toolkit/components/floating-card/context';
+
+function CardControls({ cardId }) {
+  const { closeCard, togglePinCard, isPinned } = useFloatingCard();
+
+  return (
+    <>
+      <Button onPress={() => closeCard(cardId)}>Close</Button>
+      <Button onPress={() => togglePinCard(cardId)}>
+        {isPinned(cardId) ? 'Unpin' : 'Pin'}
+      </Button>
+    </>
+  );
+}
+```
+
+Because `isPinned` reads from a mutable store rather than React state, subscribe with `subscribeToPinState` when a component needs to re-render on pin changes:
+
+```tsx
+const { isPinned, subscribeToPinState } = useFloatingCard();
+
+const pinned = useSyncExternalStore(
+  subscribeToPinState,
+  () => isPinned(cardId),
+  () => false,
+);
+```
+
 ## Props
 
 ### FloatingCard
@@ -100,9 +180,10 @@ const [isOpen, setIsOpen] = useState(true);
 | Prop | Type | Default | Description |
 |------|------|---------|-------------|
 | `id` | `UniqueId` | — | Unique identifier for the floating card |
-| `title` | `string` | — | Title displayed in the card header |
+| `title` | `string` | — | Title displayed in the card header. Falls back to `id` when omitted |
 | `isOpen` | `boolean` | `true` | Whether the card is rendered |
-| `initialDimensions` | `{ width: number; height: number }` | `{ width: 300, height: 400 }` | Initial size of the floating card |
+| `initialDimensions` | `{ width: number; height: number }` | `{ width: 300, height: 400 }` | Initial size of the card. Read once at mount |
+| `initialPosition` | `{ x: number; y: number }` | — | Initial coordinates of the card. Read once at mount |
 | `children` | `ReactNode` | — | Content rendered inside the card via a portal |
 
 ### FloatingCardProvider
@@ -110,25 +191,52 @@ const [isOpen, setIsOpen] = useState(true);
 | Prop | Type | Default | Description |
 |------|------|---------|-------------|
 | `icon` | `ReactNode \| (cardId: string) => ReactNode` | — | Icon rendered at the start of the card header |
-| `headerActions` | `Array \| (cardId: string) => Array` | — | Action buttons rendered before the close button |
+| `headerActions` | `FloatingCardHeaderAction[] \| (cardId: string) => FloatingCardHeaderAction[]` | — | Action buttons rendered before the close button |
+| `initialPinned` | `readonly UniqueId[]` | — | Card IDs pinned when the provider mounts. Read once at mount |
+| `bounds` | `'provider' \| 'viewport'` | `'provider'` | Region cards are confined to while dragging and resizing |
 | `className` | `string` | — | Additional CSS class for the provider root |
 | `children` | `ReactNode` | — | Application content and FloatingCard components |
 
-**headerActions items:**
+**FloatingCardHeaderAction:**
 
-| Key | Type | Description |
-|-----|------|-------------|
-| `icon` | `ReactNode` | Icon displayed in the action button |
-| `onClick` | `() => void` | Callback when the action is clicked |
+Each entry is either a custom button object or one of two string shorthands.
+
+| Value | Description |
+|-------|-------------|
+| `{ icon, onClick }` | Custom icon button. `icon` is a `ReactNode`, `onClick` is a `() => void` handler |
+| `'divider'` | Vertical divider separating action groups |
+| `'pin'` | Built-in pin toggle. Pinning a card disables dragging |
+
+### useFloatingCard
+
+Returns the provider's context value. Throws if called outside a `FloatingCardProvider`.
+
+| Member | Type | Description |
+|--------|------|-------------|
+| `cards` | `Record<UniqueId, HTMLDivElement>` | Registry mapping card IDs to their portal containers |
+| `closeCard` | `(id: UniqueId) => void` | Closes a card by ID |
+| `togglePinCard` | `(id: UniqueId) => void` | Toggles a card's pin state |
+| `isPinned` | `(id: UniqueId) => boolean` | Reads a card's current pin state |
+| `subscribeToPinState` | `(callback: () => void) => () => void` | Subscribes to pin changes; returns an unsubscribe function |
+| `openCard` / `addRef` / `removeRef` | — | Internal registration, managed by `FloatingCard` |
+
+## Accessibility
+
+- Each card is exposed as a non-modal dialog (`role="dialog"`, `aria-modal="false"`), labelled by its `title`
+- Header action buttons are in the tab order and operable by keyboard
+- The pin toggle reports its state with `aria-pressed`
+- Provide an `icon` with meaning conveyed by the card `title` rather than by the icon alone — header buttons render icons without visible text
 
 ## Implementation Notes
 
-- Renders children into floating dockview panels via `createPortal`
-- The provider creates an absolutely-positioned overlay with `pointer-events: none`; only the card panels receive pointer events
-- Floating cards are bounded within the viewport
-- Stale card refs are automatically cleaned up when panels are removed via any path (drag close, API close, etc.)
-- Header adapters map dockview's internal props to the custom header components
+- Has no third-party dependencies; drag, resize, and stacking are implemented directly
+- Renders children into their card via `createPortal`, so content stays mounted where it is written in the tree
+- The provider creates an absolutely-positioned overlay with `pointer-events: none`; only the cards themselves receive pointer events
+- Cards are bounded within the provider element by default, so a provider can occupy any region of the page; pass `bounds="viewport"` to let cards move anywhere on screen
+- Cards are dragged by their header and resized from any edge or corner; pinning a card freezes both
+- Pressing a card raises it above its siblings; stacking order is tracked per provider, so several providers on a page do not interfere
+- Card refs are cleaned up when a card closes or unmounts
 
-**Related:**
-- [Dockview Documentation](https://dockview.dev/)
+## Related
+
 - [GitHub Source](https://github.com/gohypergiant/standard-toolkit/tree/main/packages/design-toolkit/src/components/floating-card)

@@ -10,1306 +10,545 @@
  * governing permissions and limitations under the License.
  */
 
-import { act, render, screen } from '@testing-library/react';
+import { render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { describe, expect, it, type Mock, vi } from 'vitest';
+import { useState } from 'react';
+import { describe, expect, it, vi } from 'vitest';
 import { FloatingCard } from '.';
-import { FloatingCardContext, useFloatingCard } from './context';
+import { useFloatingCard } from './context';
 import { FloatingCardProvider } from './provider';
 import type { UniqueId } from '@accelint/core/utility/uuid';
-import type {
-  DockviewApi,
-  IDockviewHeaderActionsProps,
-  IDockviewPanelProps,
-} from 'dockview-react';
-import type { FunctionComponent } from 'react';
-import type { FloatingCardContextValue } from './types';
+import type { ReactNode } from 'react';
+import type { FloatingCardProviderProps } from './types';
 
-// --- Design toolkit component mocks ---
-// Icon and Button import `client-only` which is not compatible with the jsdom
-// test environment. Mock them with minimal HTML equivalents so adapter renders work.
+// Icon and Button reach for `client-only`, which jsdom cannot resolve. Minimal
+// HTML stand-ins keep the accessible names these tests query by.
 vi.mock('@accelint/design-toolkit/components/icon', () => ({
-  Icon: ({ children }: { children: React.ReactNode }) => (
-    <span data-testid='icon'>{children}</span>
-  ),
-}));
-
-vi.mock('@accelint/design-toolkit/components/button', () => ({
-  Button: ({
-    children,
-    onClick,
-    'aria-label': ariaLabel,
-    'aria-pressed': ariaPressed,
-  }: {
-    children: React.ReactNode;
-    onClick?: () => void;
-    'aria-label'?: string;
-    'aria-pressed'?: boolean;
-  }) => (
-    <button
-      onClick={onClick}
-      type='button'
-      aria-label={ariaLabel}
-      aria-pressed={ariaPressed}
-    >
-      {children}
-    </button>
-  ),
+  Icon: ({ children }: { children: ReactNode }) => <span>{children}</span>,
 }));
 
 vi.mock('@accelint/icons/cancel', () => ({
-  default: () => <svg data-testid='close-icon' />,
+  default: () => <svg role='presentation' />,
 }));
 
 vi.mock('@accelint/icons/pin', () => ({
-  default: () => <svg data-testid='pin-icon' />,
+  default: () => <svg role='presentation' />,
 }));
 
-// --- Dockview mock setup ---
-
-type OnReadyCallback = (event: { api: MockDockviewApi }) => void;
-type OnDidRemovePanelCallback = (event: { id: string }) => void;
-
-type MockDockviewApi = {
-  getPanel: Mock;
-  onDidRemovePanel: Mock;
-};
-
-let capturedOnReady: OnReadyCallback | undefined;
-let capturedProps: Record<string, unknown> = {};
-
-vi.mock('dockview-react', () => ({
-  DockviewReact: (props: Record<string, unknown>) => {
-    capturedProps = props;
-    capturedOnReady = props.onReady as OnReadyCallback;
-    return <div data-testid='dockview-mock' />;
-  },
-}));
-
-function createMockApi(): MockDockviewApi {
-  return {
-    getPanel: vi.fn(),
-    onDidRemovePanel: vi.fn(() => ({ dispose: vi.fn() })),
-  };
-}
-
-function triggerReady(api: MockDockviewApi) {
-  capturedOnReady?.({ api });
-}
-
-/**
- * Helper component that reads PanelContext and reports it via a callback.
- */
-function ContextReader({
-  onContext,
-}: Readonly<{
-  onContext: (ctx: FloatingCardContextValue) => void;
-}>) {
-  const ctx = useFloatingCard();
-  onContext(ctx);
-  return <div data-testid='context-reader' />;
-}
-
-function captureContext() {
-  const spy = vi.fn<(ctx: FloatingCardContextValue) => void>();
-
-  function latest(): FloatingCardContextValue {
-    return spy.mock.calls.at(-1)?.[0] as FloatingCardContextValue;
-  }
-
-  return { spy, latest };
-}
-
-describe('FloatingCardContext defaults', () => {
-  it('should include closeCard as a no-op function', () => {
-    const { spy, latest } = captureContext();
-
-    render(
-      <FloatingCardContext.Provider
-        value={{
-          cards: {},
-          addRef: () => undefined,
-          removeRef: () => undefined,
-          closeCard: () => undefined,
-          togglePinCard: () => undefined,
-          isPinned: () => false,
-          subscribeToPinState: () => () => null,
-          api: null,
-        }}
-      >
-        <ContextReader onContext={spy} />
-      </FloatingCardContext.Provider>,
-    );
-
-    expect(latest()).toBeDefined();
-    expect(typeof latest().closeCard).toBe('function');
-  });
-
-  it('should expose api as null before onReady fires', () => {
-    const { spy, latest } = captureContext();
-
-    render(
-      <FloatingCardProvider>
-        <ContextReader onContext={spy} />
-      </FloatingCardProvider>,
-    );
-
-    const ctx = latest();
-    expect(ctx).toHaveProperty('api', null);
-    expect(ctx).toHaveProperty('closeCard');
-    expect(ctx).toHaveProperty('cards');
-  });
-});
-
-describe('PanelProvider', () => {
-  describe('header component passthrough', () => {
-    it('should provide default header adapters when no custom components are given', () => {
-      render(
-        <FloatingCardProvider>
-          <div />
-        </FloatingCardProvider>,
-      );
-
-      const prefix =
-        capturedProps.prefixHeaderActionsComponent as FunctionComponent;
-      const right =
-        capturedProps.rightHeaderActionsComponent as FunctionComponent;
-
-      expect(prefix).toBeDefined();
-      expect(right).toBeDefined();
-      expect(prefix.displayName).toBe('HeaderAdapter(DefaultLeftHeader)');
-      expect(right.displayName).toBe('HeaderAdapter(DefaultRightHeader)');
-    });
-
-    it('should create left header adapter when icon is provided', () => {
-      render(
-        <FloatingCardProvider icon={<span>icon</span>}>
-          <div />
-        </FloatingCardProvider>,
-      );
-
-      const adapted =
-        capturedProps.prefixHeaderActionsComponent as FunctionComponent;
-      expect(adapted).toBeDefined();
-      expect(adapted.displayName).toBe('HeaderAdapter(DefaultLeftHeader)');
-    });
-
-    it('should create right header adapter when headerActions are provided', () => {
-      render(
-        <FloatingCardProvider
-          headerActions={[{ icon: <span>act</span>, onClick: vi.fn() }]}
-        >
-          <div />
-        </FloatingCardProvider>,
-      );
-
-      const adapted =
-        capturedProps.rightHeaderActionsComponent as FunctionComponent;
-      expect(adapted).toBeDefined();
-      expect(adapted.displayName).toBe('HeaderAdapter(DefaultRightHeader)');
-    });
-  });
-
-  describe('closeCard', () => {
-    it('should provide closeCard via context', () => {
-      const { spy, latest } = captureContext();
-
-      render(
-        <FloatingCardProvider>
-          <ContextReader onContext={spy} />
-        </FloatingCardProvider>,
-      );
-
-      expect(typeof latest().closeCard).toBe('function');
-    });
-
-    it('should not throw when calling closeCard with null API', () => {
-      const { spy, latest } = captureContext();
-
-      render(
-        <FloatingCardProvider>
-          <ContextReader onContext={spy} />
-        </FloatingCardProvider>,
-      );
-
-      // API is null before onReady fires — should be a no-op
-      expect(() => latest().closeCard('nonexistent' as UniqueId)).not.toThrow();
-    });
-
-    it('should call panel.api.close() for an existing card', () => {
-      const { spy, latest } = captureContext();
-      const mockApi = createMockApi();
-      const mockPanelClose = vi.fn();
-
-      mockApi.getPanel.mockReturnValue({ api: { close: mockPanelClose } });
-
-      const { rerender } = render(
-        <FloatingCardProvider>
-          <ContextReader onContext={spy} />
-        </FloatingCardProvider>,
-      );
-
-      act(() => {
-        triggerReady(mockApi);
-      });
-
-      // Re-render to pick up the new api state
-      rerender(
-        <FloatingCardProvider>
-          <ContextReader onContext={spy} />
-        </FloatingCardProvider>,
-      );
-
-      latest().closeCard('test-panel' as UniqueId);
-
-      expect(mockApi.getPanel).toHaveBeenCalledWith('test-panel');
-      expect(mockPanelClose).toHaveBeenCalledOnce();
-    });
-
-    it('should not throw when closing a card that does not exist', () => {
-      const { spy, latest } = captureContext();
-      const mockApi = createMockApi();
-
-      mockApi.getPanel.mockReturnValue(undefined);
-
-      const { rerender } = render(
-        <FloatingCardProvider>
-          <ContextReader onContext={spy} />
-        </FloatingCardProvider>,
-      );
-
-      act(() => {
-        triggerReady(mockApi);
-      });
-
-      rerender(
-        <FloatingCardProvider>
-          <ContextReader onContext={spy} />
-        </FloatingCardProvider>,
-      );
-
-      expect(() => latest().closeCard('nonexistent' as UniqueId)).not.toThrow();
-    });
-  });
-
-  describe('onDidRemovePanel ref cleanup', () => {
-    it('should subscribe to onDidRemovePanel when API is available', () => {
-      const mockApi = createMockApi();
-
-      const { rerender } = render(
-        <FloatingCardProvider>
-          <div />
-        </FloatingCardProvider>,
-      );
-
-      act(() => {
-        triggerReady(mockApi);
-      });
-
-      rerender(
-        <FloatingCardProvider>
-          <div />
-        </FloatingCardProvider>,
-      );
-
-      expect(mockApi.onDidRemovePanel).toHaveBeenCalled();
-    });
-
-    it('should call removeRef when a panel is removed via dockview', () => {
-      const { spy, latest } = captureContext();
-      const mockApi = createMockApi();
-      let removePanelCallback: OnDidRemovePanelCallback | undefined;
-
-      mockApi.onDidRemovePanel.mockImplementation(
-        (cb: OnDidRemovePanelCallback) => {
-          removePanelCallback = cb;
-          return { dispose: vi.fn() };
-        },
-      );
-
-      const { rerender } = render(
-        <FloatingCardProvider>
-          <ContextReader onContext={spy} />
-        </FloatingCardProvider>,
-      );
-
-      act(() => {
-        triggerReady(mockApi);
-      });
-
-      // Re-render to pick up new api, which triggers the useEffect
-      rerender(
-        <FloatingCardProvider>
-          <ContextReader onContext={spy} />
-        </FloatingCardProvider>,
-      );
-
-      // Simulate dockview removing a card
-      expect(removePanelCallback).toBeDefined();
-      act(() => {
-        removePanelCallback?.({ id: 'removed-panel' });
-      });
-
-      // The card should be removed from the cards record
-      expect(latest().cards['removed-panel' as UniqueId]).toBeUndefined();
-    });
-  });
-
-  describe('addRef', () => {
-    it('should register a div when called with a valid element', () => {
-      const { spy, latest } = captureContext();
-
-      render(
-        <FloatingCardProvider>
-          <ContextReader onContext={spy} />
-        </FloatingCardProvider>,
-      );
-
-      const div = document.createElement('div');
-
-      act(() => {
-        latest().addRef('card-a' as UniqueId, div);
-      });
-
-      expect(latest().cards['card-a' as UniqueId]).toBe(div);
-    });
-
-    it('should be a no-op when called with null', () => {
-      const { spy, latest } = captureContext();
-
-      render(
-        <FloatingCardProvider>
-          <ContextReader onContext={spy} />
-        </FloatingCardProvider>,
-      );
-
-      act(() => {
-        latest().addRef('card-null' as UniqueId, null);
-      });
-
-      expect(latest().cards['card-null' as UniqueId]).toBeUndefined();
-      expect(Object.keys(latest().cards)).toHaveLength(0);
-    });
-
-    it('should not overwrite an existing ref when called again with the same id', () => {
-      const { spy, latest } = captureContext();
-
-      render(
-        <FloatingCardProvider>
-          <ContextReader onContext={spy} />
-        </FloatingCardProvider>,
-      );
-
-      const first = document.createElement('div');
-      const second = document.createElement('div');
-
-      act(() => {
-        latest().addRef('card-b' as UniqueId, first);
-      });
-
-      act(() => {
-        latest().addRef('card-b' as UniqueId, second);
-      });
-
-      expect(latest().cards['card-b' as UniqueId]).toBe(first);
-    });
-  });
-});
-
-describe('FloatingCardContainer', () => {
-  it('should call addRef with the panel id and a DOM element when it mounts', () => {
-    // Render a provider so the Dockview mock captures the components map.
-    render(
-      <FloatingCardProvider>
-        <div />
-      </FloatingCardProvider>,
-    );
-
-    const addRef = vi.fn();
-    const FloatingCardContainerComponent = (
-      capturedProps.components as Record<
-        string,
-        FunctionComponent<IDockviewPanelProps>
-      >
-    ).default as FunctionComponent<IDockviewPanelProps>;
-
-    const mockPanelProps = {
-      api: { id: 'panel-container-test' },
-    } as unknown as IDockviewPanelProps;
-
-    render(
-      <FloatingCardContext.Provider
-        value={{
-          cards: {},
-          addRef,
-          removeRef: vi.fn(),
-          closeCard: vi.fn(),
-          togglePinCard: vi.fn(),
-          isPinned: () => false,
-          subscribeToPinState: () => () => null,
-          api: null,
-        }}
-      >
-        <FloatingCardContainerComponent {...mockPanelProps} />
-      </FloatingCardContext.Provider>,
-    );
-
-    expect(addRef).toHaveBeenCalledWith(
-      'panel-container-test',
-      expect.any(HTMLElement),
-    );
-  });
-});
-
-function makeMockActivePanel(id = 'panel-1', title = 'Panel Title') {
-  return {
-    id,
-    title,
-    api: { onDidTitleChange: vi.fn(() => ({ dispose: vi.fn() })) },
-  };
-}
-function makeMockAdapterProps(
-  activePanel?: ReturnType<typeof makeMockActivePanel>,
+const cardId = 'card-a' as UniqueId;
+const otherId = 'card-b' as UniqueId;
+
+function renderProvider(
+  children: ReactNode,
+  props: Partial<FloatingCardProviderProps> = {},
 ) {
-  return {
-    api: { close: vi.fn() },
-    activePanel,
-    panels: activePanel ? [activePanel] : [],
-  } as unknown as IDockviewHeaderActionsProps;
+  return render(
+    <FloatingCardProvider {...props}>{children}</FloatingCardProvider>,
+  );
 }
-
-describe('header adapters', () => {
-  it('should not call the icon factory when there is no active panel', () => {
-    const iconFactory = vi.fn().mockReturnValue(<span>icon</span>);
-
-    render(
-      <FloatingCardProvider icon={iconFactory}>
-        <div />
-      </FloatingCardProvider>,
-    );
-
-    const LeftAdapter =
-      capturedProps.prefixHeaderActionsComponent as FunctionComponent<IDockviewHeaderActionsProps>;
-
-    render(<LeftAdapter {...makeMockAdapterProps()} />);
-
-    // The factory must never receive an invalid/empty ID.
-    // When there is no active panel, icon is intentionally undefined.
-    expect(iconFactory).not.toHaveBeenCalled();
-  });
-
-  it('should call the icon factory with the panel id when there is an active panel', () => {
-    const iconFactory = vi.fn().mockReturnValue(<span>icon</span>);
-
-    render(
-      <FloatingCardProvider icon={iconFactory}>
-        <div />
-      </FloatingCardProvider>,
-    );
-
-    const LeftAdapter =
-      capturedProps.prefixHeaderActionsComponent as FunctionComponent<IDockviewHeaderActionsProps>;
-
-    render(
-      <LeftAdapter
-        {...makeMockAdapterProps(makeMockActivePanel('my-panel'))}
-      />,
-    );
-
-    expect(iconFactory).toHaveBeenCalledWith('my-panel');
-  });
-
-  it('should render headerActions in the provided order', () => {
-    const actions = [
-      { icon: <span>first</span>, onClick: vi.fn() },
-      { icon: <span>second</span>, onClick: vi.fn() },
-      { icon: <span>third</span>, onClick: vi.fn() },
-    ];
-
-    render(
-      <FloatingCardProvider headerActions={actions}>
-        <div />
-      </FloatingCardProvider>,
-    );
-
-    const RightAdapter =
-      capturedProps.rightHeaderActionsComponent as FunctionComponent<IDockviewHeaderActionsProps>;
-
-    const { getAllByRole } = render(
-      <FloatingCardContext.Provider
-        value={{
-          cards: {},
-          addRef: () => undefined,
-          removeRef: () => undefined,
-          closeCard: () => undefined,
-          togglePinCard: () => undefined,
-          isPinned: () => false,
-          subscribeToPinState: () => () => undefined,
-          api: null,
-        }}
-      >
-        <RightAdapter {...makeMockAdapterProps(makeMockActivePanel())} />
-      </FloatingCardContext.Provider>,
-    );
-
-    // 3 action buttons + 1 always-present close button
-    const buttons = getAllByRole('button');
-    expect(buttons).toHaveLength(4);
-  });
-});
-
-// ---------------------------------------------------------------------------
-// FloatingCard
-// ---------------------------------------------------------------------------
 
 describe('FloatingCard', () => {
-  type MockPanel = {
-    id: string;
-    api: { close: ReturnType<typeof vi.fn> };
-    group: { locked: unknown };
-    setTitle: ReturnType<typeof vi.fn>;
-  };
+  it('should render its children inside a card labelled by the title', () => {
+    renderProvider(
+      <FloatingCard id={cardId} title='Details'>
+        <p>Panel body</p>
+      </FloatingCard>,
+    );
 
-  function createMockPanel(id = 'test-panel'): MockPanel {
-    return {
-      id,
-      api: { close: vi.fn() },
-      group: { locked: undefined },
-      setTitle: vi.fn(),
-    };
-  }
+    const card = screen.getByRole('dialog', { name: 'Details' });
 
-  /** API where getPanel() returns undefined until addPanel() is called. */
-  function makeEmptyApi() {
-    let storedPanel: MockPanel | undefined;
-    const panel = createMockPanel();
+    expect(card).toBeInTheDocument();
+    expect(screen.getByText('Panel body')).toBeInTheDocument();
+  });
 
-    const api = {
-      getPanel: vi.fn(() => storedPanel),
-      addPanel: vi.fn(() => {
-        storedPanel = panel;
-        return panel;
-      }),
-      onDidRemovePanel: vi.fn(() => ({ dispose: vi.fn() })),
-    } as unknown as DockviewApi;
+  it('should fall back to the id when no title is given', () => {
+    renderProvider(
+      <FloatingCard id={cardId}>
+        <p>Panel body</p>
+      </FloatingCard>,
+    );
 
-    return { api, panel };
-  }
+    expect(screen.getByRole('dialog', { name: cardId })).toBeInTheDocument();
+  });
 
-  /** API where getPanel() always returns the given panel. */
-  function makePopulatedApi(panel?: MockPanel) {
-    const p = panel ?? createMockPanel();
+  it('should update the accessible name when the title changes', () => {
+    const { rerender } = renderProvider(
+      <FloatingCard id={cardId} title='Before'>
+        <p>Panel body</p>
+      </FloatingCard>,
+    );
 
-    const api = {
-      getPanel: vi.fn(() => p),
-      addPanel: vi.fn(() => p),
-      onDidRemovePanel: vi.fn(() => ({ dispose: vi.fn() })),
-    } as unknown as DockviewApi;
+    expect(screen.getByRole('dialog', { name: 'Before' })).toBeInTheDocument();
 
-    return { api, panel: p };
-  }
+    rerender(
+      <FloatingCardProvider>
+        <FloatingCard id={cardId} title='After'>
+          <p>Panel body</p>
+        </FloatingCard>
+      </FloatingCardProvider>,
+    );
 
-  function makeContextValue(
-    api: FloatingCardContextValue['api'] = null,
-    cards: Record<string, HTMLDivElement> = {},
-  ): FloatingCardContextValue {
-    return {
-      cards: cards as Record<UniqueId, HTMLDivElement>,
-      addRef: vi.fn(),
-      removeRef: vi.fn(),
-      closeCard: vi.fn(),
-      togglePinCard: vi.fn(),
-      isPinned: () => false,
-      subscribeToPinState: () => () => undefined,
-      api,
-    };
-  }
+    expect(screen.getByRole('dialog', { name: 'After' })).toBeInTheDocument();
+  });
 
-  describe('isOpen toggling', () => {
-    it('should call api.addPanel when isOpen is true and no panel exists', () => {
-      const { api, panel } = makeEmptyApi();
-      const div = document.createElement('div');
+  it('should render nothing when isOpen is false', () => {
+    renderProvider(
+      <FloatingCard id={cardId} title='Details' isOpen={false}>
+        <p>Panel body</p>
+      </FloatingCard>,
+    );
 
-      render(
-        <FloatingCardContext.Provider
-          value={makeContextValue(api, { 'card-1': div })}
-        >
-          <FloatingCard id={'card-1' as UniqueId} title='Test Card' isOpen>
-            <div>content</div>
-          </FloatingCard>
-        </FloatingCardContext.Provider>,
-      );
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+    expect(screen.queryByText('Panel body')).not.toBeInTheDocument();
+  });
 
-      expect(
-        (api as unknown as { addPanel: ReturnType<typeof vi.fn> }).addPanel,
-      ).toHaveBeenCalledWith(
-        expect.objectContaining({
-          id: 'card-1',
-          title: 'Test Card',
-          component: 'default',
-        }),
-      );
-      expect(panel.group.locked).toBe('no-drop-target');
-    });
+  it('should render each open card exactly once', () => {
+    renderProvider(
+      <>
+        <FloatingCard id={cardId} title='Card A'>
+          <p>Body A</p>
+        </FloatingCard>
+        <FloatingCard id={otherId} title='Card B'>
+          <p>Body B</p>
+        </FloatingCard>
+      </>,
+    );
 
-    it('should not call api.addPanel when panel already exists', () => {
-      const { api } = makePopulatedApi();
-      const div = document.createElement('div');
+    expect(screen.getAllByRole('dialog')).toHaveLength(2);
+    expect(screen.getByRole('dialog', { name: 'Card A' })).toBeInTheDocument();
+    expect(screen.getByRole('dialog', { name: 'Card B' })).toBeInTheDocument();
+  });
 
-      render(
-        <FloatingCardContext.Provider
-          value={makeContextValue(api, { 'card-existing': div })}
-        >
-          <FloatingCard id={'card-existing' as UniqueId} isOpen>
-            <div>content</div>
-          </FloatingCard>
-        </FloatingCardContext.Provider>,
-      );
+  it('should apply initialDimensions and initialPosition to the card', () => {
+    renderProvider(
+      <FloatingCard
+        id={cardId}
+        title='Sized'
+        initialDimensions={{ width: 250, height: 200 }}
+        initialPosition={{ x: 40, y: 60 }}
+      >
+        <p>Panel body</p>
+      </FloatingCard>,
+    );
 
-      expect(
-        (api as unknown as { addPanel: ReturnType<typeof vi.fn> }).addPanel,
-      ).not.toHaveBeenCalled();
-    });
+    const card = screen.getByRole('dialog', { name: 'Sized' });
 
-    it('should call panel.api.close() when isOpen changes from true to false', () => {
-      const { api, panel } = makePopulatedApi();
-      const div = document.createElement('div');
-      const ctxValue = makeContextValue(api, { 'card-toggle': div });
-
-      const { rerender } = render(
-        <FloatingCardContext.Provider value={ctxValue}>
-          <FloatingCard id={'card-toggle' as UniqueId} isOpen>
-            content
-          </FloatingCard>
-        </FloatingCardContext.Provider>,
-      );
-
-      rerender(
-        <FloatingCardContext.Provider value={ctxValue}>
-          <FloatingCard id={'card-toggle' as UniqueId} isOpen={false}>
-            content
-          </FloatingCard>
-        </FloatingCardContext.Provider>,
-      );
-
-      expect(panel.api.close).toHaveBeenCalledOnce();
-    });
-
-    it('should not call api.addPanel when api is null', () => {
-      const addPanel = vi.fn();
-      const div = document.createElement('div');
-
-      render(
-        <FloatingCardContext.Provider
-          value={makeContextValue(null, { 'card-null-api': div })}
-        >
-          <FloatingCard id={'card-null-api' as UniqueId} isOpen>
-            content
-          </FloatingCard>
-        </FloatingCardContext.Provider>,
-      );
-
-      expect(addPanel).not.toHaveBeenCalled();
-    });
-
-    it('should throw when used without a FloatingCardProvider', () => {
-      const consoleSpy = vi
-        .spyOn(console, 'error')
-        .mockImplementation(() => undefined);
-      expect(() =>
-        render(
-          <FloatingCard id={'no-provider' as UniqueId} isOpen>
-            content
-          </FloatingCard>,
-        ),
-      ).toThrow('useFloatingCard must be used within a FloatingCardProvider.');
-      consoleSpy.mockRestore();
+    expect(card).toHaveStyle({
+      width: '250px',
+      height: '200px',
+      left: '40px',
+      top: '60px',
     });
   });
 
-  describe('portal rendering', () => {
-    it('should render children into cards[id] via createPortal when isOpen', () => {
-      const container = document.createElement('div');
-      document.body.appendChild(container);
-      const { api } = makeEmptyApi();
+  it('should fall back to default geometry when none is given', () => {
+    renderProvider(
+      <FloatingCard id={cardId} title='Default'>
+        <p>Panel body</p>
+      </FloatingCard>,
+    );
 
-      render(
-        <FloatingCardContext.Provider
-          value={makeContextValue(api, { 'portal-card': container })}
-        >
-          <FloatingCard id={'portal-card' as UniqueId} isOpen>
-            <span data-testid='portal-child'>hello</span>
-          </FloatingCard>
-        </FloatingCardContext.Provider>,
-      );
-
-      expect(
-        container.querySelector('[data-testid="portal-child"]'),
-      ).not.toBeNull();
-
-      container.remove();
-    });
-
-    it('should return null when cards[id] does not exist', () => {
-      const { api } = makeEmptyApi();
-
-      render(
-        <FloatingCardContext.Provider value={makeContextValue(api, {})}>
-          <FloatingCard id={'no-ref-card' as UniqueId} isOpen>
-            <span data-testid='unreachable-child'>hello</span>
-          </FloatingCard>
-        </FloatingCardContext.Provider>,
-      );
-
-      expect(
-        document.body.querySelector('[data-testid="unreachable-child"]'),
-      ).toBeNull();
-    });
-
-    it('should return null when isOpen is false, even if cards[id] exists', () => {
-      const container = document.createElement('div');
-      document.body.appendChild(container);
-      const { api } = makeEmptyApi();
-
-      render(
-        <FloatingCardContext.Provider
-          value={makeContextValue(api, { 'closed-card': container })}
-        >
-          <FloatingCard id={'closed-card' as UniqueId} isOpen={false}>
-            <span data-testid='closed-child'>hello</span>
-          </FloatingCard>
-        </FloatingCardContext.Provider>,
-      );
-
-      expect(
-        container.querySelector('[data-testid="closed-child"]'),
-      ).toBeNull();
-
-      container.remove();
+    expect(screen.getByRole('dialog', { name: 'Default' })).toHaveStyle({
+      width: '300px',
+      height: '400px',
     });
   });
 
-  describe('title update effect', () => {
-    it('should call panel.setTitle with the new title when title changes', () => {
-      const { api, panel } = makeEmptyApi();
-      const div = document.createElement('div');
-      const ctxValue = makeContextValue(api, { 'title-card': div });
+  it('should remove the card when it unmounts', async () => {
+    const user = userEvent.setup();
 
-      const { rerender } = render(
-        <FloatingCardContext.Provider value={ctxValue}>
-          <FloatingCard
-            id={'title-card' as UniqueId}
-            title='Initial Title'
-            isOpen
-          >
-            content
-          </FloatingCard>
-        </FloatingCardContext.Provider>,
+    function Toggle() {
+      const [mounted, setMounted] = useState(true);
+
+      return (
+        <FloatingCardProvider>
+          <button onClick={() => setMounted(false)} type='button'>
+            unmount
+          </button>
+          {mounted ? (
+            <FloatingCard id={cardId} title='Details'>
+              <p>Panel body</p>
+            </FloatingCard>
+          ) : null}
+        </FloatingCardProvider>
       );
+    }
 
-      rerender(
-        <FloatingCardContext.Provider value={ctxValue}>
-          <FloatingCard
-            id={'title-card' as UniqueId}
-            title='Updated Title'
-            isOpen
-          >
-            content
-          </FloatingCard>
-        </FloatingCardContext.Provider>,
-      );
+    render(<Toggle />);
 
-      expect(panel.setTitle).toHaveBeenLastCalledWith('Updated Title');
-    });
+    expect(screen.getByRole('dialog', { name: 'Details' })).toBeInTheDocument();
 
-    it('should fall back to id when title is undefined', () => {
-      const { api, panel } = makeEmptyApi();
-      const div = document.createElement('div');
+    await user.click(screen.getByRole('button', { name: 'unmount' }));
 
-      render(
-        <FloatingCardContext.Provider
-          value={makeContextValue(api, { 'fallback-card': div })}
-        >
-          <FloatingCard id={'fallback-card' as UniqueId} isOpen>
-            content
-          </FloatingCard>
-        </FloatingCardContext.Provider>,
-      );
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+  });
+});
 
-      expect(panel.setTitle).toHaveBeenCalledWith('fallback-card');
-    });
+describe('FloatingCard controlled visibility', () => {
+  function Controlled() {
+    const [isOpen, setIsOpen] = useState(true);
 
-    it('should not call setTitle when api is null', () => {
-      // With api=null the second effect skips, so setTitle is never called.
-      // This verifies the api?.getPanel guard in the title update effect.
-      const setTitle = vi.fn();
-      const div = document.createElement('div');
+    return (
+      <FloatingCardProvider>
+        <button onClick={() => setIsOpen((open) => !open)} type='button'>
+          toggle
+        </button>
+        <FloatingCard id={cardId} title='Details' isOpen={isOpen}>
+          <p>Panel body</p>
+        </FloatingCard>
+      </FloatingCardProvider>
+    );
+  }
 
-      render(
-        <FloatingCardContext.Provider
-          value={makeContextValue(null, { 'no-api-card': div })}
-        >
-          <FloatingCard id={'no-api-card' as UniqueId} title='Title' isOpen>
-            content
-          </FloatingCard>
-        </FloatingCardContext.Provider>,
-      );
+  it('should close and reopen the card as isOpen changes', async () => {
+    const user = userEvent.setup();
 
-      expect(setTitle).not.toHaveBeenCalled();
-    });
+    render(<Controlled />);
+
+    expect(screen.getByRole('dialog', { name: 'Details' })).toBeInTheDocument();
+
+    await user.click(screen.getByRole('button', { name: 'toggle' }));
+
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+
+    await user.click(screen.getByRole('button', { name: 'toggle' }));
+
+    expect(screen.getByRole('dialog', { name: 'Details' })).toBeInTheDocument();
+  });
+});
+
+describe('FloatingCardProvider header', () => {
+  it('should render a close button that removes the card', async () => {
+    const user = userEvent.setup();
+
+    renderProvider(
+      <FloatingCard id={cardId} title='Details'>
+        <p>Panel body</p>
+      </FloatingCard>,
+    );
+
+    await user.click(screen.getByRole('button', { name: 'Close' }));
+
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
   });
 
-  describe('initialDimensions and initialPosition', () => {
-    it('should pass default dimensions into the floating option when initialDimensions is omitted', () => {
-      const { api } = makeEmptyApi();
-      const div = document.createElement('div');
+  it('should render custom header actions and call their handlers', async () => {
+    const user = userEvent.setup();
+    const onClick = vi.fn();
 
-      render(
-        <FloatingCardContext.Provider
-          value={makeContextValue(api, { 'default-dim-card': div })}
-        >
-          <FloatingCard id={'default-dim-card' as UniqueId} isOpen>
-            content
-          </FloatingCard>
-        </FloatingCardContext.Provider>,
-      );
+    renderProvider(
+      <FloatingCard id={cardId} title='Details'>
+        <p>Panel body</p>
+      </FloatingCard>,
+      { headerActions: [{ icon: <span>settings</span>, onClick }] },
+    );
 
-      expect(
-        (api as unknown as { addPanel: ReturnType<typeof vi.fn> }).addPanel,
-      ).toHaveBeenCalledWith(
-        expect.objectContaining({
-          floating: expect.objectContaining({ width: 300, height: 400 }),
-        }),
-      );
-    });
+    const actions = screen.getAllByRole('button');
 
-    it('should pass custom initialDimensions into the floating option', () => {
-      const { api } = makeEmptyApi();
-      const div = document.createElement('div');
+    // The action sits before the always-present close button.
+    await user.click(actions[0] as HTMLElement);
 
-      render(
-        <FloatingCardContext.Provider
-          value={makeContextValue(api, { 'custom-dim-card': div })}
-        >
-          <FloatingCard
-            id={'custom-dim-card' as UniqueId}
-            isOpen
-            initialDimensions={{ width: 500, height: 600 }}
-          >
-            content
-          </FloatingCard>
-        </FloatingCardContext.Provider>,
-      );
-
-      expect(
-        (api as unknown as { addPanel: ReturnType<typeof vi.fn> }).addPanel,
-      ).toHaveBeenCalledWith(
-        expect.objectContaining({
-          floating: expect.objectContaining({ width: 500, height: 600 }),
-        }),
-      );
-    });
-
-    it('should pass initialPosition x and y into the floating option when provided', () => {
-      const { api } = makeEmptyApi();
-      const div = document.createElement('div');
-
-      render(
-        <FloatingCardContext.Provider
-          value={makeContextValue(api, { 'pos-card': div })}
-        >
-          <FloatingCard
-            id={'pos-card' as UniqueId}
-            isOpen
-            initialPosition={{ x: 100, y: 200 }}
-          >
-            content
-          </FloatingCard>
-        </FloatingCardContext.Provider>,
-      );
-
-      expect(
-        (api as unknown as { addPanel: ReturnType<typeof vi.fn> }).addPanel,
-      ).toHaveBeenCalledWith(
-        expect.objectContaining({
-          floating: expect.objectContaining({ x: 100, y: 200 }),
-        }),
-      );
-    });
-
-    it('should combine initialDimensions and initialPosition in the floating option', () => {
-      const { api } = makeEmptyApi();
-      const div = document.createElement('div');
-
-      render(
-        <FloatingCardContext.Provider
-          value={makeContextValue(api, { 'combined-card': div })}
-        >
-          <FloatingCard
-            id={'combined-card' as UniqueId}
-            isOpen
-            initialDimensions={{ width: 350, height: 450 }}
-            initialPosition={{ x: 50, y: 75 }}
-          >
-            content
-          </FloatingCard>
-        </FloatingCardContext.Provider>,
-      );
-
-      expect(
-        (api as unknown as { addPanel: ReturnType<typeof vi.fn> }).addPanel,
-      ).toHaveBeenCalledWith(
-        expect.objectContaining({
-          floating: { width: 350, height: 450, x: 50, y: 75 },
-        }),
-      );
-    });
-
-    it('should include x and y as undefined in the floating option when initialPosition is omitted', () => {
-      const { api } = makeEmptyApi();
-      const div = document.createElement('div');
-
-      render(
-        <FloatingCardContext.Provider
-          value={makeContextValue(api, { 'no-pos-card': div })}
-        >
-          <FloatingCard id={'no-pos-card' as UniqueId} isOpen>
-            content
-          </FloatingCard>
-        </FloatingCardContext.Provider>,
-      );
-
-      const addPanel = (
-        api as unknown as { addPanel: ReturnType<typeof vi.fn> }
-      ).addPanel;
-      const floating = addPanel.mock.calls[0]?.[0].floating as Record<
-        string,
-        unknown
-      >;
-
-      expect(floating).toHaveProperty('x', undefined);
-      expect(floating).toHaveProperty('y', undefined);
-    });
+    expect(onClick).toHaveBeenCalledOnce();
   });
 
-  describe('unmount behavior', () => {
-    it('should not call panel.api.close() when the component unmounts', () => {
-      // The first useEffect has no cleanup — close is the provider\'s responsibility
-      const { api, panel } = makePopulatedApi();
-      const div = document.createElement('div');
+  it('should resolve headerActions per card when given a factory', () => {
+    renderProvider(
+      <>
+        <FloatingCard id={cardId} title='Card A'>
+          <p>Body A</p>
+        </FloatingCard>
+        <FloatingCard id={otherId} title='Card B'>
+          <p>Body B</p>
+        </FloatingCard>
+      </>,
+      { headerActions: (id) => (id === cardId ? ['pin'] : []) },
+    );
 
-      const { unmount } = render(
-        <FloatingCardContext.Provider
-          value={makeContextValue(api, { 'unmount-card': div })}
-        >
-          <FloatingCard id={'unmount-card' as UniqueId} isOpen>
-            content
+    const cardA = screen.getByRole('dialog', { name: 'Card A' });
+    const cardB = screen.getByRole('dialog', { name: 'Card B' });
+
+    expect(
+      within(cardA).getByRole('button', { name: 'Pin' }),
+    ).toBeInTheDocument();
+    expect(
+      within(cardB).queryByRole('button', { name: 'Pin' }),
+    ).not.toBeInTheDocument();
+  });
+
+  it('should render a divider between action groups', () => {
+    renderProvider(
+      <FloatingCard id={cardId} title='Details'>
+        <p>Panel body</p>
+      </FloatingCard>,
+      {
+        headerActions: [
+          { icon: <span>one</span>, onClick: vi.fn() },
+          'divider',
+          { icon: <span>two</span>, onClick: vi.fn() },
+        ],
+      },
+    );
+
+    // Two custom actions plus the close button.
+    expect(screen.getAllByRole('button')).toHaveLength(3);
+    expect(screen.getByRole('separator')).toBeInTheDocument();
+  });
+
+  it('should render an icon resolved per card when given a factory', () => {
+    renderProvider(
+      <>
+        <FloatingCard id={cardId} title='Card A'>
+          <p>Body A</p>
+        </FloatingCard>
+        <FloatingCard id={otherId} title='Card B'>
+          <p>Body B</p>
+        </FloatingCard>
+      </>,
+      { icon: (id) => (id === cardId ? <span>star</span> : null) },
+    );
+
+    expect(
+      within(screen.getByRole('dialog', { name: 'Card A' })).getByText('star'),
+    ).toBeInTheDocument();
+    expect(
+      within(screen.getByRole('dialog', { name: 'Card B' })).queryByText(
+        'star',
+      ),
+    ).not.toBeInTheDocument();
+  });
+});
+
+describe('FloatingCard pinning', () => {
+  const pinProps = { headerActions: ['pin' as const] };
+
+  it('should toggle the pin button pressed state', async () => {
+    const user = userEvent.setup();
+
+    renderProvider(
+      <FloatingCard id={cardId} title='Details'>
+        <p>Panel body</p>
+      </FloatingCard>,
+      pinProps,
+    );
+
+    const pin = screen.getByRole('button', { name: 'Pin' });
+
+    expect(pin).toHaveAttribute('aria-pressed', 'false');
+
+    await user.click(pin);
+
+    expect(pin).toHaveAttribute('aria-pressed', 'true');
+
+    await user.click(pin);
+
+    expect(pin).toHaveAttribute('aria-pressed', 'false');
+  });
+
+  it('should start pinned for ids listed in initialPinned', () => {
+    renderProvider(
+      <FloatingCard id={cardId} title='Details'>
+        <p>Panel body</p>
+      </FloatingCard>,
+      { ...pinProps, initialPinned: [cardId] },
+    );
+
+    expect(screen.getByRole('button', { name: 'Pin' })).toHaveAttribute(
+      'aria-pressed',
+      'true',
+    );
+  });
+
+  it('should pin only the card whose button was pressed', async () => {
+    const user = userEvent.setup();
+
+    renderProvider(
+      <>
+        <FloatingCard id={cardId} title='Card A'>
+          <p>Body A</p>
+        </FloatingCard>
+        <FloatingCard id={otherId} title='Card B'>
+          <p>Body B</p>
+        </FloatingCard>
+      </>,
+      pinProps,
+    );
+
+    const cardA = screen.getByRole('dialog', { name: 'Card A' });
+    const cardB = screen.getByRole('dialog', { name: 'Card B' });
+
+    await user.click(within(cardA).getByRole('button', { name: 'Pin' }));
+
+    expect(within(cardA).getByRole('button', { name: 'Pin' })).toHaveAttribute(
+      'aria-pressed',
+      'true',
+    );
+    expect(within(cardB).getByRole('button', { name: 'Pin' })).toHaveAttribute(
+      'aria-pressed',
+      'false',
+    );
+  });
+
+  it('should release the pin when a pinned card is closed', async () => {
+    const user = userEvent.setup();
+
+    function Reopenable() {
+      const [isOpen, setIsOpen] = useState(true);
+
+      return (
+        <FloatingCardProvider {...pinProps}>
+          <button onClick={() => setIsOpen((open) => !open)} type='button'>
+            toggle
+          </button>
+          <FloatingCard id={cardId} title='Details' isOpen={isOpen}>
+            <p>Panel body</p>
           </FloatingCard>
-        </FloatingCardContext.Provider>,
+        </FloatingCardProvider>
       );
+    }
 
-      const closeCallsBefore = panel.api.close.mock.calls.length;
-      unmount();
+    render(<Reopenable />);
 
-      expect(panel.api.close.mock.calls.length).toBe(closeCallsBefore);
-    });
+    await user.click(screen.getByRole('button', { name: 'Pin' }));
+    await user.click(screen.getByRole('button', { name: 'toggle' }));
+    await user.click(screen.getByRole('button', { name: 'toggle' }));
 
-    it('should remove portal content from the DOM when the component unmounts', () => {
-      const container = document.createElement('div');
-      document.body.appendChild(container);
-      const { api } = makeEmptyApi();
+    expect(screen.getByRole('button', { name: 'Pin' })).toHaveAttribute(
+      'aria-pressed',
+      'false',
+    );
+  });
+});
 
-      const { unmount } = render(
-        <FloatingCardContext.Provider
-          value={makeContextValue(api, { 'portal-unmount': container })}
-        >
-          <FloatingCard id={'portal-unmount' as UniqueId} isOpen>
-            <span data-testid='unmount-child'>bye</span>
-          </FloatingCard>
-        </FloatingCardContext.Provider>,
+describe('useFloatingCard', () => {
+  it('should throw when used outside a provider', () => {
+    function Orphan() {
+      useFloatingCard();
+      return null;
+    }
+
+    // React logs the error boundary trace; silence it for this expected throw.
+    const consoleError = vi
+      .spyOn(console, 'error')
+      .mockImplementation(() => undefined);
+
+    expect(() => render(<Orphan />)).toThrow(
+      'useFloatingCard must be used within a FloatingCardProvider.',
+    );
+
+    consoleError.mockRestore();
+  });
+
+  it('should close a card through closeCard', async () => {
+    const user = userEvent.setup();
+
+    function Closer() {
+      const { closeCard } = useFloatingCard();
+
+      return (
+        <button onClick={() => closeCard(cardId)} type='button'>
+          close card
+        </button>
       );
+    }
 
-      expect(
-        container.querySelector('[data-testid="unmount-child"]'),
-      ).not.toBeNull();
+    renderProvider(
+      <>
+        <Closer />
+        <FloatingCard id={cardId} title='Details'>
+          <p>Panel body</p>
+        </FloatingCard>
+      </>,
+    );
 
-      unmount();
+    await user.click(screen.getByRole('button', { name: 'close card' }));
 
-      expect(
-        container.querySelector('[data-testid="unmount-child"]'),
-      ).toBeNull();
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+  });
 
-      container.remove();
-    });
+  it('should report and toggle pin state through the context', async () => {
+    const user = userEvent.setup();
+
+    function PinReporter() {
+      const { togglePinCard, isPinned, subscribeToPinState } =
+        useFloatingCard();
+      const [, force] = useState(0);
+
+      // Re-render on pin changes so the label below stays current.
+      useState(() => subscribeToPinState(() => force((n) => n + 1)));
+
+      return (
+        <button onClick={() => togglePinCard(cardId)} type='button'>
+          {isPinned(cardId) ? 'pinned' : 'not pinned'}
+        </button>
+      );
+    }
+
+    renderProvider(
+      <>
+        <PinReporter />
+        <FloatingCard id={cardId} title='Details'>
+          <p>Panel body</p>
+        </FloatingCard>
+      </>,
+    );
+
+    await user.click(screen.getByRole('button', { name: 'not pinned' }));
+
+    expect(screen.getByRole('button', { name: 'pinned' })).toBeInTheDocument();
+  });
+
+  it('should expose the portal container for an open card', () => {
+    const seen: Record<string, HTMLElement>[] = [];
+
+    function CardsReporter() {
+      const { cards } = useFloatingCard();
+      seen.push(cards);
+      return null;
+    }
+
+    renderProvider(
+      <>
+        <CardsReporter />
+        <FloatingCard id={cardId} title='Details'>
+          <p>Panel body</p>
+        </FloatingCard>
+      </>,
+    );
+
+    const latest = seen.at(-1);
+
+    expect(latest?.[cardId]).toBeInstanceOf(HTMLElement);
   });
 });
 
 describe('multiple FloatingCardProvider instances', () => {
-  it('should render independently without interfering with each other', () => {
-    const { getByTestId } = render(
-      <>
-        <FloatingCardProvider>
-          <div data-testid='child-1' />
-        </FloatingCardProvider>
-        <FloatingCardProvider>
-          <div data-testid='child-2' />
-        </FloatingCardProvider>
-      </>,
-    );
-
-    expect(getByTestId('child-1')).toBeInTheDocument();
-    expect(getByTestId('child-2')).toBeInTheDocument();
-  });
-
-  it('should maintain separate card state per provider instance', () => {
-    const spy1 = vi.fn<(ctx: FloatingCardContextValue) => void>();
-    const spy2 = vi.fn<(ctx: FloatingCardContextValue) => void>();
-
-    const latest1 = () =>
-      spy1.mock.calls.at(-1)?.[0] as FloatingCardContextValue;
-    const latest2 = () =>
-      spy2.mock.calls.at(-1)?.[0] as FloatingCardContextValue;
+  it('should keep each provider independent', async () => {
+    const user = userEvent.setup();
 
     render(
       <>
         <FloatingCardProvider>
-          <ContextReader onContext={spy1} />
+          <FloatingCard id={cardId} title='First'>
+            <p>Body A</p>
+          </FloatingCard>
         </FloatingCardProvider>
         <FloatingCardProvider>
-          <ContextReader onContext={spy2} />
+          <FloatingCard id={otherId} title='Second'>
+            <p>Body B</p>
+          </FloatingCard>
         </FloatingCardProvider>
       </>,
     );
 
-    const div = document.createElement('div');
+    expect(screen.getAllByRole('dialog')).toHaveLength(2);
 
-    act(() => {
-      latest1().addRef('card-in-provider-1' as UniqueId, div);
-    });
+    const first = screen.getByRole('dialog', { name: 'First' });
 
-    expect(latest1().cards['card-in-provider-1' as UniqueId]).toBe(div);
-    expect(latest2().cards['card-in-provider-1' as UniqueId]).toBeUndefined();
-  });
-});
+    await user.click(within(first).getByRole('button', { name: 'Close' }));
 
-describe('pin functionality', () => {
-  it('should render a pin button in the header when "pin" is in headerActions', () => {
-    render(
-      <FloatingCardProvider headerActions={['pin']}>
-        <div />
-      </FloatingCardProvider>,
-    );
-
-    const RightAdapter =
-      capturedProps.rightHeaderActionsComponent as FunctionComponent<IDockviewHeaderActionsProps>;
-
-    render(
-      <RightAdapter
-        {...makeMockAdapterProps(makeMockActivePanel('panel-1'))}
-      />,
-    );
-
-    expect(screen.getByRole('button', { name: /pin/i })).toBeInTheDocument();
-  });
-
-  it('should toggle pin active state when pin button is clicked', async () => {
-    const user = userEvent.setup();
-
-    render(
-      <FloatingCardProvider headerActions={['pin']}>
-        <div />
-      </FloatingCardProvider>,
-    );
-
-    const RightAdapter =
-      capturedProps.rightHeaderActionsComponent as FunctionComponent<IDockviewHeaderActionsProps>;
-
-    render(
-      <RightAdapter
-        {...makeMockAdapterProps(makeMockActivePanel('panel-1'))}
-      />,
-    );
-
-    const pinButton = screen.getByRole('button', { name: /pin/i });
-    expect(pinButton).toHaveAttribute('aria-pressed', 'false');
-
-    await user.click(pinButton);
-    expect(pinButton).toHaveAttribute('aria-pressed', 'true');
-
-    await user.click(pinButton);
-    expect(pinButton).toHaveAttribute('aria-pressed', 'false');
-  });
-
-  it('should release pin when card is removed via removeRef', async () => {
-    const user = userEvent.setup();
-    const { spy, latest } = captureContext();
-
-    render(
-      <FloatingCardProvider headerActions={['pin']}>
-        <ContextReader onContext={spy} />
-      </FloatingCardProvider>,
-    );
-
-    const RightAdapter =
-      capturedProps.rightHeaderActionsComponent as FunctionComponent<IDockviewHeaderActionsProps>;
-
-    render(
-      <RightAdapter
-        {...makeMockAdapterProps(makeMockActivePanel('card-remove'))}
-      />,
-    );
-
-    const pinButton = screen.getByRole('button', { name: /pin/i });
-
-    await user.click(pinButton);
-    expect(pinButton).toHaveAttribute('aria-pressed', 'true');
-
-    act(() => {
-      latest().removeRef('card-remove' as UniqueId);
-    });
-
-    expect(pinButton).toHaveAttribute('aria-pressed', 'false');
-  });
-
-  describe('initialPinned', () => {
-    it('should expose initially pinned cards via isPinned in context', () => {
-      const { spy, latest } = captureContext();
-
-      render(
-        <FloatingCardProvider initialPinned={['pre-pinned' as UniqueId]}>
-          <ContextReader onContext={spy} />
-        </FloatingCardProvider>,
-      );
-
-      expect(latest().isPinned('pre-pinned' as UniqueId)).toBe(true);
-      expect(latest().isPinned('not-listed' as UniqueId)).toBe(false);
-    });
-
-    it('should render the pin button as pressed for an initially pinned card', () => {
-      render(
-        <FloatingCardProvider
-          headerActions={['pin']}
-          initialPinned={['pinned-at-start' as UniqueId]}
-        >
-          <div />
-        </FloatingCardProvider>,
-      );
-
-      const RightAdapter =
-        capturedProps.rightHeaderActionsComponent as FunctionComponent<IDockviewHeaderActionsProps>;
-
-      render(
-        <RightAdapter
-          {...makeMockAdapterProps(makeMockActivePanel('pinned-at-start'))}
-        />,
-      );
-
-      expect(screen.getByRole('button', { name: /pin/i })).toHaveAttribute(
-        'aria-pressed',
-        'true',
-      );
-    });
-
-    it('should render the pin button as unpressed for a card not in initialPinned', () => {
-      render(
-        <FloatingCardProvider
-          headerActions={['pin']}
-          initialPinned={['other-card' as UniqueId]}
-        >
-          <div />
-        </FloatingCardProvider>,
-      );
-
-      const RightAdapter =
-        capturedProps.rightHeaderActionsComponent as FunctionComponent<IDockviewHeaderActionsProps>;
-
-      render(
-        <RightAdapter
-          {...makeMockAdapterProps(makeMockActivePanel('not-in-initial'))}
-        />,
-      );
-
-      expect(screen.getByRole('button', { name: /pin/i })).toHaveAttribute(
-        'aria-pressed',
-        'false',
-      );
-    });
-
-    it('should allow toggling an initially pinned card to unpinned', async () => {
-      const user = userEvent.setup();
-
-      render(
-        <FloatingCardProvider
-          headerActions={['pin']}
-          initialPinned={['toggle-initial' as UniqueId]}
-        >
-          <div />
-        </FloatingCardProvider>,
-      );
-
-      const RightAdapter =
-        capturedProps.rightHeaderActionsComponent as FunctionComponent<IDockviewHeaderActionsProps>;
-
-      render(
-        <RightAdapter
-          {...makeMockAdapterProps(makeMockActivePanel('toggle-initial'))}
-        />,
-      );
-
-      const pinButton = screen.getByRole('button', { name: /pin/i });
-      expect(pinButton).toHaveAttribute('aria-pressed', 'true');
-
-      await user.click(pinButton);
-      expect(pinButton).toHaveAttribute('aria-pressed', 'false');
-    });
-  });
-
-  it('should release pin when card is removed via dockview', async () => {
-    const user = userEvent.setup();
-    const mockApi = createMockApi();
-    let removePanelCallback: OnDidRemovePanelCallback | undefined;
-
-    mockApi.onDidRemovePanel.mockImplementation(
-      (cb: OnDidRemovePanelCallback) => {
-        removePanelCallback = cb;
-        return { dispose: vi.fn() };
-      },
-    );
-
-    const { rerender } = render(
-      <FloatingCardProvider headerActions={['pin']}>
-        <div />
-      </FloatingCardProvider>,
-    );
-
-    act(() => {
-      triggerReady(mockApi);
-    });
-
-    rerender(
-      <FloatingCardProvider headerActions={['pin']}>
-        <div />
-      </FloatingCardProvider>,
-    );
-
-    const RightAdapter =
-      capturedProps.rightHeaderActionsComponent as FunctionComponent<IDockviewHeaderActionsProps>;
-
-    render(
-      <RightAdapter
-        {...makeMockAdapterProps(makeMockActivePanel('pinned-removed'))}
-      />,
-    );
-
-    const pinButton = screen.getByRole('button', { name: /pin/i });
-
-    await user.click(pinButton);
-    expect(pinButton).toHaveAttribute('aria-pressed', 'true');
-
-    act(() => {
-      removePanelCallback?.({ id: 'pinned-removed' });
-    });
-
-    expect(pinButton).toHaveAttribute('aria-pressed', 'false');
+    expect(
+      screen.queryByRole('dialog', { name: 'First' }),
+    ).not.toBeInTheDocument();
+    expect(screen.getByRole('dialog', { name: 'Second' })).toBeInTheDocument();
   });
 });

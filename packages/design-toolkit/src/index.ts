@@ -263,14 +263,41 @@ export type {
   FlashcardDetailsListProps,
   FlashcardProps,
 } from './components/flashcard/types';
+export {
+  BASE_Z_INDEX,
+  DEFAULT_DIMENSIONS,
+  DEFAULT_POSITION,
+  DRAG_THRESHOLD,
+  MIN_DIMENSIONS,
+} from './components/floating-card/constants';
+export { throttle } from './components/floating-card/hooks/throttle';
+export { useCardLayout } from './components/floating-card/hooks/use-card-layout';
+export {
+  constrainPosition,
+  useDrag,
+} from './components/floating-card/hooks/use-drag';
+export type { UseDragProps } from './components/floating-card/hooks/use-drag';
+export { useMouseInteraction } from './components/floating-card/hooks/use-mouse-interaction';
+export type { MouseInteractionConfig } from './components/floating-card/hooks/use-mouse-interaction';
+export { useResize } from './components/floating-card/hooks/use-resize';
+export type { UseResizeProps } from './components/floating-card/hooks/use-resize';
 export { FloatingCard } from './components/floating-card';
+export { FloatingCardPanel } from './components/floating-card/panel';
+export type { FloatingCardPanelProps } from './components/floating-card/panel';
 export { FloatingCardProvider } from './components/floating-card/provider';
 export type {
+  Bounds,
+  Dimensions,
   FloatingCardContextValue,
   FloatingCardHeaderAction,
+  FloatingCardLayout,
   FloatingCardProps,
   FloatingCardProviderProps,
+  Position,
+  ResizeHandle,
 } from './components/floating-card/types';
+export { resolveMaybeFactory } from './components/floating-card/utils';
+export type { MaybeFactory } from './components/floating-card/utils';
 export { GanttContentContainer } from './components/gantt/components/containers/external/gantt-content-container';
 export { GanttPanelContainer } from './components/gantt/components/containers/external/gantt-panel-container';
 export { GanttBlock } from './components/gantt/components/content-row/block';

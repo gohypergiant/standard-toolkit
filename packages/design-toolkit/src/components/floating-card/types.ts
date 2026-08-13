@@ -11,9 +11,32 @@
  */
 
 import type { UniqueId } from '@accelint/core/utility/uuid';
-import type { DockviewApi } from 'dockview-react';
 import type { PropsWithChildren, ReactNode } from 'react';
 import type { MaybeFactory } from './utils';
+
+/** A point in the provider's coordinate space. */
+export type Position = { x: number; y: number };
+
+/** A card's rendered size. */
+export type Dimensions = { width: number; height: number };
+
+/** The box a card is kept inside while dragging and resizing. */
+export type Bounds = {
+  top: number;
+  left: number;
+  right: number;
+  bottom: number;
+};
+
+/** Edge or corner a resize gesture pulls from. */
+export type ResizeHandle = 'n' | 's' | 'e' | 'w' | 'ne' | 'nw' | 'se' | 'sw';
+
+/** Geometry and stacking for one card, tracked by the provider. */
+export type FloatingCardLayout = {
+  position: Position;
+  dimensions: Dimensions;
+  zIndex: number;
+};
 
 /**
  * Context value providing floating card management functionality.
@@ -34,6 +57,18 @@ export type FloatingCardContextValue = {
   /** Programmatically closes a floating card by ID */
   closeCard: (id: UniqueId) => void;
 
+  /**
+   * Registers a card with the provider so it renders as a panel.
+   *
+   * @remarks Called by `FloatingCard`; applications use that component instead.
+   */
+  openCard: (
+    id: UniqueId,
+    title: string | undefined,
+    position: Position,
+    dimensions: Dimensions,
+  ) => void;
+
   /** Toggles pin state for a floating card, disabling drag when pinned */
   togglePinCard: (id: UniqueId) => void;
 
@@ -42,9 +77,6 @@ export type FloatingCardContextValue = {
 
   /** Subscribes to pin state changes; returns an unsubscribe function */
   subscribeToPinState: (callback: () => void) => () => void;
-
-  /** Dockview API instance, null until FloatingCardProvider's onReady fires */
-  api: DockviewApi | null;
 };
 
 /**
@@ -153,6 +185,16 @@ export type FloatingCardProviderProps = Readonly<
      * per-floating card actions.
      */
     headerActions?: MaybeFactory<FloatingCardHeaderAction[]>;
+    /**
+     * Region that cards are kept inside while being dragged and resized.
+     *
+     * `'provider'` confines cards to the provider element, so a provider that
+     * occupies part of the page keeps its cards within that region.
+     * `'viewport'` lets cards move anywhere on screen.
+     *
+     * @defaultValue 'provider'
+     */
+    bounds?: 'provider' | 'viewport';
     /**
      * Optional set of card IDs that should be pinned when the provider first mounts.
      *

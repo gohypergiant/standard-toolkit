@@ -12,10 +12,9 @@
 
 import { type PropsWithChildren, useEffect } from 'react';
 import { createPortal } from 'react-dom';
+import { DEFAULT_DIMENSIONS, DEFAULT_POSITION } from './constants';
 import { useFloatingCard } from './context';
 import type { FloatingCardProps } from './types';
-
-const defaultDimensions = { width: 300, height: 400 } as const;
 
 /**
  * Renders its children into a floating card using React portals.
@@ -34,6 +33,8 @@ const defaultDimensions = { width: 300, height: 400 } as const;
  * @remarks
  * - Requires `FloatingCardProvider` as an ancestor.
  * - The floating card is only rendered if a valid DOM reference exists for the given `id`.
+ * - `initialDimensions` and `initialPosition` are applied when the card opens;
+ *   later changes are ignored so a user's own drag or resize is never overridden.
  *
  * @example
  * ```tsx
@@ -66,42 +67,27 @@ export function FloatingCard({
   initialDimensions,
   initialPosition,
 }: PropsWithChildren<FloatingCardProps>) {
-  const { cards, api: floatingCardApi } = useFloatingCard();
+  const { cards, openCard, closeCard } = useFloatingCard();
 
-  const { width, height } = initialDimensions ?? defaultDimensions;
-  const { x, y } = initialPosition ?? {};
+  const { width, height } = initialDimensions ?? DEFAULT_DIMENSIONS;
+  const { x, y } = initialPosition ?? DEFAULT_POSITION;
 
-  // Register card with Dockview API when isOpen changes.
-  // Early return if API not ready (Dockview not fully initialized).
   useEffect(() => {
-    if (!floatingCardApi) {
-      return;
-    }
     if (!isOpen) {
-      floatingCardApi.getPanel(id)?.api.close();
+      closeCard(id);
+
       return;
     }
 
-    if (!floatingCardApi.getPanel(id)) {
-      const panel = floatingCardApi.addPanel({
-        id,
-        title,
-        component: 'default',
-        floating: { width, height, x, y },
-      });
+    openCard(id, title, { x, y }, { width, height });
+  }, [id, title, isOpen, width, height, x, y, openCard, closeCard]);
 
-      panel.group.locked = 'no-drop-target';
-    }
-
-    // Cleanup not included here. Cleanup is done at the provider level when the card is removed from the `cards` registry.
-  }, [id, title, isOpen, width, height, x, y, floatingCardApi]);
-
+  // Unregister on unmount so a card removed from the tree leaves no panel behind.
   useEffect(() => {
-    const panel = floatingCardApi?.getPanel(id);
-    if (panel) {
-      panel.setTitle(title ?? id);
-    }
-  }, [title, floatingCardApi, id]);
+    return () => {
+      closeCard(id);
+    };
+  }, [id, closeCard]);
 
   return isOpen && cards[id] ? createPortal(children, cards[id]) : null;
 }
