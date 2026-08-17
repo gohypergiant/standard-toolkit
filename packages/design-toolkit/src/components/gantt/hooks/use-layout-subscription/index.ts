@@ -11,7 +11,7 @@
  * governing permissions and limitations under the License.
  */
 
-import { useEffect, useRef } from 'react';
+import { useEffect } from 'react';
 import { shallow } from 'zustand/shallow';
 import { useGanttStoreApi } from '../../context/store';
 import type { GanttState } from '../../store';
@@ -26,20 +26,16 @@ export function useLayoutSubscription<T>({
   selector,
 }: UseLayoutSubscriptionProps<T>) {
   const store = useGanttStoreApi();
-  const callbackRef = useRef(callback);
-  callbackRef.current = callback;
-  const selectorRef = useRef(selector);
-  selectorRef.current = selector;
 
   useEffect(() => {
     let animationFrameId: number;
 
     const unsubscribe = store.subscribe(
-      (state) => selectorRef.current(state),
+      (state) => selector(state),
       (value) => {
         cancelAnimationFrame(animationFrameId);
         animationFrameId = requestAnimationFrame(() => {
-          callbackRef.current(value);
+          callback(value);
         });
       },
       {
@@ -59,5 +55,5 @@ export function useLayoutSubscription<T>({
       cancelAnimationFrame(animationFrameId);
       unsubscribe();
     };
-  }, [store]);
+  }, [store, callback, selector]);
 }
