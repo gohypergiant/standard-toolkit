@@ -29,6 +29,9 @@ New:
 - `FloatingCardProvider` accepts a `bounds` prop of `'provider'` (default) or
   `'viewport'`, controlling the region cards are confined to while dragging and
   resizing.
+- Custom header actions accept a `label`, which becomes the button's accessible
+  name. Action buttons render an icon with no visible text, so without it a
+  screen reader announces only "button".
 
 Behavior notes:
 
