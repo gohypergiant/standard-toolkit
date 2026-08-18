@@ -1,5 +1,97 @@
 # @accelint/design-toolkit
 
+## 10.0.0
+### Major Changes
+
+- 49a05f1: Reimplement `FloatingCard` without dockview.
+  
+  Dragging, resizing, and stacking order are now handled directly by the
+  component, so `dockview-react` is no longer a peer dependency and no longer
+  needs to be installed.
+  
+  BREAKING CHANGES:
+  
+  - The `dockview-react` peer dependency has been removed. Applications that
+    installed it only for `FloatingCard` can drop it.
+  - `useFloatingCard()` no longer returns `api`. It previously exposed the
+    underlying `DockviewApi` instance, which no longer exists.
+  - `useFloatingCard()` no longer returns `addRef` or `removeRef`. Registering a
+    card is internal wiring between `FloatingCard` and its provider, so it moved
+    off the value applications consume. Nothing else called them.
+  
+  `useFloatingCard()` still returns `cards`, `closeCard`, `togglePinCard`,
+  `isPinned`, and `subscribeToPinState`, all unchanged.
+  
+  Every existing `FloatingCard` and `FloatingCardProvider` prop keeps its
+  behavior, so applications that do not read `api` need no code changes.
+  
+  New:
+  
+  - `FloatingCardProvider` accepts a `bounds` prop of `'provider'` (default) or
+    `'viewport'`, controlling the region cards are confined to while dragging and
+    resizing.
+  - Custom header actions accept a `label`, which becomes the button's accessible
+    name. Action buttons render an icon with no visible text, so without it a
+    screen reader announces only "button".
+  
+  Behavior notes:
+  
+  - Cards can be resized from any edge or corner. Pinning a card continues to
+    freeze dragging and now also freezes resizing.
+- f0aa4e9: Upgrade Table to TanStack Table v9 (`@tanstack/react-table` peer dependency is now `^9.0.0`).
+  
+  BREAKING CHANGES for Table consumers:
+  
+  - The `@tanstack/react-table` peer dependency must be upgraded to `^9.0.0`.
+  - Column definitions are now typed against the Table's feature set. Replace
+    `createColumnHelper<TData>()` with the new `createTableColumnHelper<TData>()`
+    export, or pass the new `TableFeatures` type as the first generic of TanStack
+    types (`ColumnDef<TableFeatures, TData, TValue>`, `CellContext<TableFeatures,
+    TData, TValue>`, etc.). The registered feature set is exported as
+    `tableFeatures`.
+  - The `columns` prop is now `ColumnDef<TableFeatures, T, any>[]` (mirroring
+    TanStack's own columns typing) instead of a per-key mapped type; column
+    helper output assigns to it directly.
+  - `TableBodyProps`, `TableRowProps`, `TableCellProps`, `TableHeaderCellProps`,
+    and `TableHeaderProps` now constrain their generic to TanStack's `RowData`
+    (`Record<string, any> | Array<any>`).
+  - `RowSelectionState` in v9 is `Record<string, true>`; update any
+    `Record<string, boolean>` selection state accordingly.
+  - Behavior note: TanStack Table v9 renders function `cell`/`header` renderers
+    as React components (v8 called them inline). A column definition recreated
+    on each render therefore remounts its cells on each render, resetting any
+    internal cell state (open menus, focus). Define columns at module scope or
+    memoize them with stable dependencies.
+
+### Minor Changes
+
+- f0aa4e9: Table's manual row ordering (Move Up / Move Down) is now implemented as a
+  TanStack Table custom feature. New `rowOrderingFeature` export (with
+  `RowOrderingState`, `RowOrderingTableState`, `RowOrderingTableOptions`,
+  `RowOrderingTableApis`, and `RowOrderingRowApis` types) registers a
+  `rowOrdering` state slice, an identity-stable `table.setRowOrdering` state
+  setter, and `row.moveUp()` / `row.moveDown()` row APIs.
+  
+  Fixes: an open row kebab menu no longer closes when the `data` prop updates
+  mid-interaction (the move callbacks previously lived in component state, and
+  their churn remounted the kebab cells on every data change).
+  
+  Fixes: moves now interact correctly with pinned rows. Pinned rows render in
+  their own region, so moving relative to one had no visible effect; moves now
+  skip pinned neighbors, and the new `row.getCanMoveUp()` / `row.getCanMoveDown()`
+  APIs (which drive the kebab menu's disabled states) report whether an unpinned
+  row exists to move past.
+- f0aa4e9: Table now reflects `data` prop changes without a remount (e.g. polling or
+  refetching). Previously the data array was copied into internal state on first
+  render, so updates were ignored unless consumers forced a remount with a `key`.
+  Manual row reordering (Move Up / Move Down) is preserved across data updates;
+  rows added after a manual reorder append at the end. The `key` remount pattern
+  still works but is no longer necessary.
+
+### Patch Changes
+
+- 4ff8007: Fixes an issue in the Gantt component where ref-based callbacks would prevent subscriptions from firing whenever callback dependencies changed. This addresses observed layout/display bugs when modifying props.
+
 ## 9.13.0
 ### Minor Changes
 
