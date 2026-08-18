@@ -682,9 +682,6 @@ importers:
       client-only:
         specifier: ^0.0.1
         version: 0.0.1
-      dockview-react:
-        specifier: ^5.0.0
-        version: 5.0.0(react@19.2.3)
       esbuild-fix-imports-plugin:
         specifier: ^1.0.23
         version: 1.0.23
@@ -5448,17 +5445,6 @@ packages:
   dir-glob@3.0.1:
     resolution: {integrity: sha512-WkrWp9GR4KXfKGYzOLmTuGVi1UWFfws377n9cc55/tb6DuqyF6pcQ5AbiHEshaDpY9v6oaSr2XCDidGmMwdzIA==}
     engines: {node: '>=8'}
-
-  dockview-core@5.0.0:
-    resolution: {integrity: sha512-bUgH/e/PTVZ/5Y97QvF30eAs67HPzTQUbcVMojwsWX/RKys5bQCblGMvxPu+KVx+jes2JIhepFvjMepCyz1uNQ==}
-
-  dockview-react@5.0.0:
-    resolution: {integrity: sha512-OXRw5WcOMMbhpHqOwbqLHoZv7H36YzfvIunUE6AtmjaYX4djvvq+1UzGHQgKDTK1D38IwnSnuYbzSSsd+b3QIA==}
-
-  dockview@5.0.0:
-    resolution: {integrity: sha512-GPUMnhaZ7pH28Ai6HPEu4cecp9xNSp4tMtDn/In7sYCDhTztBbbLEK3BqbAwiJBEUXadnZ7j01BaZkz9ndJJ7A==}
-    peerDependencies:
-      react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
 
   doctrine@3.0.0:
     resolution: {integrity: sha512-yS+Q5i3hBf7GBkd4KG8a7eBNNWNGLTaEwwYWUijIYM7zrlYDM0BFXHjjPWlWZ1Rg7UaddZeIDmi9jF3HmqiQ2w==}
@@ -14099,19 +14085,6 @@ snapshots:
   dir-glob@3.0.1:
     dependencies:
       path-type: 4.0.0
-
-  dockview-core@5.0.0: {}
-
-  dockview-react@5.0.0(react@19.2.3):
-    dependencies:
-      dockview: 5.0.0(react@19.2.3)
-    transitivePeerDependencies:
-      - react
-
-  dockview@5.0.0(react@19.2.3):
-    dependencies:
-      dockview-core: 5.0.0
-      react: 19.2.3
 
   doctrine@3.0.0:
     dependencies:

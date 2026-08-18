@@ -266,10 +266,15 @@ export type {
 export { FloatingCard } from './components/floating-card';
 export { FloatingCardProvider } from './components/floating-card/provider';
 export type {
+  Bounds,
+  Dimensions,
   FloatingCardContextValue,
   FloatingCardHeaderAction,
+  FloatingCardLayout,
   FloatingCardProps,
   FloatingCardProviderProps,
+  Position,
+  ResizeHandle,
 } from './components/floating-card/types';
 export { GanttContentContainer } from './components/gantt/components/containers/external/gantt-content-container';
 export { GanttPanelContainer } from './components/gantt/components/containers/external/gantt-panel-container';
