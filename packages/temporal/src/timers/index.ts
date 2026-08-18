@@ -43,9 +43,12 @@ export function setClockInterval(cb: () => void, ms: number) {
     timeout = setTimeout(repeat, adjustedMs);
   }
 
-  callNextSecond(repeat);
+  const cancelNextSecond = callNextSecond(repeat);
 
-  return () => clearTimeout(timeout);
+  return () => {
+    cancelNextSecond();
+    if (timeout !== undefined) clearTimeout(timeout);
+  };
 }
 
 /**

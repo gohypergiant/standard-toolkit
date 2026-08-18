@@ -175,6 +175,23 @@ describe('callNextSecond', () => {
       vi.advanceTimersByTime(SECOND);
       expect(callback).toHaveBeenCalledTimes(1);
     });
+
+    it('can be cancelled before the next second boundary', () => {
+      // Make "now" be 12.345s into a minute so remainder(1000) = 655ms
+      vi.spyOn(Date, 'now').mockReturnValue(12_345);
+
+      const cb = vi.fn();
+
+      // callNextSecond returns a cleanup fn
+      const cancel = callNextSecond(cb);
+
+      // Cancel immediately
+      cancel?.();
+
+      vi.advanceTimersByTime(1000);
+
+      expect(cb).not.toHaveBeenCalled();
+    });
   });
 
   describe('error handling', () => {
