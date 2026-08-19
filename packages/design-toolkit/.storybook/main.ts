@@ -47,6 +47,7 @@ const config: StorybookConfig = {
   },
   core: {
     builder: getAbsolutePath('@storybook/builder-vite'), // 👈 The builder enabled here.
+    disableWhatsNewNotifications: true,
   },
   docs: {
     defaultName: 'Playground',
