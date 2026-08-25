@@ -9,38 +9,100 @@ governing permissions and limitations under the License. -->
 
 # @accelint/stream
 
-**TanStack Query for live streams.** This library manages held-open stream
-connections (SSE or WebSocket) the way TanStack Query manages fetched data:
-consumers ask for a stream by `streamKey`, and everyone using the same key
-**shares one live connection**. If you know TanStack Query you already know
-this library — same classes, same lifecycle, one different resource at the
-center: instead of caching a *response*, we cache an *open connection*.
+Cache and share SSE and WebSocket connections by key.
 
-Two entry points, one package (the `@accelint/bus` pattern):
+`@accelint/stream` manages held-open browser stream connections. Consumers use
+`streamKey` as the stream identity. Consumers with the same key share one
+connection.
 
-- **`@accelint/stream`** — the framework-agnostic core.
-- **`@accelint/stream/react`** — the React hooks.
+The package has two entry points:
 
-React is an **optional peer**: core-only consumers install and bundle zero
-React — the `react/` modules are separate subpath exports that are never
-loaded unless imported.
+- `@accelint/stream` — framework-agnostic core APIs
+- `@accelint/stream/react` — React hooks and provider
 
-## The cast (1:1 with TanStack Query)
+React is an optional peer dependency. Core-only consumers do not need to load
+React.
 
-| This library | TanStack Query | What it is |
+## Installation
+
+```bash
+pnpm add @accelint/stream
+```
+
+### Peer dependencies
+
+Install React only if you use `@accelint/stream/react`.
+
+```bash
+pnpm add react
+```
+
+TypeScript types are included.
+
+## Quick Start
+
+```tsx
+import { StreamClient } from '@accelint/stream';
+import { StreamClientProvider, useSSEStream } from '@accelint/stream/react';
+
+const client = new StreamClient();
+
+function HealthStatus({ apiUri }: { apiUri: string }) {
+  const { data, status } = useSSEStream<{ status: string }>({
+    streamKey: ['health', apiUri],
+    uri: `${apiUri}/stream/health`,
+  });
+
+  return <pre>{JSON.stringify({ status, data }, null, 2)}</pre>;
+}
+
+export function App({ apiUri }: { apiUri: string }) {
+  return (
+    <StreamClientProvider client={client}>
+      <HealthStatus apiUri={apiUri} />
+    </StreamClientProvider>
+  );
+}
+```
+
+## What is @accelint/stream?
+
+`@accelint/stream` is a cache and observer layer for live browser streams. It
+supports Server-Sent Events and WebSocket transports. It provides shared-key
+stream reuse, lazy connection setup, observer results, and cache-wide state
+inspection. This library is heavily inspired by tanstack query.
+
+The core package works without React. The React subpath adds hooks and a
+provider.
+
+## Why use @accelint/stream?
+
+This package helps when multiple consumers need to share stream lifecycle and
+state.
+
+It provides:
+
+- shared connections by `streamKey`
+- lazy connection setup on first subscription
+- short unobserved linger through `gcTime`
+- SSE and WebSocket support through the same cache model
+- cache-wide inspection for counts and filtered state
+
+## TanStack Query mapping
+
+| `@accelint/stream` | TanStack Query | Description |
 | --- | --- | --- |
-| `useSSEStream()` / `useWebSocketStream()` | `useQuery()` | The hooks a component calls — same semantics, different wire protocol |
-| `streamKey` / `streamHash` | `queryKey` / `queryHash` | Identity: everyone on the same key shares one stream |
-| `decodeFn` | `queryFn` | The injected protocol boundary — the library never assumes a wire format |
-| `StreamObserver` | `QueryObserver` | One per consumer; derives the result (`data`, `status`, flags) and fires callbacks |
-| `Stream` | `Query` | One per `streamKey`; owns state and the network resource |
-| `StreamCache` | `QueryCache` | `Map<streamHash, Stream>`; get-or-create + lifecycle events |
-| `StreamClient` | `QueryClient` | Entry point holding the cache |
+| `useSSEStream()` / `useWebSocketStream()` | `useQuery()` | Hook-level stream access |
+| `streamKey` / `streamHash` | `queryKey` / `queryHash` | Stream identity |
+| `decodeFn` | `queryFn` | Raw frame decoder |
+| `StreamObserver` | `QueryObserver` | Per-consumer observer |
+| `Stream` | `Query` | One shared stream per key |
+| `StreamCache` | `QueryCache` | Cache of streams |
+| `StreamClient` | `QueryClient` | Cache owner and imperative API |
 | `StreamClientProvider` / `useStreamClient` | `QueryClientProvider` / `useQueryClient` | React context wiring |
-| `useStreamState(filters, select)` | `useMutationState` | Aggregate observation over the whole cache |
-| `useStreamCount(filters)` | `useIsFetching` | Count of streams matching filters |
-| Transport (`EventSource`/`WebSocket`, held open) | `queryFn` fetch (runs, then done) | **The one difference** — see below |
-| `gcTime` linger | `gcTime` linger | Unobserved entries survive briefly for instant re-attach |
+| `useStreamState(filters, select)` | `useMutationState` | Cache-wide observation |
+| `useStreamCount(filters)` | `useIsFetching` | Count of matching streams |
+| `gcTime` linger | `gcTime` linger | Unobserved retention window |
 
 ## Relationships
 
@@ -58,17 +120,18 @@ flowchart LR
     OA -- "cache.build(K)" --> C
     OB -- "cache.build(K)" --> C
     C --> S["Stream for K<br/>(state: data, status)"]
-    S --> T["ONE shared transport<br/>(EventSourceTransport | WebSocketTransport)"]
-    T -- "held-open connection" --> SV[(Server)]
+    S --> T["Shared transport<br/>(EventSourceTransport | WebSocketTransport)"]
+    T -- "open connection" --> SV[(Server)]
     SV -- "raw frames" --> T
     T -- "decodeFn(raw) → data | error | ignore" --> S
 ```
 
-Two components, same `streamKey` → two observers, **one** `Stream`, **one**
-socket. Exactly like two `useQuery(K)` calls sharing one cached query — except
-the shared thing is a live connection.
+Consumers with the same `streamKey` share one `Stream` instance and one
+transport connection.
 
-## Lifecycle: mount → connect → message
+## Lifecycle
+
+### Mount, connect, and message flow
 
 ```mermaid
 sequenceDiagram
@@ -86,31 +149,27 @@ sequenceDiagram
     Comp->>Hook: commit (useSyncExternalStore subscribes)
     Hook->>Obs: subscribe
     Obs->>Str: addObserver(observer)
-    Note over Str: FIRST observer triggers the lazy connect
-    Str->>T: createTransport('sse', uri) → EventSource opens, held open
+    Note over Str: first observer triggers connection setup
+    Str->>T: createTransport('sse', uri)
     T-->>Str: onOpen
-    Str-->>Obs: status connected → onOpen()
-    Obs-->>Comp: re-render (isConnected true)
+    Str-->>Obs: status connected
+    Obs-->>Comp: re-render
     T-->>Str: onMessage(raw text frame)
-    Note over Str: decodeFn(raw) → data | error | ignore<br/>data: structural sharing on state.data<br/>error: status → error, onError fires<br/>ignore: dropped
-    Str-->>Obs: state update + data fan-out
-    Obs-->>Comp: re-render (data) + onMessage(payload)
+    Note over Str: decodeFn(raw) → data | error | ignore
+    Str-->>Obs: state update + message notification
+    Obs-->>Comp: re-render
 ```
 
-Key points:
+Facts:
 
-- **Render is side-effect free.** Creating the observer and building the
-  `Stream` opens nothing. The connection starts when the first observer
-  *subscribes* (React commit) — the same lazy pattern as TanStack Query only
-  fetching when a query gains an active observer. SSR renders never connect.
-- **`onMessage` fires for every message, even identical payloads.**
-  `state.data` uses structural sharing (`replaceEqualDeep`, same as TanStack
-  Query) so re-renders stay cheap, but SSE sources are *event emitters, not
-  state replicators* — a repeated payload is still a new event. The event
-  callback fires, but the component won't re-render if `data` reference is
-  unchanged.
+- Render does not open a connection.
+- The connection starts when the first observer subscribes.
+- SSR renders do not connect.
+- `onMessage` runs for every message, including duplicate payloads.
+- `state.data` uses structural sharing, so equal payloads can keep the same
+  reference.
 
-## Lifecycle: unmount → linger → gc (or re-attach)
+### Unmount, linger, and removal
 
 ```mermaid
 flowchart TB
@@ -123,45 +182,160 @@ flowchart TB
     Removed --> End([End])
 ```
 
-This is TanStack Query's `gcTime` model verbatim: timer armed at creation and
-on last-observer-removed, disarmed on observer-added, explicit removal
-immediate. It makes StrictMode's dev-mode mount→unmount→mount, Suspense blips,
-and quick route hops **free**: the returning observer picks up the same live
-socket instead of tearing it down and reconnecting.
+When the last observer unsubscribes, the stream remains in the cache until
+`gcTime` expires. If another observer subscribes before that, the same stream
+is reused.
 
-## Where the mental model differs from TanStack Query
+## Differences from TanStack Query
 
-A query's `queryFn` runs, resolves, and is *done* — caching its result is
-pure win. A stream's transport connection is a **standing resource**: while
-it is open, the server holds a socket and keeps sending. Consequences:
-
-- **Lingering costs the server, not just client memory.** That is why the
-  default `gcTime` is **30 seconds**, not TanStack's 5 minutes. Override per
-  hook (`gcTime: 60_000`); the longest requested linger wins (ratchets up,
-  `Infinity` disables gc) — same semantics as TanStack Query.
-- **There is no "stale data" concept.** A live connection is never stale, so
-  `staleTime` has no analog. The connection either exists or it doesn't.
-- **`retry()` is the manual reconnect** (the browser's `EventSource` stops
-  auto-reconnecting after fatal errors). It always works: if the stream was
-  externally removed, retry re-resolves against the cache and opens a fresh
-  connection.
+- A stream holds an open network connection.
+- Default `gcTime` is 30 seconds.
+- There is no `staleTime` concept.
+- `retry()` closes and reopens the connection.
 
 ## Transports
 
-- **SSE (`useSSEStream`)** — `EventSource`; the browser reconnects natively
-  (tuned by the server's `retry:` field).
-- **WebSocket (`useWebSocketStream`)** — the browser never reconnects on its
-  own, so the transport retries with doubling backoff (1s → 15s cap, reset
-  on a successful open). `uri` accepts `http(s)://` (auto-converted to
-  `ws(s)://`) or explicit `ws(s)://`. There is no client-side liveness watchdog
-  (browsers cannot send WS pings) — WS endpoints must heartbeat like the
-  SSE ones.
+- `useSSEStream` uses `EventSource`. Browser reconnect behavior follows the
+  server's `retry:` configuration.
+- `useWebSocketStream` uses WebSocket transport with client-side reconnect
+  backoff.
+- WebSocket URIs can be `http(s)://` or `ws(s)://`. `http(s)` is converted to
+  `ws(s)`.
+- A `streamKey` identifies one stream on one transport. If the same key is
+  reused with a different transport or URI, the existing stream remains in
+  use and the package logs an error.
 
-**A streamKey identifies one stream on one transport.** Requesting the same
-key on a different transport (or a different uri) logs an error and keeps
-serving the original stream.
+## API
 
-## Setup (React)
+### `StreamClient`
+
+Owns a `StreamCache` and provides imperative reads.
+
+```ts
+const client = new StreamClient();
+```
+
+Key methods:
+
+- `getStreamCache()`
+- `getStreamState(streamKey)`
+- `getStreams(filters?)`
+- `getStreamCount(filters?)`
+- `getStreamKeys()`
+- `clear()`
+
+### `StreamCache`
+
+Stores `Stream` instances by hashed `streamKey`.
+
+Important behavior:
+
+- `streamKey` is the identity, not `uri`
+- later observers can increase `gcTime` and `messageHistory`, but do not lower
+  them
+- reusing the same key with a different `uri` or transport logs an error and
+  keeps the existing stream
+
+### `Stream`
+
+Represents one shared live connection and its current state.
+
+Useful surface:
+
+- `state` — `{ data, dataUpdateCount, dataUpdatedAt, status }`
+- `getMessages()` — retained raw messages when `messageHistory > 0`
+- `getTransport()` — current live transport instance, if connected
+- `getEventSource()` — underlying `EventSource` for SSE streams
+- `retry()` — close and reopen the connection
+- `close()` — tear down the current connection
+
+### `StreamObserver`
+
+Per-consumer observer used by the React hooks. It applies `select`, tracks
+enabled state, and exposes the observer result.
+
+### `useSSEStream(options)`
+
+React hook for SSE streams.
+
+| Option | Type | Description |
+| --- | --- | --- |
+| `streamKey` | `readonly unknown[]` | Stream identity. Include all values the `uri` depends on. |
+| `uri` | `string` | SSE endpoint. |
+| `decodeFn` | `DecodeFn<T>` | Converts a raw frame into `data`, `error`, or `ignore`. |
+| `enabled` | `boolean` | Skip connecting when `false`. |
+| `gcTime` | `number` | Unobserved linger before removal. |
+| `select` | `(data: T) => TData` | Observer-specific derived slice. |
+| `messageHistory` | `number` | Retain the last N raw messages. |
+| `onOpen` | `(status: StreamStatus) => void` | Called when the connection opens. |
+| `onMessage` | `(data: T) => void` | Called for every message. |
+| `onError` | `(status: StreamStatus) => void` | Called when the stream errors. |
+| `client` | `StreamClient` | Optional client override instead of context. |
+
+**Returns:** `StreamObserverResult<TData, T>` with `data`, `messages`,
+`status`, derived booleans, and `retry()`, `pause()`, `resume()`.
+
+### `useWebSocketStream(options)`
+
+Same result shape as `useSSEStream`, but uses WebSocket transport.
+
+Notable differences:
+
+- accepts `http(s)://` or `ws(s)://` URIs
+- converts `http(s)` to `ws(s)` automatically
+- retries closed sockets with doubling backoff
+
+### `useStream(options)`
+
+Transport-agnostic React hook used by both transport-specific hooks.
+
+### `useStreamState(options?, client?)`
+
+Observes cache-wide stream state.
+
+Filters support:
+
+- `streamKey` prefix matching
+- `exact: true` for whole-key matching
+- `status`
+- `transport`
+- `predicate(stream)` for custom filtering
+
+Use `select(stream)` to project each matching stream into a smaller result.
+
+### `useStreamCount(filters?, client?)`
+
+Counts streams matching a filter set. It re-renders when membership changes.
+
+### `defaultDecodeFn(raw)`
+
+Parses each raw message as JSON and treats the result as stream data.
+
+### `createTransport(kind, uri, handlers)`
+
+Creates an `EventSourceTransport` or `WebSocketTransport` instance.
+
+### `toWebSocketUri(uri)`
+
+Converts `http://` to `ws://` and `https://` to `wss://`. Existing `ws://`
+and `wss://` URIs are returned unchanged.
+
+### `STREAM_STATUS`
+
+Status constants exported by the package:
+
+```ts
+const STREAM_STATUS = {
+  CONNECTING: 'connecting',
+  CONNECTED: 'connected',
+  ERROR: 'error',
+  DISCONNECTED: 'disconnected',
+} as const;
+```
+
+## Examples
+
+### Setup (React)
 
 ```tsx
 import { StreamClient } from '@accelint/stream';
@@ -178,22 +352,20 @@ function App({ children }) {
 }
 ```
 
-## Usage
+### Shared SSE connection in multiple components
 
 ```tsx
 import { useSSEStream } from '@accelint/stream/react';
 
 function ComponentA() {
-  const { data, status, isConnected, retry, pause, resume } = useSSEStream({
+  const { data, status } = useSSEStream({
     streamKey: ['health', apiUri],
     uri: `${apiUri}/stream/health`,
-    onMessage: (data) => console.log('A received:', data),
   });
 
   return <div>Status: {status}</div>;
 }
 
-// Shares the same connection (same streamKey)
 function ComponentB() {
   const { data } = useSSEStream({
     streamKey: ['health', apiUri],
@@ -204,60 +376,43 @@ function ComponentB() {
 }
 ```
 
-### Options
+### Common options
 
-- `streamKey` (required): stream identity. **Must include everything the
-  `uri` derives from** (e.g. the host) — the `uri` is only read when the
-  stream is first created.
-- `uri` (required): the stream endpoint.
-- `decodeFn`: turns one raw wire frame into
-  `{ kind: 'data', data } | { kind: 'error', error } | { kind: 'ignore' }` —
-  this library's `queryFn`. Defaults to JSON-as-data. Backend protocols
-  (envelopes, keepalive filtering, server-declared errors) live in app-owned
-  decoders, never in the library. Fixed when the stream is first created
-  (first consumer wins, like `uri`).
-- `enabled`: set `false` to not connect (default `true`).
-- `gcTime`: unobserved linger (connection open) before gc. 30s browser
-  default; ratchets up; `Infinity` disables.
-- `select`: derive this observer's slice from stream data — QueryObserver
-  semantics: memoized on (data identity, select identity), structurally
-  shared so a deep-equal slice keeps its reference. `onMessage` stays raw —
-  select shapes state, not events.
-- `messageHistory`: retained-message cap for `messages` in the result.
-  Default 0 (off — no retention cost); ratchets up across observers like
-  `gcTime`. Entries stay raw even when `select` narrows `data`.
-- `onOpen(status)` / `onError(status)`: fired on status transitions.
-- `onMessage(data)`: fired for **every** message, including duplicates.
-- `client`: override the context `StreamClient`.
+- `streamKey` — stream identity. Include all values the `uri` depends on.
+- `uri` — stream endpoint.
+- `decodeFn` — converts raw frames into `data`, `error`, or `ignore`.
+- `enabled` — set `false` to skip connecting.
+- `gcTime` — unobserved linger before removal.
+- `select` — per-observer derived slice of `data`.
+- `messageHistory` — retained message count for `messages`.
+- `onOpen` / `onError` — status callbacks.
+- `onMessage` — called for every message.
+- `client` — optional `StreamClient` override.
 
-### Result
+### Result shape
 
-`data`, `dataUpdatedAt`, `status` (`connecting | connected | error |
-disconnected`), the derived booleans (`isConnecting`, `isConnected`,
-`isError`, `isDisconnected`, `isEnabled`), `messages` (retained raw
-messages, oldest first — empty until `messageHistory` is set; entries are
-`{ data, dataUpdatedAt, sequence }` with consecutive duplicate payloads
-sharing one `data` reference — ideal for a read-only chat/feed UI), and
-three methods:
+The observer result includes:
 
-- `retry()`: close and reopen the underlying connection on either transport.
-  Use after a fatal error — `EventSource` stops auto-reconnecting once the
-  server rejects the connection, and the WebSocket backoff caps out.
-  Re-resolves the stream from the cache first, so it also recovers a stream
-  that was externally removed (e.g. devtools Close).
-- `pause()` / `resume()`: detach/reacquire the stream for this observer.
-  Resuming within the `gcTime` window re-attaches to the same live
-  connection.
+- `data`
+- `dataUpdatedAt`
+- `status`
+- `isConnecting`
+- `isConnected`
+- `isError`
+- `isDisconnected`
+- `isEnabled`
+- `messages`
+- `retry()`
+- `pause()`
+- `resume()`
 
-### Observing many streams at once
+`messages` is empty until `messageHistory` is set.
 
-`useStreamState` is a `useSyncExternalStore` read over the cache itself, for
-aggregate UI like a connection indicator — every way a stream can change or
-end flows through the cache and lands here.
+### Observe many streams at once
 
 ```tsx
 const activationStreams = useStreamState({
-  filters: { streamKey: ['activations'] }, // prefix match
+  filters: { streamKey: ['activations'] },
   select: (stream) => ({
     id: (stream.streamKey[1] as { id: string }).id,
     status: stream.state.status,
@@ -265,20 +420,13 @@ const activationStreams = useStreamState({
 });
 ```
 
-Filters: `streamKey` (prefix-matched via TanStack's `partialMatchKey`;
-`exact: true` for whole-key), `status`, `transport`, and `predicate` — the
-arbitrary escape hatch. Pass `select` to narrow what triggers re-renders:
-the result array is referentially stable (`replaceEqualDeep`) until the
-selected data actually changes.
-
-`useStreamCount(filters?)` is the `useIsFetching` analog — a
-membership-stable count that re-renders only when it changes:
+`useStreamCount(filters?)` returns the number of matching streams.
 
 ```tsx
 const erroredCount = useStreamCount({ status: 'error' });
 ```
 
-### Imperative access (core, no React)
+### Imperative access without React
 
 ```ts
 import { StreamClient } from '@accelint/stream';
@@ -290,17 +438,92 @@ client.getStreamCount({ transport: 'websocket' });
 client.clear();
 ```
 
-`StreamCache.subscribe()` observes every lifecycle event — this is how
-`@accelint/stream-devtools` watches from the outside without this library
-knowing it exists.
+`StreamCache.subscribe()` emits cache lifecycle events.
 
-## Message history
+### Message history
 
-Opt-in per stream via `messageHistory`: the stream keeps its last N raw
-messages, readable via `stream.getMessages()` and surfaced by observers as
-`messages`. `sequence` is the stream's `dataUpdateCount` at dispatch
-(stable across ring-buffer eviction). History lives on the stream instance
-and dies with it.
+Set `messageHistory` to retain the last N raw messages. Read retained entries
+through `messages` on the observer result or `stream.getMessages()` on the
+stream instance.
+
+### WebSocket transport and URI conversion
+
+```tsx
+import { useWebSocketStream } from '@accelint/stream/react';
+
+function StatsSocket({ cortexUri }: { cortexUri: string }) {
+  const { data, isConnected } = useWebSocketStream<{ tick: number }>({
+    streamKey: ['cortex-stats-ws', cortexUri],
+    uri: `${cortexUri}/ws/health`,
+  });
+
+  return <div>{isConnected ? data?.tick : 'connecting'}</div>;
+}
+```
+
+### Select a stable slice per observer
+
+```tsx
+type Frame = {
+  cpu: { load: number };
+  memory: { used: number };
+};
+
+const { data: cpu } = useSSEStream<Frame, Frame['cpu']>({
+  streamKey: ['stats', apiUri],
+  uri: `${apiUri}/stream/stats`,
+  select: (frame) => frame.cpu,
+});
+```
+
+If the full frame changes but the selected slice stays deep-equal, the hook
+can keep the same `data` reference.
+
+### Custom frame decoding
+
+```tsx
+import type { DecodeFn, StreamFrame } from '@accelint/stream';
+
+const decodeFn: DecodeFn<{ value: number }> = (raw): StreamFrame<{ value: number }> => {
+  const frame = JSON.parse(raw) as
+    | { type: 'data'; value: number }
+    | { type: 'heartbeat' }
+    | { type: 'error'; message: string };
+
+  if (frame.type === 'heartbeat') {
+    return { kind: 'ignore' };
+  }
+
+  if (frame.type === 'error') {
+    return { kind: 'error', error: frame.message };
+  }
+
+  return { kind: 'data', data: { value: frame.value } };
+};
+```
+
+### Filter cache state by named key segments
+
+```tsx
+const activationStreams = useStreamState({
+  filters: {
+    streamKey: ['cortex', 'activations', { datasetId: 'dataset-b' }],
+  },
+  select: (stream) => ({
+    datasetId: (stream.streamKey[2] as { datasetId: string }).datasetId,
+    status: stream.state.status,
+  }),
+});
+```
+
+Object segments inside `streamKey` use deep partial matching.
+
+## Further Reading
+
+- [`src/stream-cache.ts`](./src/stream-cache.ts) - cache creation and key conflict behavior
+- [`src/stream-observer.ts`](./src/stream-observer.ts) - observer result semantics and callbacks
+- [`src/transport.ts`](./src/transport.ts) - SSE and WebSocket transport behavior
+- [`src/react/use-stream-state.ts`](./src/react/use-stream-state.ts) - cache-wide React observation
 
 ## DevTools
 
@@ -308,3 +531,17 @@ and dies with it.
 every stream's status, observer count, message log, and lifecycle timeline,
 with Reconnect / Close / Clear All / Simulate-Error / Inject-Message
 actions.
+
+## License
+
+Apache-2.0 - see [LICENSE](../../LICENSE) for details.
+
+## Contributing
+
+Contributions are welcome. Read [../../CONTRIBUTING.md](../../CONTRIBUTING.md)
+before opening a pull request.
+
+```bash
+pnpm test --dir=src
+pnpm build
+```
