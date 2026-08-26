@@ -17,6 +17,7 @@
  */
 
 const MIN_INTERVAL_MS = 250;
+const MAX_INTERVAL_MS = 30_000;
 const DEFAULT_INTERVAL_MS = 1000;
 
 export function GET(request: Request) {
@@ -24,7 +25,7 @@ export function GET(request: Request) {
     new URL(request.url).searchParams.get('interval') ?? DEFAULT_INTERVAL_MS,
   );
   const interval = Number.isFinite(requested)
-    ? Math.max(MIN_INTERVAL_MS, requested)
+    ? Math.min(MAX_INTERVAL_MS, Math.max(MIN_INTERVAL_MS, requested))
     : DEFAULT_INTERVAL_MS;
 
   const encoder = new TextEncoder();
