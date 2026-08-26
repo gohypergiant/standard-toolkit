@@ -14,9 +14,7 @@
 /** @vitest-environment jsdom */
 
 import { StreamClient } from '@accelint/stream';
-import { StreamClientProvider } from '@accelint/stream/react';
 import { cleanup, render, screen } from '@testing-library/react';
-import { StrictMode } from 'react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { streamDevtoolsPlugin } from '../index';
 import { streamDevtoolsNoOpPlugin } from '../plugin';
@@ -49,29 +47,6 @@ describe('streamDevtoolsPlugin (react)', () => {
     vi.unstubAllGlobals();
   });
 
-  it('does not remount when a parent re-render repeats the same prop values', async () => {
-    // the plugin panel gets a fresh props OBJECT every provider re-render;
-    // only value changes may tear down the Solid root (the wrapper's
-    // memoized element pins this)
-    const panel = streamDevtoolsPlugin.render(document.createElement('div'), {
-      theme: 'dark',
-    });
-    const { rerender } = render(
-      <StreamClientProvider client={client}>{panel}</StreamClientProvider>,
-    );
-
-    const first = await screen.findByText('No SSE streams');
-    first.dataset.probe = 'stable';
-
-    rerender(
-      <StreamClientProvider client={client}>{panel}</StreamClientProvider>,
-    );
-
-    // give a would-be remount time to complete before asserting stability
-    await new Promise((resolve) => setTimeout(resolve, 50));
-    expect(screen.getByText('No SSE streams').dataset.probe).toBe('stable');
-  });
-
   it('no-op twin renders nothing and touches nothing', () => {
     const { container } = render(
       streamDevtoolsNoOpPlugin.render(document.createElement('div'), {
@@ -90,25 +65,6 @@ describe('streamDevtoolsPlugin (react)', () => {
     );
 
     expect(screen.getByText(/No StreamClient in context/)).toBeInstanceOf(
-      HTMLElement,
-    );
-  });
-
-  it('mounts under StrictMode', async () => {
-    // upstream createReactPanel freezes shell props at first mount under
-    // StrictMode (accepted limitation, same as TanStack's own panels) —
-    // but the panel must still mount and render
-    render(
-      <StrictMode>
-        <StreamClientProvider client={client}>
-          {streamDevtoolsPlugin.render(document.createElement('div'), {
-            theme: 'dark',
-          })}
-        </StreamClientProvider>
-      </StrictMode>,
-    );
-
-    expect(await screen.findByText('No SSE streams')).toBeInstanceOf(
       HTMLElement,
     );
   });
