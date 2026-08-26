@@ -50,6 +50,7 @@ describe('streamDevtoolsPlugin (react)', () => {
   it('no-op twin renders nothing and touches nothing', () => {
     const { container } = render(
       streamDevtoolsNoOpPlugin.render(document.createElement('div'), {
+        devtoolsOpen: true,
         theme: 'dark',
       }) as ReactElement,
     );
@@ -60,6 +61,7 @@ describe('streamDevtoolsPlugin (react)', () => {
   it('renders guidance instead of crashing when no provider is present', () => {
     render(
       streamDevtoolsPlugin.render(document.createElement('div'), {
+        devtoolsOpen: true,
         theme: 'dark',
       }) as ReactElement,
     );
