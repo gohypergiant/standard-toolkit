@@ -16,16 +16,20 @@
  * `cacheComponents`.
  */
 
-const MIN_INTERVAL_MS = 250;
-const MAX_INTERVAL_MS = 30_000;
+// named speeds only — the request never supplies a duration
+const INTERVAL_BY_SPEED: Record<string, number> = {
+  slow: 3000,
+  fast: 1000,
+  xfast: 250,
+};
 const DEFAULT_INTERVAL_MS = 1000;
 
 export function GET(request: Request) {
-  const requested = Number(
-    new URL(request.url).searchParams.get('interval') ?? DEFAULT_INTERVAL_MS,
-  );
-  const interval = Number.isFinite(requested)
-    ? Math.min(MAX_INTERVAL_MS, Math.max(MIN_INTERVAL_MS, requested))
+  const speed = new URL(request.url).searchParams.get('speed') ?? '';
+  // hasOwn: bare indexing resolves keys like 'constructor' through the
+  // prototype, and setInterval coerces a non-number delay to 0
+  const interval = Object.hasOwn(INTERVAL_BY_SPEED, speed)
+    ? (INTERVAL_BY_SPEED[speed] ?? DEFAULT_INTERVAL_MS)
     : DEFAULT_INTERVAL_MS;
 
   const encoder = new TextEncoder();

@@ -14,6 +14,10 @@
 import 'client-only';
 
 import {
+  Accordion,
+  AccordionHeader,
+  AccordionPanel,
+  AccordionTrigger,
   DetailsList,
   DetailsListLabel,
   DetailsListValue,
@@ -43,10 +47,13 @@ const INDICATOR_STATUS: Record<
   disconnected: 'unknown',
 };
 
+const MESSAGE_HISTORY = 50;
+
 function TickCard(props: { label: string; streamId: string; uri: string }) {
-  const { data, status } = useSSEStream<DemoTick>({
+  const { data, status, messages } = useSSEStream<DemoTick>({
     streamKey: ['devtools-demo', props.streamId],
     uri: props.uri,
+    messageHistory: MESSAGE_HISTORY,
   });
 
   return (
@@ -67,6 +74,29 @@ function TickCard(props: { label: string; streamId: string; uri: string }) {
           {data ? `${data.intervalMs} ms` : '-'}
         </DetailsListValue>
       </DetailsList>
+      <Accordion variant='compact'>
+        <AccordionHeader>
+          <AccordionTrigger>
+            Messages ({messages.length}
+            {messages.length === MESSAGE_HISTORY ? ', rolling' : ''})
+          </AccordionTrigger>
+        </AccordionHeader>
+        <AccordionPanel>
+          <ol className='flex max-h-200 flex-col gap-xs overflow-y-auto font-mono text-body-s'>
+            {/* retained oldest-first; show newest at the top */}
+            {[...messages].reverse().map((message) => (
+              <li className='flex justify-between gap-m' key={message.sequence}>
+                <span className='fg-primary-bold'>
+                  tick {message.data.tick}
+                </span>
+                <span className='fg-primary-muted'>
+                  {new Date(message.dataUpdatedAt).toISOString().slice(11, 23)}
+                </span>
+              </li>
+            ))}
+          </ol>
+        </AccordionPanel>
+      </Accordion>
     </div>
   );
 }
@@ -86,21 +116,26 @@ export function StreamExampleClient() {
             Stream devtools demo
           </h1>
           <p className='fg-primary-muted'>
-            Two SSE streams tick below. Open the TanStack Devtools trigger
-            (bottom corner) and pick the Streams tab - both streams should be
+            Three SSE streams tick below. Open the TanStack Devtools trigger
+            (bottom corner) and pick the Streams tab - all three should be
             listed with live message logs and lifecycle timelines.
           </p>
         </div>
-        <div className='grid grid-cols-2 gap-l'>
+        <div className='grid grid-cols-3 gap-l'>
+          <TickCard
+            label='Extra fast ticker (250ms)'
+            streamId='xfast'
+            uri='/stream/sse?speed=xfast'
+          />
           <TickCard
             label='Fast ticker (1s)'
             streamId='fast'
-            uri='/stream/sse?interval=1000'
+            uri='/stream/sse?speed=fast'
           />
           <TickCard
             label='Slow ticker (3s)'
             streamId='slow'
-            uri='/stream/sse?interval=3000'
+            uri='/stream/sse?speed=slow'
           />
         </div>
       </div>
