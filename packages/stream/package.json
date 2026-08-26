@@ -1,0 +1,100 @@
+{
+  "name": "@accelint/stream",
+  "description": "TanStack-Query-style caching for held-open stream connections (SSE and WebSocket): framework-agnostic core, React hooks at @accelint/stream/react.",
+  "version": "0.2.0",
+  "author": "https://hypergiant.com",
+  "$schema": "https://json.schemastore.org/package",
+  "dependencies": {
+    "@tanstack/query-core": "^5.101.2"
+  },
+  "devDependencies": {
+    "@accelint/typescript-config": "workspace:*",
+    "@accelint/vitest-config": "workspace:*",
+    "@testing-library/dom": "^10.4.1",
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.0",
+    "@types/react": "^19",
+    "react": "^19",
+    "react-dom": "^19",
+    "tsdown": "^0.18.0",
+    "typescript": "^5.9.3",
+    "vitest": "^4.0.15"
+  },
+  "engines": {
+    "node": ">=22",
+    "pnpm": ">=10"
+  },
+  "exports": {
+    ".": "./dist/index.js",
+    "./constants": "./dist/constants.js",
+    "./react": "./dist/react/index.js",
+    "./react/stream-client-provider": "./dist/react/stream-client-provider.js",
+    "./react/use-sse-stream": "./dist/react/use-sse-stream.js",
+    "./react/use-stream": "./dist/react/use-stream.js",
+    "./react/use-stream-count": "./dist/react/use-stream-count.js",
+    "./react/use-stream-state": "./dist/react/use-stream-state.js",
+    "./react/use-websocket-stream": "./dist/react/use-websocket-stream.js",
+    "./removable": "./dist/removable.js",
+    "./stream": "./dist/stream.js",
+    "./stream-cache": "./dist/stream-cache.js",
+    "./stream-client": "./dist/stream-client.js",
+    "./stream-observer": "./dist/stream-observer.js",
+    "./subscribable": "./dist/subscribable.js",
+    "./transport": "./dist/transport.js",
+    "./types": "./dist/types.js",
+    "./utils": "./dist/utils.js",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "./dist/**",
+    "./catalog-info.yaml",
+    "./CHANGELOG.md",
+    "./package.json",
+    "./README.md"
+  ],
+  "keywords": [
+    "dev-tk",
+    "react",
+    "sse",
+    "streams",
+    "tooling",
+    "websocket"
+  ],
+  "license": "Apache-2.0",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "owner": "default/pathfinder",
+  "peerDependencies": {
+    "react": "^19"
+  },
+  "peerDependenciesMeta": {
+    "react": {
+      "optional": true
+    }
+  },
+  "private": false,
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/gohypergiant/standard-toolkit"
+  },
+  "scripts": {
+    "build": "pnpm tsdown",
+    "dev": "pnpm tsc --watch",
+    "format": "pnpm biome format . --write --verbose",
+    "format:check": "pnpm biome format . --verbose",
+    "index": "pnpm zx ../../scripts/indexer.mjs packages/stream",
+    "license": "pnpm zx ../../scripts/license.mjs",
+    "lint": "pnpm biome lint . --verbose",
+    "lint:package": "pnpm publint",
+    "test": "pnpm vitest --dir=src",
+    "test:watch": "pnpm vitest --dir=src --watch"
+  },
+  "sideEffects": false,
+  "subPath": "packages/stream",
+  "title": "Accelint Stream",
+  "type": "module",
+  "types": "./dist/index.d.ts"
+}
