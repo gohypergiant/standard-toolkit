@@ -13,45 +13,8 @@
  */
 
 import { createSignal, Show } from 'solid-js';
-import { FONT_SANS, PALETTE } from './tokens';
+import { useStyles } from '../styles/use-styles';
 import type { JSX } from 'solid-js';
-
-// query-devtools `statusTooltip`, rebuilt with real elements — inline
-// styles can't do the ::before/::after arrow layers
-const WRAPPER_STYLE = 'display:inline-flex;flex-shrink:0;position:relative;';
-
-const BUBBLE_STYLE = [
-  `background:${PALETTE.tooltipBg}`,
-  `border:1px solid ${PALETTE.tooltipBorder}`,
-  'border-radius:4px',
-  `color:${PALETTE.text}`,
-  `font-family:${FONT_SANS}`,
-  'font-size:11px',
-  'font-weight:400',
-  'left:50%',
-  'padding:2px 8px',
-  'position:absolute',
-  'text-transform:none',
-  'top:100%',
-  'transform:translate(-50%, 8px)',
-  'white-space:nowrap',
-  'z-index:1',
-].join(';');
-
-const ARROW_COMMON = [
-  'border-color:transparent',
-  'border-style:solid',
-  'border-width:7px',
-  'height:0',
-  'left:50%',
-  'position:absolute',
-  'top:0',
-  'width:0',
-].join(';');
-
-const ARROW_BORDER_STYLE = `${ARROW_COMMON};border-bottom-color:${PALETTE.tooltipBorder};transform:translate(-50%, -100%);`;
-
-const ARROW_FILL_STYLE = `${ARROW_COMMON};border-bottom-color:${PALETTE.tooltipBg};transform:translate(-50%, calc(-100% + 2px));`;
 
 /**
  * Bordered bubble below the anchor. Inline-flex wrapper drops into flex
@@ -59,6 +22,7 @@ const ARROW_FILL_STYLE = `${ARROW_COMMON};border-bottom-color:${PALETTE.tooltipB
  * interactive CHILD (bubbled events); it is not itself operable.
  */
 export function Tooltip(props: { label: string; children: JSX.Element }) {
+  const styles = useStyles();
   const [visible, setVisible] = createSignal(false);
 
   return (
@@ -68,13 +32,15 @@ export function Tooltip(props: { label: string; children: JSX.Element }) {
       onFocusOut={() => setVisible(false)}
       onMouseEnter={() => setVisible(true)}
       onMouseLeave={() => setVisible(false)}
-      style={WRAPPER_STYLE}
+      class={styles().tooltipWrapper}
     >
       {props.children}
       <Show when={visible()}>
-        <span role='tooltip' style={BUBBLE_STYLE}>
-          <span aria-hidden='true' style={ARROW_BORDER_STYLE} />
-          <span aria-hidden='true' style={ARROW_FILL_STYLE} />
+        {/* query-devtools `statusTooltip`, rebuilt with real elements — the
+            arrow layers are spans rather than ::before/::after */}
+        <span role='tooltip' class={styles().tooltipBubble}>
+          <span aria-hidden='true' class={styles().tooltipArrowBorder} />
+          <span aria-hidden='true' class={styles().tooltipArrowFill} />
           {props.label}
         </span>
       </Show>

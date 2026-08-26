@@ -12,9 +12,20 @@
  * governing permissions and limitations under the License.
  */
 
+import { STREAM_STATUS } from '@accelint/stream';
 import { Tag } from '@tanstack/devtools-ui';
-import { STATUS_TAG_COLORS } from './tokens';
 import type { StreamStatus } from '@accelint/stream';
+
+/** Same hue mapping expressed as devtools-ui `Tag` color names. */
+const STATUS_TAG_COLORS: Record<
+  StreamStatus,
+  'blue' | 'gray' | 'green' | 'red'
+> = {
+  [STREAM_STATUS.CONNECTED]: 'green',
+  [STREAM_STATUS.CONNECTING]: 'blue',
+  [STREAM_STATUS.ERROR]: 'red',
+  [STREAM_STATUS.DISCONNECTED]: 'gray',
+};
 
 /**
  * Color-coded stream status badge — devtools-ui `Tag` with the

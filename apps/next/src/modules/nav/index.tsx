@@ -14,30 +14,30 @@
 
 import { uuid } from '@accelint/core';
 import {
+  Button,
+  Icon,
   Sidenav,
-  SidenavHeader,
+  SidenavAvatar,
   SidenavContent,
   SidenavFooter,
-  SidenavAvatar,
-  SidenavLink,
-  SidenavTrigger,
+  SidenavHeader,
   SidenavItem,
+  SidenavLink,
   SidenavMenu,
-  Icon,
-  Button,
+  SidenavTrigger,
+  useTheme,
 } from '@accelint/design-toolkit';
-import { useTheme } from '@accelint/design-toolkit';
 import {
   Brightness,
+  Connection,
   ExpandLeftPanel,
-  Grid,
-  Waffle,
   GlobalShare,
+  Grid,
   Newspaper,
+  Waffle,
 } from '@accelint/icons';
-import { Text } from 'react-aria-components';
-import { Heading } from 'react-aria-components';
 import { useRouter } from 'next/navigation';
+import { Heading, Text } from 'react-aria-components';
 
 const COMPONENTS = [
   { path: '/', label: 'All' },
@@ -125,6 +125,12 @@ export function Nav() {
             <Newspaper />
           </Icon>
           <Text>Forms</Text>
+        </SidenavItem>
+        <SidenavItem textValue='Streams' onPress={() => router.push('/stream')}>
+          <Icon>
+            <Connection />
+          </Icon>
+          <Text>Streams</Text>
         </SidenavItem>
       </SidenavContent>
       <SidenavFooter>

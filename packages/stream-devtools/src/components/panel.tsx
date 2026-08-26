@@ -13,12 +13,7 @@
  */
 
 import { STREAM_STATUS } from '@accelint/stream';
-import {
-  Button,
-  Header,
-  MainPanel,
-  ThemeContextProvider,
-} from '@tanstack/devtools-ui';
+import { Button, Header, MainPanel } from '@tanstack/devtools-ui';
 import {
   createEffect,
   createMemo,
@@ -28,16 +23,10 @@ import {
   onMount,
   Show,
 } from 'solid-js';
+import { tokens } from '../styles/tokens';
+import { useStyles } from '../styles/use-styles';
 import { DetailPane } from './detail-pane';
-import {
-  BREAKPOINTS,
-  FONT_MONO,
-  FONT_SANS,
-  formatTime,
-  PALETTE,
-  STATUS_BASE_COLORS,
-  STATUS_CHIP_COLORS,
-} from './tokens';
+import { formatTime } from './format-time';
 import type { StreamStatus, TransportKind } from '@accelint/stream';
 import type {
   StreamDevtoolsState,
@@ -65,61 +54,6 @@ const STATUS_ORDER: StreamStatus[] = [
   STREAM_STATUS.DISCONNECTED,
 ];
 
-const PANEL_STYLE = [
-  'box-sizing:border-box',
-  `color:${PALETTE.text}`,
-  'display:flex',
-  'flex-direction:column',
-  `font-family:${FONT_SANS}`,
-  'font-size:12px',
-  'gap:8px',
-  'height:100%',
-  'overflow:hidden',
-].join(';');
-
-const HEADER_GROUP_STYLE = 'align-items:center;display:flex;gap:8px;';
-
-const RATE_STYLE = `color:${PALETTE.muted};font-family:${FONT_MONO};font-size:11px;margin-left:auto;`;
-
-// query-devtools `queryStatusTag` recipe.
-const STATUS_CHIP_STYLE = [
-  'align-items:center',
-  `background:${PALETTE.chipBg}`,
-  'border:1px solid transparent',
-  'border-radius:4px',
-  'box-sizing:border-box',
-  'display:flex',
-  'font-weight:500',
-  'gap:6px',
-  'height:26px',
-  'padding:4px 4px 4px 6px',
-  'user-select:none',
-].join(';');
-
-const CHIP_LABEL_STYLE = 'font-size:11px;text-transform:capitalize;';
-
-function statusDotStyle(status: StreamStatus): string {
-  return `background-color:${STATUS_CHIP_COLORS[status].dot};border-radius:9999px;height:6px;width:6px;`;
-}
-
-// query-devtools `queryStatusCount`: neutral at zero, 900/300 pairing when live
-function chipCountStyle(status: StreamStatus, count: number): string {
-  const { countBg, countText } = STATUS_CHIP_COLORS[status];
-  const active = count > 0 && countBg !== undefined;
-  return [
-    'align-items:center',
-    `background:${active ? countBg : PALETTE.countNeutralBg}`,
-    'border-radius:2px',
-    `color:${active ? countText : PALETTE.countNeutralText}`,
-    'display:flex',
-    'font-size:11px',
-    'font-variant-numeric:tabular-nums',
-    'height:18px',
-    'justify-content:center',
-    'padding:0 5px',
-  ].join(';');
-}
-
 /**
  * query-devtools `showLabel`: labels hide below the second breakpoint, and
  * below the first while a detail pane is open. Width 0 = unmeasured (first
@@ -132,10 +66,10 @@ export function shouldShowChipLabels(
   if (panelWidth === 0) {
     return true;
   }
-  if (panelWidth < BREAKPOINTS.second) {
+  if (panelWidth < tokens.breakpoints.second) {
     return false;
   }
-  return !(detailOpen && panelWidth < BREAKPOINTS.first);
+  return !(detailOpen && panelWidth < tokens.breakpoints.first);
 }
 
 /**
@@ -149,95 +83,26 @@ function StatusChip(props: {
   count: number;
   showLabel: boolean;
 }) {
-  const [hovered, setHovered] = createSignal(false);
-
-  const chipStyle = () =>
-    props.showLabel
-      ? STATUS_CHIP_STYLE
-      : `${STATUS_CHIP_STYLE};background:${hovered() ? PALETTE.chipHoverBg : PALETTE.chipBg};cursor:pointer;`;
+  const styles = useStyles();
 
   return (
     // <output> (implicit status role) supports aria-label; a bare span doesn't
     <output
       aria-label={`${props.status} streams ${props.count}`}
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
-      style={chipStyle()}
+      class={styles().statusChip(!props.showLabel)}
       tabIndex={props.showLabel ? undefined : 0}
       title={props.showLabel ? undefined : `${props.status} — ${props.count}`}
     >
-      <span aria-hidden='true' style={statusDotStyle(props.status)} />
+      <span aria-hidden='true' class={styles().chipDot(props.status)} />
       <Show when={props.showLabel}>
-        <span style={CHIP_LABEL_STYLE}>{props.status}</span>
+        <span class={styles().chipLabel}>{props.status}</span>
       </Show>
-      <span style={chipCountStyle(props.status, props.count)}>
+      <span class={styles().chipCount(props.status, props.count > 0)}>
         {props.count}
       </span>
     </output>
   );
 }
-
-function bodyStyle(stacked: boolean): string {
-  return `display:flex;flex:1;flex-direction:${stacked ? 'column' : 'row'};gap:8px;min-height:0;min-width:0;padding:0 8px 8px 8px;`;
-}
-
-// 50/50 split via equal grow on zero basis — % bases + gap would sum past
-// 100% and clip the detail pane. `contain: inline-size` stops a long
-// streamKey inflating min-content through button → li → ol.
-const LIST_STYLE = [
-  'contain:inline-size',
-  'display:flex',
-  'flex:1 1 0%',
-  'flex-direction:column',
-  'list-style:none',
-  'margin:0',
-  'min-width:0',
-  'overflow:auto',
-  'padding:0',
-].join(';');
-
-const EMPTY_TEXT_STYLE = `color:${PALETTE.muted};margin:0;padding:8px 12px;`;
-
-const ROW_STYLE = `border-bottom:1px solid ${PALETTE.surface};`;
-
-function rowButtonStyle(selected: boolean): string {
-  return [
-    'align-items:center',
-    `background:${selected ? PALETTE.surface : 'none'}`,
-    'border:none',
-    'border-radius:4px',
-    'color:inherit',
-    'cursor:pointer',
-    'display:flex',
-    'font:inherit',
-    'gap:8px',
-    'padding:3px 6px',
-    'text-align:left',
-    'width:100%',
-  ].join(';');
-}
-
-const COUNT_CHIP_STYLE = [
-  'border-radius:4px',
-  'color:#ffffff',
-  'flex:0 0 auto',
-  'font-size:11px',
-  'font-weight:600',
-  'line-height:18px',
-  'min-width:22px',
-  'padding:0 4px',
-  'text-align:center',
-].join(';');
-
-// wrap the full key like query-devtools; `overflow-wrap: anywhere` (unlike
-// break-word) also removes the key's min-content pressure
-const ROW_HASH_STYLE = `font-family:${FONT_MONO};font-size:11.5px;min-width:0;overflow-wrap:anywhere;`;
-
-const ROW_META_STYLE = `color:${PALETTE.muted};flex-shrink:0;font-family:${FONT_MONO};font-size:11px;font-variant-numeric:tabular-nums;margin-left:auto;`;
-
-/** Screen-reader-only text (row status stays announced without a badge). */
-const VISUALLY_HIDDEN_STYLE =
-  'clip:rect(0 0 0 0);clip-path:inset(50%);height:1px;overflow:hidden;position:absolute;white-space:nowrap;width:1px;';
 
 /** Messages per second across a tab's ring buffers over the trailing window. */
 function messageRate(
@@ -264,6 +129,7 @@ function SummaryHeader(props: {
   rate: string;
   showLabels: boolean;
 }) {
+  const styles = useStyles();
   const countsByStatus = createMemo(() => {
     const counts = new Map<StreamStatus, number>();
     for (const stream of props.streams) {
@@ -274,8 +140,8 @@ function SummaryHeader(props: {
 
   return (
     <Header>
-      <div style={HEADER_GROUP_STYLE}>
-        <nav aria-label='Transport' style={HEADER_GROUP_STYLE}>
+      <div class={styles().headerGroup}>
+        <nav aria-label='Transport' class={styles().headerGroup}>
           <For each={TRANSPORT_TABS}>
             {(tab) => (
               <Button
@@ -299,7 +165,7 @@ function SummaryHeader(props: {
           )}
         </For>
       </div>
-      <span style={RATE_STYLE}>{props.rate} msg/s</span>
+      <span class={styles().rate}>{props.rate} msg/s</span>
     </Header>
   );
 }
@@ -309,24 +175,26 @@ function StreamRow(props: {
   selected: boolean;
   onSelect: (streamHash: string) => void;
 }) {
+  const styles = useStyles();
+
   return (
-    <li style={ROW_STYLE}>
+    <li class={styles().row}>
       <button
         aria-pressed={props.selected}
+        class={styles().rowButton(props.selected)}
         onClick={() => props.onSelect(props.stream.streamHash)}
-        style={rowButtonStyle(props.selected)}
         type='button'
       >
         <output
           aria-label={`observer count ${props.stream.observerCount}`}
-          style={`${COUNT_CHIP_STYLE};background-color:${STATUS_BASE_COLORS[props.stream.status]};`}
+          class={styles().observerCount(props.stream.status)}
           title={`Observer count — ${props.stream.status}`}
         >
           {props.stream.observerCount}
         </output>
-        <span style={VISUALLY_HIDDEN_STYLE}>{props.stream.status}</span>
-        <code style={ROW_HASH_STYLE}>{props.stream.streamHash}</code>
-        <span style={ROW_META_STYLE}>
+        <span class={styles().visuallyHidden}>{props.stream.status}</span>
+        <code class={styles().rowHash}>{props.stream.streamHash}</code>
+        <span class={styles().rowMeta}>
           {props.stream.messageCount} msgs
           {props.stream.dataUpdatedAt === 0
             ? ''
@@ -338,11 +206,14 @@ function StreamRow(props: {
 }
 
 /**
- * Thin renderer over store snapshots, styled with devtools-ui so the tab
- * reads as a sibling of TanStack's own panels. Update logic = signal
- * mirroring `store.subscribe`/`store.getSnapshot`.
+ * Thin renderer over store snapshots, styled with devtools-ui plus the
+ * theme-reactive `useStyles` classes so the tab reads as a sibling of
+ * TanStack's own panels in both themes. Update logic = signal mirroring
+ * `store.subscribe`/`store.getSnapshot`. Theme context arrives from the
+ * `components/index.tsx` seam.
  */
 export function StreamDevtoolsPanel(props: { store: StreamDevtoolsStore }) {
+  const styles = useStyles();
   const [state, setState] = createSignal(props.store.getSnapshot());
   const [selectedHash, setSelectedHash] = createSignal<string | undefined>();
   const [activeTab, setActiveTab] = createSignal<TransportKind>('sse');
@@ -377,6 +248,10 @@ export function StreamDevtoolsPanel(props: { store: StreamDevtoolsStore }) {
       setState(props.store.getSnapshot()),
     );
     onCleanup(unsubscribe);
+    // subscribe() flushes state tracked while unmounted into a fresh
+    // snapshot without notifying — re-read it, or a panel mounting after
+    // idle streams' events would render the stale pre-flush state forever
+    setState(props.store.getSnapshot());
 
     const interval = setInterval(
       () => setTick((value) => value + 1),
@@ -392,7 +267,8 @@ export function StreamDevtoolsPanel(props: { store: StreamDevtoolsStore }) {
     tabStreams().find((stream) => stream.streamHash === selectedHash()),
   );
   // width 0 = unmeasured (first paint, jsdom) — treat as wide
-  const stacked = () => panelWidth() !== 0 && panelWidth() < BREAKPOINTS.second;
+  const stacked = () =>
+    panelWidth() !== 0 && panelWidth() < tokens.breakpoints.second;
   // live: panelWidth tracks the ResizeObserver, so dragging the panel
   // narrower collapses chip labels immediately and widening restores them
   const showLabels = () =>
@@ -409,56 +285,54 @@ export function StreamDevtoolsPanel(props: { store: StreamDevtoolsStore }) {
   };
 
   return (
-    <ThemeContextProvider theme='dark'>
-      <MainPanel>
-        <div ref={setPanelEl} style={PANEL_STYLE}>
-          <SummaryHeader
-            activeTab={activeTab()}
-            onSelectTab={setActiveTab}
-            rate={rate()}
-            showLabels={showLabels()}
-            streams={tabStreams()}
-          />
-          <Show
-            fallback={
-              <p style={EMPTY_TEXT_STYLE}>
-                {activeTab() === 'sse'
-                  ? 'No SSE streams'
-                  : 'No WebSocket streams'}
-              </p>
-            }
-            when={tabStreams().length > 0}
-          >
-            <div style={bodyStyle(stacked())}>
-              <ol style={LIST_STYLE}>
-                <For each={tabStreams()}>
-                  {(stream) => (
-                    <StreamRow
-                      onSelect={toggleSelection}
-                      selected={stream.streamHash === selectedHash()}
-                      stream={stream}
-                    />
-                  )}
-                </For>
-              </ol>
-              {/* keyed by streamHash: pane-local UI state (expanded payloads,
-                  collapsed sections) must reset per stream — without the
-                  remount, stream A's expanded #3 reconciles onto stream B's */}
-              <Show keyed when={selectedStream()?.streamHash}>
-                {(streamHash) => (
-                  <DetailPane
-                    actions={props.store.actions}
-                    messageLog={state().messageLogs[streamHash] ?? []}
-                    stacked={stacked()}
-                    stream={selectedStream() as StreamDevtoolsStreamEntry}
-                    timeline={state().timelines[streamHash] ?? []}
+    <MainPanel>
+      <div class={styles().panel} ref={setPanelEl}>
+        <SummaryHeader
+          activeTab={activeTab()}
+          onSelectTab={setActiveTab}
+          rate={rate()}
+          showLabels={showLabels()}
+          streams={tabStreams()}
+        />
+        <Show
+          fallback={
+            <p class={styles().emptyText}>
+              {activeTab() === 'sse'
+                ? 'No SSE streams'
+                : 'No WebSocket streams'}
+            </p>
+          }
+          when={tabStreams().length > 0}
+        >
+          <div class={styles().body(stacked())}>
+            <ol class={styles().list}>
+              <For each={tabStreams()}>
+                {(stream) => (
+                  <StreamRow
+                    onSelect={toggleSelection}
+                    selected={stream.streamHash === selectedHash()}
+                    stream={stream}
                   />
                 )}
-              </Show>
-            </div>
-          </Show>
-        </div>
-      </MainPanel>
-    </ThemeContextProvider>
+              </For>
+            </ol>
+            {/* keyed by streamHash: pane-local UI state (expanded payloads,
+                collapsed sections) must reset per stream — without the
+                remount, stream A's expanded #3 reconciles onto stream B's */}
+            <Show keyed when={selectedStream()?.streamHash}>
+              {(streamHash) => (
+                <DetailPane
+                  actions={props.store.actions}
+                  messageLog={state().messageLogs[streamHash] ?? []}
+                  stacked={stacked()}
+                  stream={selectedStream() as StreamDevtoolsStreamEntry}
+                  timeline={state().timelines[streamHash] ?? []}
+                />
+              )}
+            </Show>
+          </div>
+        </Show>
+      </div>
+    </MainPanel>
   );
 }

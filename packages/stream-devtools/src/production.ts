@@ -12,21 +12,12 @@
  * governing permissions and limitations under the License.
  */
 
-import * as core from './core';
+/**
+ * Opt-in entry that keeps live devtools in production builds — the main
+ * entry swaps in a no-op core outside `NODE_ENV === 'development'`.
+ */
 
-// self-contained: the check must not depend on @types/node being in scope,
-// and consumer bundlers (Next, Vite) inline NODE_ENV so the losing branch
-// dead-code-eliminates
-// biome-ignore lint/style/useNamingConvention: must match the runtime global
-declare const process: { env: { NODE_ENV?: string } };
-
-// dev-only (TanStack convention) — ./production opts out; React hosts
-// want ./react, other hosts mount this with a createStreamDevtoolsStore
-export const StreamDevtoolsCore =
-  process.env.NODE_ENV !== 'development'
-    ? core.StreamDevtoolsCoreNoOp
-    : core.StreamDevtoolsCore;
-
+export { StreamDevtoolsCore } from './core';
 export { createStreamDevtoolsStore } from './store';
 export type {
   StreamDevtoolsActions,

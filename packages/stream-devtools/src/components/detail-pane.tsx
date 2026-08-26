@@ -14,9 +14,10 @@
 
 import { JsonTree, Section, SectionTitle } from '@tanstack/devtools-ui';
 import { createMemo, createSignal, For, Show } from 'solid-js';
+import { useStyles } from '../styles/use-styles';
 import { ActionRow, copyJsonToClipboard } from './action-row';
+import { formatTime } from './format-time';
 import { StatusBadge } from './status-badge';
-import { FONT_MONO, formatTime, PALETTE } from './tokens';
 import type { JSX } from 'solid-js';
 import type {
   StreamDevtoolsActions,
@@ -24,57 +25,6 @@ import type {
   StreamDevtoolsMessageEntry,
   StreamDevtoolsStreamEntry,
 } from '../types';
-
-// equal flex with the list (50/50), zero basis so the gap can't clip the
-// right edge. The pane stays the scroll container; `contain: inline-size`
-// stops long payload tokens inflating min-content through the columns.
-function paneStyle(stacked: boolean): string {
-  return [
-    stacked
-      ? `border-top:1px solid ${PALETTE.border};padding-top:8px`
-      : `border-left:1px solid ${PALETTE.border};padding-left:8px`,
-    'contain:inline-size',
-    'display:flex',
-    'flex:1 1 0%',
-    'flex-direction:column',
-    'min-width:0',
-    'overflow:auto',
-  ].join(';');
-}
-
-const SUMMARY_STYLE = 'cursor:pointer;list-style:none;';
-
-const COUNT_HINT_STYLE = `color:${PALETTE.muted};font-weight:400;`;
-
-function chevronStyle(open: boolean): string {
-  return `display:inline-block;font-size:9px;transform:${open ? 'rotate(90deg)' : 'none'};transition:transform 0.1s;`;
-}
-
-const HASH_ROW_STYLE =
-  'align-items:flex-start;display:flex;gap:8px;justify-content:space-between;margin-bottom:6px;';
-
-const HASH_CODE_STYLE = `font-family:${FONT_MONO};font-size:12px;margin:0;min-width:0;overflow-wrap:anywhere;white-space:pre-wrap;`;
-
-const DETAIL_ROW_STYLE =
-  'display:flex;gap:8px;justify-content:space-between;margin-bottom:4px;';
-
-const DETAIL_LABEL_STYLE = `color:${PALETTE.muted};flex-shrink:0;`;
-
-const DETAIL_VALUE_STYLE = `font-family:${FONT_MONO};font-size:11.5px;font-variant-numeric:tabular-nums;min-width:0;overflow-wrap:anywhere;text-align:right;`;
-
-const EVENT_LIST_STYLE = `display:flex;flex-direction:column;font-family:${FONT_MONO};font-size:11.5px;gap:2px;list-style:none;margin:0;padding:0;`;
-
-const LOG_ROW_STYLE = 'align-items:baseline;display:flex;gap:8px;';
-
-const TIMESTAMP_STYLE = `color:${PALETTE.muted};`;
-
-const DUPLICATE_BADGE_STYLE = `border-radius:4px;color:${PALETTE.warning};outline:1px solid ${PALETTE.warning};padding:0 4px;`;
-
-const MUTED_STYLE = `color:${PALETTE.muted};margin:0;`;
-
-const COPY_BUTTON_STYLE = `background:none;border:1px solid ${PALETTE.inputBorder};border-radius:4px;color:${PALETTE.muted};cursor:pointer;font:inherit;padding:0 4px;`;
-
-const PAYLOAD_BODY_STYLE = 'padding:4px 0 4px 16px;';
 
 function lifecycleLabel(event: StreamDevtoolsLifecycleEvent): string {
   switch (event.type) {
@@ -99,18 +49,19 @@ function CollapsibleSection(props: {
   countHint: string;
   children: JSX.Element;
 }) {
+  const styles = useStyles();
   const [open, setOpen] = createSignal(true);
 
   return (
     <Section aria-label={props.title}>
       <details onToggle={(event) => setOpen(event.currentTarget.open)} open>
-        <summary style={SUMMARY_STYLE}>
+        <summary class={styles().summary}>
           <SectionTitle>
-            <span aria-hidden='true' style={chevronStyle(open())}>
+            <span aria-hidden='true' class={styles().chevron(open())}>
               ▶
             </span>
             {props.title}
-            <span style={COUNT_HINT_STYLE}>{props.countHint}</span>
+            <span class={styles().countHint}>{props.countHint}</span>
           </SectionTitle>
         </summary>
         {props.children}
@@ -120,10 +71,12 @@ function CollapsibleSection(props: {
 }
 
 function DetailRow(props: { label: string; children: JSX.Element }) {
+  const styles = useStyles();
+
   return (
-    <div style={DETAIL_ROW_STYLE}>
-      <span style={DETAIL_LABEL_STYLE}>{props.label}</span>
-      <span style={DETAIL_VALUE_STYLE}>{props.children}</span>
+    <div class={styles().detailRow}>
+      <span class={styles().detailLabel}>{props.label}</span>
+      <span class={styles().detailValue}>{props.children}</span>
     </div>
   );
 }
@@ -138,15 +91,17 @@ function MessageLogEntry(props: {
   expanded: boolean;
   onToggle: (sequence: number, open: boolean) => void;
 }) {
+  const styles = useStyles();
+
   return (
-    <li style={LOG_ROW_STYLE}>
-      <span style={MUTED_STYLE}>#{props.entry.sequence}</span>
-      <span style={TIMESTAMP_STYLE}>
+    <li class={styles().logRow}>
+      <span class={styles().mutedText}>#{props.entry.sequence}</span>
+      <span class={styles().timestamp}>
         {formatTime(props.entry.dataUpdatedAt)}
       </span>
       <Show when={props.entry.duplicate}>
         <span
-          style={DUPLICATE_BADGE_STYLE}
+          class={styles().duplicateBadge}
           title='replaceEqualDeep kept the previous data reference'
         >
           duplicate
@@ -154,8 +109,8 @@ function MessageLogEntry(props: {
       </Show>
       <button
         aria-label={`copy message ${props.entry.sequence}`}
+        class={styles().copyButton}
         onClick={() => copyJsonToClipboard(props.entry.dataRef)}
-        style={COPY_BUTTON_STYLE}
         title='Copy this payload as JSON'
         type='button'
       >
@@ -167,11 +122,11 @@ function MessageLogEntry(props: {
         }
         open={props.expanded}
       >
-        <summary style={SUMMARY_STYLE}>payload</summary>
+        <summary class={styles().summary}>payload</summary>
         {/* defer the tree until expanded — rendering 50 payloads ~10x/s
             while collapsed is wasted work */}
         <Show when={props.expanded}>
-          <div style={PAYLOAD_BODY_STYLE}>
+          <div class={styles().payloadBody}>
             <JsonTree value={props.entry.dataRef} />
           </div>
         </Show>
@@ -194,6 +149,7 @@ export function DetailPane(props: {
   /** True when the panel is narrow and the columns stack vertically. */
   stacked?: boolean;
 }) {
+  const styles = useStyles();
   // expanded payload sequences — hoisted, see MessageLogEntry
   const [expanded, setExpanded] = createSignal<ReadonlySet<number>>(new Set());
   const toggleExpanded = (sequence: number, open: boolean) => {
@@ -222,11 +178,11 @@ export function DetailPane(props: {
       : `${props.messageLog.length} ${props.messageLog.length === 1 ? 'message' : 'messages'}`;
 
   return (
-    <div style={paneStyle(props.stacked ?? false)}>
+    <div class={styles().pane(props.stacked ?? false)}>
       <Section aria-label='Stream Details'>
         <SectionTitle>Stream Details</SectionTitle>
-        <div style={HASH_ROW_STYLE}>
-          <pre style={HASH_CODE_STYLE}>
+        <div class={styles().hashRow}>
+          <pre class={styles().hashCode}>
             <code>{props.stream.streamHash}</code>
           </pre>
           <StatusBadge status={props.stream.status} />
@@ -252,14 +208,14 @@ export function DetailPane(props: {
         title='Timeline'
       >
         <Show
-          fallback={<p style={MUTED_STYLE}>No lifecycle events</p>}
+          fallback={<p class={styles().mutedText}>No lifecycle events</p>}
           when={props.timeline.length > 0}
         >
-          <ol style={EVENT_LIST_STYLE}>
+          <ol class={styles().eventList}>
             <For each={props.timeline}>
               {(event) => (
-                <li style={LOG_ROW_STYLE}>
-                  <span style={TIMESTAMP_STYLE}>
+                <li class={styles().logRow}>
+                  <span class={styles().timestamp}>
                     {formatTime(event.timestamp)}
                   </span>
                   <span>{lifecycleLabel(event)}</span>
@@ -272,10 +228,10 @@ export function DetailPane(props: {
 
       <CollapsibleSection countHint={messageCountHint()} title='Message Log'>
         <Show
-          fallback={<p style={MUTED_STYLE}>No messages yet</p>}
+          fallback={<p class={styles().mutedText}>No messages yet</p>}
           when={props.messageLog.length > 0}
         >
-          <ol style={EVENT_LIST_STYLE}>
+          <ol class={styles().eventList}>
             <For each={reversedLog()}>
               {(entry) => (
                 <MessageLogEntry
@@ -292,7 +248,7 @@ export function DetailPane(props: {
       <Section aria-label='Data Explorer'>
         <SectionTitle>Data Explorer</SectionTitle>
         <Show
-          fallback={<p style={MUTED_STYLE}>No data yet</p>}
+          fallback={<p class={styles().mutedText}>No data yet</p>}
           when={
             props.stream.dataRef !== null && props.stream.dataRef !== undefined
           }
