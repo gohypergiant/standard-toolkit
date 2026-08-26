@@ -11,6 +11,7 @@
  */
 
 import { useCallback, useMemo, useRef, useState } from 'react';
+import { useControlledState } from 'react-stately/useControlledState';
 import type { Key } from '@react-types/shared';
 import type { Orientation } from './types';
 
@@ -210,13 +211,21 @@ export function useStepperState(
     orientation = 'horizontal',
   } = props;
 
-  // Internal state for uncontrolled mode
-  const [internalCurrentStep, setInternalCurrentStep] = useState<
-    Key | undefined
-  >(defaultStep);
-  const [internalCompletedSteps, setInternalCompletedSteps] = useState<
-    Set<Key>
-  >(defaultCompletedSteps ?? new Set());
+  // Controlled/uncontrolled state for current step using react-stately.
+  // Pass undefined as the fallback to handle the case where no default is provided.
+  // Cast through unknown to satisfy TypeScript when defaultStep is undefined.
+  const [currentStep, setCurrentStep] = useControlledState(
+    currentStepProp,
+    defaultStep ?? (undefined as unknown as Key),
+    onStepChange,
+  );
+
+  // Controlled/uncontrolled state for completed steps using react-stately.
+  // This works with useControlledState because we always provide a default (empty Set).
+  const [completedSteps, setCompletedSteps] = useControlledState<Set<Key>>(
+    completedStepsProp,
+    defaultCompletedSteps ?? EMPTY_SET,
+  );
 
   const [steps, setSteps] = useState<Key[]>([]);
 
@@ -226,15 +235,6 @@ export function useStepperState(
   // Ordered registered step keys used to preserve navigation sequence
   // and publish React state snapshots efficiently.
   const orderedSteps = useRef<Key[]>([]);
-
-  // Determine if controlled or uncontrolled
-  const isControlled = currentStepProp !== undefined;
-  const currentStep = isControlled ? currentStepProp : internalCurrentStep;
-
-  const isCompletedControlled = completedStepsProp !== undefined;
-  const completedSteps = isCompletedControlled
-    ? completedStepsProp
-    : internalCompletedSteps;
 
   /**
    * Register a step.
@@ -360,7 +360,7 @@ export function useStepperState(
    */
   const updateCompletedSteps = useCallback(
     (fromKey: Key | undefined, toKey: Key): void => {
-      if (fromKey === undefined || isCompletedControlled) {
+      if (fromKey === undefined) {
         return;
       }
 
@@ -368,7 +368,7 @@ export function useStepperState(
       const toIndex = getStepIndex(toKey);
       const isForward = toIndex > fromIndex;
 
-      setInternalCompletedSteps((previousCompletedSteps) => {
+      setCompletedSteps((previousCompletedSteps) => {
         const nextCompletedSteps = new Set(previousCompletedSteps);
         if (isForward) {
           nextCompletedSteps.add(fromKey);
@@ -386,7 +386,7 @@ export function useStepperState(
         return nextCompletedSteps;
       });
     },
-    [isCompletedControlled, getStepIndex, steps],
+    [setCompletedSteps, getStepIndex, steps],
   );
 
   /**
@@ -406,19 +406,16 @@ export function useStepperState(
 
       updateCompletedSteps(currentStep, targetKey);
 
-      if (!isControlled) {
-        setInternalCurrentStep(targetKey);
-      }
-
-      onStepChange?.(targetKey);
+      // useControlledState handles both controlled and uncontrolled modes,
+      // and calls onStepChange callback automatically
+      setCurrentStep(targetKey);
     },
     [
       currentStep,
       isNavigationBlocked,
       runValidation,
       updateCompletedSteps,
-      isControlled,
-      onStepChange,
+      setCurrentStep,
     ],
   );
 
