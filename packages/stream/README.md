@@ -93,9 +93,11 @@ It provides:
 | `@accelint/stream` | TanStack Query | Description |
 | --- | --- | --- |
 | `useSSEStream()` / `useWebSocketStream()` | `useQuery()` | Hook-level stream access |
+| `useSSEStreams()` / `useWebSocketStreams()` | `useQueries()` | One hook call over a dynamic set of streams |
 | `streamKey` / `streamHash` | `queryKey` / `queryHash` | Stream identity |
 | `decodeFn` | `queryFn` | Raw frame decoder |
 | `StreamObserver` | `QueryObserver` | Per-consumer observer |
+| `StreamsObserver` | `QueriesObserver` | Dynamic set of per-stream observers |
 | `Stream` | `Query` | One shared stream per key |
 | `StreamCache` | `QueryCache` | Cache of streams |
 | `StreamClient` | `QueryClient` | Cache owner and imperative API |
@@ -254,6 +256,15 @@ Useful surface:
 Per-consumer observer used by the React hooks. It applies `select`, tracks
 enabled state, and exposes the observer result.
 
+### `StreamsObserver`
+
+`QueriesObserver` analog used by the plural hooks: owns a dynamic set of
+child `StreamObserver`s behind one subscribe/`getCurrentResult()` pair.
+`setOptions(configs)` reconciles the children by `streamKey` hash — new
+configs create observers, removed configs release their stream
+subscriptions (normal gc linger), survivors keep observer state and result
+identity.
+
 ### `useSSEStream(options)`
 
 React hook for SSE streams.
@@ -275,6 +286,22 @@ React hook for SSE streams.
 **Returns:** `StreamObserverResult<TData, T>` with `data`, `messages`,
 `status`, derived booleans, and `retry()`, `pause()`, `resume()`.
 
+### `useSSEStreams(configs, options?)`
+
+`useQueries` analog
+
+| Argument | Type | Description |
+| --- | --- | --- |
+| `configs` | `UseSSEStreamsConfig<T, TData>[]` | One entry per stream, same shape as `useSSEStream`'s options (`streamKey`, `uri`, `enabled`, `select`, `messageHistory`, callbacks) minus `client`. |
+| `options.combine` | `(results) => TCombined` | Derive one value from the per-stream results. |
+| `options.client` | `StreamClient` | Optional client override instead of context. |
+
+**Returns:** without `combine`, `StreamObserverResult<TData, T>[]`
+
+When the UI naturally has a component per unique stream, prefer one
+`useSSEStream` per component. Reach for `useSSEStreams` when one component
+must own display an aggregation across multiple streams.
+
 ### `useWebSocketStream(options)`
 
 Same result shape as `useSSEStream`, but uses WebSocket transport.
@@ -285,9 +312,20 @@ Notable differences:
 - converts `http(s)` to `ws(s)` automatically
 - retries closed sockets with doubling backoff
 
+### `useWebSocketStreams(configs, options?)`
+
+`useSSEStreams` over WebSockets: same arguments, reconciliation, and
+`combine` semantics, with each stream keeping the singular WS hook's
+behavior above.
+
 ### `useStream(options)`
 
 Transport-agnostic React hook used by both transport-specific hooks.
+
+### `useStreams(configs, options?)`
+
+Transport-agnostic plural hook behind `useSSEStreams`. Each config may set
+its own `transport`, so one call can mix SSE and WebSocket streams.
 
 ### `useStreamState(options?, client?)`
 
@@ -424,6 +462,28 @@ const activationStreams = useStreamState({
 
 ```tsx
 const erroredCount = useStreamCount({ status: 'error' });
+```
+
+### One component over N streams (dynamic N)
+
+`useStreamState` observes cache-wide state, but does not subscribe to the
+streams (nothing connects) and offers no per-stream `select`/`messages`.
+When one component must own N live streams and N changes at runtime — a
+merged feed across datasets — use `useSSEStreams` (the `useQueries`
+analog, backed by `StreamsObserver`, the `QueriesObserver` analog):
+
+```tsx
+const feed = useSSEStreams(
+  datasets.map((dataset) => ({
+    streamKey: ['activations', dataset.id],
+    uri: `${baseUri}/datasets/${dataset.id}/stream`,
+    messageHistory: 50,
+  })),
+  {
+    // runs inside the snapshot; reference-stable while inputs are unchanged
+    combine: (results) => mergeNewestFirst(results),
+  },
+);
 ```
 
 ### Imperative access without React
