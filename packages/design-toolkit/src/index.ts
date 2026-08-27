@@ -558,6 +558,34 @@ export type {
 } from './components/slider/types';
 export { StatusIndicator } from './components/status-indicator';
 export type { StatusIndicatorProps } from './components/status-indicator/types';
+export { StepperBack } from './components/stepper/back';
+export {
+  StepperContext,
+  useStepperContext,
+} from './components/stepper/context';
+export { StepperList } from './components/stepper/list';
+export { StepperNext } from './components/stepper/next';
+export { StepperPanel } from './components/stepper/panel';
+export { StepperStep } from './components/stepper/step';
+export { Stepper } from './components/stepper/stepper';
+export type {
+  Orientation,
+  StepperBackProps,
+  StepperListProps,
+  StepperListRenderState,
+  StepperNextProps,
+  StepperPanelProps,
+  StepperPanelRenderState,
+  StepperProps,
+  StepperRenderState,
+  StepperStepProps,
+  StepperStepRenderState,
+} from './components/stepper/types';
+export { useStepperState } from './components/stepper/use-stepper-state';
+export type {
+  StepperState,
+  UseStepperStateProps,
+} from './components/stepper/use-stepper-state';
 export { SwitchContext, SwitchProvider } from './components/switch/context';
 export { Switch } from './components/switch';
 export type { SwitchProps } from './components/switch/types';
