@@ -56,8 +56,22 @@ describe('tableLookup', () => {
   it('should use identity for undefined default', () => {
     const actualOne = undefLookup('UNKNOWN');
     const actualTwo = undefLookup('BAR');
+    const actualThree = undefLookup('TEST');
 
     expect(actualOne).not.toBeDefined();
     expect(actualTwo).toEqual(colorTable.BAR);
+    expect(actualThree).toEqual(null);
+  });
+
+  it('should use default for for a null or undefined props', () => {
+    const actualOne = colorLookup(undefined);
+
+    expect(actualOne).toEqual(defaultColor);
+  });
+
+  it('should use identity  for for a null or undefined props', () => {
+    const actualOne = undefLookup(undefined);
+
+    expect(actualOne).toEqual(undefined);
   });
 });

@@ -39,17 +39,15 @@ import { identity } from '../../combinators/identity';
  * colorLookup(data.value);
  * ```
  */
-export const lookup =
-  <
-    A extends Record<string | number | symbol, unknown>,
-    // biome-ignore lint/suspicious/noExplicitAny: This is intended
-    B extends (...args: any[]) => any,
-  >(
-    obj: A,
-    def?: B,
-  ) =>
-  <C extends keyof A>(prop: string | number | symbol): A[C] => {
-    const fn = def ?? identity;
-
-    return fn(obj[prop]);
-  };
+export const lookup = <
+  A extends Record<PropertyKey, unknown>,
+  // biome-ignore lint/suspicious/noExplicitAny: This is intended
+  B extends (...args: any[]) => any,
+>(
+  obj: A,
+  def?: B,
+) => {
+  const fn = def ?? identity;
+  return <C extends keyof A>(prop: PropertyKey | null | undefined): A[C] =>
+    fn(prop == null ? undefined : obj[prop]);
+};
