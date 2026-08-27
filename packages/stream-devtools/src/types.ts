@@ -13,6 +13,26 @@
  */
 
 import type { StreamKey, StreamStatus, TransportKind } from '@accelint/stream';
+import type { TanStackDevtoolsPluginProps } from '@tanstack/devtools';
+
+/**
+ * Props the TanStack Devtools shell passes to a plugin's render, from the
+ * canonical type's home — `@tanstack/devtools` is a declared optional peer
+ * (React shells carry it via `@tanstack/react-devtools`), so the emitted
+ * declarations import it legitimately. Made optional because the shell
+ * always sends both props but the panel works without them (embedding,
+ * custom wrappers).
+ */
+export type StreamDevtoolsShellProps = Partial<TanStackDevtoolsPluginProps>;
+
+/**
+ * What adapters pass to the core class's `mount(el, props)`. Theme and
+ * open state are required here — a mounting adapter always knows both —
+ * plus the injected store (no event bus; see below).
+ */
+export type StreamDevtoolsMountProps = TanStackDevtoolsPluginProps & {
+  store: StreamDevtoolsStore;
+};
 
 /** One tracked stream, derived from public StreamCache events only. */
 export type StreamDevtoolsStreamEntry = {

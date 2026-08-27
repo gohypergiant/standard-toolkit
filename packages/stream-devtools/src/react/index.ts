@@ -12,7 +12,8 @@
  * governing permissions and limitations under the License.
  */
 
-import * as core from './core';
+import * as devtools from './panel';
+import * as plugin from './plugin';
 
 // self-contained: the check must not depend on @types/node being in scope,
 // and consumer bundlers (Next, Vite) inline NODE_ENV so the losing branch
@@ -20,21 +21,24 @@ import * as core from './core';
 // biome-ignore lint/style/useNamingConvention: must match the runtime global
 declare const process: { env: { NODE_ENV?: string } };
 
-// dev-only (TanStack convention) — ./production opts out; React hosts
-// want ./react, other hosts mount this with a createStreamDevtoolsStore
-export const StreamDevtoolsCore =
+// dev-only (TanStack convention) — ./react/production opts out
+export const StreamDevtoolsPanel =
   process.env.NODE_ENV !== 'development'
-    ? core.StreamDevtoolsCoreNoOp
-    : core.StreamDevtoolsCore;
+    ? devtools.StreamDevtoolsPanelNoOp
+    : devtools.StreamDevtoolsPanel;
 
-export { createStreamDevtoolsStore } from './store';
+export const streamDevtoolsPlugin =
+  process.env.NODE_ENV !== 'development'
+    ? plugin.streamDevtoolsNoOpPlugin
+    : plugin.streamDevtoolsPlugin;
+
 export type {
   StreamDevtoolsActions,
   StreamDevtoolsLifecycleEvent,
   StreamDevtoolsMessageEntry,
-  StreamDevtoolsMountProps,
   StreamDevtoolsShellProps,
   StreamDevtoolsState,
   StreamDevtoolsStore,
   StreamDevtoolsStreamEntry,
-} from './types';
+} from '../types';
+export type { StreamDevtoolsReactInit } from './panel';

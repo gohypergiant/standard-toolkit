@@ -14,35 +14,12 @@
 
 import { Button } from '@tanstack/devtools-ui';
 import { createSignal, Show } from 'solid-js';
-import { FONT_MONO, PALETTE } from './tokens';
+import { useStyles } from '../styles/use-styles';
 import { Tooltip } from './tooltip';
 import type {
   StreamDevtoolsActions,
   StreamDevtoolsStreamEntry,
 } from '../types';
-
-const ROW_STYLE =
-  'align-items:flex-start;display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px;';
-
-const INJECT_INPUT_STYLE = [
-  `background:${PALETTE.inputBg}`,
-  `border:1px solid ${PALETTE.inputBorder}`,
-  'border-radius:4px',
-  'box-sizing:border-box',
-  `color:${PALETTE.text}`,
-  'flex:1',
-  `font-family:${FONT_MONO}`,
-  'font-size:11.5px',
-  'min-width:0',
-  'padding:4px 6px',
-  'resize:vertical',
-].join(';');
-
-const DESTRUCTIVE_NOTE_STYLE = `color:${PALETTE.warning};font-size:11.5px;margin:0;`;
-
-const ERROR_STYLE = `color:${PALETTE.error};margin:4px 0 0 0;`;
-
-const DISABLED_STYLE = 'cursor:not-allowed;opacity:0.5;';
 
 const NO_TRANSPORT_TITLE =
   'Unavailable — the stream has no live connection (lazy connect: no observer has subscribed yet)';
@@ -78,6 +55,7 @@ export function ActionRow(props: {
   stream: StreamDevtoolsStreamEntry;
   actions: StreamDevtoolsActions;
 }) {
+  const styles = useStyles();
   const [injectInput, setInjectInput] = createSignal('');
   const [injectError, setInjectError] = createSignal<string | undefined>();
   const transportMissing = () => !props.stream.hasTransport;
@@ -95,7 +73,7 @@ export function ActionRow(props: {
 
   return (
     <section aria-label='Actions'>
-      <div style={ROW_STYLE}>
+      <div class={styles().actionRow}>
         <Tooltip label='stream.retry() — closes and recreates the transport'>
           <Button
             onClick={() => props.actions.reconnect(props.stream.streamHash)}
@@ -131,10 +109,10 @@ export function ActionRow(props: {
           }
         >
           <Button
+            className={transportMissing() ? styles().disabledButton : undefined}
             disabled={transportMissing()}
             onClick={() => props.actions.simulateError(props.stream.streamHash)}
             outline
-            style={transportMissing() ? DISABLED_STYLE : undefined}
             variant='danger'
           >
             Simulate Error
@@ -150,9 +128,10 @@ export function ActionRow(props: {
           </Button>
         </Tooltip>
       </div>
-      <div style={ROW_STYLE}>
+      <div class={styles().actionRow}>
         <textarea
           aria-label='Inject message JSON'
+          class={styles().injectInput}
           disabled={transportMissing()}
           onInput={(event) => {
             setInjectInput(event.currentTarget.value);
@@ -160,7 +139,6 @@ export function ActionRow(props: {
           }}
           placeholder='{"activations": []}'
           rows={2}
-          style={INJECT_INPUT_STYLE}
           value={injectInput()}
         />
         <Tooltip
@@ -171,22 +149,22 @@ export function ActionRow(props: {
           }
         >
           <Button
+            className={transportMissing() ? styles().disabledButton : undefined}
             disabled={transportMissing()}
             onClick={injectMessage}
             outline
-            style={transportMissing() ? DISABLED_STYLE : undefined}
             variant='success'
           >
             Inject Message
           </Button>
         </Tooltip>
       </div>
-      <p style={DESTRUCTIVE_NOTE_STYLE}>
+      <p class={styles().destructiveNote}>
         Destructive: injected JSON flows the real observer path (map layers,
         alerts, snackbars).
       </p>
       <Show when={injectError() !== undefined}>
-        <p role='alert' style={ERROR_STYLE}>
+        <p class={styles().errorText} role='alert'>
           Invalid JSON: {injectError()}
         </p>
       </Show>

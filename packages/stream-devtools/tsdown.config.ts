@@ -15,12 +15,20 @@ import solid from 'vite-plugin-solid';
 import { getBanner } from '../../scripts/license.js';
 
 export default defineConfig({
-  // solid JSX needs the babel transform — rolldown/oxc has no native support
-  plugins: [solid()],
-  entry: ['src/index.ts'],
+  // solid JSX needs the babel transform — rolldown/oxc has no native
+  // support. The React wrapper entry must NOT be solid-compiled: excluded
+  // here, its JSX falls through to rolldown's default React transform.
+  plugins: [solid({ exclude: /src[/\\]react[/\\]/ })],
+  entry: [
+    'src/index.ts',
+    'src/production.ts',
+    'src/react/index.ts',
+    'src/react/production.ts',
+  ],
   // query-devtools precedent: bundle solid + devtools-ui into dist so react
-  // consumers never install solid. Only the stream peer stays external.
-  external: ['@accelint/stream'],
+  // consumers never install solid. Only the peers stay external — react is
+  // an optional peer for the ./react entry, never bundled.
+  external: ['@accelint/stream', 'react'],
   clean: true,
   dts: true,
   format: 'esm',

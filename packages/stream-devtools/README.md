@@ -10,44 +10,118 @@ governing permissions and limitations under the License. -->
 # @accelint/stream-devtools
 
 **A Streams tab for TanStack Devtools.** Shows every `@accelint/stream`
-connection live — status, observer count, message log, lifecycle timeline —
-with Reconnect / Close / Clear All / Simulate-Error / Inject-Message
-actions. Built with `@tanstack/devtools-ui`, so it reads as a native
-sibling of TanStack's own panels (chip styling mirrors React Query
-devtools, including the compact dot+count collapse at narrow widths).
+connection live: status, observer count, message log, and lifecycle
+timeline, with Reconnect, Close, Clear All, Simulate-Error, and
+Inject-Message actions. The panel is built with `@tanstack/devtools-ui`,
+renders in the shell's light or dark theme, and reads as a native sibling
+of TanStack's own panels.
 
-SolidJS is fully bundled (the `@tanstack/query-devtools` approach): host
-apps never install Solid. The only peer is `@accelint/stream`.
+SolidJS is fully bundled, so host apps never install Solid. The only
+required peer is `@accelint/stream`. `react` is an optional peer, used by
+the `./react` entry only.
 
-## Usage — TanStack Devtools shell
+The package follows the TanStack devtools architecture: the root entry is
+the Solid core, and framework adapters live on subpath entries.
 
-The `StreamClient` is injected explicitly (the panel cannot read a host
-app's React context):
+| Host | Import from |
+| --- | --- |
+| `@tanstack/react-devtools` shell, or any React app | `@accelint/stream-devtools/react` |
+| Custom wrapper (Solid shell, other frameworks) | `@accelint/stream-devtools` (core class + store factory) |
+
+## Usage: React host
+
+A React shell portals each plugin render's return value as a React
+element, so it needs the React adapter. The adapter drives the Solid panel
+through a core class with `mount`/`unmount`, the same bridge TanStack's
+own panels use.
+
+The adapter is zero-config: the panel resolves the app's `StreamClient`
+from `StreamClientProvider` context, the same way React Query's devtools
+resolve their client. `<TanStackDevtools>` must sit inside the provider.
+The shell portals plugin panels, and portals keep React context.
 
 ```tsx
 import { TanStackDevtools } from '@tanstack/react-devtools';
-import { createStreamDevtoolsPlugin } from '@accelint/stream-devtools';
-import { streamClient } from './stream-client';
+import { StreamClientProvider } from '@accelint/stream/react';
+import { streamDevtoolsPlugin } from '@accelint/stream-devtools/react';
 
-<TanStackDevtools
-  plugins={[createStreamDevtoolsPlugin({ client: streamClient })]}
-/>;
+<StreamClientProvider client={streamClient}>
+  <App />
+  <TanStackDevtools plugins={[streamDevtoolsPlugin]} />
+</StreamClientProvider>;
 ```
 
-The store attaches to the client's `StreamCache` eagerly, so lifecycle
-timelines cover the whole app session — not just while the panel is open.
+To customize the tab, spread the plugin object:
+`{ ...streamDevtoolsPlugin, name: 'My Streams' }`.
 
-## Usage — standalone (no shell)
+The adapter keeps one store per client for the client's lifetime, attached
+when the panel first mounts. Timelines and message logs survive the shell
+unmounting and remounting the panel. History from before the devtools
+first open is limited to what the stream cache still holds.
+
+Known limitation, inherited from the upstream React panel host that
+TanStack's own panels also use: under React StrictMode (the Next.js dev
+default) a mounted panel keeps the theme it first mounted with. Switch the
+shell theme and reload to change it.
+
+The entry also exports `StreamDevtoolsPanel`, the raw panel component, for
+hosts without the shell. It takes the mount props directly, including an
+explicit store:
+
+```tsx
+import { StreamDevtoolsPanel } from '@accelint/stream-devtools/react';
+import { createStreamDevtoolsStore } from '@accelint/stream-devtools';
+
+const panelProps = {
+  store: createStreamDevtoolsStore(streamClient),
+  theme: 'dark',
+  devtoolsOpen: true,
+} as const;
+
+<StreamDevtoolsPanel {...panelProps} />;
+```
+
+## Usage: custom wrapper (Solid shell, other frameworks)
+
+The root entry is the Solid core class, a constructor whose instances
+`mount(el, props)` and `unmount()`, plus the store factory that binds it
+to a client. A Solid-shell plugin is a few lines with
+`@tanstack/devtools-utils`:
+
+```tsx
+import {
+  StreamDevtoolsCore,
+  createStreamDevtoolsStore,
+} from '@accelint/stream-devtools';
+import type { StreamDevtoolsMountProps } from '@accelint/stream-devtools';
+
+const props: StreamDevtoolsMountProps = {
+  store: createStreamDevtoolsStore(streamClient),
+  theme: 'dark',
+  devtoolsOpen: true,
+};
+const core = new StreamDevtoolsCore();
+core.mount(element, props);
+// later: core.unmount()
+```
+
+The store attaches to the client's `StreamCache` when created and keeps
+recording while no panel is mounted. Create it eagerly if timelines should
+span the whole app session.
+
+## Production builds
+
+The main entries are development-only, the TanStack devtools convention:
+outside `NODE_ENV === 'development'` they resolve to no-op twins that
+render nothing and never touch the client. Bundlers inline the check, so
+the devtools code path disappears from production bundles. To keep live
+devtools in a production build, import from the opt-in entries instead:
 
 ```ts
-import { mountStreamDevtools } from '@accelint/stream-devtools';
-
-const unmount = mountStreamDevtools(document.getElementById('panel'), {
-  client: streamClient,
-});
+import { StreamDevtoolsCore } from '@accelint/stream-devtools/production';
+// or, for React hosts:
+import { streamDevtoolsPlugin } from '@accelint/stream-devtools/react/production';
 ```
-
-Returns a cleanup that unmounts the panel and detaches from the cache.
 
 ## What the panel shows
 
@@ -63,13 +137,14 @@ Returns a cleanup that unmounts the panel and detaches from the cache.
 
 ## Architecture notes
 
-- Observes only public `StreamCache.subscribe()` events plus each stream's
-  own message history (the store ratchets `messageHistory` to 50 on every
-  stream it sees) — `@accelint/stream` has no knowledge of the devtools.
-- Panel → app commands are direct in-process calls, deliberately **not**
-  on the TanStack devtools event bus: the bus broadcasts to all same-origin
-  tabs, which caused cross-tab state clobbering. This is the React Query
-  devtools architecture.
+- The store observes only public `StreamCache.subscribe()` events plus
+  each stream's own message history. It ratchets `messageHistory` to 50 on
+  every stream it sees. `@accelint/stream` has no knowledge of the
+  devtools.
+- Panel-to-app commands are direct in-process calls, deliberately **not**
+  on the TanStack devtools event bus: the bus broadcasts to all
+  same-origin tabs, which caused cross-tab state clobbering. This is the
+  React Query devtools architecture.
 - Inject-Message feeds panel-validated JSON through the real transport
-  message path — indistinguishable from a server message. Treat it as
+  message path, indistinguishable from a server message. Treat it as
   destructive in apps whose observers trigger side effects.
