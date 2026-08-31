@@ -18,6 +18,7 @@ import {
   AccordionHeader,
   AccordionPanel,
   AccordionTrigger,
+  Button,
   Chip,
   DetailsList,
   DetailsListLabel,
@@ -178,14 +179,22 @@ function formatCoordinates([lon, lat]: [number, number]): string {
   return `${lat.toFixed(4)}°, ${lon.toFixed(4)}°`;
 }
 
-function EventRowItem(props: { row: EventRow }) {
-  const { row } = props;
+function EventRowItem(props: {
+  row: EventRow;
+  isExpanded: boolean;
+  onExpandedChange: (isExpanded: boolean) => void;
+}) {
+  const { isExpanded, onExpandedChange, row } = props;
   const dataset = DATASETS.find((entry) => entry.id === row.datasetId);
   const entityCount = row.entities.length;
 
   return (
     <li className='border-b border-b-static-light last:border-b-0'>
-      <Accordion variant='compact'>
+      <Accordion
+        isExpanded={isExpanded}
+        onExpandedChange={onExpandedChange}
+        variant='compact'
+      >
         <AccordionHeader className='flex items-center gap-m'>
           <AccordionTrigger>
             <span className='flex items-center gap-m'>
@@ -244,7 +253,26 @@ function EventRowItem(props: { row: EventRow }) {
  * since hook count per render is fixed. Toggling a dataset off releases
  * its subscription (gc linger); survivors keep their buffers.
  */
+/** Rows that arrived since the feed was pinned. */
+function countPendingRows(
+  liveRows: EventRow[],
+  pinnedRows: EventRow[],
+): number {
+  const pinnedKeys = new Set(pinnedRows.map((row) => row.key));
+
+  return liveRows.filter((row) => !pinnedKeys.has(row.key)).length;
+}
+
 function MergedFeedCard() {
+  const [expandedRowKeys, setExpandedRowKeys] = useState<Set<string>>(
+    () => new Set(),
+  );
+  // freeze-on-expand: while any row is open, the rendered rows are pinned
+  // to this snapshot, so the row being read can't shift or fall off the
+  // cap. The streams keep running underneath - statuses and counts stay
+  // live, and the pinned rows stay renderable because message buffers are
+  // immutable snapshots.
+  const [pinnedRows, setPinnedRows] = useState<EventRow[] | null>(null);
   const [selected, setSelected] = useState<DatasetId[]>([
     'tracks',
     'ships',
@@ -260,8 +288,6 @@ function MergedFeedCard() {
       }),
     ),
     {
-      // the k-way merge runs inside the snapshot; reference-stable while
-      // inputs are unchanged, so no consumer useMemo
       combine: (results): MergedFeed => ({
         rows: mergeEvents(results, MERGED_FEED_CAP),
         statuses: selected.map((id, index) => ({
@@ -274,6 +300,27 @@ function MergedFeedCard() {
       }),
     },
   );
+
+  const rows = pinnedRows ?? feed.rows;
+  const pendingCount = pinnedRows ? countPendingRows(feed.rows, pinnedRows) : 0;
+
+  function handleExpandedRowChange(rowKey: string, isExpanded: boolean) {
+    const next = new Set(expandedRowKeys);
+
+    if (isExpanded) {
+      next.add(rowKey);
+    } else {
+      next.delete(rowKey);
+    }
+
+    setExpandedRowKeys(next);
+    setPinnedRows(next.size > 0 ? (pinnedRows ?? feed.rows) : null);
+  }
+
+  function resumeFeed() {
+    setExpandedRowKeys(new Set());
+    setPinnedRows(null);
+  }
 
   return (
     <div className='flex flex-col gap-m rounded-md bg-surface-default p-l'>
@@ -301,20 +348,36 @@ function MergedFeedCard() {
           ))}
         </div>
       </div>
-      <div className='flex items-center gap-l'>
-        {feed.statuses.map((entry) => (
-          <div className='flex items-center gap-xs' key={entry.id}>
-            <StatusIndicator
-              status={INDICATOR_STATUS[entry.status]}
-              textValue={entry.status}
-            />
-            <span className='fg-primary-muted text-body-s'>
-              {entry.id} ({entry.messageCount})
-            </span>
-          </div>
-        ))}
+      <div className='flex items-center justify-between'>
+        <div className='flex items-center gap-l'>
+          {feed.statuses.map((entry) => (
+            <div className='flex items-center gap-xs' key={entry.id}>
+              <StatusIndicator
+                status={INDICATOR_STATUS[entry.status]}
+                textValue={entry.status}
+              />
+              <span className='fg-primary-muted text-body-s'>
+                {entry.id} ({entry.messageCount})
+              </span>
+            </div>
+          ))}
+        </div>
+        {pinnedRows && (
+          // Chip is deliberately non-interactive (no onClick/onPress) -
+          // Button is the pressable primitive; outline+xsmall reads chip-like
+          <Button
+            color='accent'
+            onPress={resumeFeed}
+            size='xsmall'
+            variant='outline'
+          >
+            {pendingCount > 0
+              ? `Feed paused - show ${pendingCount} new ${pendingCount === 1 ? 'event' : 'events'}`
+              : 'Feed paused - resume'}
+          </Button>
+        )}
       </div>
-      {feed.rows.length === 0 ? (
+      {rows.length === 0 ? (
         <p className='fg-primary-muted'>
           {selected.length === 0
             ? 'Toggle a dataset on to start the feed.'
@@ -322,8 +385,15 @@ function MergedFeedCard() {
         </p>
       ) : (
         <ol className='flex max-h-200 flex-col overflow-y-auto'>
-          {feed.rows.map((row) => (
-            <EventRowItem key={row.key} row={row} />
+          {rows.map((row) => (
+            <EventRowItem
+              isExpanded={expandedRowKeys.has(row.key)}
+              key={row.key}
+              onExpandedChange={(isExpanded) => {
+                handleExpandedRowChange(row.key, isExpanded);
+              }}
+              row={row}
+            />
           ))}
         </ol>
       )}
