@@ -363,8 +363,6 @@ function MergedFeedCard() {
           ))}
         </div>
         {pinnedRows && (
-          // Chip is deliberately non-interactive (no onClick/onPress) -
-          // Button is the pressable primitive; outline+xsmall reads chip-like
           <Button
             color='accent'
             onPress={resumeFeed}
