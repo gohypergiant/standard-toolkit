@@ -18,11 +18,29 @@ export {
   useStreamClient,
 } from './stream-client-provider';
 export { useSSEStream } from './use-sse-stream';
+export { useSSEStreams } from './use-sse-streams';
 export { useStream } from './use-stream';
 export { useStreamCount } from './use-stream-count';
+export { useStreams } from './use-streams';
 export { useStreamState } from './use-stream-state';
 export { useWebSocketStream } from './use-websocket-stream';
+export { useWebSocketStreams } from './use-websocket-streams';
 export type { StreamClientProviderProps } from './stream-client-provider';
 export type { UseSSEStreamOptions } from './use-sse-stream';
+export type {
+  UseSSEStreamsConfig,
+  UseSSEStreamsOptions,
+  UseSSEStreamsResult,
+} from './use-sse-streams';
 export type { UseStreamOptions } from './use-stream';
+export type {
+  UseStreamsConfig,
+  UseStreamsOptions,
+  UseStreamsResult,
+} from './use-streams';
 export type { UseWebSocketStreamOptions } from './use-websocket-stream';
+export type {
+  UseWebSocketStreamsConfig,
+  UseWebSocketStreamsOptions,
+  UseWebSocketStreamsResult,
+} from './use-websocket-streams';

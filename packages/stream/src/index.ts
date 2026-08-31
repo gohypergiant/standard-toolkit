@@ -37,6 +37,12 @@ export type {
   StreamState,
   StreamUpdateAction,
 } from './stream';
+export { StreamsObserver } from './streams-observer';
+export type {
+  StreamsCombineFn,
+  StreamsObserverOptions,
+  StreamsObserverResults,
+} from './streams-observer';
 export {
   EventSourceTransport,
   WebSocketTransport,
