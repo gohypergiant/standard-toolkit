@@ -618,6 +618,7 @@ export type {
   TableBodyProps,
   TableCellProps,
   TableContextValue,
+  TableDensity,
   TableHeaderCellProps,
   TableHeaderProps,
   TableProps,

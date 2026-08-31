@@ -16,6 +16,10 @@
   .headerCell {
     @apply p-m pr-none fg-primary-muted gap-xxs text-body-s flex items-center justify-between border-1 border-transparent text-left align-middle font-medium;
 
+    @variant group-data-[density=compact]/table {
+      @apply p-xxs whitespace-nowrap;
+    }
+
     @variant hover {
       @apply fg-primary-bold;
     }
@@ -32,6 +36,10 @@
 
   .cell {
     @apply fg-primary-bold min-w-l font-display text-body-s p-m text-left align-middle;
+
+    @variant group-data-[density=compact]/table {
+      @apply p-xxs min-w-0 whitespace-nowrap;
+    }
 
     @variant selected {
       @apply bg-accent-primary-muted;

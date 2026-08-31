@@ -133,6 +133,8 @@ export function Table<T extends { id: Key }>({
   persistRowKebabMenu = true,
   persistHeaderKebabMenu = true,
   persistNumerals = false,
+  showNumerals = true,
+  density = 'cozy',
   enableSorting = true,
   enableColumnReordering = true,
   enableRowActions = true,
@@ -252,18 +254,22 @@ export function Table<T extends { id: Key }>({
    */
   const columns = useMemo<ColumnDef<TableFeatures, T, unknown>[]>(
     () => [
-      {
-        id: 'numeral',
-        cell: ({ row }) =>
-          row.getIsPinned() ? (
-            <Icon size='small'>
-              <Pin />
-            </Icon>
-          ) : (
-            <span data-testid='numeral'>{row.index + 1}</span>
-          ),
-        size: META_COLUMN_WIDTH,
-      },
+      ...(showNumerals
+        ? ([
+            {
+              id: 'numeral',
+              cell: ({ row }) =>
+                row.getIsPinned() ? (
+                  <Icon size='small'>
+                    <Pin />
+                  </Icon>
+                ) : (
+                  <span data-testid='numeral'>{row.index + 1}</span>
+                ),
+              size: META_COLUMN_WIDTH,
+            },
+          ] satisfies ColumnDef<TableFeatures, T, unknown>[])
+        : []),
       ...(showCheckbox
         ? ([
             {
@@ -295,7 +301,7 @@ export function Table<T extends { id: Key }>({
       ...(columnsProp ?? []),
       ...(kebabPosition === 'right' ? [actionColumn] : []),
     ],
-    [showCheckbox, columnsProp, kebabPosition, actionColumn],
+    [showNumerals, showCheckbox, columnsProp, kebabPosition, actionColumn],
   );
 
   const handleSortChange = (
@@ -321,19 +327,12 @@ export function Table<T extends { id: Key }>({
     [onRowSelectionChange],
   );
 
-  const {
-    getHeaderGroups,
-    getTopRows,
-    getCenterRows,
-    getBottomRows,
-    setColumnOrder,
-  } = useTable({
+  const table = useTable({
     features: tableFeatures,
     data,
     columns,
     enableSorting,
     initialState: {
-      columnOrder: columns.map(({ id }) => id ?? ''),
       rowSelection: rowSelectionProp ?? {},
     },
     state: {
@@ -357,10 +356,20 @@ export function Table<T extends { id: Key }>({
     onPaginationChange: handlePaginationChange,
   });
 
+  const {
+    getHeaderGroups,
+    getTopRows,
+    getCenterRows,
+    getBottomRows,
+    setColumnOrder,
+  } = table;
+
   const moveColumnLeft = useCallback(
     (oldIndex: number) => {
       setColumnOrder((order) => {
-        const newColumnOrder = [...order];
+        const newColumnOrder = order.length
+          ? [...order]
+          : table.getAllLeafColumns().map((column) => column.id);
         const newIndex = oldIndex - 1;
 
         if (newIndex < 0) {
@@ -375,16 +384,18 @@ export function Table<T extends { id: Key }>({
         return newColumnOrder;
       });
     },
-    [setColumnOrder],
+    [setColumnOrder, table],
   );
 
   const moveColumnRight = useCallback(
     (oldIndex: number) => {
       setColumnOrder((order) => {
-        const newColumnOrder = [...order];
+        const newColumnOrder = order.length
+          ? [...order]
+          : table.getAllLeafColumns().map((column) => column.id);
         const newIndex = oldIndex + 1;
 
-        if (newIndex >= order.length) {
+        if (newIndex >= newColumnOrder.length) {
           return order;
         }
 
@@ -396,14 +407,18 @@ export function Table<T extends { id: Key }>({
         return newColumnOrder;
       });
     },
-    [setColumnOrder],
+    [setColumnOrder, table],
   );
 
-  const className = clsx(fullWidth && 'w-full table-fixed', rest.className);
+  const className = clsx(
+    'group/table',
+    fullWidth && 'w-full table-fixed',
+    rest.className,
+  );
 
   if (children) {
     return (
-      <table {...rest} className={className}>
+      <table {...rest} data-density={density} className={className}>
         {children}
       </table>
     );
@@ -427,7 +442,7 @@ export function Table<T extends { id: Key }>({
         handleColumnReordering,
       }}
     >
-      <table {...rest} className={className}>
+      <table {...rest} data-density={density} className={className}>
         <TableHeader
           headerGroups={getHeaderGroups()}
           columnSelection={columnSelection}

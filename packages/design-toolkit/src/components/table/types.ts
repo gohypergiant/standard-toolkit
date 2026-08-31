@@ -49,6 +49,22 @@ type ExtendedTableProps<T extends { id: Key }> = {
   showCheckbox?: boolean;
 
   /**
+   * Whether to render the numeral (row number) column at all.
+   * Unlike `persistNumerals`, which only controls hover visibility, setting
+   * this to false omits the column entirely. The numeral column is also where
+   * the row pin indicator renders, so pinned rows lose that indicator.
+   */
+  showNumerals?: boolean;
+
+  /**
+   * Visual density of header and body cells.
+   * `cozy` (default) is the standard spacing; `compact` tightens padding and
+   * keeps cell content on a single line for dense data tables. The table
+   * element also exposes the value as `data-density`.
+   */
+  density?: TableDensity;
+
+  /**
    * Initial row selection state.
    * An object mapping row IDs to their selection state (true = selected).
    * Example: { 'row-1': true, 'row-2': true }
@@ -287,6 +303,8 @@ export type TableHeaderProps<T extends RowData> =
 /**
  * Context value for table configuration and state.
  */
+export type TableDensity = 'cozy' | 'compact';
+
 export type TableContextValue = {
   columnSelection: string | null;
   enableColumnReordering: boolean;

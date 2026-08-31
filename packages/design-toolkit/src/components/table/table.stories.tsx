@@ -251,6 +251,24 @@ export const Default: Story = {
   render: (args) => <Table {...args} key={JSON.stringify(args)} />,
 };
 
+export const CompactDensity: Story = {
+  args: {
+    density: 'compact',
+    showNumerals: false,
+    enableSorting: false,
+  },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'Compact density tightens cell padding and keeps content on a single line; showNumerals={false} omits the row-number column entirely.',
+      },
+    },
+  },
+
+  render: (args) => <Table {...args} key={JSON.stringify(args)} />,
+};
+
 export const SortableColumns: Story = {
   args: {
     kebabPosition: 'left',

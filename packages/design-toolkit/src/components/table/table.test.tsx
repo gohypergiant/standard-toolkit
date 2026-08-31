@@ -272,3 +272,139 @@ describe('Table data updates', () => {
     expect(screen.getByText('Move Down')).toBeInTheDocument();
   });
 });
+
+const changeHelper = createTableColumnHelper<{
+  id: string;
+  a: string;
+  b: string;
+  c: string;
+}>();
+
+const changeCol = (key: 'a' | 'b' | 'c') =>
+  changeHelper.accessor(key, {
+    id: key,
+    header: () => <span>{`Header ${key.toUpperCase()}`}</span>,
+    cell: (info) => info.getValue(),
+  });
+
+const changeData = [{ id: 'r1', a: 'va', b: 'vb', c: 'vc' }];
+
+const contentHeaders = () =>
+  screen
+    .getAllByRole('columnheader')
+    .map((th) => th.textContent)
+    .filter((text) => text?.startsWith('Header '));
+
+describe('Table column set changes', () => {
+  it('renders a column added after mount in its given position', () => {
+    const { rerender } = render(
+      <Table data={changeData} columns={[changeCol('a'), changeCol('b')]} />,
+    );
+
+    expect(contentHeaders()).toEqual(['Header A', 'Header B']);
+
+    rerender(
+      <Table
+        data={changeData}
+        columns={[changeCol('a'), changeCol('c'), changeCol('b')]}
+      />,
+    );
+
+    expect(contentHeaders()).toEqual(['Header A', 'Header C', 'Header B']);
+    expect(screen.getByText('vc')).toBeInTheDocument();
+  });
+
+  it('drops a column removed after mount', () => {
+    const { rerender } = render(
+      <Table
+        data={changeData}
+        columns={[changeCol('a'), changeCol('c'), changeCol('b')]}
+      />,
+    );
+
+    rerender(
+      <Table data={changeData} columns={[changeCol('a'), changeCol('b')]} />,
+    );
+
+    expect(contentHeaders()).toEqual(['Header A', 'Header B']);
+    expect(screen.queryByText('vc')).not.toBeInTheDocument();
+  });
+});
+
+describe('Table column moves', () => {
+  it('moves a column right on the first move (no pre-seeded order)', async () => {
+    render(
+      <Table data={changeData} columns={[changeCol('a'), changeCol('b')]} />,
+    );
+
+    expect(contentHeaders()).toEqual(['Header A', 'Header B']);
+
+    // header kebabs are unnamed menu buttons; the first belongs to Header A
+    const menuButtons = screen.getAllByRole('button', { name: 'Menu' });
+    await userEvent.click(menuButtons[0] as HTMLElement);
+    await userEvent.click(screen.getByText('Move Column Right'));
+
+    expect(contentHeaders()).toEqual(['Header B', 'Header A']);
+  });
+
+  it('keeps a manual move and appends columns added afterwards', async () => {
+    const { rerender } = render(
+      <Table data={changeData} columns={[changeCol('a'), changeCol('b')]} />,
+    );
+
+    const menuButtons = screen.getAllByRole('button', { name: 'Menu' });
+    await userEvent.click(menuButtons[0] as HTMLElement);
+    await userEvent.click(screen.getByText('Move Column Right'));
+
+    expect(contentHeaders()).toEqual(['Header B', 'Header A']);
+
+    // once the user has customized the order, new columns append at the end
+    rerender(
+      <Table
+        data={changeData}
+        columns={[changeCol('a'), changeCol('c'), changeCol('b')]}
+      />,
+    );
+
+    expect(contentHeaders()).toEqual(['Header B', 'Header A', 'Header C']);
+  });
+});
+
+describe('Table density', () => {
+  it('defaults to cozy', () => {
+    render(<Table data={changeData} columns={[changeCol('a')]} />);
+
+    expect(screen.getByRole('table')).toHaveAttribute('data-density', 'cozy');
+  });
+
+  it('exposes compact density on the table element', () => {
+    render(
+      <Table data={changeData} columns={[changeCol('a')]} density='compact' />,
+    );
+
+    expect(screen.getByRole('table')).toHaveAttribute(
+      'data-density',
+      'compact',
+    );
+  });
+});
+
+describe('Table numerals', () => {
+  it('renders the numeral column by default', () => {
+    render(<Table data={changeData} columns={[changeCol('a')]} />);
+
+    expect(screen.getAllByTestId('numeral').length).toBeGreaterThan(0);
+  });
+
+  it('omits the numeral column when showNumerals is false', () => {
+    render(
+      <Table
+        data={changeData}
+        columns={[changeCol('a')]}
+        showNumerals={false}
+      />,
+    );
+
+    expect(screen.queryByTestId('numeral')).not.toBeInTheDocument();
+  });
+});
