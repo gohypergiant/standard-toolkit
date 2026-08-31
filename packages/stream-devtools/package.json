@@ -1,0 +1,95 @@
+{
+  "name": "@accelint/stream-devtools",
+  "description": "TanStack Devtools panel for @accelint/stream — every stream's status, observers, message log, and lifecycle timeline, with reconnect/close/simulate/inject actions.",
+  "version": "1.0.0",
+  "author": "https://hypergiant.com",
+  "$schema": "https://json.schemastore.org/package",
+  "devDependencies": {
+    "@accelint/stream": "workspace:*",
+    "@accelint/typescript-config": "workspace:*",
+    "@accelint/vitest-config": "workspace:*",
+    "@tanstack/devtools": "^0.14.2",
+    "@tanstack/devtools-ui": "^0.6.0",
+    "@tanstack/devtools-utils": "^0.4.0",
+    "@testing-library/dom": "^10.4.1",
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.0",
+    "@types/react": "^19",
+    "goober": "^2.1.16",
+    "radashi": "^12.6.2",
+    "react": "^19",
+    "react-dom": "^19",
+    "solid-js": "^1.9.7",
+    "tsdown": "^0.18.0",
+    "typescript": "^5.9.3",
+    "vite-plugin-solid": "^2.11.9",
+    "vitest": "^4.0.15"
+  },
+  "engines": {
+    "node": ">=22",
+    "pnpm": ">=10"
+  },
+  "exports": {
+    ".": "./dist/index.js",
+    "./production": "./dist/production.js",
+    "./react": "./dist/react/index.js",
+    "./react/production": "./dist/react/production.js",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "./dist/**",
+    "./catalog-info.yaml",
+    "./CHANGELOG.md",
+    "./package.json",
+    "./README.md"
+  ],
+  "keywords": [
+    "dev-tk",
+    "devtools",
+    "sse",
+    "streams",
+    "tooling",
+    "websocket"
+  ],
+  "license": "Apache-2.0",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "owner": "default/pathfinder",
+  "peerDependencies": {
+    "@accelint/stream": "workspace:*",
+    "@tanstack/devtools": "^0.14.2",
+    "react": "^19"
+  },
+  "peerDependenciesMeta": {
+    "@tanstack/devtools": {
+      "optional": true
+    },
+    "react": {
+      "optional": true
+    }
+  },
+  "private": false,
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/gohypergiant/standard-toolkit"
+  },
+  "scripts": {
+    "build": "pnpm tsdown",
+    "dev": "pnpm tsc --watch",
+    "format": "pnpm biome format . --write --verbose",
+    "format:check": "pnpm biome format . --verbose",
+    "license": "pnpm zx ../../scripts/license.mjs",
+    "lint": "pnpm biome lint . --verbose",
+    "lint:package": "pnpm publint",
+    "test": "pnpm vitest --dir=src",
+    "test:watch": "pnpm vitest --dir=src --watch"
+  },
+  "sideEffects": false,
+  "subPath": "packages/stream-devtools",
+  "title": "Accelint Stream Devtools",
+  "type": "module",
+  "types": "./dist/index.d.ts"
+}

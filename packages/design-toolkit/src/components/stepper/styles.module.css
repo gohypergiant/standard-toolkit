@@ -1,0 +1,126 @@
+/*
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
+ * This file is licensed to you under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License. You may obtain a copy
+ * of the License at https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under
+ * the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS
+ * OF ANY KIND, either express or implied. See the License for the specific language
+ * governing permissions and limitations under the License.
+ */
+
+@reference '@accelint/design-foundation/styles';
+
+@layer components.l1 {
+  .stepper {
+    @apply flex;
+
+    @variant orientation-horizontal {
+      @apply flex-col;
+    }
+
+    @variant orientation-vertical {
+      @apply h-full flex-row;
+    }
+  }
+
+  .list {
+    @apply gap-xs flex;
+
+    @variant orientation-horizontal {
+      @apply relative w-full flex-row;
+    }
+
+    @variant orientation-vertical {
+      @apply h-full flex-col;
+    }
+  }
+
+  .step {
+    @apply gap-xs fg-primary-muted rounded-small relative flex cursor-pointer items-center;
+    min-width: 100px;
+
+    @variant hover {
+      @apply fg-primary-bold;
+    }
+
+    @variant focus-visible {
+      @apply fg-primary-bold outline outline-2 outline-offset-2 outline-(--outline-accent-primary-bold);
+    }
+
+    @variant pressed {
+      @apply fg-pressed;
+    }
+
+    @variant current {
+      @apply fg-accent-primary-bold bg-accent-primary-muted;
+
+      @variant hover {
+        @apply fg-accent-primary-hover bg-accent-primary-hover;
+      }
+
+      @variant focus-visible {
+        @apply fg-accent-primary-hover bg-accent-primary-hover;
+      }
+
+      @variant pressed {
+        @apply fg-accent-primary-pressed bg-interactive-muted-pressed;
+      }
+    }
+
+    @variant visited {
+      @apply fg-normal-bold bg-normal-muted;
+
+      @variant hover {
+        @apply fg-normal-hover bg-normal-hover;
+      }
+
+      @variant focus-visible {
+        @apply fg-normal-hover bg-normal-hover;
+      }
+    }
+
+    @variant disabled {
+      @apply fg-disabled bg-interactive-disabled cursor-not-allowed;
+    }
+
+    /* Connectors for horizontal orientation */
+    @variant group-orientation-horizontal/stepper {
+      &:not(:last-child)::after {
+        @apply absolute top-1/2 left-full block h-px bg-(--outline-static);
+        content: '';
+        width: var(--connector-width, 1rem);
+        transform: translateY(-50%);
+      }
+
+      @variant visited {
+        &:not(:last-child)::after {
+          @apply bg-(--outline-normal-bold);
+        }
+      }
+    }
+
+    /* Connectors for vertical orientation */
+    @variant group-orientation-vertical/stepper {
+      @apply w-full;
+
+      &:not(:last-child)::after {
+        @apply absolute top-full left-1/2 block w-px bg-(--outline-static);
+        content: '';
+        height: var(--connector-height, 1rem);
+        transform: translateX(-50%);
+      }
+
+      @variant visited {
+        &:not(:last-child)::after {
+          @apply bg-(--outline-normal-bold);
+        }
+      }
+    }
+  }
+
+  .panel {
+    @apply fg-primary-bold p-m;
+  }
+}

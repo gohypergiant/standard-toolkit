@@ -1,6 +1,6 @@
 ---
 title: FloatingCard
-description: Renders children into a resizable, draggable floating panel using React portals and Dockview
+description: Renders children into a resizable, draggable floating panel using React portals
 source: packages/design-toolkit/src/components/floating-card/index.tsx
 source_sha: 8ab9f023e60d98c7af5b0f6a472145154b424b65
 doc_sha: 015bda6532d608121dc31f535623d60760db0fdf
@@ -49,7 +49,7 @@ interface FloatingCardProps {
   title?: string;
   isOpen?: boolean;
   initialDimensions?: { width: number; height: number };
-  initialPosition?: { x?: number; y?: number };
+  initialPosition?: { x: number; y: number };
 }
 ```
 
@@ -62,7 +62,7 @@ interface FloatingCardProps {
 | `title` | `string` | - | No |
 | `isOpen` | `boolean` | `true` | No |
 | `initialDimensions` | `{ width: number; height: number }` | `{ width: 300, height: 400 }` | No |
-| `initialPosition` | `{ x?: number; y?: number }` | - | No |
+| `initialPosition` | `{ x: number; y: number }` | - | No |
 
 #### `id`
 
@@ -70,7 +70,7 @@ Unique identifier for the floating card. Must be stable across renders.
 
 #### `title`
 
-Title displayed in the floating card header. Defaults to the `id` if not provided.
+Title displayed in the floating card header. When omitted the header shows no title and the card is announced as "Floating card".
 
 #### `isOpen`
 
@@ -82,7 +82,7 @@ Initial width and height of the floating card in pixels.
 
 #### `initialPosition`
 
-Initial x and y coordinates for the floating card's top-left corner. If not specified, the card appears at a default position managed by Dockview.
+Initial x and y coordinates for the floating card's top-left corner. If not specified, the card appears at a default position.
 
 ## Examples
 
@@ -248,7 +248,7 @@ const cardId = uuid();
 ### Registration and Lifecycle
 
 FloatingCard registers itself with the floating card engine on mount and:
-1. Creates a Dockview panel if `isOpen` is `true`
+1. Creates a floating panel if `isOpen` is `true`
 2. Updates the panel title when `title` prop changes
 3. Closes the panel when `isOpen` becomes `false`
 4. Cleans up when unmounted (handled at provider level)
@@ -305,4 +305,3 @@ function App() {
 ## Related
 
 - [FloatingCardProvider](./provider.mdx) - Required context provider
-- [Dockview](https://dockview.dev/) - Underlying panel management library
