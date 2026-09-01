@@ -44,7 +44,7 @@ context: |
                         lefthook pre-commit runs format + license + index
   - Build Tools:        tsdown (ESM-only, dts, unbundle, treeshake) for
                         libraries; next build for apps/next; generated barrel
-                        index.ts via `pnpm index` turbo task
+                        index.ts via `pnpm indexer` (turbo `index` task)
   - CI/CD:              GitHub Actions — ci.yml (build/format/lint/test),
                         release.yml (changesets action → npm), release-beta,
                         visual-regression (Playwright/Chromium), memlab,
@@ -70,7 +70,7 @@ context: |
     (source) and tsconfig.dev.json (tests/stories) — never type-check
     against the solution file directly
   - Generated barrels: package root src/index.ts files are GENERATED
-    (`pnpm index`); never edit them by hand. Nested index.ts barrels are
+    (`pnpm indexer`); never edit them by hand. Nested index.ts barrels are
     hand-curated public API surfaces
   - Key patterns: react-aria-components composition (useContextProps,
     composeRenderProps, slotted contexts, data-* attributes for styling);
@@ -170,6 +170,14 @@ context: |
     styles' and @layer components.l1 — never tailwind-variants/cva
   - Private modules: mark internal files with a leading // __private-exports
     comment or __internal__/ directory
+  - Controlled state (design-toolkit): component-owned state slices expose
+    an x / defaultX / onXChange triple built on react-stately's
+    useControlledState - uncontrolled by default, controlled when
+    x !== undefined, callbacks receive plain resolved values (never
+    updater functions), no runtime mode switching; Table's private
+    use-table-controlled-state adapter is the reference implementation;
+    TanStack state types (SortingState, RowSelectionState, RowPinningState)
+    are imported from @tanstack/react-table, never re-exported
 
   ## Testing Patterns
   - Pattern:        AAA (Arrange, Act, Assert)
@@ -212,7 +220,7 @@ context: |
   - Default exports or dot-notation subcomponents (Button.Link)
   - Arrow-function components or displayName assignments
   - File names with the family prefix (button-link.tsx)
-  - Editing generated src/index.ts barrels by hand (run `pnpm index`)
+  - Editing generated src/index.ts barrels by hand (run `pnpm indexer`)
   - design-foundation vite/webpack/css lib helpers — @deprecated; use
     @accelint/postcss-tailwind-css-modules instead
   - tailwind-variants / cva for component styling — use CSS Modules @layer
