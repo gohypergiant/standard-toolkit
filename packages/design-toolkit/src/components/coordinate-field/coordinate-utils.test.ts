@@ -1241,3 +1241,107 @@ describe('Coordinate Utils - Paste Handling', () => {
     });
   });
 });
+
+/**
+ * Byte-identical regression suite for the geo-parts migration.
+ *
+ * `convertDDToDisplaySegments`, `parseCoordinateStringToSegments`, and
+ * `getAllCoordinateFormats` are public (barrel + subpath). This suite pins their
+ * exact segment arrays / ordering and full-format strings to the values produced
+ * before the migration onto @accelint/geo parts, so any drift in shape, ordering,
+ * precision, padding, or sentinel is caught.
+ */
+describe('Coordinate Utils - geo-parts migration regression', () => {
+  describe('convertDDToDisplaySegments produces identical segment arrays', () => {
+    it.each`
+      lat              | lon               | dd                                     | ddm                                             | dms                                                     | mgrs                                   | utm
+      ${40.7128}       | ${-74.006}        | ${['40.7128', '-74.006']}              | ${['40', '42.768', 'N', '74', '0.36', 'W']}     | ${['40', '42', '46.08', 'N', '74', '0', '21.6', 'W']}   | ${['18', 'T', 'WL', '83959', '07350']} | ${['18', 'N', '583959', '4507351']}
+      ${46.1247816666} | ${101.6556516666} | ${['46.1247816666', '101.6556516666']} | ${['46', '7.4869', 'N', '101', '39.3391', 'E']} | ${['46', '7', '29.21', 'N', '101', '39', '20.35', 'E']} | ${['47', 'T', 'QM', '05167', '11340']} | ${['47', 'N', '705168', '5111340']}
+      ${0}             | ${0}              | ${['0', '0']}                          | ${['0', '0', 'N', '0', '0', 'E']}               | ${['0', '0', '0', 'N', '0', '0', '0', 'E']}             | ${['31', 'N', 'AA', '66021', '00000']} | ${['31', 'N', '166021', '0']}
+      ${-33.8688}      | ${151.2093}       | ${['-33.8688', '151.2093']}            | ${['33', '52.128', 'S', '151', '12.558', 'E']}  | ${['33', '52', '7.68', 'S', '151', '12', '33.48', 'E']} | ${['56', 'H', 'LH', '34368', '50948']} | ${['56', 'S', '334369', '6250948']}
+      ${84}            | ${0}              | ${['84', '0']}                         | ${['84', '0', 'N', '0', '0', 'E']}              | ${['84', '0', '0', 'N', '0', '0', '0', 'E']}            | ${['31', 'X', 'DP', '65005', '29005']} | ${['31', 'N', '465005', '9329005']}
+      ${-80}           | ${0}              | ${['-80', '0']}                        | ${['80', '0', 'S', '0', '0', 'E']}              | ${['80', '0', '0', 'S', '0', '0', '0', 'E']}            | ${['31', 'C', 'DM', '41867', '16915']} | ${['31', 'S', '441868', '1116915']}
+    `('at [$lat, $lon]', ({ lat, lon, dd, ddm, dms, mgrs, utm }) => {
+      const value: CoordinateValue = { lat, lon };
+
+      expect(convertDDToDisplaySegments(value, 'dd')).toEqual(dd);
+      expect(convertDDToDisplaySegments(value, 'ddm')).toEqual(ddm);
+      expect(convertDDToDisplaySegments(value, 'dms')).toEqual(dms);
+      expect(convertDDToDisplaySegments(value, 'mgrs')).toEqual(mgrs);
+      expect(convertDDToDisplaySegments(value, 'utm')).toEqual(utm);
+    });
+
+    it('returns null for MGRS/UTM outside the grid band (poles)', () => {
+      const value: CoordinateValue = { lat: 89.999, lon: 179.999 };
+
+      expect(convertDDToDisplaySegments(value, 'mgrs')).toBeNull();
+      expect(convertDDToDisplaySegments(value, 'utm')).toBeNull();
+      // DD/DDM/DMS remain defined at the same coordinate.
+      expect(convertDDToDisplaySegments(value, 'ddm')).toEqual([
+        '89',
+        '59.94',
+        'N',
+        '179',
+        '59.94',
+        'E',
+      ]);
+    });
+  });
+
+  describe('parseCoordinateStringToSegments produces identical segment arrays', () => {
+    it.each`
+      format    | input                                 | expected
+      ${'dd'}   | ${'40.765432 N / -123.456789 W'}      | ${['40.765432', '-123.456789']}
+      ${'dd'}   | ${'40.7128 N / 74.0060 W'}            | ${['40.7128', '-74.0060']}
+      ${'ddm'}  | ${"89° 45.9259' N / 123° 27.4073' W"} | ${['89', '45.9259', 'N', '123', '27.4073', 'W']}
+      ${'dms'}  | ${'40 42 46.08 N / 74 0 21.60 W'}     | ${['40', '42', '46.08', 'N', '74', '0', '21.6', 'W']}
+      ${'mgrs'} | ${'18T WM 12345 67890'}               | ${['18', 'T', 'WM', '12345', '67890']}
+      ${'utm'}  | ${'18N 585628 4511644'}               | ${['18', 'N', '585628', '4511644']}
+    `('parses $format string "$input"', ({ format, input, expected }) => {
+      expect(parseCoordinateStringToSegments(input, format)).toEqual(expected);
+    });
+  });
+
+  describe('getAllCoordinateFormats produces identical strings', () => {
+    it('formats an in-band coordinate to all five systems', () => {
+      const formats = getAllCoordinateFormats({ lat: 40.7128, lon: -74.006 });
+
+      expect(formats.dd).toEqual({
+        value: '40.7128 N / 74.006 W',
+        isValid: true,
+      });
+      expect(formats.ddm).toEqual({
+        value: '40 42.768 N / 74 0.36 W',
+        isValid: true,
+      });
+      expect(formats.dms).toEqual({
+        value: '40 42 46.08 N / 74 0 21.6 W',
+        isValid: true,
+      });
+      expect(formats.mgrs).toEqual({
+        value: '18T WL 83959 07350',
+        isValid: true,
+      });
+      expect(formats.utm).toEqual({
+        value: '18N 583959 4507351',
+        isValid: true,
+      });
+    });
+
+    it('maps MGRS/UTM out-of-range to the poles sentinel', () => {
+      const formats = getAllCoordinateFormats({ lat: 89.999, lon: 179.999 });
+
+      expect(formats.dd.isValid).toBe(true);
+      expect(formats.ddm.isValid).toBe(true);
+      expect(formats.dms.isValid).toBe(true);
+      expect(formats.mgrs).toEqual({
+        value: 'Not available at poles',
+        isValid: false,
+      });
+      expect(formats.utm).toEqual({
+        value: 'Not available at poles',
+        isValid: false,
+      });
+    });
+  });
+});
