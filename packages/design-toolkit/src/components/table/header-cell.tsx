@@ -30,6 +30,7 @@ import {
 } from './constants/table';
 import { TableContext } from './context';
 import styles from './styles.module.css';
+import { toMenuVariant } from './utils';
 import type { TableFeatures } from './features';
 import type { TableHeaderCellProps } from './types';
 
@@ -48,6 +49,7 @@ function HeaderCellMenu<T extends RowData>({
     manualSorting,
     handleSortChange,
     handleColumnReordering,
+    variant,
   } = useContext(TableContext);
 
   const [hoveredArrow, setHoveredArrow] = useState(false);
@@ -82,7 +84,7 @@ function HeaderCellMenu<T extends RowData>({
             {!hoveredArrow && sort === SortDirection.ASC && <ArrowUp />}
           </Icon>
         </Button>
-        <Menu>
+        <Menu variant={toMenuVariant(variant)}>
           {enableColumnReordering && (
             <>
               <MenuItem
@@ -176,7 +178,7 @@ export function TableHeaderCell<T extends RowData>({
   header,
   ...rest
 }: TableHeaderCellProps<T>) {
-  const { columnSelection } = useContext(TableContext);
+  const { columnSelection, variant } = useContext(TableContext);
   const renderProps = header?.getContext();
   const sortLabel =
     header?.column.getIsSorted() === SortDirection.ASC
@@ -193,7 +195,12 @@ export function TableHeaderCell<T extends RowData>({
       style={{ width: header?.getSize() }}
     >
       <div
-        className={clsx('group/header-cell', styles.headerCell, className)}
+        className={clsx(
+          'group/header-cell',
+          styles.headerCell,
+          styles[variant],
+          className,
+        )}
         data-selected={header?.column.id === columnSelection || null}
       >
         {children ||

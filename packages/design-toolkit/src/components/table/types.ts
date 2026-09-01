@@ -26,6 +26,7 @@ import type {
   PropsWithChildren,
   SetStateAction,
 } from 'react';
+import type { DensityVariant } from '@/lib/types';
 import type { TableFeatures } from './features';
 
 type BaseTableProps = Omit<ComponentPropsWithRef<'table'>, 'children'>;
@@ -153,6 +154,15 @@ type ExtendedTableProps<T extends { id: Key }> = {
    * @default false
    */
   fullWidth?: boolean;
+
+  /**
+   * Density of header and body cells, one step on the spacing scale per value:
+   * `'cozy'` (12px padding), `'compact'` (8px), `'crammed'` (2px, single-line
+   * cells with no minimum width). Meta columns follow the same padding; row
+   * height follows the cells.
+   * @default DEFAULT_TABLE_VARIANT ('cozy')
+   */
+  variant?: DensityVariant;
 
   /**
    * Number of rows per page. Enables built-in pagination when set.
@@ -304,4 +314,6 @@ export type TableContextValue = {
     direction: 'asc' | 'desc' | null,
   ) => void;
   handleColumnReordering?: (index: number) => void;
+  /** Active density, applied by header cells and body cells as a module class. */
+  variant: DensityVariant;
 };

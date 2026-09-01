@@ -124,12 +124,29 @@ const pageData = allData.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
 
 <Canvas of={TableStories.PrePaginated} />
 
+## Variants
+
+The `variant` prop sets the density of header and body cells. Meta columns
+(numerals, checkbox, kebab menu) follow the same padding step, and row height
+follows the cells.
+
+| Variant | Description |
+|---------|-------------|
+| `cozy` | 12px cell padding (default) |
+| `compact` | 8px cell padding for denser layouts |
+| `crammed` | 2px cell padding with single-line cells for maximum density |
+
+Only data mode (`columns` + `data`) accepts `variant`. Custom-children mode
+(the [Static Table](#static-table) above) renders `cozy`; wrap the cells in
+`TableContext.Provider` to hand-compose a denser table.
+
 ## Props
 
 | Prop | Type | Default | Description |
 |------|------|---------|-------------|
 | `columns` | `ColumnDef[]` | — | Array of TanStack column definitions |
 | `data` | `T[]` | — | Array of data objects with `id` property |
+| `variant` | `'cozy' \| 'compact' \| 'crammed'` | `'cozy'` | Cell density; see [Variants](#variants) |
 | `showCheckbox` | `boolean` | — | Show checkbox column for row selection |
 | `rowSelection` | `RowSelectionState` | — | Controlled row selection state (object mapping row IDs to boolean) |
 | `onRowSelectionChange` | `function` | — | Callback when row selection changes |

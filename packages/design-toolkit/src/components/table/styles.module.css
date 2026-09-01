@@ -14,7 +14,19 @@
 
 @layer components.l1 {
   .headerCell {
-    @apply p-m pr-none fg-primary-muted gap-xxs text-body-s flex items-center justify-between border-1 border-transparent text-left align-middle font-medium;
+    @apply fg-primary-muted gap-xxs text-body-s flex items-center justify-between border-1 border-transparent text-left align-middle font-medium;
+
+    &.cozy {
+      @apply p-m pr-none;
+    }
+
+    &.compact {
+      @apply p-s pr-none;
+    }
+
+    &.crammed {
+      @apply p-xxs whitespace-nowrap;
+    }
 
     @variant hover {
       @apply fg-primary-bold;
@@ -31,7 +43,19 @@
   }
 
   .cell {
-    @apply fg-primary-bold min-w-l font-display text-body-s p-m text-left align-middle;
+    @apply fg-primary-bold font-display text-body-s text-left align-middle;
+
+    &.cozy {
+      @apply p-m min-w-l;
+    }
+
+    &.compact {
+      @apply p-s min-w-l;
+    }
+
+    &.crammed {
+      @apply p-xxs min-w-0 whitespace-nowrap;
+    }
 
     @variant selected {
       @apply bg-accent-primary-muted;

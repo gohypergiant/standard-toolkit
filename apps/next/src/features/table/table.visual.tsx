@@ -75,6 +75,7 @@ function renderScenario(scenario: TableScenario) {
       enableRowActions={scenario.enableRowActions}
       fullWidth={scenario.fullWidth}
       rowSelection={scenario.rowSelection}
+      variant={scenario.variant}
     />
   );
 }

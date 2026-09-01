@@ -15,12 +15,14 @@ import type {
   GridListItemProps,
   GridListProps,
 } from 'react-aria-components/GridList';
+import type { DensityVariant } from '@/lib/types';
 import type { IconProps } from '../icon/types';
 
+// Provisional subset (no 'crammed') until align-collection-density-scale revisits it.
 /**
  * Visual density variant for list items.
  */
-export type ListItemVariant = 'cozy' | 'compact';
+export type ListItemVariant = Exclude<DensityVariant, 'crammed'>;
 
 /**
  * Props for the ListItem component.

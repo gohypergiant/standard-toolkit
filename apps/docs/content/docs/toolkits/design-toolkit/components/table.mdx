@@ -34,6 +34,7 @@ export function MyTable() {
 interface TableProps<T extends { id: Key }> {
   columns: ColumnDef<T>[];
   data: T[];
+  variant?: 'cozy' | 'compact' | 'crammed';
   showCheckbox?: boolean;
   rowSelection?: RowSelectionState;
   kebabPosition?: 'left' | 'right';
@@ -61,6 +62,7 @@ interface TableProps<T extends { id: Key }> {
 |------|------|---------|----------|
 | `columns` | `ColumnDef<T>[]` | - | Yes |
 | `data` | `T[]` | - | Yes |
+| `variant` | `'cozy' \| 'compact' \| 'crammed'` | `'cozy'` | No |
 | `showCheckbox` | `boolean` | `false` | No |
 | `rowSelection` | `RowSelectionState` | `{}` | No |
 | `kebabPosition` | `'left' \| 'right'` | `'right'` | No |
@@ -95,6 +97,22 @@ Array of TanStack Table column definitions. Each column defines how to access an
 #### `data`
 
 Array of data objects. Each object must have a unique `id` property of type `string` or `number`.
+
+#### `variant`
+
+Visual density variant that controls the padding of header and body cells:
+- `cozy` - 12px cell padding, the default
+- `compact` - 8px cell padding for denser layouts
+- `crammed` - 2px cell padding with single-line cells for maximum density
+
+Meta columns (row numerals, selection checkbox, kebab menu) follow the same
+padding step, and row height follows the cells. The row and header kebab
+menus inherit the density, clamped to the `Menu` component's `cozy | compact`
+subset, so `crammed` tables open `compact` menus.
+
+Only data mode (`columns` + `data`) accepts `variant`. Custom-children mode
+renders `cozy`; wrap the cells in `TableContext.Provider` to hand-compose a
+denser table.
 
 #### `showCheckbox`
 
