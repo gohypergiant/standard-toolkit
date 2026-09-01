@@ -6,7 +6,7 @@ Give Table one controlled-state convention: every Table-owned state slice is exp
 
 BREAKING CHANGES:
 
-- `rowSelection` is now the controlled value of the selection slice. It was previously read only on mount as an initial value, so later prop changes never reached the table. Pass `defaultRowSelection` for initial-only selection; keep `rowSelection` (paired with `onRowSelectionChange`) to drive selection from your own state. A static `rowSelection` with no callback now renders a frozen selection.
+- `rowSelection` is now the controlled value of the selection slice. It was previously read only on mount as an initial value, so later prop changes never reached the table. For uncontrolled usage pass `defaultRowSelection` as the starting selection and the table manages it from there; keep `rowSelection` (paired with `onRowSelectionChange`) to drive selection from your own state. A static `rowSelection` with no callback now renders a frozen selection.
 - `onRowSelectionChange` receives the plain next `RowSelectionState` instead of TanStack's updater-or-value. Wiring a `useState` setter keeps working unchanged; remove any `typeof updater === 'function'` branches, which are now dead code.
 - `onSortChange` receives the plain next `SortingState` in both client-side and `manualSorting` modes, instead of `(columnId, direction)` in `manualSorting` mode only. Read `sort[0]?.id` and `sort[0]?.desc` in place of the old arguments; an empty array means sorting was cleared.
 
