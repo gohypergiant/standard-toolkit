@@ -74,7 +74,7 @@ function renderScenario(scenario: TableScenario) {
       enableColumnReordering={scenario.enableColumnReordering}
       enableRowActions={scenario.enableRowActions}
       fullWidth={scenario.fullWidth}
-      rowSelection={scenario.rowSelection}
+      defaultRowSelection={scenario.defaultRowSelection}
     />
   );
 }

@@ -13,7 +13,7 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { useState } from 'react';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import { Pagination } from '../pagination/index';
 import { createTableColumnHelper } from './features';
 import { Table } from './index';
@@ -62,6 +62,36 @@ function PaginatedTable() {
         value={page}
         total={Math.ceil(allData.length / PAGE_SIZE)}
         onChange={setPage}
+      />
+    </>
+  );
+}
+
+function ControlledPaginatedTable({
+  onPageChange,
+}: {
+  onPageChange: (page: number) => void;
+}) {
+  const [page, setPage] = useState(1);
+
+  const handlePageChange = (nextPage: number) => {
+    onPageChange(nextPage);
+    setPage(nextPage);
+  };
+
+  return (
+    <>
+      <Table
+        columns={columns}
+        data={allData}
+        pageSize={PAGE_SIZE}
+        page={page}
+        onPageChange={handlePageChange}
+      />
+      <Pagination
+        value={page}
+        total={Math.ceil(allData.length / PAGE_SIZE)}
+        onChange={handlePageChange}
       />
     </>
   );
@@ -140,6 +170,32 @@ describe('Table with pagination', () => {
     expect(rows).toHaveLength(6);
     expect(screen.getByText('first-21')).toBeInTheDocument();
     expect(screen.getByText('first-25')).toBeInTheDocument();
+  });
+
+  it('should seed the initial page from defaultPage when uncontrolled', () => {
+    render(
+      <Table
+        columns={columns}
+        data={allData}
+        pageSize={PAGE_SIZE}
+        defaultPage={2}
+      />,
+    );
+
+    expect(screen.getByText('first-11')).toBeInTheDocument();
+    expect(screen.getByText('first-20')).toBeInTheDocument();
+    expect(screen.queryByText('first-1')).not.toBeInTheDocument();
+  });
+
+  it('should call onPageChange with a plain number when controlled', async () => {
+    const onPageChange = vi.fn();
+    render(<ControlledPaginatedTable onPageChange={onPageChange} />);
+
+    await userEvent.click(screen.getByLabelText('Next page'));
+
+    expect(onPageChange).toHaveBeenCalledTimes(1);
+    expect(onPageChange).toHaveBeenCalledWith(2);
+    expect(typeof onPageChange.mock.calls[0]?.[0]).toBe('number');
   });
 });
 

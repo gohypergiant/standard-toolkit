@@ -78,7 +78,7 @@ export type TableScenario = {
   enableColumnReordering?: boolean;
   enableRowActions?: boolean;
   fullWidth?: boolean;
-  rowSelection?: RowSelectionState;
+  defaultRowSelection?: RowSelectionState;
   emptyData?: boolean;
   isSorted?: 'asc' | 'desc';
 };
@@ -108,14 +108,14 @@ export const PROP_COMBOS: TableScenario[] = [
     screenshotName: 'table-selected-rows.png',
     showCheckbox: true,
     persistNumerals: true,
-    rowSelection: { artemis: true, sable: true },
+    defaultRowSelection: { artemis: true, sable: true },
   },
   {
     name: 'all rows selected',
     className: 'inline-block',
     screenshotName: 'table-all-rows-selected.png',
     showCheckbox: true,
-    rowSelection: { artemis: true, cassius: true, sable: true },
+    defaultRowSelection: { artemis: true, cassius: true, sable: true },
   },
   {
     name: 'sorted ascending',
