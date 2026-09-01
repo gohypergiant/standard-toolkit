@@ -20,6 +20,7 @@
     "./clamp": "./dist/clamp/index.js",
     "./random": "./dist/random/index.js",
     "./round": "./dist/round/index.js",
+    "./wrap": "./dist/wrap/index.js",
     "./package.json": "./package.json"
   },
   "files": [

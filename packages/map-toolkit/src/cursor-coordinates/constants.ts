@@ -11,6 +11,5 @@
  */
 
 export const MAX_LONGITUDE = 180;
-export const LONGITUDE_RANGE = 360;
 export const DEFAULT_LATLON_COORDS = '--, --';
 export const DEFAULT_MGRS_UTM_COORDS = '--- -- ---- ----';

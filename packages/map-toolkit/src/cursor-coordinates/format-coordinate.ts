@@ -19,11 +19,8 @@ import {
   toMgrsParts,
   toUtmParts,
 } from '@accelint/geo';
-import {
-  DEFAULT_MGRS_UTM_COORDS,
-  LONGITUDE_RANGE,
-  MAX_LONGITUDE,
-} from './constants';
+import { wrap } from '@accelint/math';
+import { DEFAULT_MGRS_UTM_COORDS, MAX_LONGITUDE } from './constants';
 import type { CoordinateFormatTypes } from './types';
 
 /**
@@ -34,11 +31,7 @@ import type { CoordinateFormatTypes } from './types';
  * @returns Normalized longitude between -180 and 180
  */
 export function normalizeLongitude(lon: number): number {
-  return (
-    ((((lon + MAX_LONGITUDE) % LONGITUDE_RANGE) + LONGITUDE_RANGE) %
-      LONGITUDE_RANGE) -
-    MAX_LONGITUDE
-  );
+  return wrap(-MAX_LONGITUDE, MAX_LONGITUDE, lon);
 }
 
 /**
