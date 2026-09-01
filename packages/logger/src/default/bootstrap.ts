@@ -91,5 +91,11 @@ export function bootstrap({
 
   instance.withLogLevelManager(new OneWayLogLevelManager());
 
+  // If logging was disabled, re-apply disableLogging() to the new LogLevelManager
+  // because LogLayer constructor called disableLogging() before we replaced the manager
+  if (enabled === false) {
+    instance.disableLogging();
+  }
+
   return instance;
 }
