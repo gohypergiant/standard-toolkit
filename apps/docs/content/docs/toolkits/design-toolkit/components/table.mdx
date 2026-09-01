@@ -5,7 +5,7 @@ source: packages/design-toolkit/src/components/table/index.tsx
 source_sha: 64cbc01cd2b212f8139249ca03762baa8c48ef73
 doc_sha: 6f34a5ef05e34c363ef815edd2082a6a700a9d74
 deprecated: false
-updated: 2026-07-13
+updated: 2026-09-01
 ---
 
 ## Usage
@@ -36,6 +36,9 @@ interface TableProps<T extends { id: Key }> {
   data: T[];
   showCheckbox?: boolean;
   rowSelection?: RowSelectionState;
+  defaultRowSelection?: RowSelectionState;
+  rowPinning?: RowPinningState;
+  defaultRowPinning?: RowPinningState;
   kebabPosition?: 'left' | 'right';
   persistRowKebabMenu?: boolean;
   persistHeaderKebabMenu?: boolean;
@@ -44,16 +47,21 @@ interface TableProps<T extends { id: Key }> {
   enableColumnReordering?: boolean;
   enableRowActions?: boolean;
   manualSorting?: boolean;
+  sort?: SortingState;
+  defaultSort?: SortingState;
   fullWidth?: boolean;
   pageSize?: number;
   page?: number;
   defaultPage?: number;
-  onSortChange?: (columnId: string, sortDirection: 'asc' | 'desc' | null) => void;
+  onSortChange?: (sort: SortingState) => void;
   onColumnReorderChange?: (index: number) => void;
-  onRowSelectionChange?: (updaterOrValue: RowSelectionState | ((old: RowSelectionState) => RowSelectionState)) => void;
+  onRowSelectionChange?: (rowSelection: RowSelectionState) => void;
+  onRowPinningChange?: (rowPinning: RowPinningState) => void;
   onPageChange?: (page: number) => void;
 }
 ```
+
+`RowSelectionState`, `RowPinningState`, and `SortingState` are TanStack Table types. Import them from `@tanstack/react-table`; the design toolkit does not re-export them.
 
 ### Props
 
@@ -62,7 +70,10 @@ interface TableProps<T extends { id: Key }> {
 | `columns` | `ColumnDef<T>[]` | - | Yes |
 | `data` | `T[]` | - | Yes |
 | `showCheckbox` | `boolean` | `false` | No |
-| `rowSelection` | `RowSelectionState` | `{}` | No |
+| `rowSelection` | `RowSelectionState` | - | No |
+| `defaultRowSelection` | `RowSelectionState` | `{}` | No |
+| `rowPinning` | `RowPinningState` | - | No |
+| `defaultRowPinning` | `RowPinningState` | `{ top: [], bottom: [] }` | No |
 | `kebabPosition` | `'left' \| 'right'` | `'right'` | No |
 | `persistRowKebabMenu` | `boolean` | `true` | No |
 | `persistHeaderKebabMenu` | `boolean` | `true` | No |
@@ -71,6 +82,8 @@ interface TableProps<T extends { id: Key }> {
 | `enableColumnReordering` | `boolean` | `true` | No |
 | `enableRowActions` | `boolean` | `true` | No |
 | `manualSorting` | `boolean` | `false` | No |
+| `sort` | `SortingState` | - | No |
+| `defaultSort` | `SortingState` | `[]` | No |
 | `fullWidth` | `boolean` | `false` | No |
 | `pageSize` | `number` | - | No |
 | `page` | `number` | - | No |
@@ -78,6 +91,7 @@ interface TableProps<T extends { id: Key }> {
 | `onSortChange` | `function` | - | No |
 | `onColumnReorderChange` | `function` | - | No |
 | `onRowSelectionChange` | `function` | - | No |
+| `onRowPinningChange` | `function` | - | No |
 | `onPageChange` | `function` | - | No |
 
 #### `columns`
@@ -100,13 +114,33 @@ Array of data objects. Each object must have a unique `id` property of type `str
 
 When `true`, displays a checkbox column for row selection. The header checkbox selects/deselects all rows.
 
-#### `rowSelection`
+#### `rowSelection` / `defaultRowSelection`
 
-Initial row selection state. An object mapping row IDs to their selection state:
+Controlled and uncontrolled row selection state. An object mapping row IDs to their selection state:
 
 ```typescript
 { 'row-1': true, 'row-2': true }  // Rows 1 and 2 are selected
 ```
+
+Selection is controlled while `rowSelection` is provided; pair it with `onRowSelectionChange` to apply changes, otherwise the selection stays frozen at that value. Use `defaultRowSelection` to seed an uncontrolled table; it is ignored while `rowSelection` is provided.
+
+#### `onRowSelectionChange`
+
+Called with the plain next `RowSelectionState` whenever selection changes. Functional updaters from the table engine are resolved internally and never reach this callback.
+
+#### `rowPinning` / `defaultRowPinning`
+
+Controlled and uncontrolled row pinning state: arrays of row IDs pinned to the top and bottom of the table:
+
+```typescript
+{ top: ['row-1'], bottom: [] }
+```
+
+Pinning is controlled while `rowPinning` is provided; pair it with `onRowPinningChange` to apply changes, otherwise the pinning stays frozen at that value. IDs absent from `data` are skipped when rendering, never pruned - the controlling owner is responsible for pruning stale IDs.
+
+#### `onRowPinningChange`
+
+Called with the plain next `RowPinningState` when pinning changes (for example via the row kebab menu's Pin / Unpin actions). Functional updaters from the table engine are resolved internally and never reach this callback.
 
 #### `kebabPosition`
 
@@ -128,7 +162,7 @@ When `true`, row number column is always visible. When `false`, only visible on 
 
 #### `enableSorting`
 
-Enables column sorting. Click column headers to sort ascending/descending.
+Enables column sorting. Use the column header menu (kebab) to sort ascending, sort descending, or clear sorting.
 
 #### `enableColumnReordering`
 
@@ -142,7 +176,21 @@ Enables row actions through the kebab menu, including:
 
 #### `manualSorting`
 
-When `true`, assumes data is already sorted (for server-side sorting). Disables client-side sorting.
+When `true`, assumes data is already sorted (for server-side sorting). Disables client-side sorting; the header menu still updates the sort state and indicators, and `onSortChange` still receives the plain next `SortingState`.
+
+#### `sort` / `defaultSort`
+
+Controlled and uncontrolled sort state. An array of `{ id, desc }` entries keyed by column id; the header menu writes at most one entry (no multi-column sort):
+
+```typescript
+[{ id: 'age', desc: true }]
+```
+
+Sorting is controlled while `sort` is provided; pair it with `onSortChange` to apply changes, otherwise the sort stays frozen at that value. This applies in both client-side and `manualSorting` modes. Use `defaultSort` to seed an uncontrolled table; it is ignored while `sort` is provided.
+
+#### `onSortChange`
+
+Called with the plain next `SortingState` whenever sorting changes: `[{ id, desc }]`, or `[]` when sorting is cleared. Functional updaters from the table engine are resolved internally and never reach this callback.
 
 #### `fullWidth`
 
@@ -191,10 +239,11 @@ const data = [
 
 ```tsx
 import { Table } from '@accelint/design-toolkit';
+import type { RowSelectionState } from '@tanstack/react-table';
 import { useState } from 'react';
 
 export function SelectableTable() {
-  const [selection, setSelection] = useState({});
+  const [selection, setSelection] = useState<RowSelectionState>({});
 
   const columns = [
     { accessorKey: 'name', header: 'Name' },
@@ -254,22 +303,21 @@ export function PaginatedTable() {
 
 ```tsx
 import { Table } from '@accelint/design-toolkit';
+import type { SortingState } from '@tanstack/react-table';
 import { useState } from 'react';
 
 export function ServerSortedTable() {
-  const [sortColumn, setSortColumn] = useState<string>('');
-  const [sortDirection, setSortDirection] = useState<'asc' | 'desc' | null>(null);
+  const [sort, setSort] = useState<SortingState>([]);
 
   const columns = [
     { accessorKey: 'name', header: 'Name' },
     { accessorKey: 'date', header: 'Date' },
   ];
 
-  const handleSortChange = (columnId: string, direction: 'asc' | 'desc' | null) => {
-    setSortColumn(columnId);
-    setSortDirection(direction);
-    // Fetch sorted data from server
-    fetchSortedData(columnId, direction);
+  const handleSortChange = (nextSort: SortingState) => {
+    setSort(nextSort);
+    // Fetch sorted data from the server
+    fetchSortedData(nextSort[0]?.id, nextSort[0]?.desc);
   };
 
   return (
@@ -277,6 +325,7 @@ export function ServerSortedTable() {
       columns={columns}
       data={data}
       manualSorting
+      sort={sort}
       onSortChange={handleSortChange}
     />
   );
