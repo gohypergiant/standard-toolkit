@@ -42,6 +42,18 @@ const data = [
 
 <Canvas of={TableStories.Default} />
 
+## Controlled and Uncontrolled State
+
+Sorting, row selection, and row pinning each follow the same convention: the
+state is uncontrolled by default, can be seeded with a `default*` prop, and
+becomes controlled when the value prop is set. Every `on*Change` callback
+receives the plain next state value, ready to pass to a `useState` setter. A
+controlled value without a matching callback stays frozen at that value.
+
+The state types (`SortingState`, `RowSelectionState`, `RowPinningState`) are
+imported from `@tanstack/react-table`; the design toolkit does not re-export
+them.
+
 ## Static Table
 
 For simple tables without sorting or selection, use subcomponents directly.
@@ -79,27 +91,120 @@ columnHelper.accessor('firstName', {
 
 <Canvas of={TableStories.ColumnSizing} />
 
-## Row Selection
+## Sorting
 
-Track selected rows with `rowSelection` and `onRowSelectionChange`.
+Use the column header menu (kebab) to sort ascending, sort descending, or
+clear sorting. Sorting is uncontrolled by default; seed the initial order with
+`defaultSort`, or control it with `sort` and `onSortChange`.
 
 ```tsx
-const [selectedRows, setSelectedRows] = useState({ tanner: true, joe: true });
+import type { SortingState } from '@tanstack/react-table';
+
+const [sort, setSort] = useState<SortingState>([{ id: 'age', desc: true }]);
+
+<Table
+  columns={columns}
+  data={data}
+  sort={sort}
+  onSortChange={setSort}
+/>
+```
+
+`onSortChange` receives the plain next `SortingState`: `[{ id, desc }]`, or
+`[]` when sorting is cleared. The header menu writes at most one entry (no
+multi-column sort).
+
+<Canvas of={TableStories.ControlledSorting} />
+
+### Server-side Sorting
+
+Set `manualSorting` to sort the data yourself (for example on the server). The
+table renders `data` in the order you provide and still reflects the
+controlled `sort` value in the header menu and `aria-sort` attributes.
+
+```tsx
+import type { SortingState } from '@tanstack/react-table';
+
+const [sort, setSort] = useState<SortingState>([]);
+
+// Sort wherever the data lives, using sort[0]?.id and sort[0]?.desc
+const sortedData = useSortedFromServer(sort[0]);
+
+<Table
+  columns={columns}
+  data={sortedData}
+  manualSorting
+  sort={sort}
+  onSortChange={setSort}
+/>
+```
+
+<Canvas of={TableStories.ServerSideSorting} />
+
+## Row Selection
+
+Row selection is uncontrolled by default. Seed it with `defaultRowSelection`,
+or control it with `rowSelection` and `onRowSelectionChange`.
+
+```tsx
+import type { RowSelectionState } from '@tanstack/react-table';
+
+// Uncontrolled: seed the initial selection
+<Table
+  columns={columns}
+  data={data}
+  showCheckbox
+  defaultRowSelection={{ tanner: true, joe: true }}
+/>
+
+// Controlled: hold the state yourself
+const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
 
 <Table
   columns={columns}
   data={data}
   showCheckbox
-  rowSelection={selectedRows}
-  onRowSelectionChange={setSelectedRows}
+  rowSelection={rowSelection}
+  onRowSelectionChange={setRowSelection}
 />
 ```
 
+`onRowSelectionChange` receives the plain next `RowSelectionState`: an object
+mapping selected row IDs to `true`, such as `{ tanner: true }`.
+
 <Canvas of={TableStories.InitialRowSelection} />
+
+<Canvas of={TableStories.ControlledRowSelection} />
+
+## Row Pinning
+
+Pin rows to the top or bottom of the table through the row actions menu. Row
+pinning is uncontrolled by default; seed it with `defaultRowPinning`, or
+control it with `rowPinning` and `onRowPinningChange`. Pinned IDs absent from
+`data` are skipped when rendering, never pruned; the controlling owner is
+responsible for removing stale IDs.
+
+```tsx
+import type { RowPinningState } from '@tanstack/react-table';
+
+const [rowPinning, setRowPinning] = useState<RowPinningState>({
+  top: ['joe'],
+  bottom: [],
+});
+
+<Table
+  columns={columns}
+  data={data}
+  rowPinning={rowPinning}
+  onRowPinningChange={setRowPinning}
+/>
+```
+
+<Canvas of={TableStories.ControlledRowPinning} />
 
 ## Pagination
 
-Table handles client-side data slicing internally when `pageSize` is set. Render `<Pagination>` alongside the Table to provide page navigation — the two components are kept separate so you have full control over Pagination's placement and props.
+Table handles client-side data slicing internally when `pageSize` is set. Render `<Pagination>` alongside the Table to provide page navigation - the two components are kept separate so you have full control over Pagination's placement and props.
 
 ```tsx
 const [page, setPage] = useState(1);
@@ -126,13 +231,22 @@ const pageData = allData.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
 
 ## Props
 
+`SortingState`, `RowSelectionState`, and `RowPinningState` are imported from `@tanstack/react-table`.
+
 | Prop | Type | Default | Description |
 |------|------|---------|-------------|
-| `columns` | `ColumnDef[]` | — | Array of TanStack column definitions |
-| `data` | `T[]` | — | Array of data objects with `id` property |
-| `showCheckbox` | `boolean` | — | Show checkbox column for row selection |
-| `rowSelection` | `RowSelectionState` | — | Controlled row selection state (object mapping row IDs to boolean) |
-| `onRowSelectionChange` | `function` | — | Callback when row selection changes |
+| `columns` | `ColumnDef[]` | - | Array of TanStack column definitions |
+| `data` | `T[]` | - | Array of data objects with `id` property |
+| `showCheckbox` | `boolean` | - | Show checkbox column for row selection |
+| `rowSelection` | `RowSelectionState` | - | Controlled row selection state (object mapping selected row IDs to `true`) |
+| `defaultRowSelection` | `RowSelectionState` | `{}` | Initial row selection for uncontrolled use; ignored while `rowSelection` is set |
+| `onRowSelectionChange` | `(rowSelection: RowSelectionState) => void` | - | Called with the plain next selection state |
+| `sort` | `SortingState` | - | Controlled sort state, e.g. `[{ id: 'age', desc: true }]` |
+| `defaultSort` | `SortingState` | `[]` | Initial sort for uncontrolled use; ignored while `sort` is set |
+| `onSortChange` | `(sort: SortingState) => void` | - | Called with the plain next sort state, in both client-side and `manualSorting` modes |
+| `rowPinning` | `RowPinningState` | - | Controlled row pinning state, e.g. `{ top: ['row-1'], bottom: [] }` |
+| `defaultRowPinning` | `RowPinningState` | `{ top: [], bottom: [] }` | Initial row pinning for uncontrolled use; ignored while `rowPinning` is set |
+| `onRowPinningChange` | `(rowPinning: RowPinningState) => void` | - | Called with the plain next pinning state |
 | `kebabPosition` | `'left' \| 'right'` | `'right'` | Position of row action menu |
 | `persistHeaderKebabMenu` | `boolean` | `true` | Always show header kebab menu |
 | `persistRowKebabMenu` | `boolean` | `true` | Always show row kebab menu |
@@ -140,14 +254,13 @@ const pageData = allData.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
 | `enableSorting` | `boolean` | `true` | Enable column sorting |
 | `enableColumnReordering` | `boolean` | `true` | Enable column reordering |
 | `enableRowActions` | `boolean` | `true` | Enable row action menu |
-| `manualSorting` | `boolean` | `false` | Server-side sorting mode |
-| `onSortChange` | `(columnId, direction) => void` | — | Callback for manual sorting |
-| `onColumnReorderChange` | `(index) => void` | — | Callback when column is reordered |
+| `manualSorting` | `boolean` | `false` | Server-side sorting mode; data renders in the order provided |
+| `onColumnReorderChange` | `(index) => void` | - | Callback when column is reordered |
 | `fullWidth` | `boolean` | `false` | Apply full width with fixed layout |
-| `pageSize` | `number` | — | Rows per page; enables built-in pagination |
-| `page` | `number` | — | Controlled current page (1-indexed) |
+| `pageSize` | `number` | - | Rows per page; enables built-in pagination |
+| `page` | `number` | - | Controlled current page (1-indexed) |
 | `defaultPage` | `number` | `1` | Uncontrolled default page (1-indexed) |
-| `onPageChange` | `(page: number) => void` | — | Callback when page changes |
+| `onPageChange` | `(page: number) => void` | - | Callback when page changes |
 
 ## Subcomponents
 
@@ -163,8 +276,9 @@ For static tables, use these subcomponents:
 
 ## Accessibility
 
-- Keyboard navigation for sorting and row actions
+- Sorting is performed from each column's header menu (kebab), with Sort Ascending, Sort Descending, and Clear Sort items reachable by keyboard
 - ARIA sort attributes on sortable columns
+- Keyboard navigation for row actions
 - Screen reader support for selection state
 
 ## Related

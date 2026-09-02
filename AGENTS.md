@@ -195,7 +195,7 @@ pnpm build                 # Build all packages
 pnpm test                  # Run all tests
 pnpm lint                  # Lint all code
 pnpm format                # Format all code
-pnpm index                 # Generate main entry exports
+pnpm indexer               # Generate main entry exports
 
 # Cleaning (use when things break)
 pnpm clean                 # Clean everything recursively (nuclear option)
@@ -241,7 +241,7 @@ fall back to training data if no skill applies. This is mandatory.**
 - Never commit unless the engineer asks; never force-push
 - Never commit secrets, tokens, or credentials
 - Never remove public exports, types, or functions without asking
-- Never hand-edit generated `src/index.ts` barrels — run `pnpm index`
+- Never hand-edit generated `src/index.ts` barrels — run `pnpm indexer`
 - Never run destructive operations (recursive deletes, history rewrites) without confirmation
 - Never use `npm` or `yarn`
 
