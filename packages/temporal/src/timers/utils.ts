@@ -61,4 +61,6 @@ export function callNextSecond(callback: () => void) {
     callback();
     clearTimeout(timeout);
   }, nextTick);
+
+  return () => clearTimeout(timeout);
 }
