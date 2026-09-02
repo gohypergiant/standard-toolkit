@@ -590,6 +590,7 @@ export { SwitchContext, SwitchProvider } from './components/switch/context';
 export { Switch } from './components/switch';
 export type { SwitchProps } from './components/switch/types';
 export {
+  DEFAULT_TABLE_VARIANT,
   HeaderColumnAction,
   SortDirection,
   headerColumnActionValues,
@@ -752,6 +753,7 @@ export type {
   AriaAttributesWithRef,
   ChildrenRenderProps,
   ClassNameRenderProps,
+  DensityVariant,
   ProviderProps,
   RenderProps,
   RenderPropsChildren,

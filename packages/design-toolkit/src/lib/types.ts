@@ -89,3 +89,11 @@ export type AriaAttributes = ReactAriaAttributes & {
 
 /** ARIA attributes combined with ref forwarding support */
 export type AriaAttributesWithRef<T> = AriaAttributes & RefAttributes<T>;
+
+/**
+ * Visual density for collection components (Tree, List, Menu, Accordion,
+ * Table). One step on the spacing scale per value: `cozy` is the roomiest,
+ * `crammed` the tightest. Components that support only a subset narrow it
+ * with `Exclude<DensityVariant, ...>` under their own exported names.
+ */
+export type DensityVariant = 'cozy' | 'compact' | 'crammed';

@@ -11,6 +11,7 @@
  */
 
 import { getSafeEnumValues, type SafeEnum } from '@accelint/core';
+import type { DensityVariant } from '@/lib/types';
 
 /** Sort direction options for table columns. */
 export const SortDirection = Object.freeze({
@@ -36,3 +37,10 @@ export type HeaderColumnActionKey = SafeEnum<typeof HeaderColumnAction>;
 
 /** Array of valid header column action values. */
 export const headerColumnActionValues = getSafeEnumValues(HeaderColumnAction);
+
+/**
+ * Default density for the Table (`'cozy'`, 12px cell padding). Shared by the
+ * root `variant` prop default and the default `TableContext` value so the two
+ * can never diverge.
+ */
+export const DEFAULT_TABLE_VARIANT: DensityVariant = 'cozy';

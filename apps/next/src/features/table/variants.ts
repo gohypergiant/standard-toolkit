@@ -10,6 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
+import type { DensityVariant } from '@accelint/design-toolkit';
 import type { RowSelectionState } from '@tanstack/react-table';
 
 export type Person = {
@@ -63,7 +64,10 @@ export type ScenarioName =
   | 'kebab position left'
   | 'full width'
   | 'minimal'
-  | 'hidden peripherals';
+  | 'hidden peripherals'
+  | 'compact'
+  | 'crammed'
+  | 'crammed all features';
 
 export type TableScenario = {
   name: ScenarioName;
@@ -81,6 +85,7 @@ export type TableScenario = {
   rowSelection?: RowSelectionState;
   emptyData?: boolean;
   isSorted?: 'asc' | 'desc';
+  variant?: DensityVariant;
 };
 
 export const PROP_COMBOS: TableScenario[] = [
@@ -163,5 +168,29 @@ export const PROP_COMBOS: TableScenario[] = [
     persistRowKebabMenu: false,
     persistHeaderKebabMenu: false,
     persistNumerals: false,
+  },
+  {
+    name: 'compact',
+    className: 'inline-block',
+    screenshotName: 'table-compact.png',
+    variant: 'compact',
+  },
+  {
+    name: 'crammed',
+    className: 'inline-block',
+    screenshotName: 'table-crammed.png',
+    variant: 'crammed',
+  },
+  {
+    name: 'crammed all features',
+    className: 'inline-block',
+    screenshotName: 'table-crammed-all-features.png',
+    variant: 'crammed',
+    showCheckbox: true,
+    persistNumerals: true,
+    persistRowKebabMenu: true,
+    persistHeaderKebabMenu: true,
+    enableRowActions: true,
+    kebabPosition: 'right',
   },
 ];

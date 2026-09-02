@@ -170,6 +170,15 @@ context: |
     styles' and @layer components.l1 — never tailwind-variants/cva
   - Private modules: mark internal files with a leading // __private-exports
     comment or __internal__/ directory
+  - Density variants: one shared DensityVariant ('cozy' | 'compact' |
+    'crammed') in design-toolkit src/lib/types.ts; components alias it under
+    their own names (Tree full union; List/Menu/Accordion the cozy|compact
+    subset until align-collection-density-scale). Target padding ladder is
+    one spacing token per step: cozy p-m (12px), compact p-s (8px), crammed
+    p-xxs (2px) + whitespace-nowrap; Table is the first component on it.
+    Plumbing is prop -> context -> clsx(styles.x, styles[variant]) with
+    explicit &.cozy / &.compact / &.crammed blocks, never a data-density
+    attribute
 
   ## Testing Patterns
   - Pattern:        AAA (Arrange, Act, Assert)
