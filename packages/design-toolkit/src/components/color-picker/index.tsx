@@ -113,7 +113,11 @@ export function ColorPicker({
 
   const [selectionSource, setSelectionSource] = useState<
     'none' | 'swatch' | 'custom'
-  >('swatch');
+  >(defaultValue === undefined ? 'none' : 'custom');
+
+  const [lastValidColor, setLastValidColor] = useState<string | Color>(
+    normalizeColor(defaultValue) || '#ECECE6',
+  );
 
   const currentValue =
     value !== undefined ? normalizeColor(value) : internalValue;
@@ -127,6 +131,7 @@ export function ColorPicker({
 
   const handleSwatchChange = (newValue: string | Color) => {
     setInternalValue(newValue);
+    setLastValidColor(newValue);
     setSelectionSource('swatch');
     onChange?.(newValue);
   };
@@ -134,6 +139,7 @@ export function ColorPicker({
   const handleCustomColorChange = (newColor: Color) => {
     const newValue = newColor.toString('hex');
     setInternalValue(newValue);
+    setLastValidColor(newValue);
     setSelectionSource('custom');
     onChange?.(newValue);
   };
@@ -162,7 +168,7 @@ export function ColorPicker({
         >
           {allowNull && (
             <NoColorButton
-              isActive={currentValue === undefined}
+              isActive={selectionSource === 'none'}
               onClick={handleNoColorClick}
             />
           )}
@@ -170,9 +176,11 @@ export function ColorPicker({
           <ColorSwatchPicker
             {...rest}
             aria-labelledby={labelId}
-            {...(selectionSource === 'swatch' && currentValue
-              ? { value: currentValue }
-              : {})}
+            value={
+              selectionSource === 'swatch' && currentValue
+                ? currentValue
+                : parseColor('rgba(0, 0, 0, 0)')
+            }
             onChange={handleSwatchChange}
             layout='grid'
             style={{ display: 'contents' }}
@@ -204,11 +212,9 @@ export function ColorPicker({
             <CustomColorPicker
               isActive={selectionSource === 'custom'}
               colorValue={
-                currentValue
-                  ? typeof currentValue === 'string'
-                    ? parseColor(currentValue)
-                    : currentValue
-                  : parseColor('#000000')
+                typeof lastValidColor === 'string'
+                  ? parseColor(lastValidColor)
+                  : lastValidColor
               }
               onChange={handleCustomColorChange}
             />

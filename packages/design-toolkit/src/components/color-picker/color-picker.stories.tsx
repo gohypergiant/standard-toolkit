@@ -10,14 +10,14 @@
  * governing permissions and limitations under the License.
  */
 
+import { useState } from 'react';
+import { parseColor } from 'react-aria-components';
 import { useTheme } from '../../providers/theme-provider';
 import { ColorPicker } from './';
 import { CustomColorPicker } from './custom-color-picker';
 import { NoColorButton } from './no-color-button';
 import type { Rgba255Tuple } from '@accelint/predicates/is-rgba-255-tuple';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { useState } from 'react';
-import { parseColor } from 'react-aria-components';
 
 const meta = {
   title: 'Components/ColorPicker',

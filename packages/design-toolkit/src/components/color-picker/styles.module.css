@@ -37,37 +37,13 @@
     }
 
     @variant selected {
-      @apply outline-accent-primary-bold cursor-default;
+      @apply outline-accent-primary-cold cursor-default;
+      outline-color: var(--outline-accent-primary-bold);
     }
   }
 
   .swatch {
     @apply size-l;
-  }
-
-  .noColorButton {
-    @apply bg-surface-default rounded-medium relative size-4 border-2 transition-all;
-    border-color: var(--border-surface-bold);
-
-    @variant hover {
-      @apply outline outline-2;
-      outline-color: var(--outline-interactive-hover);
-    }
-
-    @variant focus-visible {
-      @apply outline outline-2;
-      outline-color: var(--outline-interactive-hover);
-    }
-
-    @variant selected {
-      @apply outline outline-2 outline-offset-2;
-      border-color: var(--outline-accent-primary-bold);
-      outline-color: var(--outline-accent-primary-bold);
-    }
-
-    @variant disabled {
-      @apply cursor-not-allowed opacity-50;
-    }
   }
 
   .customColorButton {
