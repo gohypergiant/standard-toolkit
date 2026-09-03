@@ -19,17 +19,20 @@ import {
   isRgba255Tuple,
   type Rgba255Tuple,
 } from '@accelint/predicates/is-rgba-255-tuple';
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import {
+  type Color,
   ColorSwatch,
   ColorSwatchPicker,
   ColorSwatchPickerItem,
-  type Color,
+  parseColor,
 } from 'react-aria-components/ColorSwatchPicker';
+import { composeRenderProps } from 'react-aria-components/composeRenderProps';
 import { Label } from '../label';
+import { CustomColorPicker } from './custom-color-picker';
+import { NoColorButton } from './no-color-button';
 import styles from './styles.module.css';
 import type { ColorPickerProps } from './types';
-import { composeRenderProps } from 'react-aria-components/composeRenderProps';
 
 /**
  * A color picker component that renders a grid of color swatches for selection.
@@ -87,19 +90,55 @@ function normalizeColor(
 }
 
 export function ColorPicker({
+  allowNull,
   classNames,
   defaultValue,
   isRequired,
   items,
   label,
   ref,
+  showCustomPicker,
   value,
+  onChange,
   ...rest
 }: ColorPickerProps) {
   const labelId = useMemo(
     () => (label ? uuid({ path: [label] }) : undefined),
     [label],
   );
+
+  const [internalValue, setInternalValue] = useState<
+    string | Color | undefined
+  >(normalizeColor(defaultValue));
+
+  const [selectionSource, setSelectionSource] = useState<
+    'none' | 'swatch' | 'custom'
+  >('swatch');
+
+  const currentValue =
+    value !== undefined ? normalizeColor(value) : internalValue;
+
+  const handleNoColorClick = () => {
+    const newValue = undefined;
+    setInternalValue(newValue);
+    setSelectionSource('none');
+    onChange?.(newValue);
+  };
+
+  const handleSwatchChange = (newValue: string | Color) => {
+    setInternalValue(newValue);
+    setSelectionSource('swatch');
+    onChange?.(newValue);
+  };
+
+  const handleCustomColorChange = (newColor: Color) => {
+    const newValue = newColor.toString('hex');
+    setInternalValue(newValue);
+    setSelectionSource('custom');
+    onChange?.(newValue);
+  };
+
+  const hasExtraButtons = allowNull || showCustomPicker;
 
   return (
     <div ref={ref} className={clsx(styles.container, classNames?.container)}>
@@ -112,34 +151,103 @@ export function ColorPicker({
           {label}
         </Label>
       )}
-      <ColorSwatchPicker
-        {...rest}
-        aria-labelledby={labelId}
-        defaultValue={normalizeColor(defaultValue)}
-        value={normalizeColor(value)}
-        className={composeRenderProps(classNames?.picker, (className) =>
-          clsx(styles.picker, className),
-        )}
-      >
-        {items.map((item) => {
-          const color = normalizeColor(item);
-          return (
-            <ColorSwatchPickerItem
-              key={typeof color === 'string' ? color : color.toString('hexa')}
-              className={composeRenderProps(classNames?.item, (className) =>
-                clsx(styles.item, className),
-              )}
-              color={color}
-            >
-              <ColorSwatch
-                className={composeRenderProps(classNames?.swatch, (className) =>
-                  clsx(styles.swatch, className),
+      {hasExtraButtons ? (
+        <div
+          className={clsx(
+            styles.picker,
+            typeof classNames?.picker === 'string'
+              ? classNames?.picker
+              : undefined,
+          )}
+        >
+          {allowNull && (
+            <NoColorButton
+              isActive={currentValue === undefined}
+              onClick={handleNoColorClick}
+            />
+          )}
+
+          <ColorSwatchPicker
+            {...rest}
+            aria-labelledby={labelId}
+            {...(selectionSource === 'swatch' && currentValue
+              ? { value: currentValue }
+              : {})}
+            onChange={handleSwatchChange}
+            layout='grid'
+            style={{ display: 'contents' }}
+          >
+            {items.map((item) => {
+              const color = normalizeColor(item);
+              return (
+                <ColorSwatchPickerItem
+                  key={
+                    typeof color === 'string' ? color : color.toString('hexa')
+                  }
+                  className={composeRenderProps(classNames?.item, (className) =>
+                    clsx(styles.item, className),
+                  )}
+                  color={color}
+                >
+                  <ColorSwatch
+                    className={composeRenderProps(
+                      classNames?.swatch,
+                      (className) => clsx(styles.swatch, className),
+                    )}
+                  />
+                </ColorSwatchPickerItem>
+              );
+            })}
+          </ColorSwatchPicker>
+
+          {showCustomPicker && (
+            <CustomColorPicker
+              isActive={selectionSource === 'custom'}
+              colorValue={
+                currentValue
+                  ? typeof currentValue === 'string'
+                    ? parseColor(currentValue)
+                    : currentValue
+                  : parseColor('#000000')
+              }
+              onChange={handleCustomColorChange}
+            />
+          )}
+        </div>
+      ) : (
+        <ColorSwatchPicker
+          {...rest}
+          aria-labelledby={labelId}
+          value={currentValue}
+          onChange={handleSwatchChange}
+          className={composeRenderProps(classNames?.picker, (className) =>
+            clsx(styles.picker, className),
+          )}
+        >
+          {items.map((item) => {
+            const color = normalizeColor(item);
+            return (
+              <ColorSwatchPickerItem
+                key={typeof color === 'string' ? color : color.toString('hexa')}
+                className={composeRenderProps(classNames?.item, (className) =>
+                  clsx(styles.item, className),
                 )}
-              />
-            </ColorSwatchPickerItem>
-          );
-        })}
-      </ColorSwatchPicker>
+                color={color}
+              >
+                <ColorSwatch
+                  className={composeRenderProps(
+                    classNames?.swatch,
+                    (className) => clsx(styles.swatch, className),
+                  )}
+                />
+              </ColorSwatchPickerItem>
+            );
+          })}
+        </ColorSwatchPicker>
+      )}
     </div>
   );
 }
+
+export { CustomColorPicker } from './custom-color-picker';
+export { NoColorButton } from './no-color-button';

@@ -12,8 +12,12 @@
 
 import { useTheme } from '../../providers/theme-provider';
 import { ColorPicker } from './';
+import { CustomColorPicker } from './custom-color-picker';
+import { NoColorButton } from './no-color-button';
 import type { Rgba255Tuple } from '@accelint/predicates/is-rgba-255-tuple';
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import { useState } from 'react';
+import { parseColor } from 'react-aria-components';
 
 const meta = {
   title: 'Components/ColorPicker',
@@ -122,6 +126,93 @@ export const ThemeTokens: Story = {
         ]}
         defaultValue={tokens.bg.accent.primary.bold}
       />
+    );
+  },
+};
+
+export const NoColorButtonStory = {
+  name: 'NoColorButton',
+  render: () => {
+    const [isActive, setIsActive] = useState(false);
+
+    return (
+      <div className='flex flex-col gap-4'>
+        <div className='flex items-center gap-2'>
+          <NoColorButton
+            isActive={isActive}
+            onClick={() => setIsActive(!isActive)}
+          />
+          <span>Active: {isActive ? 'Yes' : 'No'}</span>
+        </div>
+        <div className='flex items-center gap-2'>
+          <NoColorButton
+            isActive={false}
+            isDisabled
+            onClick={() => {
+              // Disabled button no-op
+            }}
+          />
+          <span>Disabled</span>
+        </div>
+      </div>
+    );
+  },
+};
+
+export const CustomColorPickerStory = {
+  name: 'CustomColorPicker',
+  render: () => {
+    const [color, setColor] = useState(parseColor('#30D27E'));
+
+    return (
+      <div className='flex flex-col gap-4'>
+        <div className='flex items-center gap-2'>
+          <CustomColorPicker colorValue={color} onChange={setColor} />
+          <span>Current color: {color.toString('hex')}</span>
+        </div>
+        <div className='flex items-center gap-2'>
+          <CustomColorPicker
+            colorValue={parseColor('#ff0000')}
+            isDisabled
+            onChange={() => {
+              // Disabled picker no-op
+            }}
+          />
+          <span>Disabled</span>
+        </div>
+      </div>
+    );
+  },
+};
+
+export const CombinedColorControls = {
+  name: 'Combined Controls',
+  render: () => {
+    const [selectedColor, setSelectedColor] = useState<string | undefined>(
+      '#30D27E',
+    );
+
+    return (
+      <div className='flex flex-col gap-4'>
+        <ColorPicker
+          items={[
+            '#ECECE6',
+            '#898989',
+            '#62a6ff',
+            '#30D27E',
+            '#FCA400',
+            '#D4231D',
+          ]}
+          value={selectedColor}
+          onChange={(color) => setSelectedColor(color as string | undefined)}
+          allowNull
+          showCustomPicker
+        />
+
+        <div className='text-body-s fg-primary-bold'>
+          {selectedColor ? `Selected: ${selectedColor}` : 'No color selected'}
+        </div>
+      </div>
     );
   },
 };

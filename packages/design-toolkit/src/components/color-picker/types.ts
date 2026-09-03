@@ -49,4 +49,11 @@ export type ColorPickerProps = Omit<
     isRequired?: boolean;
     /** Label text displayed above the picker. */
     label?: string;
+    /** Whether to allow null/no color selection by showing the "no color" button as the first option. */
+    allowNull?: boolean;
+    /** Whether to show the custom color picker button as the last option. */
+    showCustomPicker?: boolean;
   };
+
+export type { CustomColorPickerProps } from './custom-color-picker.types';
+export type { NoColorButtonProps } from './no-color-button.types';

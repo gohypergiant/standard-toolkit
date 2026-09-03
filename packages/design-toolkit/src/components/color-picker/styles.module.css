@@ -44,4 +44,97 @@
   .swatch {
     @apply size-l;
   }
+
+  .noColorButton {
+    @apply bg-surface-default rounded-medium relative size-4 border-2 transition-all;
+    border-color: var(--border-surface-bold);
+
+    @variant hover {
+      @apply outline outline-2;
+      outline-color: var(--outline-interactive-hover);
+    }
+
+    @variant focus-visible {
+      @apply outline outline-2;
+      outline-color: var(--outline-interactive-hover);
+    }
+
+    @variant selected {
+      @apply outline outline-2 outline-offset-2;
+      border-color: var(--outline-accent-primary-bold);
+      outline-color: var(--outline-accent-primary-bold);
+    }
+
+    @variant disabled {
+      @apply cursor-not-allowed opacity-50;
+    }
+  }
+
+  .customColorButton {
+    @variant selected {
+      @apply rounded-none outline outline-1 outline-offset-2;
+      outline-color: var(--outline-accent-primary-bold);
+    }
+  }
+
+  .colorArea {
+    @apply rounded-medium size-full min-h-[192px];
+  }
+
+  .colorThumb {
+    @apply bg-surface-default size-[18px] rounded-full border-2 transition-shadow;
+    border-color: var(--border-surface-default);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+    @variant focus-visible {
+      @apply ring-2 ring-offset-2 outline-none;
+      --tw-ring-color: var(--outline-accent-primary-bold);
+    }
+  }
+
+  .hueSlider {
+    @apply relative w-full;
+  }
+
+  .hueSliderTrack {
+    @apply relative h-6 w-full rounded-full;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  }
+
+  .hueSliderThumb {
+    @apply outline-static top-1/2 size-5 rounded-full border-2 transition-all;
+    box-shadow:
+      0 0 0 1px rgba(0, 0, 0, 0.1),
+      inset 0 0 0 1px rgba(0, 0, 0, 0.1);
+
+    @variant focus-visible {
+      @apply size-6 outline-none;
+    }
+
+    @variant disabled {
+      @apply cursor-not-allowed opacity-50;
+    }
+  }
+
+  .rgbFieldsContainer {
+    @apply gap-xs grid grid-cols-3;
+  }
+
+  .rgbField {
+    @apply gap-xs flex flex-col;
+  }
+
+  .rgbFieldLabel {
+    @apply fg-primary-muted text-body-xs font-medium;
+  }
+
+  .rgbFieldInput {
+    @apply bg-surface-default fg-primary-bold rounded-medium px-s py-xs text-body-s w-full border transition-colors;
+    border-color: var(--border-surface-bold);
+
+    @variant focus {
+      @apply outline-none;
+      border-color: var(--border-interactive-hover);
+    }
+  }
 }
