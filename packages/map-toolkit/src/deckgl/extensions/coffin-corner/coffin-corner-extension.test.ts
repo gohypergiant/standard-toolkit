@@ -330,6 +330,24 @@ describe('CoffinCornerExtension', () => {
 
       expect(shaders).toBeNull();
     });
+
+    it('exposes an overridable icon base-color hook guarded by a define', () => {
+      // IconLayer subclasses that re-color the sampled texel override
+      // `coffinCorner_iconBaseColor`; the `#ifndef` guard lets them suppress the
+      // default. This contract is part of the extension's public surface, so the
+      // hook name, guard macro, and the default texture sample must all be present.
+      const layer = createMockLayer();
+
+      const shaders = extension.getShaders.call(layer, extension);
+      const fsDecl = shaders?.inject['fs:#decl'] ?? '';
+
+      expect(fsDecl).toContain('coffinCorner_iconBaseColor');
+      expect(fsDecl).toContain('COFFIN_CORNER_HAS_CUSTOM_ICON_BASE_COLOR');
+      expect(fsDecl).toContain('texture(iconsTexture, textureCoords)');
+      expect(shaders?.inject['fs:#main-start']).toContain(
+        'coffinCorner_iconBaseColor(vTextureCoords)',
+      );
+    });
   });
 
   describe('unsupported layer guards', () => {

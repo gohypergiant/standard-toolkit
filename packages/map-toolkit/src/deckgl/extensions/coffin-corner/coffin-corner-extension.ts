@@ -230,9 +230,36 @@ vec4 coffinCorner_composite(
 // -- Layer-specific fragment shader main-start injections --
 
 /**
- * IconLayer `fs:#main-start` — samples `iconsTexture` to get the base icon color,
- * then composites brackets over it. References IconLayer-specific uniforms/varyings:
- * `iconsTexture`, `vTextureCoords`, `uv`.
+ * IconLayer fragment declarations: the shared SDF functions plus the
+ * overridable base-color hook.
+ *
+ * The bracket math runs at `fs:#main-start` — before IconLayer's own
+ * `if (a < icon.alphaCutoff) discard;` — so the brackets render over the
+ * transparent parts of the icon quad too. That ordering means the extension
+ * cannot read the host's final `fragColor` (it doesn't exist yet); it must
+ * produce the base color the brackets sit on itself.
+ *
+ * `coffinCorner_iconBaseColor` is that base color. The default samples
+ * `iconsTexture` (matching plain IconLayer). An IconLayer *subclass* whose
+ * fragment shader transforms the sampled texel — e.g. replacing a match color
+ * with a per-instance fill — can preserve that transformation under the
+ * brackets by defining `COFFIN_CORNER_HAS_CUSTOM_ICON_BASE_COLOR` and supplying
+ * its own `coffinCorner_iconBaseColor` (see {@link CoffinCornerExtension} docs).
+ * The guard keeps the default from colliding with the override.
+ */
+const ICON_FS_DECL = /* glsl */ `\
+${FS_DECL}
+#ifndef COFFIN_CORNER_HAS_CUSTOM_ICON_BASE_COLOR
+vec4 coffinCorner_iconBaseColor(vec2 textureCoords) {
+  return texture(iconsTexture, textureCoords);
+}
+#endif
+`;
+
+/**
+ * IconLayer `fs:#main-start` — derives the base icon color via the
+ * `coffinCorner_iconBaseColor` hook, then composites brackets over it.
+ * References IconLayer-specific varyings: `vTextureCoords`, `uv`.
  */
 const ICON_FS_MAIN_START = /* glsl */ `\
   geometry.uv = uv; // uv = texture coordinate on the icon quad (ranges -1 to 1, center is 0,0)
@@ -259,8 +286,9 @@ const ICON_FS_MAIN_START = /* glsl */ `\
     float fillAlpha = 1.0 - smoothstep(0.0, antiAlias, cornerDist);
 
     if (insideBox) {
-      // Sample icon texture (iconsTexture and vTextureCoords are provided by IconLayer's shader)
-      vec4 baseColor = texture(iconsTexture, vTextureCoords);
+      // Base color from the overridable hook — the raw texel by default, or a
+      // subclass's color-replaced texel when overridden.
+      vec4 baseColor = coffinCorner_iconBaseColor(vTextureCoords);
 
       fragColor = coffinCorner_composite(baseColor, isHovered, isSelected, strokeAlpha, fillAlpha);
       DECKGL_FILTER_COLOR(fragColor, geometry);
@@ -373,7 +401,7 @@ const ICON_SHADERS = {
   inject: {
     'vs:#decl': VS_DECL,
     'vs:#main-end': VS_MAIN_END,
-    'fs:#decl': FS_DECL,
+    'fs:#decl': ICON_FS_DECL,
     'fs:#main-start': ICON_FS_MAIN_START,
   },
 };
@@ -476,6 +504,45 @@ function syncEntitySet(
  *   selectedEntityIds: selectedSet,
  *   hoveredEntityIds: hoveredSet,
  * })
+ * ```
+ *
+ * **Custom icon base color (IconLayer subclasses):** The bracket math runs at
+ * `fs:#main-start`, before IconLayer's `discard`, so the extension produces the
+ * base color the brackets sit on rather than reading the host's final
+ * `fragColor`. By default that base color is `texture(iconsTexture, …)`. If your
+ * IconLayer subclass transforms the sampled texel (e.g. replacing a match color
+ * with a per-instance fill), override the `coffinCorner_iconBaseColor` hook so
+ * the transform is preserved under the brackets — instead of duplicating the
+ * whole bracket shader. Define `COFFIN_CORNER_HAS_CUSTOM_ICON_BASE_COLOR` to
+ * suppress the default and supply your own implementation:
+ *
+ * @example Overriding the icon base color in a subclass
+ * ```typescript
+ * class MaskedCoffinCornerExtension extends CoffinCornerExtension {
+ *   static override componentName = 'MaskedCoffinCornerExtension';
+ *
+ *   override getShaders(this: Layer) {
+ *     const shaders = super.getShaders(this);
+ *     if (!shaders) return null;
+ *
+ *     return {
+ *       ...shaders,
+ *       inject: {
+ *         ...shaders.inject,
+ *         // Prepend the guard + override; the guard suppresses the default
+ *         // coffinCorner_iconBaseColor while keeping the shared SDF decls.
+ *         'fs:#decl': `\
+ * #define COFFIN_CORNER_HAS_CUSTOM_ICON_BASE_COLOR
+ * vec4 coffinCorner_iconBaseColor(vec2 textureCoords) {
+ *   vec4 texel = texture(iconsTexture, textureCoords);
+ *   // ...replace matchColor with the per-instance fill...
+ *   return texel;
+ * }
+ * ${shaders.inject['fs:#decl']}`,
+ *       },
+ *     };
+ *   }
+ * }
  * ```
  */
 export class CoffinCornerExtension extends LayerExtension {

@@ -336,6 +336,29 @@ describe('BaseMap', () => {
         maxPitch,
       });
     });
+
+    it('raises maxPitch to 85 in the same render a UI toggle flips 2D → 2.5D', () => {
+      // A UI control emitting `setView('2.5D')` updates the store's `view` and
+      // `pitch:60` together, so `cameraState` flips to `{view:'2.5D', pitch:60}`
+      // in a single render. `maxPitch` must already be 85 in that same render —
+      // otherwise MapLibre clamps the applied `pitch:60` back to the previous
+      // `maxPitch:0` and the tilt never sticks (the bug the UI worked around by
+      // re-asserting pitch on a later tick).
+      const id = uuid();
+      useFakeMap(createFakeMap());
+
+      render(<BaseMap id={id} defaultView='2D' />);
+
+      expect(capturedMapProps).toMatchObject({ maxPitch: 0, pitch: 0 });
+
+      act(() => {
+        cameraStore.actions(id).setCameraState({ view: '2.5D', pitch: 60 });
+      });
+
+      expect(capturedMapProps).toMatchObject({ maxPitch: 85, pitch: 60 });
+
+      clearCameraState(id);
+    });
   });
 });
 

@@ -11,48 +11,21 @@
  */
 'use client';
 
-import {
-  coordinateSystems,
-  createCoordinate,
-  formatDecimalDegrees,
-  formatDegreesDecimalMinutes,
-  formatDegreesMinutesSeconds,
-} from '@accelint/geo';
 import type { UniqueId } from '@accelint/core';
 import 'client-only';
 import { useContext, useMemo } from 'react';
 import { createLoggerDomain } from '@/shared/logger';
 import { MapContext } from '../deckgl/base-map/provider';
-import {
-  DEFAULT_LATLON_COORDS,
-  DEFAULT_MGRS_UTM_COORDS,
-  LONGITUDE_RANGE,
-  MAX_LONGITUDE,
-} from './constants';
+import { DEFAULT_LATLON_COORDS, DEFAULT_MGRS_UTM_COORDS } from './constants';
+import { formatCoordinate, normalizeLongitude } from './format-coordinate';
 import { cursorCoordinateStore } from './store';
 import type {
-  CoordinateFormatTypes,
   RawCoordinate,
   UseCursorCoordinatesOptions,
   UseCursorCoordinatesReturn,
 } from './types';
 
 const logger = createLoggerDomain('[CursorCoordinates]');
-
-/**
- * Normalizes longitude to -180 to 180 range.
- * Handles wraparound including multi-revolution values.
- *
- * @param lon - Longitude value in degrees
- * @returns Normalized longitude between -180 and 180
- */
-function normalizeLongitude(lon: number): number {
-  return (
-    ((((lon + MAX_LONGITUDE) % LONGITUDE_RANGE) + LONGITUDE_RANGE) %
-      LONGITUDE_RANGE) -
-    MAX_LONGITUDE
-  );
-}
 
 /**
  * Builds a RawCoordinate object from a coordinate tuple.
@@ -71,90 +44,6 @@ function buildRawCoordinate(coord: [number, number] | null): RawCoordinate {
     longitude: normalizedLon,
     latitude: coord[1],
   };
-}
-
-/**
- * Formats a coordinate using the specified format.
- * Uses @accelint/geo formatters which match CoordinateField precision:
- * - DD: 6 decimal places
- * - DDM: 4 decimal places for minutes
- * - DMS: 2 decimal places for seconds
- *
- * @param coord - Coordinate tuple [longitude, latitude]
- * @param format - Coordinate format type
- * @returns Formatted coordinate string
- *  *
- * @remarks
- * **UTM/MGRS Limitations:** UTM and MGRS coordinate systems are only valid between 80°S and 84°N.
- * Coordinates outside this range (e.g., polar regions) will return the default placeholder `--, --`.
- * Other formats (DD, DDM, DMS) work correctly at all latitudes.
- */
-function formatCoordinate(
-  coord: [number, number],
-  format: CoordinateFormatTypes,
-): string {
-  // Normalize longitude and convert to [lat, lon] for geo formatters
-  const normalizedLon = normalizeLongitude(coord[0]);
-  const latLon: [number, number] = [coord[1], normalizedLon];
-
-  switch (format) {
-    case 'dd':
-      return formatDecimalDegrees(latLon, {
-        withOrdinal: true,
-        separator: ' / ',
-        prefix: '',
-        suffix: '',
-      });
-    case 'ddm':
-      return formatDegreesDecimalMinutes(latLon, {
-        withOrdinal: true,
-        separator: ' / ',
-        prefix: '',
-        suffix: '',
-      });
-    case 'dms':
-      return formatDegreesMinutesSeconds(latLon, {
-        withOrdinal: true,
-        separator: ' / ',
-        prefix: '',
-        suffix: '',
-      });
-    case 'mgrs':
-    case 'utm': {
-      // UTM and MGRS are only valid between 80°S and 84°N
-      // Use createCoordinate for grid-based formats
-      // Input format: "lon E / lat N" for LONLAT (matching geo package DD tests)
-      // Limit to 10 decimal places (geo parser max) and avoid floating point precision issues
-      const lat = latLon[0];
-      const lon = latLon[1];
-
-      // Check if coordinate is within valid UTM/MGRS range
-      if (lat < -80 || lat > 84) {
-        return DEFAULT_MGRS_UTM_COORDS;
-      }
-
-      const latOrdinal = lat >= 0 ? 'N' : 'S';
-      const lonOrdinal = lon >= 0 ? 'E' : 'W';
-      // Use LONLAT format: longitude first, then latitude
-      // toFixed(10) ensures we stay within the parser's regex limits
-      const formattedInput = `${Math.abs(lon).toFixed(10)} ${lonOrdinal} / ${Math.abs(lat).toFixed(10)} ${latOrdinal}`;
-
-      const geoCoord = createCoordinate(
-        coordinateSystems.dd,
-        'LONLAT',
-      )(formattedInput);
-
-      // Validate the coordinate was created successfully
-      if (!geoCoord.valid) {
-        logger.error(
-          `Failed to create coordinate for ${format}: ${geoCoord.errors.join(', ')}`,
-        );
-        return DEFAULT_MGRS_UTM_COORDS;
-      }
-
-      return geoCoord[format]();
-    }
-  }
 }
 
 /**
