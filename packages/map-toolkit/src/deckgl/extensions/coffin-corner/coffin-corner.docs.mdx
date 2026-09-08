@@ -55,6 +55,23 @@ deck.gl `LayerExtension` that injects coffin corner shader code into the host la
 
 **Supported layers:** `IconLayer` (and subclasses like `SymbolLayer`) and `ScatterplotLayer`. Each layer type gets its own shader path — IconLayer samples `iconsTexture` to composite brackets over the icon, while ScatterplotLayer replicates the circle fill/stroke logic and expands the quad to make room for brackets beyond the circle edge.
 
+**Constructor options:**
+
+| Option | Type | Default | Description |
+|--------|------|---------|-------------|
+| `iconBaseColorGlsl` | `string \| undefined` | `'baseColor = texture(iconsTexture, vTextureCoords);'` | GLSL statements that assign `baseColor` (`vec4`) — the icon color the brackets composite over. Runs inside the fragment `main`, so it can reference anything the host IconLayer declares. Use it when a custom IconLayer transforms the sampled texel (e.g. replaces a match color with a per-instance fill) so the same transform shows beneath the brackets. Ignored on `ScatterplotLayer`. |
+
+```tsx
+// Keep a custom IconLayer's color replacement visible under the brackets.
+const extension = new CoffinCornerExtension({
+  iconBaseColorGlsl: `
+    baseColor = texture(iconsTexture, vTextureCoords);
+    if (all(equal(baseColor.rgb, myLayer.matchColor.rgb))) {
+      baseColor.rgb = vFillColor.rgb;
+    }`,
+});
+```
+
 **Props (added to the host layer):**
 
 | Prop | Type | Default | Description |
