@@ -1,0 +1,49 @@
+---
+title: "Overview"
+description: A lightweight JavaScript utility for converting between various value types, including colors, booleans, numbers, geographic coordinates, and map tile coordinates.
+source: packages/converters/src/index.ts
+source_sha: 4d087869282a5ba6e5392fcf5d3d1e5b94c4e125
+doc_sha: d650a775d89ac643c4879d06163b6e1477f933ca
+deprecated: false
+updated: 2026-07-14
+---
+
+## Installation
+
+```bash
+pnpm add @accelint/converters
+```
+
+## Usage
+
+```typescript
+// Import from root (all exports)
+import { 
+  hexToRgba255Tuple, 
+  rgba255TupleToHex,
+  booleanToNumber,
+  toBoolean 
+} from '@accelint/converters';
+
+// Import from sub-modules
+import { hexToRgba255Tuple } from '@accelint/converters/hex';
+import { cssRgbaStringToRgba255Tuple } from '@accelint/converters/css-rgba';
+import { glslToRgba255Tuple } from '@accelint/converters/glsl';
+```
+
+## Available Exports
+
+| Export Path | Description |
+|-------------|-------------|
+| [boolean-to-number](./boolean-to-number) | Convert boolean values to numeric representations (0/1) |
+| [css-rgba](./css-rgba) | Convert between CSS rgba strings/objects and RGBA 0-255 tuples |
+| [glsl](./glsl) | Convert between GLSL normalized colors (0-1) and RGBA 0-255 tuples |
+| [hex](./hex) | Convert between hex color strings and RGBA 0-255 tuples |
+| [to-boolean](./to-boolean) | Convert various value types to boolean |
+| [zxy-to-bbox](./zxy-to-bbox) | Convert map tile coordinates (z/x/y) to bounding box coordinates |
+
+## Related
+
+- [@accelint/constants](../constants) - Color and coordinate constants
+- [@accelint/predicates](../predicates) - Value validation predicates
+- [GitHub Repository](https://github.com/gohypergiant/standard-toolkit) - Source code

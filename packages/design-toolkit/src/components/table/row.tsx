@@ -14,6 +14,7 @@
 import { clsx } from '@accelint/design-foundation/lib/utils';
 import { TableCell } from './cell';
 import styles from './styles.module.css';
+import type { RowData } from '@tanstack/react-table';
 import type { TableRowProps } from './types';
 
 /**
@@ -39,7 +40,7 @@ import type { TableRowProps } from './types';
  * @param props.row - TanStack table row object.
  * @returns The rendered TableRow component.
  */
-export function TableRow<T>({
+export function TableRow<T extends RowData>({
   ref,
   children,
   className,

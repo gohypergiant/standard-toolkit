@@ -1,0 +1,42 @@
+---
+title: "isLesser"
+description: Curried predicate that determines if a value is less than a threshold
+source: packages/predicates/src/is-lesser/index.ts
+source_sha: dc5cdee83db775ee88aa2e4cffa1bd0d39663cba
+doc_sha: 0c856f8a6ba209c0047a006e3d8b731dc5b62ef0
+deprecated: false
+updated: 2026-07-13
+---
+
+Creates a predicate that determines if a value is less than a threshold.
+
+## Reference
+
+```typescript
+function isLesser<T extends number | string>(threshold: T): (value: T) => boolean
+```
+
+## Examples
+
+```typescript
+import { isLesser } from '@accelint/predicates';
+
+const isBelowLimit = isLesser(100);
+isBelowLimit(50);  // true
+isBelowLimit(150); // false
+
+// Temperature filtering
+const temperatures = [15, 25, 35, 45];
+const cool = temperatures.filter(isLesser(30)); // [15, 25]
+```
+
+> **Good to know:** String comparisons use lexicographic ordering. For case-insensitive comparisons, convert strings to the same case before applying predicates.
+
+## Related
+
+- [isLesserEqual](./is-lesser-equal) - Check if value is less than or equal to threshold (inclusive)
+- [isGreater](./is-greater) - Check if value is greater than threshold
+- [isGreaterEqual](./is-greater-equal) - Check if value is greater than or equal to threshold
+- [isEqual](./is-equal) - Check if value is equal to reference
+- [isNotEqual](./is-not-equal) - Check if value is not equal to reference
+- [isBetween](./is-between) - Check if value is in a range (inclusive)

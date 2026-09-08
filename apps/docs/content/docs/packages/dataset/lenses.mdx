@@ -1,0 +1,666 @@
+---
+title: Lenses
+description: Lens-based accessors for type-safe extraction of dataset properties and metadata
+source: packages/dataset/src/lenses.ts
+source_sha: 10b1ea922bf9625aa82fc9648cfa741b4fea379e
+doc_sha: 1ae3656e60a2bf72fe496ff2c72ab5c53d9937ce
+deprecated: false
+updated: 2026-07-13
+---
+
+## Usage
+
+```typescript
+import {
+  datasetId,
+  datasetName,
+  datasetTable,
+  datasetServiceUrls,
+  datasetGeometryProperty,
+} from '@accelint/dataset';
+
+// Extract root properties
+const id = datasetId(dataset);
+const name = datasetName(dataset);
+
+// Extract metadata properties (composed lenses)
+const tableName = datasetTable(dataset);
+const urls = datasetServiceUrls(dataset);
+
+// Type-safe property extraction with generics
+type Feature = { id: number; location: Point };
+const geomKey = datasetGeometryProperty<Feature>(dataset); // 'location'
+const coords = feature[geomKey];
+```
+
+## Reference
+
+The package exports two categories of lens functions: **Root Property Lenses** for direct dataset properties and **Composed Lenses** for nested metadata properties.
+
+### Root Property Lenses
+
+Extract top-level dataset properties directly.
+
+#### datasetId
+
+```typescript
+function datasetId(dataset: AnyDataset): string
+```
+
+Extracts the unique identifier from a dataset.
+
+**Parameters:**
+- `dataset` - The dataset to extract id from
+
+**Returns:** The unique dataset identifier string
+
+#### datasetLevel
+
+```typescript
+function datasetLevel(dataset: AnyDataset): 'generated' | 'user'
+```
+
+Extracts the provenance level from a dataset.
+
+**Parameters:**
+- `dataset` - The dataset to extract level from
+
+**Returns:** `'generated'` for system-created datasets or `'user'` for user-uploaded datasets
+
+#### datasetVisible
+
+```typescript
+function datasetVisible(dataset: AnyDataset): boolean
+```
+
+Extracts the visibility state from a dataset.
+
+**Parameters:**
+- `dataset` - The dataset to extract visibility from
+
+**Returns:** Boolean indicating initial visibility
+
+#### datasetMutatable
+
+```typescript
+function datasetMutatable(dataset: AnyDataset): boolean
+```
+
+Extracts the mutability flag from a dataset.
+
+**Parameters:**
+- `dataset` - The dataset to extract mutability from
+
+**Returns:** Boolean indicating if dataset can be modified
+
+#### datasetName
+
+```typescript
+function datasetName(dataset: AnyDataset): string
+```
+
+Extracts the display name from a dataset.
+
+**Parameters:**
+- `dataset` - The dataset to extract name from
+
+**Returns:** Human-readable dataset name
+
+#### datasetDescription
+
+```typescript
+function datasetDescription(dataset: AnyDataset): string
+```
+
+Extracts the description from a dataset.
+
+**Parameters:**
+- `dataset` - The dataset to extract description from
+
+**Returns:** Detailed dataset description string
+
+#### datasetServiceType
+
+```typescript
+function datasetServiceType(dataset: AnyDataset): LayerServiceType
+```
+
+Extracts the service type from a dataset.
+
+**Parameters:**
+- `dataset` - The dataset to extract service type from
+
+**Returns:** The service protocol type: `'VTS'` | `'WMS'` | `'WFS'` | `'REST'` | `'FS'` | `'Unknown'`
+
+#### datasetDataType
+
+```typescript
+function datasetDataType(dataset: AnyDataset): LayerDataType
+```
+
+Extracts the data format type from a dataset.
+
+**Parameters:**
+- `dataset` - The dataset to extract data type from
+
+**Returns:** The data format type: `'GEOJSON'` | `'ARROW'` | `'Unknown'`
+
+#### datasetPresentationTypes
+
+```typescript
+function datasetPresentationTypes(
+  dataset: AnyDataset
+): Record<string, (LayerConfigType | string)[] | null>
+```
+
+Extracts presentation types from a dataset.
+
+**Parameters:**
+- `dataset` - The dataset to extract presentation types from
+
+**Returns:** Record mapping field names to available visualization types
+
+#### datasetFields
+
+```typescript
+function datasetFields(dataset: AnyDataset): LayerDatasetField[]
+```
+
+Extracts field definitions from a dataset.
+
+**Parameters:**
+- `dataset` - The dataset to extract fields from
+
+**Returns:** Array of `LayerDatasetField` objects
+
+#### datasetMetaData
+
+```typescript
+function datasetMetaData(dataset: AnyDataset): LayerDatasetMetadata
+```
+
+Extracts metadata from a dataset.
+
+**Parameters:**
+- `dataset` - The dataset to extract metadata from
+
+**Returns:** The `LayerDatasetMetadata` object
+
+### Metadata Property Lenses (Direct Access)
+
+Extract properties from `LayerDatasetMetadata` objects directly.
+
+#### metaDataTable
+
+```typescript
+function metaDataTable(metadata: LayerDatasetMetadata): string
+```
+
+Extracts the table name from metadata.
+
+**Parameters:**
+- `metadata` - The metadata object to extract from
+
+**Returns:** The database table name
+
+#### metaDataServiceUrls
+
+```typescript
+function metaDataServiceUrls(metadata: LayerDatasetMetadata): string[] | undefined
+```
+
+Extracts service URLs from metadata.
+
+**Parameters:**
+- `metadata` - The metadata object to extract from
+
+**Returns:** Array of service endpoint URLs or undefined
+
+#### metaDataServiceVersion
+
+```typescript
+function metaDataServiceVersion(metadata: LayerDatasetMetadata): SemVerVersion | undefined
+```
+
+Extracts the service version from metadata.
+
+**Parameters:**
+- `metadata` - The metadata object to extract from
+
+**Returns:** The service version string or undefined
+
+#### metaDataServiceLayer
+
+```typescript
+function metaDataServiceLayer(metadata: LayerDatasetMetadata): string | undefined
+```
+
+Extracts the service layer identifier from metadata.
+
+**Parameters:**
+- `metadata` - The metadata object to extract from
+
+**Returns:** The service layer identifier or undefined
+
+#### metaDataBackend
+
+```typescript
+function metaDataBackend(metadata: LayerDatasetMetadata): string | undefined
+```
+
+Extracts the backend implementation identifier from metadata.
+
+**Parameters:**
+- `metadata` - The metadata object to extract from
+
+**Returns:** Backend identifier string or undefined
+
+#### metaDataVendorParams
+
+```typescript
+function metaDataVendorParams(metadata: LayerDatasetMetadata): Record<string, unknown> | undefined
+```
+
+Extracts backend-specific vendor parameters from metadata.
+
+**Parameters:**
+- `metadata` - The metadata object to extract from
+
+**Returns:** Record of vendor-specific parameters or undefined
+
+### Composed Dataset Lenses
+
+Extract metadata properties directly from dataset objects using composed lenses (dataset → metadata → property).
+
+#### datasetTable
+
+```typescript
+function datasetTable(dataset: AnyDataset): string
+```
+
+Extracts the table name directly from a dataset.
+
+**Parameters:**
+- `dataset` - The dataset to extract table name from
+
+**Returns:** The database table name
+
+#### datasetServiceUrls
+
+```typescript
+function datasetServiceUrls(dataset: AnyDataset): string[] | undefined
+```
+
+Extracts service URLs directly from a dataset.
+
+**Parameters:**
+- `dataset` - The dataset to extract service URLs from
+
+**Returns:** Array of service endpoint URLs or undefined
+
+#### datasetServiceVersion
+
+```typescript
+function datasetServiceVersion(dataset: AnyDataset): SemVerVersion | undefined
+```
+
+Extracts the service version directly from a dataset.
+
+**Parameters:**
+- `dataset` - The dataset to extract service version from
+
+**Returns:** The service version string or undefined
+
+#### datasetServiceLayer
+
+```typescript
+function datasetServiceLayer(dataset: AnyDataset): string | undefined
+```
+
+Extracts the service layer identifier directly from a dataset.
+
+**Parameters:**
+- `dataset` - The dataset to extract service layer from
+
+**Returns:** The service layer identifier or undefined
+
+#### datasetBackend
+
+```typescript
+function datasetBackend(dataset: AnyDataset): string | undefined
+```
+
+Extracts the backend implementation identifier directly from a dataset.
+
+**Parameters:**
+- `dataset` - The dataset to extract backend from
+
+**Returns:** Backend identifier string or undefined
+
+#### datasetVendorParams
+
+```typescript
+function datasetVendorParams(dataset: AnyDataset): Record<string, unknown> | undefined
+```
+
+Extracts backend-specific vendor parameters directly from a dataset.
+
+**Parameters:**
+- `dataset` - The dataset to extract vendor params from
+
+**Returns:** Record of vendor-specific parameters or undefined
+
+#### datasetIdProperty
+
+```typescript
+function datasetIdProperty<T>(dataset: AnyDataset): keyof T
+```
+
+Extracts the feature identifier property name directly from a dataset.
+
+**Type Parameters:**
+- `T` - The expected feature type with typed property keys
+
+**Parameters:**
+- `dataset` - The dataset to extract id property from
+
+**Returns:** The id property name as a key of T
+
+#### datasetGeometryProperty
+
+```typescript
+function datasetGeometryProperty<T>(dataset: AnyDataset): keyof T
+```
+
+Extracts the geometry property name directly from a dataset.
+
+**Type Parameters:**
+- `T` - The expected feature type with typed property keys
+
+**Parameters:**
+- `dataset` - The dataset to extract geometry property from
+
+**Returns:** The geometry property name as a key of T
+
+#### datasetMinZoom
+
+```typescript
+function datasetMinZoom(dataset: AnyDataset): number | undefined
+```
+
+Extracts the minimum zoom level directly from a dataset.
+
+**Parameters:**
+- `dataset` - The dataset to extract min zoom from
+
+**Returns:** The minimum zoom level or undefined
+
+#### datasetMaxZoom
+
+```typescript
+function datasetMaxZoom(dataset: AnyDataset): number | undefined
+```
+
+Extracts the maximum zoom level directly from a dataset.
+
+**Parameters:**
+- `dataset` - The dataset to extract max zoom from
+
+**Returns:** The maximum zoom level or undefined
+
+#### datasetPositionFormat
+
+```typescript
+function datasetPositionFormat(dataset: AnyDataset): 'XY' | 'XYZ' | undefined
+```
+
+Extracts the position format directly from a dataset.
+
+**Parameters:**
+- `dataset` - The dataset to extract position format from
+
+**Returns:** `'XY'` | `'XYZ'` | undefined
+
+#### datasetMaxRequests
+
+```typescript
+function datasetMaxRequests(dataset: AnyDataset): number | undefined
+```
+
+Extracts the maximum concurrent requests directly from a dataset.
+
+**Parameters:**
+- `dataset` - The dataset to extract max requests from
+
+**Returns:** The max requests limit or undefined
+
+#### datasetRefetchInterval
+
+```typescript
+function datasetRefetchInterval(dataset: AnyDataset): number | undefined
+```
+
+Extracts the refetch interval directly from a dataset.
+
+**Parameters:**
+- `dataset` - The dataset to extract refetch interval from
+
+**Returns:** The refetch interval in milliseconds or undefined
+
+#### datasetDefaultFields
+
+```typescript
+function datasetDefaultFields(dataset: AnyDataset): string[]
+```
+
+Extracts the default fields array directly from a dataset.
+
+**Parameters:**
+- `dataset` - The dataset to extract default fields from
+
+**Returns:** Array of field names
+
+#### datasetBatchSize
+
+```typescript
+function datasetBatchSize(dataset: AnyDataset): number | undefined
+```
+
+Extracts the batch size directly from a dataset.
+
+**Parameters:**
+- `dataset` - The dataset to extract batch size from
+
+**Returns:** The batch size or undefined
+
+#### datasetFilterDialect
+
+```typescript
+function datasetFilterDialect(dataset: AnyDataset): FilterDialect | undefined
+```
+
+Extracts the filter dialect directly from a dataset.
+
+**Parameters:**
+- `dataset` - The dataset to extract filter dialect from
+
+**Returns:** `'cql'` | `'gml'` | undefined
+
+## Examples
+
+### Example: Building a dataset display component
+
+```typescript
+import {
+  datasetId,
+  datasetName,
+  datasetDescription,
+  datasetServiceType,
+  datasetVisible,
+} from '@accelint/dataset';
+
+function DatasetCard({ dataset }: { dataset: AnyDataset }) {
+  const id = datasetId(dataset);
+  const name = datasetName(dataset);
+  const description = datasetDescription(dataset);
+  const serviceType = datasetServiceType(dataset);
+  const isVisible = datasetVisible(dataset);
+
+  return (
+    <div data-dataset-id={id}>
+      <h2>{name}</h2>
+      <p>{description}</p>
+      <span>Service: {serviceType}</span>
+      {isVisible && <span>Currently visible</span>}
+    </div>
+  );
+}
+```
+
+### Example: Building service endpoint URLs
+
+```typescript
+import {
+  datasetServiceUrls,
+  datasetServiceVersion,
+  datasetServiceLayer,
+  datasetTable,
+} from '@accelint/dataset';
+
+function buildWFSUrl(dataset: AnyDataset): string {
+  const urls = datasetServiceUrls(dataset);
+  const version = datasetServiceVersion(dataset);
+  const layer = datasetServiceLayer(dataset);
+  const table = datasetTable(dataset);
+
+  const baseUrl = urls?.[0] || '';
+  const queryParams = new URLSearchParams({
+    service: 'WFS',
+    version: version || '2.0.0',
+    request: 'GetFeature',
+    typeName: layer || table,
+    outputFormat: 'application/json',
+  });
+
+  return `${baseUrl}?${queryParams}`;
+}
+```
+
+### Example: Type-safe feature property access
+
+```typescript
+import { datasetIdProperty, datasetGeometryProperty } from '@accelint/dataset';
+
+type WeatherFeature = {
+  // biome-ignore lint/style/useNamingConvention: API response format
+  station_id: string;
+  temperature: number;
+  humidity: number;
+  location: [number, number];
+};
+
+function extractFeatureData(
+  dataset: AnyDataset,
+  feature: WeatherFeature
+) {
+  // Type-safe property extraction
+  const idKey = datasetIdProperty<WeatherFeature>(dataset); // 'station_id'
+  const geomKey = datasetGeometryProperty<WeatherFeature>(dataset); // 'location'
+
+  return {
+    id: feature[idKey],
+    coordinates: feature[geomKey],
+    temperature: feature.temperature,
+  };
+}
+```
+
+### Example: Configuring data fetching
+
+```typescript
+import {
+  datasetMaxRequests,
+  datasetRefetchInterval,
+  datasetBatchSize,
+  datasetDefaultFields,
+} from '@accelint/dataset';
+
+function createFetchConfig(dataset: AnyDataset) {
+  const maxRequests = datasetMaxRequests(dataset) || 6;
+  const refetchInterval = datasetRefetchInterval(dataset);
+  const batchSize = datasetBatchSize(dataset) || 10000;
+  const fields = datasetDefaultFields(dataset);
+
+  return {
+    concurrency: maxRequests,
+    polling: refetchInterval ? { interval: refetchInterval } : null,
+    pagination: { pageSize: batchSize },
+    fields: fields.join(','),
+  };
+}
+```
+
+### Example: Handling backend-specific configuration
+
+```typescript
+import {
+  datasetBackend,
+  datasetVendorParams,
+  datasetFilterDialect,
+} from '@accelint/dataset';
+
+function buildBackendConfig(dataset: AnyDataset) {
+  const backend = datasetBackend(dataset);
+  const vendorParams = datasetVendorParams(dataset);
+  const filterDialect = datasetFilterDialect(dataset);
+
+  if (backend === 'geoserver' && vendorParams) {
+    return {
+      backend,
+      formatOptions: vendorParams.formatOptions,
+      viewparams: vendorParams.viewparams,
+      filterFormat: filterDialect || 'cql',
+    };
+  }
+
+  return { backend, filterFormat: filterDialect || 'cql' };
+}
+```
+
+### Example: Rendering field-based visualizations
+
+```typescript
+import {
+  datasetFields,
+  datasetPresentationTypes,
+  datasetDataType,
+} from '@accelint/dataset';
+
+function selectVisualization(dataset: AnyDataset, fieldName: string) {
+  const fields = datasetFields(dataset);
+  const presentationTypes = datasetPresentationTypes(dataset);
+  const dataType = datasetDataType(dataset);
+
+  const field = fields.find(f => f.id === fieldName);
+  const availableTypes = presentationTypes[fieldName];
+
+  if (!field || !availableTypes) {
+    return null;
+  }
+
+  // Choose appropriate visualization based on field type and data format
+  if (dataType === 'ARROW' && availableTypes.includes('point')) {
+    return { type: 'point', field: field.id, label: field.label };
+  }
+
+  return { type: availableTypes[0], field: field.id, label: field.label };
+}
+```
+
+> **Good to know:** All lens functions are pure and do not modify the input dataset. Optional properties return `undefined` when not present. The generic type parameters on `datasetIdProperty` and `datasetGeometryProperty` provide compile-time type safety for feature property access.
+
+## Related
+
+- [types/datasets](./types/datasets.mdx) - Dataset type definitions and unions
+- [validation](./validation.mdx) - Dataset configuration validation
+- [@accelint/core](../../core/index.mdx) - Lens utilities (lensProp, composeLens, get)

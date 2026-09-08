@@ -1,0 +1,228 @@
+---
+title: "uuid"
+description: Generate and validate UUIDs with stable deterministic option
+source: utility/uuid/index.ts
+source_sha: b65ffedf6aef021e016d08273ba293149a322ea9
+doc_sha: 28e5b42430e30bfb1a3d09d5369e079055dcd58a
+deprecated: false
+updated: 2026-07-13
+---
+
+Generate and validate UUIDs (Universally Unique Identifiers). Supports both random UUIDs (v4) and stable deterministic UUIDs (v5).
+
+## Usage
+
+```typescript
+import { uuid, isUUID } from '@accelint/core';
+
+// Generate random UUID
+const id = uuid();
+// '550e8400-e29b-41d4-a716-446655440000'
+
+// Generate stable UUID from path
+const stableId = uuid({ path: ['user', '123'] });
+// Always produces the same UUID for this path
+
+// Validate UUID
+isUUID('550e8400-e29b-41d4-a716-446655440000');
+// true
+
+isUUID('not-a-uuid');
+// false
+```
+
+## Reference
+
+### uuid
+
+```typescript
+function uuid(options?: UniqueIdOptions): UniqueId
+```
+
+#### Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `options` | `UniqueIdOptions \| undefined` | Optional configuration for UUID generation |
+
+#### UniqueIdOptions
+
+```typescript
+type UniqueIdOptions = {
+  namespace?: UniqueId;
+  path?: (number | string)[];
+};
+```
+
+| Property | Type | Description |
+|----------|------|-------------|
+| `namespace` | `UniqueId \| undefined` | Namespace UUID for v5 generation (default: `v5.URL`) |
+| `path` | `(number \| string)[] \| undefined` | Path components for deterministic generation |
+
+#### Returns
+
+Returns a `UniqueId` (tagged string type representing a UUID).
+
+### isUUID
+
+```typescript
+function isUUID(value: unknown): value is UniqueId
+```
+
+#### Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `value` | `unknown` | The value to validate |
+
+#### Returns
+
+Returns `true` if the value is a valid UUID, `false` otherwise. Acts as a type guard.
+
+### Types
+
+```typescript
+type UniqueId = Tagged<string, 'UUID'>;
+```
+
+## Examples
+
+### Example: Random UUIDs
+
+```typescript
+import { uuid } from '@accelint/core';
+
+// Generate unique IDs
+const id1 = uuid();
+const id2 = uuid();
+
+id1 === id2; // false (different every time)
+```
+
+### Example: Stable deterministic UUIDs
+
+```typescript
+import { uuid } from '@accelint/core';
+
+// Same path always produces same UUID
+const userId = uuid({ path: ['user', '123'] });
+const userId2 = uuid({ path: ['user', '123'] });
+
+userId === userId2; // true (deterministic)
+
+// Different path produces different UUID
+const postId = uuid({ path: ['post', '456'] });
+userId === postId; // false
+```
+
+### Example: Namespaced UUIDs
+
+```typescript
+import { uuid } from '@accelint/core';
+
+// Create a namespace
+const appNamespace = uuid({ path: ['my', 'app'] });
+
+// Generate IDs within that namespace
+const id1 = uuid({ namespace: appNamespace, path: ['user', '1'] });
+const id2 = uuid({ namespace: appNamespace, path: ['user', '2'] });
+
+// Same namespace + path = same UUID
+const id3 = uuid({ namespace: appNamespace, path: ['user', '1'] });
+id1 === id3; // true
+```
+
+### Example: Dynamic stable IDs
+
+```typescript
+import { uuid } from '@accelint/core';
+
+interface Entity {
+  type: string;
+  id: number;
+}
+
+function getEntityId(entity: Entity) {
+  return uuid({ path: [entity.type, entity.id] });
+}
+
+const user = { type: 'user', id: 123 };
+const id1 = getEntityId(user);
+const id2 = getEntityId(user);
+
+id1 === id2; // true (stable for same input)
+```
+
+### Example: Validating UUIDs
+
+```typescript
+import { uuid, isUUID } from '@accelint/core';
+
+function processId(id: string) {
+  if (!isUUID(id)) {
+    throw new Error('Invalid UUID');
+  }
+  // TypeScript knows id is UniqueId here
+  return id;
+}
+
+const validId = uuid();
+processId(validId); // OK
+
+processId('not-a-uuid'); // Throws error
+```
+
+### Example: Database primary keys
+
+```typescript
+import { uuid } from '@accelint/core';
+
+interface User {
+  id: string;
+  name: string;
+  email: string;
+}
+
+function createUser(name: string, email: string): User {
+  return {
+    id: uuid(), // Random UUID
+    name,
+    email
+  };
+}
+
+const user = createUser('Alice', 'alice@example.com');
+// { id: '...uuid...', name: 'Alice', email: 'alice@example.com' }
+```
+
+### Example: Idempotency keys
+
+```typescript
+import { uuid } from '@accelint/core';
+
+interface Payment {
+  amount: number;
+  userId: string;
+}
+
+function createIdempotencyKey(payment: Payment) {
+  // Same payment details = same idempotency key
+  return uuid({
+    path: ['payment', payment.userId, String(payment.amount)]
+  });
+}
+
+const payment = { amount: 100, userId: 'user-123' };
+
+const key1 = createIdempotencyKey(payment);
+const key2 = createIdempotencyKey(payment);
+
+key1 === key2; // true (prevents duplicate charges)
+```
+
+> **Good to know:** When `path` is provided, `uuid` generates a deterministic v5 UUID based on the namespace and path. When `path` is empty or omitted, it generates a random v4 UUID. Use deterministic UUIDs for stable IDs based on content, and random UUIDs for true uniqueness.
+
+## Related
+
+- [noop](../noop/index.md) - No-operation function
+- [once](../once/index.md) - Ensure a function is only called once

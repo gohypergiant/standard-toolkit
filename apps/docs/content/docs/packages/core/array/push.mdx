@@ -1,0 +1,105 @@
+---
+title: "push"
+description: Returns a new array with a value added to the end
+source: packages/core/src/array/push/index.ts
+source_sha: 62d684e1edb9d73ffe4657d266877a5f3ffcddc2
+doc_sha: 0b72c734eccf691e17c6a509c3891f04212a66ef
+deprecated: false
+updated: 2026-07-13
+---
+
+## Usage
+
+```typescript
+import { push } from '@accelint/core';
+
+// Add element to end
+const withFive = push([1, 2, 3, 4])(5);
+// [1, 2, 3, 4, 5]
+
+// Partial application
+const addToNumbers = push([1, 2, 3]);
+addToNumbers(4); // [1, 2, 3, 4]
+```
+
+## Reference
+
+```typescript
+function push<T>(
+  arr: T[]
+): (x: T) => T[]
+```
+
+### Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `arr` | `T[]` | The array to add an element to. |
+
+### Returns
+
+Returns a curried function that accepts a value and returns a new array with that value added to the end.
+
+### Type Parameters
+
+- `T` - The type of elements in the array
+
+## Examples
+
+### Example: Building arrays immutably
+
+```typescript
+import { push } from '@accelint/core';
+
+let numbers: number[] = [];
+numbers = push(numbers)(1);
+numbers = push(numbers)(2);
+numbers = push(numbers)(3);
+// [1, 2, 3]
+
+// Original array unchanged
+const original = [1, 2, 3];
+const extended = push(original)(4);
+// original: [1, 2, 3]
+// extended: [1, 2, 3, 4]
+```
+
+### Example: Composing with pipe
+
+```typescript
+import { push, map, pipe } from '@accelint/core';
+
+const processAndAdd = pipe(
+  map((x: number) => x * 2),
+  push([10])
+);
+
+processAndAdd([1, 2, 3]);
+// [10, 2, 4, 6]
+```
+
+### Example: Working with different types
+
+```typescript
+import { push } from '@accelint/core';
+
+interface Task {
+  id: number;
+  title: string;
+}
+
+const tasks: Task[] = [
+  { id: 1, title: 'Task 1' }
+];
+
+const withNewTask = push(tasks)({ id: 2, title: 'Task 2' });
+// [{ id: 1, title: 'Task 1' }, { id: 2, title: 'Task 2' }]
+```
+
+> **Good to know:** This is a pure function that always returns a new array. The original array is never modified.
+
+## Related
+
+- [unshift](../unshift/index.md) - Add element to the start
+- [concat](../concat/index.md) - Concatenate multiple arrays
+- [slice](../slice/index.md) - Extract portion of array

@@ -1,0 +1,159 @@
+---
+title: parseDegreesMinutesSeconds
+description: Parses Degrees Minutes Seconds coordinate strings with validation for ranges and bearing indicators.
+source: packages/geo/src/coordinates/latlon/degrees-minutes-seconds/parser.ts
+source_sha: 1f613f8737155eab93ca9939e1e18092a096ad63
+doc_sha: fd64320a79a9cd73bedf58c5f31b197c509aada6
+deprecated: false
+updated: 2026-07-14
+---
+
+## Usage
+
+```typescript
+import { parseDegreesMinutesSeconds } from '@accelint/geo';
+
+// Parse with explicit format
+const [tokens, errors] = parseDegreesMinutesSeconds('LATLON', '37° 46\' 29.64" N / 122° 25\' 9.84" W');
+// tokens: ['37', '46', '29.64', 'N', '/', '122', '25', '9.84', 'W']
+// errors: []
+```
+
+## Reference
+
+```typescript
+function parseDegreesMinutesSeconds(
+  format: 'LATLON' | 'LONLAT',
+  input: string
+): [tokens: string[], errors: string[]]
+```
+
+### Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `format` | `'LATLON' \| 'LONLAT'` | Expected format ordering |
+| `input` | `string` | Raw coordinate string to parse |
+
+### Returns
+
+Returns a tuple containing:
+- `tokens`: Array of parsed coordinate components (degrees, minutes, seconds, bearings, dividers)
+- `errors`: Array of validation error messages (empty if valid)
+
+### Validation Rules
+
+Validates that:
+- Degree values are integers (no decimal component allowed in degrees)
+- Minute values are integers in valid range (0-59)
+- Second values are in valid range (0-59.999...)
+- Bearing indicators match the specified format (N/S for latitude, E/W for longitude)
+- Negative signs on degrees are converted to appropriate bearing directions
+
+## Examples
+
+### Example: Basic parsing
+
+```typescript
+import { parseDegreesMinutesSeconds } from '@accelint/geo';
+
+const [tokens, errors] = parseDegreesMinutesSeconds('LATLON', '37° 46\' 29.64" N / 122° 25\' 9.84" W');
+// tokens: ['37', '46', '29.64', 'N', '/', '122', '25', '9.84', 'W']
+// errors: []
+```
+
+### Example: Without degree/minute/second symbols
+
+```typescript
+import { parseDegreesMinutesSeconds } from '@accelint/geo';
+
+const [tokens, errors] = parseDegreesMinutesSeconds('LATLON', '45 30 15.23 N, 122 25 9.84 W');
+// tokens: ['45', '30', '15.23', 'N', '/', '122', '25', '9.84', 'W']
+// errors: []
+```
+
+### Example: Maximum valid values
+
+```typescript
+import { parseDegreesMinutesSeconds } from '@accelint/geo';
+
+const [tokens, errors] = parseDegreesMinutesSeconds('LATLON', '90° 0\' 0" S, 180° 0\' 0" W');
+// tokens: ['90', '0', '0', 'S', '/', '180', '0', '0', 'W']
+// errors: []
+```
+
+### Example: Negative values convert to bearings
+
+```typescript
+import { parseDegreesMinutesSeconds } from '@accelint/geo';
+
+const [tokens, errors] = parseDegreesMinutesSeconds('LATLON', '-40 26 30 / 79 58 15');
+// tokens: ['40', '26', '30', 'S', '/', '79', '58', '15', 'E']
+// errors: []
+```
+
+### Example: LONLAT format
+
+```typescript
+import { parseDegreesMinutesSeconds } from '@accelint/geo';
+
+const [tokens, errors] = parseDegreesMinutesSeconds('LONLAT', '122° 25\' 9.84" W / 37° 46\' 29.64" N');
+// tokens: ['122', '25', '9.84', 'W', '/', '37', '46', '29.64', 'N']
+// errors: []
+```
+
+### Example: Seconds out of range
+
+```typescript
+import { parseDegreesMinutesSeconds } from '@accelint/geo';
+
+const [tokens, errors] = parseDegreesMinutesSeconds('LATLON', '40° 26\' 60" N, 79° 0\' 0" W');
+// tokens: []
+// errors: ['[ERROR] Seconds value (60) exceeds max value (59.999999999).']
+```
+
+### Example: Minutes out of range
+
+```typescript
+import { parseDegreesMinutesSeconds } from '@accelint/geo';
+
+const [tokens, errors] = parseDegreesMinutesSeconds('LATLON', '40° 60\' 0" N, 79° 0\' 0" W');
+// tokens: []
+// errors: ['[ERROR] Minutes value (60) exceeds max value (59).']
+```
+
+### Example: Decimal degrees value error
+
+```typescript
+import { parseDegreesMinutesSeconds } from '@accelint/geo';
+
+const [tokens, errors] = parseDegreesMinutesSeconds('LATLON', '40.5° 26\' 30" N, 79° 58\' 0" W');
+// tokens: []
+// errors: ['[ERROR] Degrees value (40.5) must not include decimal value.']
+```
+
+### Example: Flexible separators
+
+```typescript
+import { parseDegreesMinutesSeconds } from '@accelint/geo';
+
+// Comma separator
+parseDegreesMinutesSeconds('LATLON', '40° 26\' 30" N, 79° 58\' 0" W');
+
+// Slash separator
+parseDegreesMinutesSeconds('LATLON', '40° 26\' 30" N / 79° 58\' 0" W');
+
+// Space separator
+parseDegreesMinutesSeconds('LATLON', '40° 26\' 30" N 79° 58\' 0" W');
+```
+
+> **Good to know:** The parser accepts various separators (comma, slash, or space) between coordinate components. Negative signs on degrees are automatically converted to appropriate bearing directions (S for negative latitude, W for negative longitude).
+
+> **Good to know:** Degrees Minutes Seconds format requires integer degrees and integer minutes. Only seconds may contain decimal values. Use `parseDecimalDegrees` for decimal degree values or `parseDegreesDecimalMinutes` for DDM notation.
+
+## Related
+
+- [formatDegreesMinutesSeconds](./formatter.md) - Format coordinates in Degrees Minutes Seconds notation
+- [parseDecimalDegrees](../decimal-degrees/parser.md) - Parse Decimal Degrees coordinate strings
+- [parseDegreesDecimalMinutes](../degrees-decimal-minutes/parser.md) - Parse DDM coordinate strings
+- [createCoordinate](../../coordinate.md) - Create coordinate with automatic parsing

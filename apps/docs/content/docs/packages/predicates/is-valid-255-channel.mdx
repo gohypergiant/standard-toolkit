@@ -1,0 +1,116 @@
+---
+title: isValid255Channel
+description: Validates a single color channel value (0-255)
+source: packages/predicates/src/is-valid-255-channel/index.ts
+source_sha: 6fcefa9066602e68ac2ed28f0a90ef2e34afb5a0
+doc_sha: 516767a20e19021f9e2bb0555258130b4f5338be
+deprecated: false
+updated: 2026-07-13
+---
+
+## Usage
+
+```typescript
+import { isValid255Channel } from '@accelint/predicates/is-valid-255-channel';
+
+isValid255Channel(0);    // true
+isValid255Channel(128);  // true
+isValid255Channel(255);  // true
+isValid255Channel(256);  // false
+isValid255Channel(-1);   // false
+isValid255Channel(NaN);  // false
+```
+
+## Reference
+
+```typescript
+function isValid255Channel(n: number): boolean
+```
+
+## Examples
+
+```typescript
+import { isValid255Channel } from '@accelint/predicates/is-valid-255-channel';
+
+// Valid channel values
+isValid255Channel(0);    // true (minimum)
+isValid255Channel(128);  // true (mid-range)
+isValid255Channel(255);  // true (maximum)
+
+// Out of range
+isValid255Channel(256);  // false (too high)
+isValid255Channel(-1);   // false (negative)
+
+// Invalid numbers
+isValid255Channel(NaN);       // false
+isValid255Channel(Infinity);  // false
+isValid255Channel(-Infinity); // false
+
+// Non-integers
+isValid255Channel(128.5);     // false (not an integer)
+isValid255Channel(0.5);       // false
+```
+
+## Real-World Example: Color channel validation
+
+```typescript
+import { isValid255Channel } from '@accelint/predicates/is-valid-255-channel';
+
+function createRgbaObject(
+  r: number,
+  g: number,
+  b: number,
+  a: number
+): { r: number; g: number; b: number; a: number } {
+  // Validate RGB channels (0-255)
+  if (!isValid255Channel(r)) {
+    throw new Error(`Invalid red channel: ${r} (must be 0-255)`);
+  }
+  if (!isValid255Channel(g)) {
+    throw new Error(`Invalid green channel: ${g} (must be 0-255)`);
+  }
+  if (!isValid255Channel(b)) {
+    throw new Error(`Invalid blue channel: ${b} (must be 0-255)`);
+  }
+  
+  // Alpha channel is 0-1 in CSS format
+  if (a < 0 || a > 1 || Number.isNaN(a)) {
+    throw new Error(`Invalid alpha channel: ${a} (must be 0-1)`);
+  }
+  
+  return { r, g, b, a };
+}
+
+// Valid
+createRgbaObject(255, 128, 64, 0.5); // { r: 255, g: 128, b: 64, a: 0.5 }
+
+// Throws error
+createRgbaObject(256, 128, 64, 0.5); // Error: Invalid red channel: 256
+```
+
+## Real-World Example: Building color validators
+
+```typescript
+import { isValid255Channel } from '@accelint/predicates/is-valid-255-channel';
+
+function validateRgbTuple(value: unknown): value is [number, number, number] {
+  if (!Array.isArray(value) || value.length !== 3) {
+    return false;
+  }
+  
+  return value.every(channel => 
+    typeof channel === 'number' && isValid255Channel(channel)
+  );
+}
+
+validateRgbTuple([255, 128, 64]);  // true
+validateRgbTuple([256, 128, 64]);  // false (r out of range)
+```
+
+> **Good to know:** This validator checks for integer values between 0-255, rejecting floats, NaN, and infinity. Use it as a building block for more complex color validators.
+
+## Related
+
+- [isCssRgbaObject](./is-css-rgba-object) - Type guard for CSS RGBA objects
+- [isRgba255Tuple](./is-rgba-255-tuple) - Type guard for RGBA tuples
+- [isNumber](./is-number) - Type guard for numbers

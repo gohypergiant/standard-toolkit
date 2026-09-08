@@ -1,0 +1,156 @@
+---
+title: parseMGRS
+description: Parses Military Grid Reference System (MGRS) coordinate strings into latitude/longitude values.
+source: packages/geo/src/coordinates/mgrs/parser.ts
+source_sha: 244459af6db0314d55a72a7baaa058c26d9a2b9e
+doc_sha: a86dddd2438fa3cbab8c18703db7075d53af2b68
+deprecated: false
+updated: 2026-07-13
+---
+
+Parses Military Grid Reference System (MGRS) coordinate strings and converts them to latitude/longitude decimal degrees with detailed validation.
+
+## Usage
+
+```typescript
+import { parseMGRS } from '@accelint/geo';
+
+// Parse MGRS coordinate
+const [coords, errors] = parseMGRS(null, '31U BF 12345 67890');
+// coords: ['48.123456', 'N', '/', '11.234567', 'E']
+// errors: []
+```
+
+## Reference
+
+```typescript
+function parseMGRS(
+  _format: any,
+  input: string
+): [tokens: string[], errors: string[]]
+```
+
+### Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `_format` | `any` | Unused format parameter (MGRS has fixed format) |
+| `input` | `string` | MGRS coordinate string to parse (e.g., '31U BF 12345 67890') |
+
+### Returns
+
+Returns a tuple containing:
+- `tokens`: Array with latitude/longitude values and bearing indicators
+- `errors`: Array of validation error messages (empty if valid)
+
+### MGRS Format
+
+MGRS coordinates consist of:
+1. **Grid Zone Designation** (2-3 chars): UTM zone number (01-60) + latitude band letter (C-X, excluding I and O)
+2. **100K Square Identification** (2 chars): Two-letter square identifier (A-Z, excluding I and O)
+3. **Numerical Location**: Easting and northing values within the 100km square
+
+Expected format: `DDZ AA DDD DDD`
+
+Example: `31U BF 12345 67890`
+
+### Validation Rules
+
+Validates that:
+- UTM zone number is between 1 and 60
+- Latitude band letter is valid (C-H, J-N, P-X)
+- 100K meter square identification uses valid letters (A-H, J-N, P-Z)
+- Numerical location (easting and northing) are positive numbers
+
+## Examples
+
+### Example: Valid MGRS coordinate
+
+```typescript
+import { parseMGRS } from '@accelint/geo';
+
+const [coords, errors] = parseMGRS(null, '31U BF 12345 67890');
+// coords: ['48.123456', 'N', '/', '11.234567', 'E']
+// errors: []
+```
+
+### Example: New York City coordinates
+
+```typescript
+import { parseMGRS } from '@accelint/geo';
+
+const [coords, errors] = parseMGRS(null, '18T WL 80000 00000');
+// coords: ['40.7128', 'N', '/', '73.9352', 'W']
+// errors: []
+```
+
+### Example: Invalid UTM zone
+
+```typescript
+import { parseMGRS } from '@accelint/geo';
+
+const [coords, errors] = parseMGRS(null, '99Z AA 12345 67890');
+// coords: []
+// errors: ['[ERROR] Invalid UTM zone number (99) found in grid zone designation; expected format DDZ AA DDD DDD.']
+```
+
+### Example: Invalid latitude band
+
+```typescript
+import { parseMGRS } from '@accelint/geo';
+
+const [coords, errors] = parseMGRS(null, '31I AA 12345 67890');
+// coords: []
+// errors: ['[ERROR] Invalid Latitude band letter (I) found in grid zone designation; expected format DDZ AA DDD DDD.']
+```
+
+### Example: Invalid 100K square identification
+
+```typescript
+import { parseMGRS } from '@accelint/geo';
+
+const [coords, errors] = parseMGRS(null, '31U OI 12345 67890');
+// coords: []
+// errors: ['[ERROR] Invalid 100K m square identification (OI) found; expected format DDZ AA DDD DDD.']
+```
+
+### Example: Invalid numerical location
+
+```typescript
+import { parseMGRS } from '@accelint/geo';
+
+const [coords, errors] = parseMGRS(null, '31U AA 0 0');
+// coords: []
+// errors: ['[ERROR] Invalid numerical location (0,0) found; expected format DDZ AA DDD DDD.']
+```
+
+### Example: Missing components
+
+```typescript
+import { parseMGRS } from '@accelint/geo';
+
+const [coords, errors] = parseMGRS(null, '31U');
+// coords: []
+// errors: ['[ERROR] Invalid 100K m square identification () found; expected format DDZ AA DDD DDD.']
+```
+
+### Example: Empty input
+
+```typescript
+import { parseMGRS } from '@accelint/geo';
+
+const [coords, errors] = parseMGRS(null, '');
+// coords: []
+// errors: ['[ERROR] No input provided; expected format DDZ AA DDD DDD.']
+```
+
+> **Good to know:** MGRS uses the geodesy library for conversion. The coordinate system automatically handles UTM zone calculations and converts to precise latitude/longitude values.
+
+> **Good to know:** Letters I and O are excluded from MGRS to avoid confusion with digits 1 and 0. Valid latitude bands exclude polar regions (A, B, Y, Z are not used in standard MGRS).
+
+## Related
+
+- [parseUTM](../utm/parser.md) - Parse Universal Transverse Mercator coordinates
+- [parseDecimalDegrees](../latlon/decimal-degrees/parser.md) - Parse Decimal Degrees coordinates
+- [createCoordinate](../coordinate.md) - Create coordinate with automatic parsing
+- [coordinateSystems](../coordinate.md#coordinatesystems) - Available coordinate systems

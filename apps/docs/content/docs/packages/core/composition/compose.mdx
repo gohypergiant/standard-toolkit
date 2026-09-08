@@ -1,0 +1,84 @@
+---
+title: "compose"
+description: Combine two or more functions to create a new function that passes results from one function to the next, executing right-to-left.
+source: packages/core/src/composition/compose/index.ts
+source_sha: d6f3890ddffd1953e622c75fa7cb59500d6278b7
+doc_sha: e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0
+deprecated: false
+updated: 2026-07-13
+---
+
+## Usage
+
+```typescript
+import { compose } from '@accelint/core/composition/compose';
+
+// Basic usage - read from right to left
+const transform = compose(
+  (x: number) => x.toString(),
+  (x: number) => x + 3,
+  (x: number) => x * 2
+);
+
+transform(5); // "13"
+```
+
+## Reference
+
+```typescript
+function compose<Fns extends CompositionArray>(
+  ...fns: Fns
+): (...args: ComposeParams<Fns>) => ComposeReturn<Fns>
+```
+
+### Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `...fns` | Function array | The functions to compose. All functions except the last must be unary. The last function can be n-ary. |
+
+### Returns
+
+Returns a function that executes the composed functions right-to-left, passing each result to the next function.
+
+### Type Parameters
+
+- `Fns` - Array of functions where all except the last must be unary
+- `ComposeParams<Fns>` - Inferred parameter types of the last function
+- `ComposeReturn<Fns>` - Inferred return type of the first function
+
+## Examples
+
+### Example: Mathematical composition
+
+```typescript
+import { compose } from '@accelint/core/composition/compose';
+
+// Traditional math notation: f(g(x))
+const double = (x: number) => x * 2;
+const addTen = (x: number) => x + 10;
+const square = (x: number) => x * x;
+
+const f = compose(square, addTen, double);
+f(5); // 400 (square(addTen(double(5))) = (10 + 10)² = 400)
+```
+
+### Example: Data processing pipeline
+
+```typescript
+import { compose } from '@accelint/core/composition/compose';
+
+const uppercase = (s: string) => s.toUpperCase();
+const addExclamation = (s: string) => `${s}!`;
+const trim = (s: string) => s.trim();
+
+const shout = compose(uppercase, addExclamation, trim);
+shout('  hello  '); // "HELLO!"
+```
+
+> **Good to know:** `compose` executes right-to-left (mathematical composition order), while `pipe` executes left-to-right (reading order). They solve the same problem with different execution orders. Choose `pipe` for more readable data transformation pipelines, or `compose` when following mathematical notation.
+
+## Related
+
+- [pipe](../pipe/index.md) - Compose functions left-to-right
+- [curry](../curry/index.md) - Transform multi-argument function into curried function

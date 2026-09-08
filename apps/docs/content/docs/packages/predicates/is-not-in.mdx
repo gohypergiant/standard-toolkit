@@ -1,0 +1,115 @@
+---
+title: "isNotIn"
+description: Curried predicate for testing if a value does not exist in an array using strict equality
+source: packages/predicates/src/is-not-in/index.ts
+source_sha: ae92ee8da776d4f34ce1ba73e6063154f3ce800a
+doc_sha: 2f9c8b5e7d3a6f1c4e9b2d8a5f7c3e1b9d4a6f8c
+deprecated: false
+updated: 2026-07-14
+---
+
+Creates a predicate that determines if a value does **not** exist in a given array.
+
+## Usage
+
+```typescript
+import { isNotIn } from '@accelint/predicates';
+
+const isInvalidStatus = isNotIn(['pending', 'approved', 'rejected']);
+isInvalidStatus('unknown');  // true
+isInvalidStatus('pending');  // false
+```
+
+## Reference
+
+```typescript
+function isNotIn<T>(array: T[]): (value: T) => boolean
+```
+
+### Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `array` | `T[]` | Array to search within |
+
+### Returns
+
+Curried function that accepts a value and returns `true` if the value does **not** exist in the array.
+
+## Examples
+
+### Example: Filtering unauthorized requests
+
+```typescript
+import { isNotIn } from '@accelint/predicates';
+
+const blockedUsers = [101, 205, 399];
+const isNotBlocked = isNotIn(blockedUsers);
+
+const incomingRequests = [101, 102, 205, 300];
+const allowed = incomingRequests.filter(isNotBlocked);
+// [102, 300]
+```
+
+### Example: Excluding reserved keywords
+
+```typescript
+import { isNotIn } from '@accelint/predicates';
+
+const RESERVED_WORDS = ['class', 'function', 'return', 'if', 'else'];
+const isNotReserved = isNotIn(RESERVED_WORDS);
+
+function isValidIdentifier(name: string): boolean {
+  return isNotReserved(name) && /^[a-zA-Z_]\w*$/.test(name);
+}
+
+isValidIdentifier('myVariable'); // true
+isValidIdentifier('class');      // false
+```
+
+### Example: Finding new items
+
+```typescript
+import { isNotIn } from '@accelint/predicates';
+
+const existingIds = [1, 2, 3, 4, 5];
+const isNewId = isNotIn(existingIds);
+
+const incomingIds = [4, 5, 6, 7];
+const newItems = incomingIds.filter(isNewId);
+// [6, 7]
+```
+
+## Real-World Example: Role-based access control
+
+```typescript
+import { isIn, isNotIn } from '@accelint/predicates';
+
+const ADMIN_ROLES = ['admin', 'super-admin'];
+const RESTRICTED_ACTIONS = ['delete-user', 'modify-permissions'];
+
+const isAdmin = isIn(ADMIN_ROLES);
+const isNotRestricted = isNotIn(RESTRICTED_ACTIONS);
+
+function canPerformAction(userRole: string, action: string): boolean {
+  if (isAdmin(userRole)) {
+    return true; // Admins can do anything
+  }
+  
+  return isNotRestricted(action);
+}
+
+canPerformAction('admin', 'delete-user');     // true
+canPerformAction('user', 'view-dashboard');   // true
+canPerformAction('user', 'delete-user');      // false
+```
+
+> **Good to know:** This predicate uses `Array.prototype.includes()` internally, which uses strict equality (`===`). For deep equality or custom comparison logic, use a different approach or preprocess your data.
+
+## Related
+
+- [isIn](../is-in/index.md) - Array membership predicate
+- [isEqual](../is-equal/index.md) - Strict equality comparison
+- [isNotEqual](../is-not-equal/index.md) - Strict inequality comparison
+- [isBetween](../is-between/index.md) - Range membership for numbers
+- [isNotLike](../is-not-like/index.md) - Pattern non-matching with RegExp

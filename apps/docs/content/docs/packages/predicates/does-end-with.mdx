@@ -1,0 +1,78 @@
+---
+title: "doesEndWith"
+description: Curried predicate for testing if strings end with a specific suffix
+source: packages/predicates/src/does-end-with/index.ts
+source_sha: d87ca7a1207018b6543932bf06c7edcbb7998726
+doc_sha: 6d4c9f3e8b2a7d1f5c9e4b8a2d7f3e6c1b5a8d2f
+deprecated: false
+updated: 2026-07-13
+---
+
+Creates a predicate function that determines if a string ends with a specific suffix.
+
+## Usage
+
+```typescript
+import { doesEndWith } from '@accelint/predicates';
+
+const isJsFile = doesEndWith('.js');
+isJsFile('app.js');   // true
+isJsFile('style.css'); // false
+```
+
+## Reference
+
+```typescript
+function doesEndWith(suffix: string): (input: string) => boolean
+```
+
+### Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `suffix` | `string` | The substring to use as the suffix |
+
+### Returns
+
+Curried function that accepts a string and returns `true` if it ends with the suffix.
+
+## Examples
+
+### Example: File extension filtering
+
+```typescript
+import { doesEndWith } from '@accelint/predicates';
+
+const isImageFile = doesEndWith('.jpg');
+const isConfigFile = doesEndWith('.json');
+
+const files = ['avatar.jpg', 'config.json', 'script.js', 'photo.jpg'];
+const images = files.filter(doesEndWith('.jpg'));
+// ['avatar.jpg', 'photo.jpg']
+```
+
+### Example: Email domain validation
+
+```typescript
+import { doesEndWith } from '@accelint/predicates';
+
+const isCompanyEmail = doesEndWith('@company.com');
+
+function validateEmail(email: string): boolean {
+  return isCompanyEmail(email);
+}
+
+validateEmail('user@company.com');    // true
+validateEmail('user@external.com');   // false
+```
+
+> **Good to know:** Comparisons are case-sensitive. Use native String methods like `.toLowerCase()` before applying this predicate if case-insensitive matching is needed.
+
+## Related
+
+- [doesStartWith](./does-start-with) - Check if string starts with prefix
+- [doesNotStartWith](./does-not-start-with) - Check if string does not start with prefix
+- [doesNotEndWith](./does-not-end-with) - Negated version of this function
+- [isLike](../is-like/index.md) - Pattern matching with RegExp
+- [isNotLike](../is-not-like/index.md) - Negated pattern matching
+- [isString](../is-string/index.md) - Type guard for strings
