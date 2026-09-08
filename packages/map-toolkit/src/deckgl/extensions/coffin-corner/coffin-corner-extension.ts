@@ -81,15 +81,15 @@ const STATE_ATTRIBUTE = 'instanceCoffinCornerState';
  * unpacked into two varyings for the fragment shader.
  */
 const VS_DECL = /* glsl */ `\
-in vec2 instanceCoffinCornerState; // x = selected, y = hovered
+in vec2 ${STATE_ATTRIBUTE}; // x = selected, y = hovered
 out float vInstanceSelectedEntity; // v prefix is conventional for "varying"
 out float vInstanceHoveredEntity;
 `;
 
 /** Vertex main-end: unpack the per-instance state into the fragment varyings. */
 const VS_MAIN_END = /* glsl */ `\
-vInstanceSelectedEntity = instanceCoffinCornerState.x;
-vInstanceHoveredEntity = instanceCoffinCornerState.y;
+vInstanceSelectedEntity = ${STATE_ATTRIBUTE}.x;
+vInstanceHoveredEntity = ${STATE_ATTRIBUTE}.y;
 `;
 
 // -- ScatterplotLayer-specific vertex shader injections --
@@ -120,7 +120,7 @@ ${VS_MAIN_END}
 // Skip expansion in globe mode — clip-space XY manipulation causes depth conflicts
 // with the globe surface (known deck.gl limitation, see PR #9975).
 vQuadScale = 1.0;
-if ((instanceCoffinCornerState.x > 0.5 || instanceCoffinCornerState.y > 0.5)
+if ((${STATE_ATTRIBUTE}.x > 0.5 || ${STATE_ATTRIBUTE}.y > 0.5)
     && project.projectionMode != PROJECTION_MODE_GLOBE) {
   vQuadScale = 2.0;
   // Add extra offset in clip space (works for both billboard and non-billboard)
@@ -465,6 +465,11 @@ function entitySetsEqual(
  * Sync a Set of entity IDs into an entity state map. Replaces the full
  * contents of the map when the Set contents change (value equality) and
  * invalidates the packed state attribute so it re-uploads.
+ *
+ * @param entities - State map to overwrite in place.
+ * @param newIds - Incoming prop value; `undefined` clears the map.
+ * @param oldIds - Previous prop value, for the value-equality short-circuit.
+ * @param attributeManager - Host layer's attribute manager, or null before init.
  */
 function syncEntitySet(
   entities: Map<EntityId, number>,
@@ -599,8 +604,7 @@ export class CoffinCornerExtension extends LayerExtension<CoffinCornerExtensionO
           const { selectedEntities, hoveredEntities } = this.state;
           const getId =
             (this.props as unknown as CoffinCornerExtensionProps).getEntityId ??
-            // biome-ignore lint/suspicious/noExplicitAny: Default accessor assumes item.id exists.
-            ((item: any) => item.id as EntityId);
+            ((item: unknown) => (item as { id: EntityId }).id);
           const items = data ?? [];
           const value = attribute.value as Float32Array;
 
