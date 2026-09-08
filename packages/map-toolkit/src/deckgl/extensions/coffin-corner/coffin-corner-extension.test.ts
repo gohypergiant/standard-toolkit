@@ -75,17 +75,16 @@ describe('CoffinCornerExtension', () => {
       expect(layer.state.hoveredEntities.size).toBe(0);
     });
 
-    it('should register two instanced GPU attributes', () => {
+    it('should register a single packed vec2 instanced GPU attribute', () => {
+      // One attribute, not two: WebGL caps programs at 16 vertex attributes and
+      // IconLayer hosts are already near the limit.
       const layer = createMockLayer();
 
       extension.initializeState.call(layer);
 
-      expect(layer.addInstanced).toHaveBeenCalledWith(
-        expect.objectContaining({
-          instanceSelectedEntity: expect.objectContaining({ size: 1 }),
-          instanceHoveredEntity: expect.objectContaining({ size: 1 }),
-        }),
-      );
+      expect(layer.addInstanced).toHaveBeenCalledWith({
+        instanceCoffinCornerState: expect.objectContaining({ size: 2 }),
+      });
     });
 
     it('should handle null attributeManager gracefully', () => {
@@ -98,22 +97,23 @@ describe('CoffinCornerExtension', () => {
       expect(layer.state.hoveredEntities).toBeInstanceOf(Map);
     });
 
-    it('should write 1.0 for selected entities in the attribute update callback', () => {
+    it('should pack selected into x and hovered into y per instance', () => {
       const layer = createMockLayer();
       extension.initializeState.call(layer);
 
       layer.state.selectedEntities.set('entity-a', 1);
+      layer.state.hoveredEntities.set('entity-b', 1);
+      layer.state.selectedEntities.set('entity-c', 1);
+      layer.state.hoveredEntities.set('entity-c', 1);
 
       const addInstancedCall = layer.addInstanced.mock.calls[0][0];
-      const updateFn = addInstancedCall.instanceSelectedEntity.update;
+      const updateFn = addInstancedCall.instanceCoffinCornerState.update;
 
-      const attribute = { value: new Float32Array(3) };
+      const attribute = { value: new Float32Array(6) };
       const data = [{ id: 'entity-a' }, { id: 'entity-b' }, { id: 'entity-c' }];
       updateFn(attribute, { data });
 
-      expect(attribute.value[0]).toBe(1);
-      expect(attribute.value[1]).toBe(0);
-      expect(attribute.value[2]).toBe(0);
+      expect(Array.from(attribute.value)).toEqual([1, 0, 0, 1, 1, 1]);
     });
 
     it('should use custom getEntityId accessor from props', () => {
@@ -125,14 +125,13 @@ describe('CoffinCornerExtension', () => {
       layer.state.hoveredEntities.set('custom-1', 1);
 
       const addInstancedCall = layer.addInstanced.mock.calls[0][0];
-      const updateFn = addInstancedCall.instanceHoveredEntity.update;
+      const updateFn = addInstancedCall.instanceCoffinCornerState.update;
 
-      const attribute = { value: new Float32Array(2) };
+      const attribute = { value: new Float32Array(4) };
       const data = [{ uid: 'custom-1' }, { uid: 'custom-2' }];
       updateFn(attribute, { data });
 
-      expect(attribute.value[0]).toBe(1);
-      expect(attribute.value[1]).toBe(0);
+      expect(Array.from(attribute.value)).toEqual([0, 1, 0, 0]);
     });
 
     it('should default to 0 for items not in the entity map', () => {
@@ -140,14 +139,13 @@ describe('CoffinCornerExtension', () => {
       extension.initializeState.call(layer);
 
       const addInstancedCall = layer.addInstanced.mock.calls[0][0];
-      const updateFn = addInstancedCall.instanceSelectedEntity.update;
+      const updateFn = addInstancedCall.instanceCoffinCornerState.update;
 
-      const attribute = { value: new Float32Array(2) };
+      const attribute = { value: new Float32Array(4) };
       const data = [{ id: 'not-selected' }, { id: 'also-not-selected' }];
       updateFn(attribute, { data });
 
-      expect(attribute.value[0]).toBe(0);
-      expect(attribute.value[1]).toBe(0);
+      expect(Array.from(attribute.value)).toEqual([0, 0, 0, 0]);
     });
 
     it('should handle undefined data gracefully', () => {
@@ -155,7 +153,7 @@ describe('CoffinCornerExtension', () => {
       extension.initializeState.call(layer);
 
       const addInstancedCall = layer.addInstanced.mock.calls[0][0];
-      const updateFn = addInstancedCall.instanceSelectedEntity.update;
+      const updateFn = addInstancedCall.instanceCoffinCornerState.update;
 
       const attribute = { value: new Float32Array(0) };
 
@@ -180,7 +178,9 @@ describe('CoffinCornerExtension', () => {
       expect(layer.state.selectedEntities.get('a')).toBe(1);
       expect(layer.state.selectedEntities.get('b')).toBe(1);
       expect(layer.state.selectedEntities.get('c')).toBe(1);
-      expect(layer.invalidate).toHaveBeenCalledWith('instanceSelectedEntity');
+      expect(layer.invalidate).toHaveBeenCalledWith(
+        'instanceCoffinCornerState',
+      );
     });
 
     it('should replace entity map contents when selectedEntityIds changes', () => {
@@ -226,7 +226,9 @@ describe('CoffinCornerExtension', () => {
       );
 
       expect(layer.state.selectedEntities.size).toBe(0);
-      expect(layer.invalidate).toHaveBeenCalledWith('instanceSelectedEntity');
+      expect(layer.invalidate).toHaveBeenCalledWith(
+        'instanceCoffinCornerState',
+      );
     });
 
     it('should not invalidate when selectedEntityIds is same reference', () => {
@@ -259,7 +261,9 @@ describe('CoffinCornerExtension', () => {
       expect(layer.state.hoveredEntities.size).toBe(2);
       expect(layer.state.hoveredEntities.get('a')).toBe(1);
       expect(layer.state.hoveredEntities.get('b')).toBe(1);
-      expect(layer.invalidate).toHaveBeenCalledWith('instanceHoveredEntity');
+      expect(layer.invalidate).toHaveBeenCalledWith(
+        'instanceCoffinCornerState',
+      );
     });
   });
 

@@ -67,20 +67,29 @@ uniform coffinCornerUniforms {
 // -- Shared shader injections (IconLayer and ScatterplotLayer) --
 
 /**
- * Vertex declarations: per-instance attributes for selection/hover state,
- * passed to the fragment shader as varyings.
+ * Name of the single instanced attribute carrying selection/hover state.
+ *
+ * Both flags are packed into one `vec2` (x = selected, y = hovered) rather than
+ * two float attributes: WebGL caps a program at 16 vertex attributes, IconLayer
+ * already uses 11, and custom IconLayers add their own — so every attribute
+ * this extension claims is one a host layer can't.
+ */
+const STATE_ATTRIBUTE = 'instanceCoffinCornerState';
+
+/**
+ * Vertex declarations: the packed per-instance selection/hover attribute,
+ * unpacked into two varyings for the fragment shader.
  */
 const VS_DECL = /* glsl */ `\
-in float instanceSelectedEntity;
-in float instanceHoveredEntity;
+in vec2 instanceCoffinCornerState; // x = selected, y = hovered
 out float vInstanceSelectedEntity; // v prefix is conventional for "varying"
 out float vInstanceHoveredEntity;
 `;
 
-/** Vertex main-end: forward per-instance attributes to the fragment shader. */
+/** Vertex main-end: unpack the per-instance state into the fragment varyings. */
 const VS_MAIN_END = /* glsl */ `\
-vInstanceSelectedEntity = instanceSelectedEntity;
-vInstanceHoveredEntity = instanceHoveredEntity;
+vInstanceSelectedEntity = instanceCoffinCornerState.x;
+vInstanceHoveredEntity = instanceCoffinCornerState.y;
 `;
 
 // -- ScatterplotLayer-specific vertex shader injections --
@@ -111,7 +120,7 @@ ${VS_MAIN_END}
 // Skip expansion in globe mode — clip-space XY manipulation causes depth conflicts
 // with the globe surface (known deck.gl limitation, see PR #9975).
 vQuadScale = 1.0;
-if ((instanceSelectedEntity > 0.5 || instanceHoveredEntity > 0.5)
+if ((instanceCoffinCornerState.x > 0.5 || instanceCoffinCornerState.y > 0.5)
     && project.projectionMode != PROJECTION_MODE_GLOBE) {
   vQuadScale = 2.0;
   // Add extra offset in clip space (works for both billboard and non-billboard)
@@ -454,14 +463,14 @@ function entitySetsEqual(
 
 /**
  * Sync a Set of entity IDs into an entity state map. Replaces the full
- * contents of the map when the Set contents change (value equality).
+ * contents of the map when the Set contents change (value equality) and
+ * invalidates the packed state attribute so it re-uploads.
  */
 function syncEntitySet(
   entities: Map<EntityId, number>,
   newIds: ReadonlySet<EntityId> | undefined,
   oldIds: ReadonlySet<EntityId> | undefined,
   attributeManager: { invalidate: (name: string) => void } | null,
-  attributeName: string,
 ): void {
   if (!entitySetsEqual(newIds, oldIds)) {
     entities.clear();
@@ -470,7 +479,7 @@ function syncEntitySet(
         entities.set(id, 1);
       }
     }
-    attributeManager?.invalidate(attributeName);
+    attributeManager?.invalidate(STATE_ATTRIBUTE);
   }
 }
 
@@ -560,8 +569,8 @@ export class CoffinCornerExtension extends LayerExtension<CoffinCornerExtensionO
   }
 
   /**
-   * Initializes selection and hover entity state maps and registers
-   * `instanceSelectedEntity` / `instanceHoveredEntity` GPU attributes.
+   * Initializes selection and hover entity state maps and registers the
+   * packed `instanceCoffinCornerState` GPU attribute (x = selected, y = hovered).
    * No-op on unsupported layer types (e.g. PathLayer, SolidPolygonLayer).
    */
   override initializeState(this: CoffinCornerLayer) {
@@ -580,40 +589,34 @@ export class CoffinCornerExtension extends LayerExtension<CoffinCornerExtensionO
       return;
     }
 
-    const makeUpdateCallback =
-      (stateKey: 'selectedEntities' | 'hoveredEntities') =>
-      (
-        attribute: { value: unknown },
-        { data }: { data: unknown[] | undefined },
-      ) => {
-        const entities = this.state[stateKey];
-        const getId =
-          (this.props as unknown as CoffinCornerExtensionProps).getEntityId ??
-          // biome-ignore lint/suspicious/noExplicitAny: Default accessor assumes item.id exists.
-          ((item: any) => item.id as EntityId);
-        const items = data ?? [];
-        const value = attribute.value as Float32Array;
-
-        for (let i = 0; i < items.length; i++) {
-          value[i] = entities.get(getId(items[i])) ?? 0;
-        }
-      };
-
     attributeManager.addInstanced({
-      instanceSelectedEntity: {
-        size: 1,
-        update: makeUpdateCallback('selectedEntities'),
-      },
-      instanceHoveredEntity: {
-        size: 1,
-        update: makeUpdateCallback('hoveredEntities'),
+      [STATE_ATTRIBUTE]: {
+        size: 2,
+        update: (
+          attribute: { value: unknown },
+          { data }: { data: unknown[] | undefined },
+        ) => {
+          const { selectedEntities, hoveredEntities } = this.state;
+          const getId =
+            (this.props as unknown as CoffinCornerExtensionProps).getEntityId ??
+            // biome-ignore lint/suspicious/noExplicitAny: Default accessor assumes item.id exists.
+            ((item: any) => item.id as EntityId);
+          const items = data ?? [];
+          const value = attribute.value as Float32Array;
+
+          for (let i = 0; i < items.length; i++) {
+            const id = getId(items[i]);
+            value[i * 2] = selectedEntities.get(id) ?? 0;
+            value[i * 2 + 1] = hoveredEntities.get(id) ?? 0;
+          }
+        },
       },
     });
   }
 
   /**
    * Syncs `selectedEntityIds` and `hoveredEntityIds` prop changes into the
-   * entity state maps and invalidates the corresponding GPU attributes.
+   * entity state maps and invalidates the packed state GPU attribute.
    *
    * No-op on unsupported layer types.
    */
@@ -632,7 +635,6 @@ export class CoffinCornerExtension extends LayerExtension<CoffinCornerExtensionO
       params.props.selectedEntityIds,
       params.oldProps.selectedEntityIds,
       attributeManager,
-      'instanceSelectedEntity',
     );
 
     syncEntitySet(
@@ -640,7 +642,6 @@ export class CoffinCornerExtension extends LayerExtension<CoffinCornerExtensionO
       params.props.hoveredEntityIds,
       params.oldProps.hoveredEntityIds,
       attributeManager,
-      'instanceHoveredEntity',
     );
   }
 

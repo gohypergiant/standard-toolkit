@@ -18,10 +18,6 @@ export {
 } from './base-map/constants';
 export { MapEvents, MapEventsNamespace } from './base-map/events';
 export { CoffinCornerExtension } from './extensions/coffin-corner';
-export {
-  MaskedIconLayer,
-  type MaskedIconLayerProps,
-} from './masked-icon-layer';
 export { createSavedViewport } from './saved-viewports';
 export {
   DASH_ARRAYS,
