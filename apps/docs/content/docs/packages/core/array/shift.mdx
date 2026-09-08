@@ -1,0 +1,118 @@
+---
+title: "shift"
+description: Returns a tuple of the first element and remaining elements of an array
+source: packages/core/src/array/shift/index.ts
+source_sha: 6f85673ea54d6b791eb9c5bd0a023e60610fcc81
+doc_sha: b5fad2443e61e8ba6532d453a6038d1451411910
+deprecated: false
+updated: 2026-07-13
+---
+
+Returns a tuple containing the first element (head) and the remaining elements (tail) of an array.
+
+## Usage
+
+```typescript
+import { shift } from '@accelint/core';
+
+// Destructure head and tail
+const [head, tail] = shift([1, 2, 3, 4, 5]);
+// head: 1
+// tail: [2, 3, 4, 5]
+```
+
+## Reference
+
+```typescript
+function shift<T>(
+  arr: T[]
+): [T, T[]]
+```
+
+### Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `arr` | `T[]` | The array to extract head and tail from. |
+
+### Returns
+
+Returns a tuple where the first element is the head (first element) and the second element is the tail (remaining elements).
+
+### Type Parameters
+
+- `T` - The type of elements in the array
+
+## Examples
+
+### Example: Processing first element separately
+
+```typescript
+import { shift } from '@accelint/core';
+
+const [first, rest] = shift([10, 20, 30, 40]);
+
+console.log(`First: ${first}`); // "First: 10"
+console.log(`Rest: ${rest}`); // "Rest: [20, 30, 40]"
+```
+
+### Example: Recursive pattern
+
+```typescript
+import { shift } from '@accelint/core';
+
+function sumArray(arr: number[]): number {
+  if (arr.length === 0) return 0;
+  
+  const [head, tail] = shift(arr);
+  return head + sumArray(tail);
+}
+
+sumArray([1, 2, 3, 4, 5]); // 15
+```
+
+### Example: Pattern matching style
+
+```typescript
+import { shift } from '@accelint/core';
+
+interface Item {
+  id: number;
+  value: string;
+}
+
+const items: Item[] = [
+  { id: 1, value: 'first' },
+  { id: 2, value: 'second' },
+  { id: 3, value: 'third' }
+];
+
+const [current, remaining] = shift(items);
+// current: { id: 1, value: 'first' }
+// remaining: [{ id: 2, value: 'second' }, { id: 3, value: 'third' }]
+```
+
+### Example: Queue operations
+
+```typescript
+import { shift, push } from '@accelint/core';
+
+// Dequeue operation
+let queue = [1, 2, 3, 4];
+const [item, newQueue] = shift(queue);
+queue = newQueue;
+// item: 1
+// queue: [2, 3, 4]
+
+// Enqueue operation
+queue = push(queue)(5);
+// queue: [2, 3, 4, 5]
+```
+
+> **Good to know:** This function does not handle empty arrays. Ensure the array has at least one element before calling `shift`.
+
+## Related
+
+- [unshift](../unshift/index.md) - Add element to the start
+- [push](../push/index.md) - Add element to the end
+- [slice](../slice/index.md) - Extract portion of array

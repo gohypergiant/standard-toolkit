@@ -1,0 +1,165 @@
+---
+title: "Coordinates"
+description: Default empty coordinate value using NaN to avoid "Null Island" at [0,0].
+source: packages/constants/src/coordinates/index.ts
+source_sha: baa1663be9d9bdbd5724b463df1021593f219c76
+doc_sha: 927aa1f57e17f0206efad2407135e13297fc3776
+deprecated: false
+updated: 2026-07-13
+---
+
+## Usage
+
+```typescript
+import { DEFAULT_COORDINATE } from '@accelint/constants/coordinates';
+
+// Initialize coordinate state
+const [location, setLocation] = useState(DEFAULT_COORDINATE);
+
+// Check for uninitialized coordinates
+if (Number.isNaN(location[0]) || Number.isNaN(location[1])) {
+  console.log('No location set');
+}
+```
+
+## Reference
+
+```typescript
+const DEFAULT_COORDINATE: [number, number];
+```
+
+A tuple `[Number.NaN, Number.NaN]` representing an uninitialized or invalid coordinate.
+
+> **Good to know:** Using `[0, 0]` as a default is incorrect—it represents a real location in the Gulf of Guinea, off the west coast of Africa, known colloquially as "Null Island." Using `NaN` values explicitly indicates the absence of a valid coordinate.
+
+## Examples
+
+### Example: Initializing map state
+
+```typescript
+import { DEFAULT_COORDINATE } from '@accelint/constants/coordinates';
+
+interface MapState {
+  center: [number, number];
+  zoom: number;
+}
+
+const initialState: MapState = {
+  center: DEFAULT_COORDINATE,
+  zoom: 1,
+};
+```
+
+### Example: Validating coordinates
+
+```typescript
+import { DEFAULT_COORDINATE } from '@accelint/constants/coordinates';
+
+function isValidCoordinate(coord: [number, number]): boolean {
+  return !Number.isNaN(coord[0]) && !Number.isNaN(coord[1]);
+}
+
+isValidCoordinate([40.7128, -74.0060]); // true (New York)
+isValidCoordinate(DEFAULT_COORDINATE);   // false (uninitialized)
+isValidCoordinate([0, 0]);               // true (Null Island - valid but unusual)
+```
+
+### Example: Handling geolocation errors
+
+```typescript
+import { DEFAULT_COORDINATE } from '@accelint/constants/coordinates';
+
+function getCurrentLocation(): Promise<[number, number]> {
+  return new Promise((resolve) => {
+    if (!navigator.geolocation) {
+      resolve(DEFAULT_COORDINATE);
+      return;
+    }
+
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        resolve([position.coords.latitude, position.coords.longitude]);
+      },
+      () => {
+        resolve(DEFAULT_COORDINATE);
+      },
+    );
+  });
+}
+```
+
+### Example: Conditional rendering based on coordinate validity
+
+```typescript
+import { DEFAULT_COORDINATE } from '@accelint/constants/coordinates';
+
+function LocationDisplay({ coords }: { coords: [number, number] }) {
+  const isValid = !Number.isNaN(coords[0]) && !Number.isNaN(coords[1]);
+
+  if (!isValid) {
+    return <div>Location not available</div>;
+  }
+
+  return (
+    <div>
+      Latitude: {coords[0].toFixed(4)}, Longitude: {coords[1].toFixed(4)}
+    </div>
+  );
+}
+
+// Usage
+<LocationDisplay coords={DEFAULT_COORDINATE} />
+// Renders: "Location not available"
+```
+
+### Example: Resetting coordinates
+
+```typescript
+import { DEFAULT_COORDINATE } from '@accelint/constants/coordinates';
+
+class LocationTracker {
+  private location: [number, number] = DEFAULT_COORDINATE;
+
+  setLocation(lat: number, lon: number): void {
+    this.location = [lat, lon];
+  }
+
+  clearLocation(): void {
+    this.location = DEFAULT_COORDINATE;
+  }
+
+  hasLocation(): boolean {
+    return !Number.isNaN(this.location[0]) && !Number.isNaN(this.location[1]);
+  }
+}
+```
+
+### Example: Type-safe coordinate handling
+
+```typescript
+import { DEFAULT_COORDINATE } from '@accelint/constants/coordinates';
+
+type Coordinate = [number, number];
+type ValidCoordinate = [lat: number, lon: number];
+
+function normalizeCoordinate(coord: Coordinate): ValidCoordinate | null {
+  if (Number.isNaN(coord[0]) || Number.isNaN(coord[1])) {
+    return null;
+  }
+
+  // Clamp latitude to [-90, 90]
+  const lat = Math.max(-90, Math.min(90, coord[0]));
+  // Normalize longitude to [-180, 180]
+  const lon = ((coord[1] + 180) % 360) - 180;
+
+  return [lat, lon];
+}
+
+normalizeCoordinate(DEFAULT_COORDINATE); // null
+normalizeCoordinate([40.7128, -74.0060]); // [40.7128, -74.0060]
+```
+
+## Related
+
+- [Null Island](https://en.wikipedia.org/wiki/Null_Island) - Wikipedia article on the [0,0] coordinate
+- [Geolocation API](https://developer.mozilla.org/en-US/docs/Web/API/Geolocation_API) - MDN documentation

@@ -1,0 +1,16 @@
+# Specification Index
+
+| Capability | Purpose | Related | Last touched by |
+| --- | --- | --- | --- |
+| api-doc-generation | Automated generation of TypeScript/React API reference documentation from source code, outputting to a centralized documentation site structure. | | |
+| coordinate-grid-layers | Defines requirements for the coordinate grid layer system in `@accelint/map-toolkit`. Provides `GARSLayer` and `MGRSLayer` as standalone deck.gl layers built on a shared `BaseGridLayer` abstraction. Covers rendering, zoom configuration, styling, and event bus integration. | | |
+| docs-content-structure | Organization of documentation content into a section-based folder hierarchy with navigation metadata for the fumadocs documentation site. | | |
+| docs-homepage | A welcoming landing page that introduces Standard Toolkit and provides quick navigation to all packages and documentation sections. | | |
+| docs-navigation | Responsive navigation system for the documentation site with collapsible sections, search functionality, and theme controls. | | |
+| docs-styling | Visual styling system for the documentation website that applies design-toolkit aesthetic (outlines, spacing, typography) to fumadocs UI components via CSS overrides. | | |
+| docs-website-foundation | Core infrastructure for the fumadocs-based documentation website including routing, content loading, and page rendering. | | |
+| stepper-accessibility | Defines accessibility requirements for Stepper components including ARIA patterns, keyboard navigation, screen reader announcements, and focus management to ensure keyboard-only and assistive technology users can navigate multi-step workflows. | stepper-composition, stepper-navigation, stepper-state-management, stepper-styling | add-stepper-component |
+| stepper-composition | Defines the component family structure, context provider pattern, ID-based matching, and composition patterns for Stepper components following design-toolkit conventions from Tabs and ViewStack. | stepper-accessibility, stepper-navigation, stepper-state-management, stepper-styling | add-stepper-component |
+| stepper-navigation | Defines navigation behavior for Stepper components including sequential forward/backward navigation, disabled step blocking, direct step selection, synchronous validation callbacks, and programmatic navigation methods. | stepper-accessibility, stepper-composition, stepper-state-management, stepper-styling | add-stepper-component |
+| stepper-state-management | Defines state management patterns for Stepper components including controlled/uncontrolled modes, step registration, bidirectional completion tracking, step order, and Key type consistency following design-toolkit's Tabs and ViewStack patterns. | stepper-accessibility, stepper-composition, stepper-navigation, stepper-styling | add-stepper-component |
+| stepper-styling | Defines styling requirements for Stepper components using CSS Modules, design-foundation tokens, data attributes, orientation support, and responsive patterns to enable flexible visual customization while maintaining accessibility. | stepper-accessibility, stepper-composition, stepper-navigation, stepper-state-management | add-stepper-component |

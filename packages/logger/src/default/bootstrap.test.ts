@@ -27,7 +27,8 @@ vi.mock('loglayer', () => ({
       debug: vi.fn(),
       trace: vi.fn(),
       fatal: vi.fn(),
-      withLogLevelManager: vi.fn(),
+      withLogLevelManager: vi.fn().mockReturnThis(),
+      disableLogging: vi.fn(),
     };
   }),
   StructuredTransport: vi.fn(function () {
@@ -324,6 +325,20 @@ describe('bootstrap', () => {
       expect(vi.mocked(LogLayer)).toHaveBeenCalledWith(
         expect.objectContaining({ enabled: false }),
       );
+    });
+
+    test('should call disableLogging when enabled=false to ensure OneWayLogLevelManager respects disabled state', () => {
+      const logger = bootstrap({ enabled: false });
+
+      // Verify disableLogging was called after withLogLevelManager
+      expect(logger.disableLogging).toHaveBeenCalledOnce();
+    });
+
+    test('should not call disableLogging when enabled=true', () => {
+      const logger = bootstrap({ enabled: true });
+
+      // Should not call disableLogging for enabled logger
+      expect(logger.disableLogging).not.toHaveBeenCalled();
     });
   });
 

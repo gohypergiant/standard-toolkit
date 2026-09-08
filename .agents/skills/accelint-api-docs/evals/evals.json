@@ -1,0 +1,89 @@
+{
+  "skill_name": "accelint-api-docs",
+  "evals": [
+    {
+      "id": 1,
+      "name": "generate-curried-function",
+      "prompt": "hey i need api docs for the map function in packages/core/src/array/map/index.ts. can you generate markdown documentation for it? it's a curried function with generics so make sure that's clear in the docs",
+      "expected_output": "Colocated index.md with: proper frontmatter (title, description, source, SHAs), usage showing both partial application and direct usage, reference section with TypeScript signature and generic type parameters explained, realistic examples, related links, proper markdown structure",
+      "files": []
+    },
+    {
+      "id": 2,
+      "name": "generate-react-component",
+      "prompt": "I'm working on documenting our design system. Can you create API reference docs for the Button component at packages/design-toolkit/src/components/button/index.tsx? It's got multiple variants and props, and integrates with React Aria. Also check if there's existing storybook docs we should reference",
+      "expected_output": "Colocated index.md with: component description, JSX usage examples, props table (Prop/Type/Default/Required columns), detailed subsections for complex props like 'variant' and 'color', multiple realistic examples showing different configurations, note about React Aria integration, proper frontmatter",
+      "files": []
+    },
+    {
+      "id": 3,
+      "name": "generate-hook-with-generics",
+      "prompt": "document the useBus hook from packages/bus/src/react/index.ts - it's a type-safe event bus hook that returns useEmit/useOn/useOnce. make sure the type safety patterns are super clear since that's the whole point of using it",
+      "expected_output": "Colocated index.md with: hook description emphasizing type safety, usage showing event type definition and hook destructuring, reference explaining returned hooks (useEmit/useOn/useOnce), examples covering different event patterns (with/without payload, targeting), generic type parameter documentation",
+      "files": []
+    },
+    {
+      "id": 4,
+      "name": "generate-class-singleton",
+      "prompt": "/accelint-api-docs packages/bus/src/broadcast/index.ts",
+      "expected_output": "Colocated index.md with: class description, singleton pattern highlighted, usage showing getInstance(), reference organized by: type parameters, properties, constructor, static methods, event methods (on/once/off/emit), configuration methods, management methods, examples showing pub/sub patterns and targeting options",
+      "files": []
+    },
+    {
+      "id": 5,
+      "name": "generate-constant-enum",
+      "prompt": "we need docs for the Keycode constant in packages/hotkey-manager/src/enums/keycode.ts. it's a frozen object (SafeEnum pattern) with all the keyboard codes. make sure devs know how to use it with registerHotkey",
+      "expected_output": "Colocated index.md with: constant description, usage in hotkey registration context, reference showing both value object and type, available values organized by category (letters/numbers/function keys/arrows/etc), examples with modifier combinations and various key types",
+      "files": []
+    },
+    {
+      "id": 6,
+      "name": "multi-export-file",
+      "prompt": "Can you document all the React hooks exported from packages/bus/src/react/index.ts? There's useBus, useEmit, useOn, and useOnce all in one file",
+      "expected_output": "Single index.md with H2 sections for each hook (## useBus, ## useEmit, ## useOn, ## useOnce), each section following full doc structure, proper frontmatter listing all entities in 'entities' field of mapping",
+      "files": []
+    },
+    {
+      "id": 7,
+      "name": "update-after-code-change",
+      "prompt": "i just added a new 'size' prop to the Button component (packages/design-toolkit/src/components/button/index.tsx) with values 'xs' | 'sm' | 'md' | 'lg'. the docs at packages/design-toolkit/src/components/button/index.md are now stale. can you update them? i manually added a note about accessibility in the docs last week, so don't overwrite that",
+      "expected_output": "Updated index.md with: new 'size' prop added to props table, examples showing size variants, manually-added accessibility note preserved (three-way merge awareness), updated source_sha and doc_sha in frontmatter, updated date",
+      "files": []
+    },
+    {
+      "id": 8,
+      "name": "validate-stale-docs",
+      "prompt": "/accelint-api-docs --validate packages/core/src/array/",
+      "expected_output": "Validation report showing: SHA staleness check results (which docs have source_sha != current HEAD), broken cross-reference links if any, missing frontmatter fields, markdownlint issues, summary with counts (X stale, Y broken links, Z lint issues)",
+      "files": []
+    },
+    {
+      "id": 9,
+      "name": "batch-generate-directory",
+      "prompt": "generate API docs for everything in packages/core/src/array/ - there's map, filter, reduce, and a few others in there. process them all sequentially with checkpoints",
+      "expected_output": "Multiple index.md files created (one per subdirectory), progress indicators showing [1/N], [2/N] etc, mapping file updated after each success, error handling demonstrated if any file fails (logged, prompt for retry/skip/quit), final summary of successes/failures",
+      "files": []
+    },
+    {
+      "id": 10,
+      "name": "existing-docs-reference",
+      "prompt": "There's already some documentation for TextField at packages/design-toolkit/src/components/textfield/TextField.docs.mdx with good examples. Can you generate fresh API reference docs for packages/design-toolkit/src/components/textfield/index.tsx but use those existing docs as reference material? extract the examples from there",
+      "expected_output": "Prompt asking \"Found TextField.docs.mdx. [U]se as reference [I]gnore\", if use: new index.md incorporating examples/patterns from existing docs, citation comment at bottom (<!-- Referenced: TextField.docs.mdx for examples -->), structure follows reference examples from this skill",
+      "files": []
+    },
+    {
+      "id": 11,
+      "name": "deprecated-api",
+      "prompt": "document packages/core/src/array/oldMap/index.ts - it has an @deprecated JSDoc tag saying to use the new map function instead since v2.0.0",
+      "expected_output": "index.md with deprecation callout at top (> **Deprecated**: This function is deprecated since v2.0.0. Use [map](../map/index.md) instead.), deprecated: true in frontmatter, otherwise normal documentation structure",
+      "files": []
+    },
+    {
+      "id": 12,
+      "name": "internal-export-skip",
+      "prompt": "/accelint-api-docs packages/bus/src/react/index.ts",
+      "expected_output": "Skips _internal functions and @internal JSDoc-tagged exports, prompts about which exports to document (excludes internal ones from list), documents only public API surface",
+      "files": []
+    }
+  ]
+}

@@ -1,0 +1,252 @@
+---
+title: "Overview"
+description: A comprehensive collection of 268 SVG icon components for React applications
+source: packages/icons/src/icons/index.ts
+source_sha: 0a221be83da6dbee5658d8ab9d2b0c39848ac749
+doc_sha: 7a2054dbc908823f6d705c75e3e74fee170b426d
+deprecated: false
+updated: 2026-07-14
+---
+
+## Usage
+
+```tsx
+import { Add, Bell, Check } from '@accelint/icons';
+
+export function MyComponent() {
+  return (
+    <div>
+      <Add width={24} height={24} />
+      <Bell width={24} height={24} />
+      <Check width={24} height={24} />
+    </div>
+  );
+}
+```
+
+## Reference
+
+All icon components share the same API:
+
+```typescript
+interface SVGRProps {
+  title?: string;
+  titleId?: string;
+}
+
+type IconComponent = (
+  props: SVGProps<SVGSVGElement> & SVGRProps
+) => JSX.Element;
+```
+
+### Props
+
+| Prop | Type | Default | Required |
+|------|------|---------|----------|
+| `width` | `number \| string` | - | No |
+| `height` | `number \| string` | - | No |
+| `className` | `string` | - | No |
+| `style` | `CSSProperties` | - | No |
+| `fill` | `string` | - | No |
+| `title` | `string` | - | No |
+| `titleId` | `string` | - | No |
+
+All standard SVG element props are supported via `SVGProps<SVGSVGElement>`.
+
+#### `title`
+
+Provides accessible text description for screen readers. When provided, renders a `<title>` element inside the SVG.
+
+#### `titleId`
+
+Custom ID for the title element. Used with `aria-labelledby` for accessibility. Auto-generated if `title` is provided without `titleId`.
+
+### Icon Sizing
+
+Icons use `currentColor` for fill, inheriting text color from parent elements. Size should be controlled via `width` and `height` props or CSS.
+
+## Available Icons
+
+### Navigation & Actions
+
+`Add`, `AddFill`, `AddToList`, `Remove`, `RemoveFill`, `RemoveFromList`, `ArrowUp`, `ArrowDown`, `ArrowLeft`, `ArrowRight`, `Arrow`, `ArrowNortheast`, `ArrowNorthwest`, `ArrowSoutheast`, `ArrowSouthwest`, `ChevronUp`, `ChevronDown`, `ChevronLeft`, `ChevronRight`, `ChevronFillUp`, `ChevronFillDown`, `ChevronFillLeft`, `ChevronFillRight`, `Cancel`, `CancelFill`, `Check`, `Edit`, `Delete`, `Duplicate`, `Undo`, `Move`, `Expand`, `ExpandAll`, `ExpandLeft`, `ExpandRight`, `ExpandWindow`, `ExpandLeftPanel`, `Collapse`, `CollapseAll`, `CollapseWindow`, `Condense`
+
+### Media Controls
+
+`Play`, `Pause`, `Stop`, `Record`, `FastForward`, `FastRewind`, `JumpTo`, `JumpToStart`, `JumpToEnd`, `Loop`, `Reverse`, `Playback`
+
+### UI Elements
+
+`Bell`, `Dashboard`, `Filter`, `Search`, `Settings`, `Help`, `Information`, `Hamburger`, `Kebab`, `Waffle`, `Grid`, `Calendar`, `Time`, `Timer`, `Plus`, `Minus`, `CopyToClipboard`, `PasteFromClipboard`, `Screenshot`, `AttachFile`, `Link`, `Share`, `GlobalShare`, `Flag`, `Pin`, `Note`, `Message`, `Phone`, `Label`, `Tag`
+
+### Tools & Drawing
+
+`CircleTool`, `EllipseTool`, `LineTool`, `PolygonTool`, `RectangleTool`, `RectangleSelect`, `Lasso`, `PolygonLasso`, `ColorPicker`, `CursorDefault`, `CursorCrosshair`, `CursorDrag`, `DragHorz`, `DragVert`
+
+### Status & Indicators
+
+`Alert`, `AlertBase`, `Warning`, `Success`, `Problem`, `Hide`, `Show`, `Lock`, `LockFill`, `LockOutline`, `Live`, `Connection`, `ConnectionLost`, `BadData`, `NonEditable`, `None`, `Placeholder`
+
+### Data & Visualization
+
+`Data`, `ExploreData`, `InsertChart`, `ChartStackedBar`, `Gantt`, `Plots`, `Feed`, `Layers`, `LayerGroup`, `Overlays`, `Attributes`, `ArrangeTable`, `SelectionList`, `StackCards`, `Stack`, `Newspaper`, `TrackChanges`
+
+### Geography & Mapping
+
+`Airport`, `MilitaryAirfield`, `Airspaces`, `Terrain`, `Weather`, `Wind`, `Radar`, `RadarSite`, `RadarAnomaly`, `Region`, `Sector`, `MapPin`, `Marker`, `LocationFill`, `LocationStroke`, `MercatorProjection`, `Coverage`, `CenterOn`, `ZoomIn`, `ZoomOut`, `ZoomTo`, `Focus`, `Spotlight`
+
+### Military & Defense
+
+`Target`, `PresumedTarget`, `DefendedPointCaalDal`, `Missile`, `Missiles`, `ThreatAssess`, `BattleStation`, `WatchTower`, `CommonTrack`, `CommonAirTrack`, `CommonOperatingPic`, `AirTrackHistory`, `TrackHistory`, `TrackEta`, `TrackEtaEndpoint`, `FlightPlan`, `Mission`, `Assignment`, `Handover`, `Handshake`, `CreateCoa`, `CopSettings`, `InterceptPoint`, `Hold`, `Tether`
+
+### Vehicles & Assets
+
+`Car`, `Helicopter`, `Uas`, `UasHomePoint`, `LargeJet`, `SmallJet`, `Prop`, `CommercialShip`, `MilitaryVessel`, `PersonalBoat`, `Birds`, `Landmine`, `Skull`
+
+### Infrastructure
+
+`Building`, `Stadium`, `Artcc`, `ConnectingAirports`, `SensorHealth`, `UnscheduledMaintenance`, `ElectromagneticSpectrum`, `Radio`, `Remote`
+
+### Interface Elements
+
+`PanelOpen`, `PanelClosed`, `OpenContainer`, `FullScreen`, `PopOut`, `PopBackIn`, `Appearance`, `Brightness`, `Contrast`, `Mode`, `Keyboard`, `ArrowKeys`, `MouseLeftClick`, `MouseMiddleClick`, `MouseRightClick`, `MouseScroll`, `ScrollClick`
+
+### User & Access
+
+`Person`, `Login`, `Logout`, `Ticket`, `UserManual`, `WhatsNew`, `BugReport`
+
+### Shapes & Geometry
+
+`PointFill`, `PointOutline`, `SquareFill`, `SquareOutline`, `TriangleFill`, `TriangleOutline`, `CircleTool`, `Slash`, `Star`, `Wheel`
+
+### Media & Audio
+
+`SoundAudible`, `SoundMute`, `Mute`, `Bolt`, `BoltNotVisible`
+
+### Organization
+
+`Group`, `Land`, `Ascending`, `Descending`
+
+### Other
+
+`Import`, `Duplicate`, `Slash`, `None`
+
+## Examples
+
+### Example: Basic icon usage
+
+```tsx
+import { Add } from '@accelint/icons';
+
+<Add width={24} height={24} />
+```
+
+### Example: Icon with color
+
+Icons inherit `currentColor` by default:
+
+```tsx
+import { Bell } from '@accelint/icons';
+
+<div style={{ color: '#ff0000' }}>
+  <Bell width={24} height={24} />
+</div>
+```
+
+Or override with className:
+
+```tsx
+import { Check } from '@accelint/icons';
+
+<Check width={24} height={24} className="text-green-500" />
+```
+
+### Example: Icon with accessibility
+
+```tsx
+import { Settings } from '@accelint/icons';
+
+<Settings 
+  width={24} 
+  height={24} 
+  title="Open settings"
+  aria-label="Open settings"
+/>
+```
+
+### Example: Icon in button
+
+```tsx
+import { Add } from '@accelint/icons';
+import { Button } from '@accelint/design-toolkit';
+
+<Button>
+  <Add width={16} height={16} />
+  Add Item
+</Button>
+```
+
+### Example: Icon with custom styling
+
+```tsx
+import { Warning } from '@accelint/icons';
+
+<Warning 
+  width={32} 
+  height={32}
+  style={{ 
+    fill: 'orange',
+    filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.1))'
+  }}
+/>
+```
+
+### Example: Dynamic icon selection
+
+```tsx
+import * as Icons from '@accelint/icons';
+
+interface IconDisplayProps {
+  name: keyof typeof Icons;
+  size?: number;
+}
+
+export function IconDisplay({ name, size = 24 }: IconDisplayProps) {
+  const IconComponent = Icons[name];
+  return <IconComponent width={size} height={size} />;
+}
+
+// Usage
+<IconDisplay name="Add" size={32} />
+<IconDisplay name="Bell" size={24} />
+```
+
+### Example: Icon with responsive sizing
+
+```tsx
+import { Dashboard } from '@accelint/icons';
+
+<Dashboard 
+  className="w-6 h-6 md:w-8 md:h-8"
+  style={{ width: '1.5rem', height: '1.5rem' }}
+/>
+```
+
+### Example: Icon in design system
+
+```tsx
+import { Icon } from '@accelint/design-toolkit';
+import { Settings } from '@accelint/icons';
+
+// Icon component automatically sizes based on context
+<Icon>
+  <Settings />
+</Icon>
+```
+
+> **Good to know:** All icons are 24×24 viewBox by default. When using with the design system's `Icon` component, size is controlled by context and you don't need to specify width/height.
+
+## Related
+
+- [Icon](../../toolkits/design-toolkit/components/icon/index.mdx) - Design system Icon component with automatic sizing
+- [Button](../../toolkits/design-toolkit/components/button/index.mdx) - Button component that works with icons

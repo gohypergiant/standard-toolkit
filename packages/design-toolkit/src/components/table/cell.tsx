@@ -12,7 +12,7 @@
  */
 
 import { clsx } from '@accelint/design-foundation/lib/utils';
-import { flexRender } from '@tanstack/react-table';
+import { flexRender, type RowData } from '@tanstack/react-table';
 import { useContext } from 'react';
 import { HeaderColumnAction } from './constants/table';
 import { TableContext } from './context';
@@ -38,7 +38,7 @@ import type { TableCellProps } from './types';
  * @param props.cell - TanStack table cell object.
  * @returns The rendered TableCell component.
  */
-export function TableCell<T>({
+export function TableCell<T extends RowData>({
   children,
   ref,
   className,

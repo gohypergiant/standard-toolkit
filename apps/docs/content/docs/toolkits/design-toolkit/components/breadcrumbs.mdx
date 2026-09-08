@@ -1,0 +1,214 @@
+---
+title: Breadcrumbs
+description: Accessible breadcrumb navigation showing user's location within an application hierarchy
+source: packages/design-toolkit/src/components/breadcrumbs/index.tsx
+source_sha: baa3a28e33d04099b20c90784eae948e306480c9
+doc_sha: c3fcaf6ac9d56979bd6ee8edc2981ff18f016130
+deprecated: false
+updated: 2026-07-13
+---
+
+Accessible breadcrumb navigation that displays the user's location within an application hierarchy and provides links back to parent pages. The final item represents the current page.
+
+## Usage
+
+```tsx
+import { Breadcrumbs, BreadcrumbItem } from '@accelint/design-toolkit';
+
+export function MyPage() {
+  return (
+    <Breadcrumbs>
+      <BreadcrumbItem linkProps={{ href: '/' }}>Home</BreadcrumbItem>
+      <BreadcrumbItem linkProps={{ href: '/products' }}>Products</BreadcrumbItem>
+      <BreadcrumbItem>Current Product</BreadcrumbItem>
+    </Breadcrumbs>
+  );
+}
+```
+
+## Reference
+
+### Breadcrumbs
+
+```typescript
+interface BreadcrumbsProps {
+  children: React.ReactNode;
+  className?: string;
+}
+```
+
+#### Props
+
+| Prop | Type | Default | Required |
+|------|------|---------|----------|
+| `children` | `React.ReactNode` | - | Yes |
+| `className` | `string` | - | No |
+
+### BreadcrumbItem
+
+```typescript
+interface BreadcrumbItemProps {
+  children: React.ReactNode;
+  linkProps?: { href: string };
+  classNames?: {
+    item?: string;
+    link?: string;
+    separator?: string;
+  };
+}
+```
+
+#### Props
+
+| Prop | Type | Default | Required |
+|------|------|---------|----------|
+| `children` | `React.ReactNode` | - | Yes |
+| `linkProps` | `{ href: string }` | - | No |
+| `classNames` | `object` | - | No |
+
+#### `linkProps`
+
+Props passed to the Link component. Omit for the current page (which should not be a link).
+
+#### `classNames`
+
+Custom class names for sub-elements:
+- `item` - The breadcrumb item container
+- `link` - The link element (when linkProps is provided)
+- `separator` - The chevron separator icon
+
+### Inherited Props
+
+Breadcrumbs inherits props from React Aria's `Breadcrumbs` component. See [React Aria Breadcrumbs](https://react-spectrum.adobe.com/react-aria/Breadcrumbs.html) for full API reference.
+
+## Examples
+
+### Example: Basic breadcrumbs
+
+```tsx
+import { Breadcrumbs, BreadcrumbItem } from '@accelint/design-toolkit';
+
+<Breadcrumbs>
+  <BreadcrumbItem linkProps={{ href: '/' }}>Home</BreadcrumbItem>
+  <BreadcrumbItem linkProps={{ href: '/docs' }}>Documentation</BreadcrumbItem>
+  <BreadcrumbItem>Getting Started</BreadcrumbItem>
+</Breadcrumbs>
+```
+
+### Example: Multi-level navigation
+
+```tsx
+import { Breadcrumbs, BreadcrumbItem } from '@accelint/design-toolkit';
+
+<Breadcrumbs>
+  <BreadcrumbItem linkProps={{ href: '/' }}>Home</BreadcrumbItem>
+  <BreadcrumbItem linkProps={{ href: '/settings' }}>Settings</BreadcrumbItem>
+  <BreadcrumbItem linkProps={{ href: '/settings/account' }}>Account</BreadcrumbItem>
+  <BreadcrumbItem>Profile</BreadcrumbItem>
+</Breadcrumbs>
+```
+
+### Example: With router integration
+
+```tsx
+import { Breadcrumbs, BreadcrumbItem } from '@accelint/design-toolkit';
+import { useNavigate } from 'react-router-dom';
+
+export function RouterBreadcrumbs() {
+  const navigate = useNavigate();
+
+  return (
+    <Breadcrumbs>
+      <BreadcrumbItem
+        linkProps={{
+          href: '/',
+          onPress: (e) => {
+            e.preventDefault();
+            navigate('/');
+          },
+        }}
+      >
+        Home
+      </BreadcrumbItem>
+      <BreadcrumbItem
+        linkProps={{
+          href: '/products',
+          onPress: (e) => {
+            e.preventDefault();
+            navigate('/products');
+          },
+        }}
+      >
+        Products
+      </BreadcrumbItem>
+      <BreadcrumbItem>Details</BreadcrumbItem>
+    </Breadcrumbs>
+  );
+}
+```
+
+### Example: Custom styling
+
+```tsx
+import { Breadcrumbs, BreadcrumbItem } from '@accelint/design-toolkit';
+
+<Breadcrumbs className="bg-gray-100 p-4 rounded">
+  <BreadcrumbItem
+    linkProps={{ href: '/' }}
+    classNames={{
+      link: 'text-blue-600 hover:text-blue-800 font-semibold',
+      separator: 'text-gray-400',
+    }}
+  >
+    Home
+  </BreadcrumbItem>
+  <BreadcrumbItem classNames={{ item: 'text-gray-900 font-bold' }}>
+    Current Page
+  </BreadcrumbItem>
+</Breadcrumbs>
+```
+
+### Example: E-commerce navigation
+
+```tsx
+import { Breadcrumbs, BreadcrumbItem } from '@accelint/design-toolkit';
+
+<Breadcrumbs>
+  <BreadcrumbItem linkProps={{ href: '/' }}>Home</BreadcrumbItem>
+  <BreadcrumbItem linkProps={{ href: '/shop' }}>Shop</BreadcrumbItem>
+  <BreadcrumbItem linkProps={{ href: '/shop/electronics' }}>Electronics</BreadcrumbItem>
+  <BreadcrumbItem linkProps={{ href: '/shop/electronics/laptops' }}>Laptops</BreadcrumbItem>
+  <BreadcrumbItem>MacBook Pro 16"</BreadcrumbItem>
+</Breadcrumbs>
+```
+
+### Example: Documentation site
+
+```tsx
+import { Breadcrumbs, BreadcrumbItem } from '@accelint/design-toolkit';
+
+<Breadcrumbs>
+  <BreadcrumbItem linkProps={{ href: '/docs' }}>Docs</BreadcrumbItem>
+  <BreadcrumbItem linkProps={{ href: '/docs/components' }}>Components</BreadcrumbItem>
+  <BreadcrumbItem linkProps={{ href: '/docs/components/navigation' }}>Navigation</BreadcrumbItem>
+  <BreadcrumbItem>Breadcrumbs</BreadcrumbItem>
+</Breadcrumbs>
+```
+
+> **Good to know:** The final breadcrumb item should not have `linkProps` as it represents the current page. A chevron separator is automatically added between items, but not after the final item.
+
+### Example: Minimal breadcrumbs
+
+```tsx
+import { Breadcrumbs, BreadcrumbItem } from '@accelint/design-toolkit';
+
+<Breadcrumbs>
+  <BreadcrumbItem linkProps={{ href: '/' }}>Home</BreadcrumbItem>
+  <BreadcrumbItem>Current</BreadcrumbItem>
+</Breadcrumbs>
+```
+
+## Related
+
+- [Link](../link/index.md) - Link component used internally
+- [Icon](../icon/index.md) - Icon component for separators

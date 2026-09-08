@@ -1,0 +1,104 @@
+---
+title: CarouselViewer
+description: Displays the full-size media for the currently active carousel item.
+source: packages/design-toolkit/src/components/carousel/viewer.tsx
+source_sha: 292100168f133ce07bbfa8a90057698d0ce6c449
+doc_sha: 4136ffbbe89336a4bcc6f9eaa0195c2ec95826a2
+deprecated: false
+updated: 2026-07-13
+---
+
+Displays the full-size media for the currently active carousel item based on its data type (image, video, or audio).
+
+## Usage
+
+```tsx
+import { Carousel, CarouselViewer } from '@accelint/design-toolkit';
+
+export function Gallery({ items, position, setPosition }) {
+  return (
+    <Carousel items={items} currentPosition={position} setCurrentPosition={setPosition}>
+      <CarouselViewer />
+    </Carousel>
+  );
+}
+```
+
+## Reference
+
+```typescript
+interface CarouselViewerProps extends PropsWithChildren {
+  classNames?: {
+    container?: string;
+    media?: string;
+  };
+}
+```
+
+### Props
+
+| Prop | Type | Default | Required |
+|------|------|---------|----------|
+| `children` | `React.ReactNode` | - | No |
+| `classNames` | `{ container?: string; media?: string }` | - | No |
+
+#### `children`
+
+Optional overlay content rendered inside the viewer. Useful for positioning controls or metadata over the media.
+
+#### `classNames.container`
+
+Class name applied to the viewer container element.
+
+#### `classNames.media`
+
+Class name applied to the displayed media element (`img`, `video`, or `audio` component).
+
+## Examples
+
+### Example: Basic viewer
+
+```tsx
+import { Carousel, CarouselViewer } from '@accelint/design-toolkit';
+
+<Carousel items={items} currentPosition={position} setCurrentPosition={setPosition}>
+  <CarouselViewer />
+</Carousel>
+```
+
+### Example: With overlay controls
+
+```tsx
+import { Carousel, CarouselViewer, CarouselPosition } from '@accelint/design-toolkit';
+
+<Carousel items={items} currentPosition={position} setCurrentPosition={setPosition}>
+  <CarouselViewer>
+    <div style={{ position: 'absolute', bottom: '1rem', right: '1rem' }}>
+      <CarouselPosition />
+    </div>
+  </CarouselViewer>
+</Carousel>
+```
+
+### Example: Custom styling
+
+```tsx
+import { Carousel, CarouselViewer } from '@accelint/design-toolkit';
+
+<Carousel items={items} currentPosition={position} setCurrentPosition={setPosition}>
+  <CarouselViewer
+    classNames={{
+      container: 'aspect-video bg-gray-900',
+      media: 'object-contain'
+    }}
+  />
+</Carousel>
+```
+
+> **Good to know:** CarouselViewer automatically renders the appropriate media element based on the current item's `dataType`: images use `<img>`, videos use the `Video` component, and audio uses the `Audio` component.
+
+## Related
+
+- [Carousel](./index.mdx) - Parent carousel component
+- [Video](../video/index.mdx) - Video component for video items
+- [Audio](../audio/index.mdx) - Audio component for audio items

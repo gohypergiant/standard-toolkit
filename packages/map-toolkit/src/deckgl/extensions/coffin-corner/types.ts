@@ -54,3 +54,17 @@ export type CoffinCornerExtensionProps<TLayerProps = unknown> = {
 
 /** Unique identifier for an entity managed by the coffin corner extension. */
 export type EntityId = string | number;
+
+/** Constructor options for {@link CoffinCornerExtension}. */
+export type CoffinCornerExtensionOptions = {
+  /**
+   * GLSL statements that assign `baseColor` (a `vec4`) — the icon color the
+   * brackets composite over — on IconLayer hosts. Spliced inside the fragment
+   * `main`, so they can reference anything the host shader declares
+   * (`iconsTexture`, `vTextureCoords`, plus any uniforms/varyings a custom
+   * IconLayer adds). Ignored on ScatterplotLayer hosts.
+   *
+   * @default 'baseColor = texture(iconsTexture, vTextureCoords);'
+   */
+  iconBaseColorGlsl?: string;
+};

@@ -1,0 +1,152 @@
+---
+title: "setClockTimeout"
+description: Execute a callback once after a specified delay, starting from the next clock second boundary
+source: packages/temporal/src/timers/index.ts
+source_sha: 58e85118ec419fd5bc2eb25635f26ebb45f7b269
+doc_sha: c8936672d7936aba01e721f2e525bfcd075717c3
+deprecated: false
+updated: 2025-01-14
+---
+
+## Usage
+
+```typescript
+import { setClockTimeout } from '@accelint/temporal';
+
+const cleanup = setClockTimeout(() => {
+  console.log('Executed at:', new Date().toISOString());
+}, 5000);
+
+// Cancel if needed before execution
+cleanup();
+```
+
+## Reference
+
+```typescript
+function setClockTimeout(
+  cb: () => void,
+  ms: number
+): () => void
+```
+
+Executes a callback once after a specified delay, aligned to clock second boundaries. Unlike standard `setTimeout`, this function waits until the next clock second before starting the countdown.
+
+### Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `cb` | `() => void` | Callback function to execute after the delay. |
+| `ms` | `number` | Time in milliseconds to wait before executing the callback. |
+
+### Returns
+
+Returns a cleanup function that cancels the timeout when called. Safe to call multiple times.
+
+## Examples
+
+### Example: Delayed notification
+
+```typescript
+import { setClockTimeout } from '@accelint/temporal';
+
+function showNotification(message: string, delayMs: number) {
+  const cleanup = setClockTimeout(() => {
+    alert(message);
+  }, delayMs);
+  
+  return cleanup;
+}
+
+const cancel = showNotification('Time is up!', 10000);
+// Shows notification after 10 seconds, starting at next clock second
+
+// User can cancel before it fires
+document.getElementById('cancel')?.addEventListener('click', cancel);
+```
+
+### Example: Debounced action with clock alignment
+
+```typescript
+import { setClockTimeout } from '@accelint/temporal';
+
+function createDebouncedSave<T>(saveFn: (data: T) => void, delayMs: number) {
+  let cleanup: (() => void) | undefined;
+  
+  return (data: T) => {
+    if (cleanup) cleanup();
+    
+    cleanup = setClockTimeout(() => {
+      saveFn(data);
+    }, delayMs);
+    
+    return cleanup;
+  };
+}
+
+const debouncedSave = createDebouncedSave(
+  (data: { value: number }) => console.log('Saving:', data),
+  2000
+);
+
+// Only the last call will execute (after 2 seconds from next clock second)
+debouncedSave({ value: 1 });
+debouncedSave({ value: 2 });
+debouncedSave({ value: 3 });
+```
+
+### Example: Scheduled task execution
+
+```typescript
+import { setClockTimeout } from '@accelint/temporal';
+
+async function scheduleTask(taskFn: () => Promise<void>, delayMs: number) {
+  const cleanup = setClockTimeout(async () => {
+    try {
+      await taskFn();
+      console.log('Task completed successfully');
+    } catch (error) {
+      console.error('Task failed:', error);
+    }
+  }, delayMs);
+  
+  return cleanup;
+}
+
+const cleanup = await scheduleTask(
+  async () => {
+    await fetch('/api/cleanup');
+  },
+  60000
+);
+// Executes cleanup task 1 minute after next clock second
+```
+
+### Example: Coordinated timeout with clock alignment
+
+```typescript
+import { setClockTimeout } from '@accelint/temporal';
+
+function coordinatedTimeout(callbacks: Array<() => void>, delayMs: number) {
+  const cleanups = callbacks.map(cb => 
+    setClockTimeout(cb, delayMs)
+  );
+  
+  return () => cleanups.forEach(cleanup => cleanup());
+}
+
+// All callbacks execute at the same time, aligned to clock
+const cancel = coordinatedTimeout([
+  () => console.log('First'),
+  () => console.log('Second'),
+  () => console.log('Third'),
+], 3000);
+```
+
+> **Good to know:** Execution starts counting from the next clock second boundary, not immediately. For immediate execution, use standard `setTimeout`. Zero or negative delays are treated as immediate execution after reaching the next clock second.
+
+## Related
+
+- [setClockInterval](./set-clock-interval.mdx) - Execute callback repeatedly at intervals
+- [callNextSecond](./timers/utils.md#callnextsecond) - Execute callback at next clock second
+- [remainder](./timers/utils.md#remainder) - Calculate time until next interval boundary

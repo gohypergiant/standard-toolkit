@@ -12,7 +12,7 @@
 
 import { ThemeProvider } from '@accelint/design-toolkit';
 import { Table } from '@accelint/design-toolkit/components/table';
-import { createColumnHelper } from '@tanstack/react-table';
+import { createTableColumnHelper } from '@accelint/design-toolkit/components/table/features';
 import { dash } from 'radashi';
 import { describe, expect, test } from 'vitest';
 import { page, userEvent } from 'vitest/browser';
@@ -24,7 +24,7 @@ import {
 } from '~/visual-regression/vitest';
 import { DATA, type Person, PROP_COMBOS, type TableScenario } from './variants';
 
-const columnHelper = createColumnHelper<Person>();
+const columnHelper = createTableColumnHelper<Person>();
 
 const columns = [
   columnHelper.accessor('firstName', {

@@ -12,7 +12,6 @@
 
 import { IconLayer } from '@deck.gl/layers';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { MaskedIconLayer } from '../../masked-icon-layer';
 import { CoffinCornerExtension } from './coffin-corner-extension';
 import type { Rgba255Tuple } from '@accelint/predicates';
 import type { EntityId } from './types';
@@ -313,7 +312,7 @@ describe('CoffinCornerExtension', () => {
 
       expect(shaders?.modules).toHaveLength(1);
       expect(shaders?.modules[0]?.name).toBe('coffinCorner');
-      expect(Object.keys(shaders?.inject)).toEqual(
+      expect(Object.keys(shaders?.inject ?? {})).toEqual(
         expect.arrayContaining([
           'vs:#decl',
           'vs:#main-end',
@@ -332,35 +331,37 @@ describe('CoffinCornerExtension', () => {
       expect(shaders).toBeNull();
     });
 
-    it('samples the icon texture in the plain icon main-start injection', () => {
+    it('should sample iconsTexture for the base color by default', () => {
       const layer = createMockLayer();
 
       const shaders = extension.getShaders.call(layer, extension);
 
       expect(shaders?.inject['fs:#main-start']).toContain(
-        'texture(iconsTexture, vTextureCoords)',
-      );
-      // A plain IconLayer host must NOT get the masked color replacement.
-      expect(shaders?.inject['fs:#main-start']).not.toContain(
-        'maskedIcon_replace',
+        'baseColor = texture(iconsTexture, vTextureCoords);',
       );
     });
 
-    it('uses the masked main-start for a MaskedIconLayer host', () => {
-      // Source the masked-host identity from the real MaskedIconLayer (an
-      // IconLayer subclass) so the duck-typed layerName can't silently drift
-      // from production. A bare prototype instance is enough — the extension
-      // only reads the prototype chain + static layerName, not layer state.
-      // biome-ignore lint/suspicious/noExplicitAny: minimal masked-host mock.
-      const layer = Object.create(MaskedIconLayer.prototype) as any;
+    it('should splice iconBaseColorGlsl into the icon fragment main-start', () => {
+      const layer = createMockLayer();
+      const iconBaseColorGlsl = 'baseColor = vec4(1.0, 0.0, 0.0, 1.0);';
+      const customExtension = new CoffinCornerExtension({ iconBaseColorGlsl });
 
-      const shaders = extension.getShaders.call(layer, extension);
+      const shaders = customExtension.getShaders.call(layer, customExtension);
+      const fsMainStart = shaders?.inject['fs:#main-start'] ?? '';
 
-      // The masked path applies the color replacement before compositing.
-      expect(shaders?.inject['fs:#main-start']).toContain('maskedIcon_replace');
-      expect(shaders?.inject['fs:#main-start']).toContain(
+      expect(fsMainStart).toContain(iconBaseColorGlsl);
+      expect(fsMainStart).not.toContain(
         'texture(iconsTexture, vTextureCoords)',
       );
+    });
+
+    it('should return a stable shader config across calls', () => {
+      const layer = createMockLayer();
+
+      const first = extension.getShaders.call(layer, extension);
+      const second = extension.getShaders.call(layer, extension);
+
+      expect(first).toBe(second);
     });
   });
 

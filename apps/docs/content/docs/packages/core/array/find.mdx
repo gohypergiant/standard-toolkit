@@ -1,0 +1,86 @@
+---
+title: "find"
+description: Returns the first element of the given array that satisfies the predicate, or null if not found.
+source: packages/core/src/array/find/index.ts
+source_sha: 106a32d9d7f1b657662a8183e731cd5fd4eb1cf5
+doc_sha: c5e9f8b2d4a1e6c3f7b9d2a8e4c6f1a3b5d7e9f0
+deprecated: false
+updated: 2026-07-13
+---
+
+## Usage
+
+```typescript
+import { find } from '@accelint/core/array/find';
+
+// Basic usage - find first even number
+const firstEven = find((x: number) => x % 2 === 0)([1, 2, 3, 4, 5]);
+// 2
+
+// Not found returns null
+const notFound = find((x: number) => x > 10)([1, 2, 3]);
+// null
+```
+
+## Reference
+
+```typescript
+function find<T>(
+  predicate: (element: T, index: number) => boolean
+): (arr: T[]) => T | null
+```
+
+### Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `predicate` | `(element: T, index: number) => boolean` | Function called for each element until one passes. Receives the element and its index. |
+
+### Returns
+
+Returns a curried function that accepts an array and returns the first element that satisfies the predicate, or `null` if none found.
+
+### Type Parameters
+
+- `T` - The type of elements in the array
+
+## Examples
+
+### Example: Finding an object
+
+```typescript
+import { find } from '@accelint/core/array/find';
+
+interface User {
+  id: number;
+  name: string;
+}
+
+const users: User[] = [
+  { id: 1, name: 'Alice' },
+  { id: 2, name: 'Bob' }
+];
+
+const user = find((u: User) => u.id === 2)(users);
+// { id: 2, name: 'Bob' }
+```
+
+### Example: Using index parameter
+
+```typescript
+import { find } from '@accelint/core/array/find';
+
+// Find first element at an even index
+const evenIndexed = find((_: string, index: number) => index % 2 === 0);
+evenIndexed(['a', 'b', 'c', 'd']);
+// 'a' (index 0)
+```
+
+> **Good to know:** Returns `null` (not `undefined`) when no element matches. The predicate stops executing once a match is found, providing early exit optimization. This is a pure function with no side effects.
+
+## Related
+
+- [filter](../filter/index.md) - Get all elements matching predicate
+- [find-index](../find-index/index.md) - Get index of first matching element
+- [find-last](../find-last/index.md) - Find from the end of the array
+- [some](../some/index.md) - Test if any element passes predicate

@@ -12,15 +12,69 @@
  */
 
 import { createContext, useContext } from 'react';
-import type { FloatingCardContextValue } from './types';
+import type { UniqueId } from '@accelint/core/utility/uuid';
+import type { Dimensions, FloatingCardContextValue, Position } from './types';
+
+/**
+ * How a `FloatingCard` attaches itself to its provider.
+ *
+ * @remarks
+ * Internal wiring rather than application API, so it is declared here rather
+ * than alongside the public types. Every member is stable for the provider's
+ * lifetime.
+ */
+export type FloatingCardRegistryValue = {
+  /** Registers a card with the provider so it renders as a panel */
+  openCard: (
+    id: UniqueId,
+    title: string | undefined,
+    position: Position,
+    dimensions: Dimensions,
+  ) => void;
+
+  /** Registers the DOM node a card's children portal into */
+  addRef: (id: UniqueId, ref: HTMLDivElement | null) => void;
+};
 
 export const FloatingCardContext =
   createContext<FloatingCardContextValue | null>(null);
+
+/**
+ * Wiring between `FloatingCard` and its provider.
+ *
+ * @remarks
+ * Deliberately separate from {@link FloatingCardContext}: registering a card is
+ * an internal detail, so it stays off the value applications consume. Its
+ * members are stable for the provider's lifetime, so reading it never causes a
+ * re-render.
+ */
+export const FloatingCardRegistryContext =
+  createContext<FloatingCardRegistryValue | null>(null);
+
+/**
+ * Reads the registration channel a `FloatingCard` uses to attach itself.
+ *
+ * @returns The provider's registration callbacks.
+ * @throws {Error} If used outside of a FloatingCardProvider.
+ */
+export function useFloatingCardRegistry(): FloatingCardRegistryValue {
+  const context = useContext(FloatingCardRegistryContext);
+
+  if (!context) {
+    // Only FloatingCard reads this, so name that rather than the internal hook.
+    throw new Error(
+      'FloatingCard must be rendered within a FloatingCardProvider.',
+    );
+  }
+
+  return context;
+}
+
 /**
  * Hook to access floating card management functionality.
  *
- * Provides access to card registry, ref management, and programmatic control
- * over opening, closing, and pinning floating cards.
+ * Provides the card registry and programmatic control over closing and pinning
+ * floating cards.
  *
  * @returns Context value with card management methods and state.
  * @throws {Error} If used outside of a FloatingCardProvider.
