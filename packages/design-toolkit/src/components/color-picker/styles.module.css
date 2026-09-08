@@ -37,7 +37,7 @@
     }
 
     @variant selected {
-      @apply outline-accent-primary-cold cursor-default;
+      @apply cursor-default;
       outline-color: var(--outline-accent-primary-bold);
     }
   }
