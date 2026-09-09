@@ -64,6 +64,7 @@ import {
   toDdmParts,
   toDmsParts,
   toMgrsParts,
+  toPlainDecimalString,
   toUtmParts,
 } from '@accelint/geo';
 import {
@@ -104,6 +105,29 @@ export interface CoordinateFormatResult {
  *
  * @internal
  */
+/** Decimal places retained when rendering a decimal-degrees value for display. */
+const DD_DISPLAY_PRECISION = 10;
+
+/**
+ * Renders a signed decimal-degrees value for display: fixed notation rounded to
+ * 10 decimal places with trailing zeros trimmed.
+ *
+ * Fixed notation keeps sub-`1e-6` magnitudes parseable (`String(1e-7)` would
+ * give `'1e-7'`, which the segment parsers reject), and the rounding hides float
+ * artifacts (`0.1 + 0.2` renders as `'0.3'`). Shared by the DD segment and
+ * full-string renderers so the two cannot disagree on precision.
+ *
+ * @param value - Signed decimal-degrees value.
+ * @returns The rendered value, e.g. `'40.7128'`, `'-74.006'`, `'0'`.
+ *
+ * @internal
+ */
+function formatDecimalDegreesValue(value: number): string {
+  const rendered = value.toFixed(DD_DISPLAY_PRECISION).replace(/\.?0+$/, '');
+
+  return rendered === '-0' ? '0' : rendered;
+}
+
 function formatDDSegments(segments: string[]): string | null {
   if (segments.length < 2) {
     return null;
@@ -118,7 +142,8 @@ function formatDDSegments(segments: string[]): string | null {
   const latDir = getHemisphere(latNum, 'lat');
   const lonDir = getHemisphere(lonNum, 'lon');
 
-  return `${Math.abs(latNum)} ${latDir} / ${Math.abs(lonNum)} ${lonDir}`;
+  // Plain notation: `${1e-7}` would be '1e-7', which geo's lexer mis-reads.
+  return `${toPlainDecimalString(Math.abs(latNum))} ${latDir} / ${toPlainDecimalString(Math.abs(lonNum))} ${lonDir}`;
 }
 
 /**
@@ -433,14 +458,13 @@ export function convertDDToDisplaySegments(
     const { lat, lon } = value;
 
     // Build each format's segments directly from @accelint/geo structured parts.
-    // DD keeps the raw signed magnitude (full precision); DDM/DMS use the parts
-    // functions' default display precision (minutes 4, seconds 2); MGRS/UTM read
-    // the grid parts and branch on the discriminated out-of-range result.
+    // DD renders the signed values at 10 decimal places in fixed notation;
+    // DDM/DMS use the parts functions' default display precision (minutes 4,
+    // seconds 2); MGRS/UTM read the grid parts and branch on the discriminated
+    // out-of-range result.
     switch (format) {
       case 'dd':
-        // DD segments carry the raw signed magnitudes at full precision (no
-        // rounding), matching geo's decimal-degrees renderer over the raw value.
-        return [String(lat), String(lon)];
+        return [formatDecimalDegreesValue(lat), formatDecimalDegreesValue(lon)];
       case 'ddm': {
         const latParts = toDdmParts(lat, 'lat');
         const lonParts = toDdmParts(lon, 'lon');
@@ -742,17 +766,15 @@ function convertToUtmResult(lat: number, lon: number): CoordinateFormatResult {
 /**
  * Convert coordinate to a specific format with error handling
  *
- * DD reads the geo string renderer directly; DDM/DMS and MGRS/UTM compose the
- * display string from @accelint/geo structured parts. MGRS/UTM signal
- * out-of-range latitudes through the discriminated result rather than by
- * matching geodesy error text, mapping to the poles sentinel.
+ * DD renders the signed values with the shared decimal-degrees renderer;
+ * DDM/DMS and MGRS/UTM compose the display string from @accelint/geo
+ * structured parts. MGRS/UTM signal out-of-range latitudes through the
+ * discriminated result rather than by matching geodesy error text, mapping to
+ * the poles sentinel.
  *
  * @internal
  */
 function convertToFormat(
-  coord: {
-    dd: () => string;
-  },
   format: CoordinateSystem,
   value: CoordinateValue,
 ): CoordinateFormatResult {
@@ -761,7 +783,10 @@ function convertToFormat(
   try {
     switch (format) {
       case 'dd':
-        return { value: coord.dd(), isValid: true };
+        return {
+          value: `${formatDecimalDegreesValue(Math.abs(lat))} ${getHemisphere(lat, 'lat')} / ${formatDecimalDegreesValue(Math.abs(lon))} ${getHemisphere(lon, 'lon')}`,
+          isValid: true,
+        };
       case 'ddm': {
         const latParts = toDdmParts(lat, 'lat');
         const lonParts = toDdmParts(lon, 'lon');
@@ -845,20 +870,15 @@ export function getAllCoordinateFormats(
 
   const validValue = value as CoordinateValue;
 
+  if (!isValidNumericCoordinate(validValue.lat, validValue.lon)) {
+    return invalidResult;
+  }
+
   try {
-    const create = createCoordinate(coordinateSystems.dd, 'LATLON');
-    const coord = create(
-      `${validValue.lat.toFixed(10)} / ${validValue.lon.toFixed(10)}`,
-    );
-
-    if (!coord.valid) {
-      return invalidResult;
-    }
-
     const result = {} as Record<CoordinateSystem, CoordinateFormatResult>;
 
     for (const format of COORDINATE_SYSTEMS) {
-      result[format] = convertToFormat(coord, format, validValue);
+      result[format] = convertToFormat(format, validValue);
     }
 
     return result;

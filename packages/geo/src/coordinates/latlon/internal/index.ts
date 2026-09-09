@@ -179,6 +179,7 @@ export {
   normalizeObjectToLatLon,
   tupleToLatLon,
 } from './normalize';
+export { toPlainDecimalString } from './plain-decimal';
 export {
   isFiniteNumber,
   isValidNumericCoordinate,

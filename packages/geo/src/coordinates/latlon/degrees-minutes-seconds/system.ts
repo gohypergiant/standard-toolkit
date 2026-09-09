@@ -13,6 +13,7 @@
 
 import { type Compass, type Format, SYMBOL_PATTERNS } from '../internal';
 import { formatCoordinateSystem } from '../internal/format';
+import { toPlainDecimalString } from '../internal/plain-decimal';
 import { parseDegreesMinutesSeconds } from './parser';
 import type { CoordinateSystem } from '../internal/coordinate-system';
 
@@ -77,7 +78,7 @@ export const systemDegreesMinutesSeconds: CoordinateSystem = {
       const min = Math.floor(rem);
       const sec = Number.parseFloat(((rem - min) * 60).toFixed(10));
 
-      return `${deg} ${min} ${sec}`;
+      return `${deg} ${min} ${toPlainDecimalString(sec)}`;
     });
   },
 };

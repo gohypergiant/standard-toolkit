@@ -208,6 +208,51 @@ describe.each`
   });
 });
 
+describe('magnitudes below 1e-6 (JavaScript exponential notation)', () => {
+  // `String(1e-7)` is '1e-7'; the lexer and round-trip renderers must keep
+  // plain decimal notation so these parse and format like any other value.
+  const create = createCoordinate(coordinateSystems.dd, 'LATLON');
+
+  it.each`
+    input                          | lat             | lon
+    ${'0.0000001 N / 0 E'}         | ${0.0000001}    | ${0}
+    ${'0.0000005 S / 0.0000001 W'} | ${-0.0000005}   | ${-0.0000001}
+    ${'0.0000001234 N / 180 W'}    | ${0.0000001234} | ${-180}
+  `('parses $input', ({ input, lat, lon }) => {
+    const coord = create(input);
+
+    expect(coord.errors).toEqual([]);
+    expect(coord.valid).toBe(true);
+    expect(coord.raw).toEqual({ LAT: lat, LON: lon });
+  });
+
+  it.each`
+    tuple                      | dd                             | ddm                             | dms
+    ${[0.0000001, 0]}          | ${'0.0000001 N / 0 E'}         | ${'0 0.000006 N / 0 0 E'}       | ${'0 0 0.00036 N / 0 0 0 E'}
+    ${[-0.0000005, 0.0000001]} | ${'0.0000005 S / 0.0000001 E'} | ${'0 0.00003 S / 0 0.000006 E'} | ${'0 0 0.0018 S / 0 0 0.00036 E'}
+  `('formats $tuple in plain notation', ({ tuple, dd, ddm, dms }) => {
+    const coord = create(tuple);
+
+    expect(coord.dd()).toBe(dd);
+    expect(coord.ddm()).toBe(ddm);
+    expect(coord.dms()).toBe(dms);
+  });
+
+  it.each`
+    system   | parse
+    ${'dd'}  | ${(value: string) => createCoordinate(coordinateSystems.dd, 'LATLON')(value)}
+    ${'ddm'} | ${(value: string) => createCoordinate(coordinateSystems.ddm, 'LATLON')(value)}
+    ${'dms'} | ${(value: string) => createCoordinate(coordinateSystems.dms, 'LATLON')(value)}
+  `('survives a $system format → parse round-trip', ({ system, parse }) => {
+    const original = create([0.0000001, -0.0000005]);
+    const formatted = original[system as 'dd' | 'ddm' | 'dms']();
+    const reparsed = parse(formatted);
+
+    expect(reparsed.valid).toBe(true);
+    expect(reparsed.raw).toEqual({ LAT: 0.0000001, LON: -0.0000005 });
+  });
+});
+
 describe('raw coordinate parsing', () => {
   describe('Decimal Degrees', () => {
     it.each`

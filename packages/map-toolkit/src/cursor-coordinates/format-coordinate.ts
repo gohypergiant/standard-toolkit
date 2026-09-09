@@ -23,12 +23,26 @@ import { wrap } from '@accelint/math';
 import { DEFAULT_MGRS_UTM_COORDS, MAX_LONGITUDE } from './constants';
 import type { CoordinateFormatTypes } from './types';
 
+/** Display options shared by the DD/DDM/DMS formatters: `lat N / lon W`. */
+const ORDINAL_FORMAT_OPTIONS = {
+  withOrdinal: true,
+  separator: ' / ',
+  prefix: '',
+  suffix: '',
+};
+
 /**
  * Normalizes longitude to the -180 to 180 range.
  * Handles wraparound including multi-revolution values.
  *
  * @param lon - Longitude value in degrees
  * @returns Normalized longitude between -180 and 180
+ *
+ * @example
+ * ```ts
+ * normalizeLongitude(190); // -170
+ * normalizeLongitude(-540); // -180
+ * ```
  */
 export function normalizeLongitude(lon: number): number {
   return wrap(-MAX_LONGITUDE, MAX_LONGITUDE, lon);
@@ -77,26 +91,11 @@ export function formatCoordinate(
 
   switch (format) {
     case 'dd':
-      return formatDecimalDegrees(latLon, {
-        withOrdinal: true,
-        separator: ' / ',
-        prefix: '',
-        suffix: '',
-      });
+      return formatDecimalDegrees(latLon, ORDINAL_FORMAT_OPTIONS);
     case 'ddm':
-      return formatDegreesDecimalMinutes(latLon, {
-        withOrdinal: true,
-        separator: ' / ',
-        prefix: '',
-        suffix: '',
-      });
+      return formatDegreesDecimalMinutes(latLon, ORDINAL_FORMAT_OPTIONS);
     case 'dms':
-      return formatDegreesMinutesSeconds(latLon, {
-        withOrdinal: true,
-        separator: ' / ',
-        prefix: '',
-        suffix: '',
-      });
+      return formatDegreesMinutesSeconds(latLon, ORDINAL_FORMAT_OPTIONS);
     case 'mgrs': {
       // The geo grid parts own the 80°S–84°N inclusive boundary and reject
       // non-finite input; an out-of-range result maps to the placeholder.

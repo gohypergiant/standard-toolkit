@@ -13,6 +13,7 @@
 
 import * as Patterning from '@/patterning';
 import { SYMBOL_PATTERNS, SYMBOLS } from '.';
+import { toPlainDecimalString } from './plain-decimal';
 
 export type Tokens = ReturnType<typeof lexer>;
 
@@ -88,7 +89,8 @@ function fixLeadingAndTrailing(t: string) {
   const [sign, num, pos] = (FLOATS.exec(t) ?? []).slice(1);
 
   if (num) {
-    return `${sign}${Number.parseFloat(num)}${pos}`;
+    // Plain notation: `${1e-7}` would be '1e-7', whose '-7' re-lexes as a sign.
+    return `${sign}${toPlainDecimalString(Number.parseFloat(num))}${pos}`;
   }
 
   return t;

@@ -1344,4 +1344,70 @@ describe('Coordinate Utils - geo-parts migration regression', () => {
       });
     });
   });
+
+  // Values where the parts migration deliberately differs from the old
+  // string-and-regex path: DD precision edges and DDM/DMS carry.
+  describe('DD display precision', () => {
+    it.each`
+      label                  | lat          | lon           | expected
+      ${'float artifact'}    | ${0.1 + 0.2} | ${0.1 + 0.2}  | ${['0.3', '0.3']}
+      ${'repeating decimal'} | ${1 / 3}     | ${-1 / 3}     | ${['0.3333333333', '-0.3333333333']}
+      ${'sub-1e-6 value'}    | ${0.0000001} | ${-0.0000005} | ${['0.0000001', '-0.0000005']}
+      ${'negative zero'}     | ${-0}        | ${-0}         | ${['0', '0']}
+      ${'antimeridian'}      | ${0}         | ${-180}       | ${['0', '-180']}
+      ${'eastern edge'}      | ${0}         | ${180}        | ${['0', '180']}
+    `('renders $label in fixed notation', ({ lat, lon, expected }) => {
+      expect(convertDDToDisplaySegments({ lat, lon }, 'dd')).toEqual(expected);
+    });
+
+    it('round-trips a sub-1e-6 DD value through the segment parser', () => {
+      const segments = convertDDToDisplaySegments(
+        { lat: 0.0000001, lon: -0.0000005 },
+        'dd',
+      );
+
+      expect(segments).toEqual(['0.0000001', '-0.0000005']);
+      expect(convertDisplaySegmentsToDD(segments as string[], 'dd')).toEqual({
+        lat: 0.0000001,
+        lon: -0.0000005,
+      });
+    });
+
+    it('uses the same renderer for the DD full-format string', () => {
+      const formats = getAllCoordinateFormats({
+        lat: 0.1 + 0.2,
+        lon: -(1 / 3),
+      });
+
+      expect(formats.dd).toEqual({
+        value: '0.3 N / 0.3333333333 W',
+        isValid: true,
+      });
+    });
+  });
+
+  describe('DDM/DMS carry at a minute/second boundary', () => {
+    it('carries 60 minutes into the next degree', () => {
+      const value: CoordinateValue = { lat: 40.99999999, lon: 0 };
+
+      expect(convertDDToDisplaySegments(value, 'ddm')).toEqual([
+        '41',
+        '0',
+        'N',
+        '0',
+        '0',
+        'E',
+      ]);
+      expect(convertDDToDisplaySegments(value, 'dms')).toEqual([
+        '41',
+        '0',
+        '0',
+        'N',
+        '0',
+        '0',
+        '0',
+        'E',
+      ]);
+    });
+  });
 });

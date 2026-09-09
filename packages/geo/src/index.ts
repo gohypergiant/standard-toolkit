@@ -62,6 +62,7 @@ export {
   getOrdinal,
 } from './coordinates/latlon/internal/ordinal';
 export type { Axis, Hemisphere } from './coordinates/latlon/internal/ordinal';
+export { toPlainDecimalString } from './coordinates/latlon/internal/plain-decimal';
 export {
   isFiniteNumber,
   isValidNumericCoordinate,

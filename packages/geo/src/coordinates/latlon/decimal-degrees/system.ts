@@ -13,6 +13,7 @@
 
 import { type Compass, type Format, SYMBOL_PATTERNS } from '../internal';
 import { formatCoordinateSystem } from '../internal/format';
+import { toPlainDecimalString } from '../internal/plain-decimal';
 import { parseDecimalDegrees } from './parser';
 import type { CoordinateSystem } from '../internal/coordinate-system';
 
@@ -62,6 +63,6 @@ export const systemDecimalDegrees: CoordinateSystem = {
   },
 
   toFormat(format: Format, coordinates: [number, number]) {
-    return formatCoordinateSystem(format, coordinates, (abs) => `${abs}`);
+    return formatCoordinateSystem(format, coordinates, toPlainDecimalString);
   },
 };
