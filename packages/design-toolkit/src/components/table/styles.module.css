@@ -25,7 +25,7 @@
     }
 
     &.crammed {
-      @apply p-xxs whitespace-nowrap;
+      @apply p-xxs overflow-hidden text-ellipsis whitespace-nowrap;
     }
 
     @variant hover {
@@ -54,7 +54,7 @@
     }
 
     &.crammed {
-      @apply p-xxs min-w-0 whitespace-nowrap;
+      @apply p-xxs min-w-0 overflow-hidden text-ellipsis whitespace-nowrap;
     }
 
     @variant selected {

@@ -136,6 +136,11 @@ follows the cells.
 | `compact` | 8px cell padding for denser layouts |
 | `crammed` | 2px cell padding with single-line cells for maximum density |
 
+With `fullWidth` (fixed layout), `crammed` truncates text wider than its
+column with an ellipsis; set a TanStack column `size` to control the cutoff.
+Custom cell content that intentionally extends beyond the cell edge is also
+clipped at `crammed`; portaled overlays (menus, tooltips) are unaffected.
+
 Only data mode (`columns` + `data`) accepts `variant`. Custom-children mode
 (the [Static Table](#static-table) above) renders `cozy`; wrap the cells in
 `TableContext.Provider` to hand-compose a denser table.

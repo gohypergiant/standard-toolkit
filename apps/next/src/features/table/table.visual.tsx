@@ -22,7 +22,13 @@ import {
   insertModeInFilename,
   THEME_MODES,
 } from '~/visual-regression/vitest';
-import { DATA, type Person, PROP_COMBOS, type TableScenario } from './variants';
+import {
+  DATA,
+  DATA_LONG,
+  type Person,
+  PROP_COMBOS,
+  type TableScenario,
+} from './variants';
 
 const columnHelper = createTableColumnHelper<Person>();
 
@@ -59,7 +65,7 @@ const columns = [
 ];
 
 function renderScenario(scenario: TableScenario) {
-  const data = scenario.emptyData ? [] : DATA;
+  const data = scenario.emptyData ? [] : scenario.longData ? DATA_LONG : DATA;
 
   return (
     <Table
@@ -76,6 +82,7 @@ function renderScenario(scenario: TableScenario) {
       fullWidth={scenario.fullWidth}
       rowSelection={scenario.rowSelection}
       variant={scenario.variant}
+      className={scenario.tableClassName}
     />
   );
 }
