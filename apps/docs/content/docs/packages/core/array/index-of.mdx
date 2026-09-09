@@ -1,0 +1,110 @@
+---
+title: "indexOf"
+description: Returns the first index at which a given element can be found in an array
+source: packages/core/src/array/index-of/index.ts
+source_sha: 9644cfe3807bc488778ca50e14766b5fd02b3941
+doc_sha: 760a5016967e30d0862d7bc41909fe68760a142d
+deprecated: false
+updated: 2026-07-13
+---
+
+## Usage
+
+```typescript
+import { indexOf } from '@accelint/core';
+
+// Find index of a value
+const index = indexOf(3)([1, 2, 3, 4, 5]);
+// 2
+
+// Partial application
+const findAppleIndex = indexOf('apple');
+findAppleIndex(['banana', 'orange', 'apple']); // 2
+```
+
+## Reference
+
+```typescript
+function indexOf<T>(
+  x: T
+): (arr: T[]) => number
+```
+
+### Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `x` | `T` | The value to search for in the array. |
+
+### Returns
+
+Returns a curried function that accepts an array and returns the index of the first occurrence of the value, or `-1` if not found.
+
+### Type Parameters
+
+- `T` - The type of elements in the array and the value to search for
+
+## Examples
+
+### Example: Finding first occurrence
+
+```typescript
+import { indexOf } from '@accelint/core';
+
+const data = [1, 2, 3, 2, 1];
+indexOf(2)(data); // 1 (first occurrence)
+```
+
+### Example: Element not found
+
+```typescript
+import { indexOf } from '@accelint/core';
+
+const numbers = [1, 2, 3, 4, 5];
+indexOf(10)(numbers); // -1
+```
+
+### Example: Strict equality comparison
+
+```typescript
+import { indexOf } from '@accelint/core';
+
+// Objects are compared by reference
+const obj = { id: 1 };
+const arr = [obj, { id: 2 }, { id: 3 }];
+
+indexOf(obj)(arr); // 0
+indexOf({ id: 1 })(arr); // -1 (different object reference)
+```
+
+### Example: Working with different types
+
+```typescript
+import { indexOf } from '@accelint/core';
+
+const mixed: (string | number)[] = ['a', 1, 'b', 2];
+
+indexOf('b')(mixed); // 2
+indexOf(1)(mixed); // 1
+```
+
+### Example: Checking if element exists
+
+```typescript
+import { indexOf } from '@accelint/core';
+
+const hasElement = (value: number) => (arr: number[]) => 
+  indexOf(value)(arr) !== -1;
+
+const numbers = [1, 2, 3, 4, 5];
+hasElement(3)(numbers); // true
+hasElement(10)(numbers); // false
+```
+
+> **Good to know:** This function uses strict equality (`===`) for comparison. For predicate-based searches, use [findIndex](../find-index/index.md) instead.
+
+## Related
+
+- [findIndex](../find-index/index.md) - Find index by predicate
+- [includes](../includes/index.md) - Check if array includes element
+- [find](../find/index.md) - Find element by predicate

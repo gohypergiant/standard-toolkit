@@ -1,0 +1,398 @@
+---
+title: Slider
+description: Range input for numeric value selection with support for single values or ranges, markers, snap-to-markers, and optional input fields.
+source: packages/design-toolkit/src/components/slider/index.tsx
+source_sha: dc7c9dd482e57f06d942b743b653fe02c69b201b
+doc_sha: 91d5a951f6a92257042cefe7d2be9242f7ba373f
+deprecated: false
+updated: 2026-07-13
+---
+
+## Usage
+
+```tsx
+import { Slider } from '@accelint/design-toolkit';
+
+export function VolumeControl() {
+  return (
+    <Slider
+      label="Volume"
+      defaultValue={50}
+      minValue={0}
+      maxValue={100}
+      onChange={(value) => setVolume(value)}
+    />
+  );
+}
+```
+
+## Reference
+
+```typescript
+interface SliderProps extends Omit<AriaSliderProps, 'children' | 'className'> {
+  label: string;
+  layout?: 'grid' | 'stack';
+  markers?: SliderMarkersConfig;
+  showInput?: boolean;
+  showLabel?: boolean;
+  showMarkerLabels?: boolean;
+  showValueLabels?: boolean;
+  snapToMarkers?: boolean;
+  classNames?: {
+    slider?: AriaSliderProps['className'];
+    label?: LabelProps['className'];
+    inputs?: string;
+    input?: string;
+    track?: SliderTrackProps['className'];
+    trackBackground?: string;
+    trackValue?: string;
+    thumb?: SliderThumbProps['className'];
+    minValue?: string;
+    maxValue?: string;
+    markers?: string;
+    marker?: string;
+    markerDot?: string;
+    markerLabel?: string;
+  };
+}
+
+type SliderMarkersConfig = number | SliderMarker[] | number[];
+
+interface SliderMarker {
+  value: number;
+  label?: string;
+}
+```
+
+### Props
+
+| Prop | Type | Default | Required |
+|------|------|---------|----------|
+| `label` | `string` | - | Yes |
+| `defaultValue` | `number \| number[]` | `[minValue]` | No |
+| `value` | `number \| number[]` | - | No |
+| `minValue` | `number` | `0` | No |
+| `maxValue` | `number` | `100` | No |
+| `step` | `number` | - | No |
+| `layout` | `'grid' \| 'stack'` | `'grid'` | No |
+| `markers` | `SliderMarkersConfig` | - | No |
+| `showInput` | `boolean` | `false` | No |
+| `showLabel` | `boolean` | `true` | No |
+| `showMarkerLabels` | `boolean` | `false` | No |
+| `showValueLabels` | `boolean` | `true` | No |
+| `snapToMarkers` | `boolean` | `false` | No |
+| `orientation` | `'horizontal' \| 'vertical'` | `'horizontal'` | No |
+| `onChange` | `(value: number \| number[]) => void` | - | No |
+| `onChangeEnd` | `(value: number \| number[]) => void` | - | No |
+
+#### `label`
+
+Label text for the slider. Required for accessibility. Hidden when `showLabel={false}`, but still used for `aria-label`.
+
+#### `defaultValue` / `value`
+
+Single number for a single-value slider, or array of two numbers for a range slider. Range sliders render two thumbs.
+
+```tsx
+// Single value
+<Slider defaultValue={50} />
+
+// Range
+<Slider defaultValue={[20, 80]} />
+```
+
+#### `layout`
+
+Controls the arrangement of slider elements:
+- `grid` - Label, input fields, track, and values arranged in a grid layout (default)
+- `stack` - Elements stacked vertically in document order
+
+#### `markers`
+
+Configures discrete marker points on the slider track:
+
+```tsx
+// Number: evenly spaced markers (e.g., 5 creates markers at 0%, 25%, 50%, 75%, 100%)
+<Slider markers={5} />
+
+// Array of values
+<Slider markers={[0, 25, 50, 75, 100]} />
+
+// Array of marker objects with labels
+<Slider 
+  markers={[
+    { value: 0, label: 'Low' },
+    { value: 50, label: 'Medium' },
+    { value: 100, label: 'High' },
+  ]}
+  showMarkerLabels
+/>
+```
+
+#### `showInput`
+
+Displays numeric input fields for direct value entry. Inputs debounce changes by 500ms for smooth interaction. Single-value sliders show one input; range sliders show two.
+
+#### `showMarkerLabels`
+
+Shows labels on markers that have a `label` property. Only applies when using marker objects with labels.
+
+#### `showValueLabels`
+
+Shows min/max value labels at track ends. Automatically hidden when a labeled marker exists at that position (prevents duplicate labels).
+
+#### `snapToMarkers`
+
+When `true`, the slider can only be set to marker values. The thumb snaps to the nearest marker during drag and on release. Requires `markers` prop.
+
+#### `onChangeEnd`
+
+Called when the user finishes dragging the thumb (on pointer up or blur). Useful for triggering API calls or expensive operations after interaction completes.
+
+### Inherited Props
+
+Slider inherits all props from React Aria's `Slider` component, including:
+- `isDisabled` - Disables the slider
+- `formatOptions` - Number formatting options
+- `name` - Form field name
+
+See [React Aria Slider](https://react-spectrum.adobe.com/react-aria/Slider.html) for full API reference.
+
+## Examples
+
+### Example: Basic slider
+
+```tsx
+import { Slider } from '@accelint/design-toolkit';
+
+<Slider
+  label="Volume"
+  defaultValue={50}
+  minValue={0}
+  maxValue={100}
+/>
+```
+
+### Example: Range slider
+
+```tsx
+import { Slider } from '@accelint/design-toolkit';
+
+<Slider
+  label="Price range"
+  defaultValue={[20, 80]}
+  minValue={0}
+  maxValue={100}
+/>
+```
+
+### Example: With input fields
+
+```tsx
+import { Slider } from '@accelint/design-toolkit';
+
+<Slider
+  label="Temperature"
+  defaultValue={72}
+  minValue={60}
+  maxValue={85}
+  showInput
+/>
+```
+
+### Example: With evenly spaced markers
+
+```tsx
+import { Slider } from '@accelint/design-toolkit';
+
+<Slider
+  label="Quality"
+  defaultValue={3}
+  minValue={1}
+  maxValue={5}
+  markers={5}
+  step={1}
+/>
+```
+
+### Example: With labeled markers
+
+```tsx
+import { Slider } from '@accelint/design-toolkit';
+
+<Slider
+  label="Priority"
+  defaultValue={2}
+  minValue={1}
+  maxValue={5}
+  markers={[
+    { value: 1, label: 'Low' },
+    { value: 2, label: 'Medium' },
+    { value: 3, label: 'High' },
+    { value: 4, label: 'Critical' },
+    { value: 5, label: 'Urgent' },
+  ]}
+  showMarkerLabels
+  snapToMarkers
+/>
+```
+
+> **Good to know:** When using `snapToMarkers` with labeled markers, the slider becomes a discrete selector — perfect for priority levels, quality settings, or rating scales.
+
+### Example: Snap to markers
+
+```tsx
+import { Slider } from '@accelint/design-toolkit';
+
+<Slider
+  label="CPU cores"
+  defaultValue={4}
+  minValue={1}
+  maxValue={16}
+  markers={[1, 2, 4, 8, 16]}
+  snapToMarkers
+/>
+```
+
+### Example: Custom step
+
+```tsx
+import { Slider } from '@accelint/design-toolkit';
+
+<Slider
+  label="Percentage"
+  defaultValue={50}
+  minValue={0}
+  maxValue={100}
+  step={5}
+/>
+```
+
+### Example: Controlled slider
+
+```tsx
+import { useState } from 'react';
+import { Slider } from '@accelint/design-toolkit';
+
+export function ControlledExample() {
+  const [value, setValue] = useState(50);
+
+  return (
+    <>
+      <Slider
+        label="Brightness"
+        value={value}
+        onChange={setValue}
+        minValue={0}
+        maxValue={100}
+      />
+      <p>Current: {value}%</p>
+    </>
+  );
+}
+```
+
+### Example: Disabled slider
+
+```tsx
+import { Slider } from '@accelint/design-toolkit';
+
+<Slider
+  label="Read-only setting"
+  value={75}
+  isDisabled
+  minValue={0}
+  maxValue={100}
+/>
+```
+
+### Example: Stack layout
+
+```tsx
+import { Slider } from '@accelint/design-toolkit';
+
+<Slider
+  label="Zoom"
+  defaultValue={100}
+  minValue={50}
+  maxValue={200}
+  layout="stack"
+  showInput
+/>
+```
+
+### Example: With onChange and onChangeEnd
+
+```tsx
+import { Slider } from '@accelint/design-toolkit';
+
+<Slider
+  label="Volume"
+  defaultValue={50}
+  minValue={0}
+  maxValue={100}
+  onChange={(value) => {
+    // Called during drag
+    console.log('Dragging:', value);
+  }}
+  onChangeEnd={(value) => {
+    // Called on release
+    console.log('Final value:', value);
+    saveToApi(value);
+  }}
+/>
+```
+
+> **Good to know:** Use `onChangeEnd` for expensive operations like API calls to avoid triggering them repeatedly during drag.
+
+### Example: Without visible label
+
+```tsx
+import { Slider } from '@accelint/design-toolkit';
+
+<Slider
+  label="Volume"
+  showLabel={false}
+  defaultValue={50}
+  minValue={0}
+  maxValue={100}
+/>
+```
+
+> **Good to know:** Even with `showLabel={false}`, the label text is still used for `aria-label` to ensure accessibility.
+
+### Example: Hide min/max values
+
+```tsx
+import { Slider } from '@accelint/design-toolkit';
+
+<Slider
+  label="Opacity"
+  defaultValue={0.5}
+  minValue={0}
+  maxValue={1}
+  step={0.1}
+  showValueLabels={false}
+/>
+```
+
+### Example: Custom markers (uneven spacing)
+
+```tsx
+import { Slider } from '@accelint/design-toolkit';
+
+<Slider
+  label="Response time"
+  defaultValue={100}
+  minValue={0}
+  maxValue={1000}
+  markers={[0, 50, 100, 200, 500, 1000]}
+  snapToMarkers
+/>
+```
+
+## Related
+
+- [TextField](../text-field/index.md) - Single-line text input
+- [Input](../input/index.md) - Base input component
+- [Tooltip](../tooltip/index.md) - Used for displaying thumb values on hover

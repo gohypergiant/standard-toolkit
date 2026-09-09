@@ -1,0 +1,285 @@
+---
+title: BroadcastChannel Mock
+description: Mock implementation of BroadcastChannel for Vitest testing
+source: tooling/vitest-config/mocks/broadcast-channel.ts
+source_sha: 50cc6c58d502562339da8546cbf5953866db9fa3
+doc_sha: 8ba774565cdf23d43b90ac112f97fb72990ef12d
+deprecated: false
+updated: 2026-07-13
+---
+
+Mock implementation of the BroadcastChannel API for testing browser-based messaging in Vitest. Simulates message broadcasting across channels with the same name.
+
+## Usage
+
+```typescript
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { mockBroadcastChannel, resetMockBroadcastChannel } from '@accelint/vitest-config/mocks/broadcast-channel';
+
+describe('BroadcastChannel tests', () => {
+  beforeEach(() => {
+    mockBroadcastChannel();
+  });
+
+  afterEach(() => {
+    resetMockBroadcastChannel();
+  });
+
+  it('broadcasts messages between channels', () => {
+    const channel1 = new BroadcastChannel('test');
+    const channel2 = new BroadcastChannel('test');
+    
+    const handler = vi.fn();
+    channel2.addEventListener('message', handler);
+    
+    channel1.postMessage({ data: 'hello' });
+    
+    expect(handler).toHaveBeenCalled();
+  });
+});
+```
+
+## Reference
+
+### mockBroadcastChannel
+
+```typescript
+function mockBroadcastChannel(): void
+```
+
+Installs a mock BroadcastChannel implementation on `globalThis`. Call this in `beforeEach` or test setup to enable BroadcastChannel testing.
+
+**Side effects:**
+- Replaces `globalThis.BroadcastChannel` with mock implementation
+- Creates internal channel registry for message routing
+
+### resetMockBroadcastChannel
+
+```typescript
+function resetMockBroadcastChannel(): void
+```
+
+Removes the mock implementation and clears all registered channels. Call this in `afterEach` to clean up after tests.
+
+**Side effects:**
+- Clears channel registry
+- Deletes `globalThis.BroadcastChannel`
+
+### Mock Interface
+
+The mock BroadcastChannel implements:
+
+```typescript
+interface MockChannel {
+  name: string;
+  onmessage: ((event: MessageEvent) => void) | null;
+  onmessageerror: ((event: MessageEvent) => void) | null;
+  addEventListener: MockFunctionResult;
+  removeEventListener: MockFunctionResult;
+  postMessage: MockFunctionResult;
+  close: MockFunctionResult;
+}
+```
+
+All methods are Vitest mock functions (`vi.fn()`), allowing assertion on calls and behavior.
+
+## Examples
+
+### Example: Basic message passing
+
+```typescript
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { mockBroadcastChannel, resetMockBroadcastChannel } from '@accelint/vitest-config/mocks/broadcast-channel';
+
+describe('BroadcastChannel', () => {
+  beforeEach(() => {
+    mockBroadcastChannel();
+  });
+
+  afterEach(() => {
+    resetMockBroadcastChannel();
+  });
+
+  it('sends messages to other channels', () => {
+    const sender = new BroadcastChannel('app');
+    const receiver = new BroadcastChannel('app');
+    
+    const handler = vi.fn();
+    receiver.addEventListener('message', handler);
+    
+    sender.postMessage({ type: 'update', value: 42 });
+    
+    expect(handler).toHaveBeenCalledWith(
+      expect.objectContaining({
+        data: { type: 'update', value: 42 },
+      })
+    );
+  });
+});
+```
+
+### Example: Multiple listeners on same channel
+
+```typescript
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { mockBroadcastChannel, resetMockBroadcastChannel } from '@accelint/vitest-config/mocks/broadcast-channel';
+
+describe('Multiple listeners', () => {
+  beforeEach(() => {
+    mockBroadcastChannel();
+  });
+
+  afterEach(() => {
+    resetMockBroadcastChannel();
+  });
+
+  it('broadcasts to all listeners', () => {
+    const channel = new BroadcastChannel('notifications');
+    
+    const handler1 = vi.fn();
+    const handler2 = vi.fn();
+    
+    channel.addEventListener('message', handler1);
+    channel.addEventListener('message', handler2);
+    
+    channel.postMessage({ text: 'New notification' });
+    
+    expect(handler1).toHaveBeenCalled();
+    expect(handler2).toHaveBeenCalled();
+  });
+});
+```
+
+### Example: Isolated channel names
+
+```typescript
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { mockBroadcastChannel, resetMockBroadcastChannel } from '@accelint/vitest-config/mocks/broadcast-channel';
+
+describe('Channel isolation', () => {
+  beforeEach(() => {
+    mockBroadcastChannel();
+  });
+
+  afterEach(() => {
+    resetMockBroadcastChannel();
+  });
+
+  it('does not broadcast across different channel names', () => {
+    const channel1 = new BroadcastChannel('app');
+    const channel2 = new BroadcastChannel('other');
+    
+    const handler = vi.fn();
+    channel2.addEventListener('message', handler);
+    
+    channel1.postMessage({ data: 'test' });
+    
+    expect(handler).not.toHaveBeenCalled();
+  });
+});
+```
+
+### Example: Using onmessage handler
+
+```typescript
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { mockBroadcastChannel, resetMockBroadcastChannel } from '@accelint/vitest-config/mocks/broadcast-channel';
+
+describe('onmessage handler', () => {
+  beforeEach(() => {
+    mockBroadcastChannel();
+  });
+
+  afterEach(() => {
+    resetMockBroadcastChannel();
+  });
+
+  it('calls onmessage when message received', () => {
+    const sender = new BroadcastChannel('chat');
+    const receiver = new BroadcastChannel('chat');
+    
+    const messages: unknown[] = [];
+    receiver.onmessage = (event) => {
+      messages.push(event.data);
+    };
+    
+    sender.postMessage({ text: 'Hello' });
+    sender.postMessage({ text: 'World' });
+    
+    expect(messages).toEqual([
+      { text: 'Hello' },
+      { text: 'World' },
+    ]);
+  });
+});
+```
+
+### Example: Asserting postMessage calls
+
+```typescript
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { mockBroadcastChannel, resetMockBroadcastChannel } from '@accelint/vitest-config/mocks/broadcast-channel';
+
+describe('Message assertions', () => {
+  beforeEach(() => {
+    mockBroadcastChannel();
+  });
+
+  afterEach(() => {
+    resetMockBroadcastChannel();
+  });
+
+  it('tracks postMessage calls', () => {
+    const channel = new BroadcastChannel('events');
+    
+    channel.postMessage({ event: 'start' });
+    channel.postMessage({ event: 'progress', value: 50 });
+    channel.postMessage({ event: 'complete' });
+    
+    expect(channel.postMessage).toHaveBeenCalledTimes(3);
+    expect(channel.postMessage).toHaveBeenNthCalledWith(2, {
+      event: 'progress',
+      value: 50,
+    });
+  });
+});
+```
+
+### Example: Setup file integration
+
+```typescript
+// tests/setup.ts
+import { beforeEach, afterEach } from 'vitest';
+import { mockBroadcastChannel, resetMockBroadcastChannel } from '@accelint/vitest-config/mocks/broadcast-channel';
+
+beforeEach(() => {
+  mockBroadcastChannel();
+});
+
+afterEach(() => {
+  resetMockBroadcastChannel();
+});
+```
+
+```typescript
+// vitest.config.ts
+import { defineConfig, mergeConfig } from 'vitest/config';
+import baseConfig from '@accelint/vitest-config/dom';
+
+export default mergeConfig(
+  baseConfig,
+  defineConfig({
+    test: {
+      setupFiles: ['./tests/setup.ts'],
+    },
+  }),
+);
+```
+
+> **Good to know:** The mock simulates message broadcasting by routing messages to all channels with matching names. Messages are delivered synchronously within the same test context, making assertions straightforward.
+
+## Related
+
+- [dom](../dom.mdx) - Vitest configuration for React/DOM testing
+- [no-dom](../no-dom.mdx) - Base Vitest configuration
+- [BroadcastChannel API](https://developer.mozilla.org/en-US/docs/Web/API/BroadcastChannel) - MDN documentation

@@ -1,0 +1,171 @@
+---
+title: parseDecimalDegrees
+description: Parses Decimal Degrees coordinate strings with validation for ranges and bearing indicators.
+source: packages/geo/src/coordinates/latlon/decimal-degrees/parser.ts
+source_sha: 3c25f6a62eb2eb4d8bda4e66a7b87e9bf87dcbd4
+doc_sha: 7507898b8cb2ce0ad27d05a5a3b05f35a0658e09
+deprecated: false
+updated: 2026-07-13
+---
+
+Parses a Decimal Degrees coordinate string with validation for ranges, bearing indicators, and format consistency.
+
+## Usage
+
+```typescript
+import { parseDecimalDegrees } from '@accelint/geo';
+
+// Parse with explicit format
+const [coords, errors] = parseDecimalDegrees('37.7749° N / 122.4194° W', 'LATLON');
+// coords: ['37.7749', 'N', '/', '122.4194', 'W']
+// errors: []
+```
+
+## Reference
+
+```typescript
+function parseDecimalDegrees(
+  input: string,
+  format: 'LATLON' | 'LONLAT'
+): [tokens: string[], errors: string[]]
+```
+
+### Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `input` | `string` | Raw coordinate string to parse |
+| `format` | `'LATLON' \| 'LONLAT'` | Expected format ordering |
+
+### Returns
+
+Returns a tuple containing:
+- `tokens`: Array of parsed coordinate components (degrees, bearings, dividers)
+- `errors`: Array of validation error messages (empty if valid)
+
+### Validation Rules
+
+Validates that:
+- Degree values are within acceptable ranges (±90 for latitude, ±180 for longitude)
+- Minutes indicator (`'`) is not present (invalid for Decimal Degrees)
+- Seconds indicator (`"`) is not present (invalid for Decimal Degrees)
+- Bearing indicators match the specified format (N/S for latitude, E/W for longitude)
+- Negative signs on degrees are converted to appropriate bearing directions
+
+## Examples
+
+### Example: Basic parsing
+
+```typescript
+import { parseDecimalDegrees } from '@accelint/geo';
+
+const [coords, errors] = parseDecimalDegrees('37.7749° N / 122.4194° W', 'LATLON');
+// coords: ['37.7749', 'N', '/', '122.4194', 'W']
+// errors: []
+```
+
+### Example: Without degree symbols
+
+```typescript
+import { parseDecimalDegrees } from '@accelint/geo';
+
+const [coords, errors] = parseDecimalDegrees('45.5 N, 122.6 W', 'LATLON');
+// coords: ['45.5', 'N', '/', '122.6', 'W']
+// errors: []
+```
+
+### Example: Negative values convert to bearings
+
+```typescript
+import { parseDecimalDegrees } from '@accelint/geo';
+
+const [coords, errors] = parseDecimalDegrees('-45.5 75.3', 'LATLON');
+// coords: ['45.5', 'S', '/', '75.3', 'E']
+// errors: []
+```
+
+### Example: LONLAT format
+
+```typescript
+import { parseDecimalDegrees } from '@accelint/geo';
+
+const [coords, errors] = parseDecimalDegrees('180 E / 90 N', 'LONLAT');
+// coords: ['180', 'E', '/', '90', 'N']
+// errors: []
+```
+
+### Example: Out of range latitude
+
+```typescript
+import { parseDecimalDegrees } from '@accelint/geo';
+
+const [coords, errors] = parseDecimalDegrees('91 / 0', 'LATLON');
+// coords: []
+// errors: ['[ERROR] Degrees value (91) exceeds max value (90).']
+```
+
+### Example: Out of range longitude
+
+```typescript
+import { parseDecimalDegrees } from '@accelint/geo';
+
+const [coords, errors] = parseDecimalDegrees('180 , 90', 'LONLAT');
+// coords: []
+// errors: ['[ERROR] Degrees value (181) exceeds max value (180).']
+```
+
+### Example: Invalid minutes indicator
+
+```typescript
+import { parseDecimalDegrees } from '@accelint/geo';
+
+const [coords, errors] = parseDecimalDegrees('40° 26\' N, 79° 58\' W', 'LATLON');
+// coords: []
+// errors: ['[ERROR] Minutes indicator (\') not valid in Decimal Degrees.']
+```
+
+### Example: Invalid seconds indicator
+
+```typescript
+import { parseDecimalDegrees } from '@accelint/geo';
+
+const [coords, errors] = parseDecimalDegrees('40° 26" N, 79° 58" W', 'LATLON');
+// coords: []
+// errors: ['[ERROR] Seconds indicator (") not valid in Decimal Degrees.']
+```
+
+### Example: Format mismatch
+
+```typescript
+import { parseDecimalDegrees } from '@accelint/geo';
+
+const [coords, errors] = parseDecimalDegrees('1 E / 2 N', 'LATLON');
+// coords: []
+// errors: ['[ERROR] Mismatched formats: "LATLON" expected, "LONLAT" found.']
+```
+
+### Example: Flexible separators
+
+```typescript
+import { parseDecimalDegrees } from '@accelint/geo';
+
+// Comma separator
+parseDecimalDegrees('45.5 N, 90.5 W', 'LATLON');
+
+// Slash separator
+parseDecimalDegrees('45.5 N / 90.5 W', 'LATLON');
+
+// Space separator
+parseDecimalDegrees('45.5 N 90.5 W', 'LATLON');
+```
+
+> **Good to know:** The parser accepts various separators (comma, slash, or space) between coordinate components. Negative signs on degrees are automatically converted to appropriate bearing directions (S for negative latitude, W for negative longitude).
+
+> **Good to know:** Decimal Degrees format does NOT allow minutes (`'`) or seconds (`"`) indicators. Use `parseDegreesDecimalMinutes` or `parseDegreesMinutesSeconds` for those formats.
+
+## Related
+
+- [formatDecimalDegrees](./formatter.md) - Format coordinates in Decimal Degrees notation
+- [parseDegreesDecimalMinutes](../degrees-decimal-minutes/parser.md) - Parse DDM coordinate strings
+- [parseDegreesMinutesSeconds](../degrees-minutes-seconds/parser.md) - Parse DMS coordinate strings
+- [createCoordinate](../../coordinate.md) - Create coordinate with automatic parsing

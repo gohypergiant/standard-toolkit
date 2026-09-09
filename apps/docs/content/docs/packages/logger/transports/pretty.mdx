@@ -1,0 +1,236 @@
+---
+title: prettyTransport
+description: Pretty-printed console transport for human-readable log output
+source: packages/logger/src/transports/pretty.ts
+source_sha: b10bcd365cf46b823f3374af702cca7f13c5698f
+doc_sha: 0287e6483ebf1e1401062d4b9fb1e856b58db478
+deprecated: false
+updated: 2026-07-13
+---
+
+## Usage
+
+```typescript
+import { prettyTransport } from '@accelint/logger/transports/pretty';
+
+const transport = prettyTransport({ level: 'debug' });
+```
+
+## Reference
+
+```typescript
+function prettyTransport(options: PrettyTransportProps): LogLayerTransport
+
+type PrettyTransportProps = {
+  level: LogLevel;
+}
+```
+
+### Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `options` | `PrettyTransportProps` | Transport configuration options |
+| `options.level` | `LogLevel` | Minimum log level to output |
+
+### Returns
+
+Returns a configured LogLayer transport instance that outputs formatted, colorized logs to the console using `message-only` view mode and browser runtime settings.
+
+### Configuration Details
+
+The transport is configured with:
+- **viewMode**: `'message-only'` - Focuses on the message, minimizing visual clutter
+- **runtime**: `'browser'` - Uses browser-style formatting for consistent output
+- **includeDataInBrowserConsole**: `true` - Always includes log data in the output
+
+> **Good to know:** This transport is the default when `pretty: true` (the default) in `getLogger` or `bootstrap`. It provides a good balance between readability and information density, even on the server.
+
+## Examples
+
+### Example: Basic pretty transport
+
+```typescript
+import { bootstrap, prettyTransport } from '@accelint/logger';
+
+const logger = bootstrap({
+  enabled: true,
+  transports: [prettyTransport({ level: 'debug' })],
+});
+
+logger.info('User logged in', { userId: 'usr_123' });
+// Console output: 
+// ℹ️ User logged in { userId: 'usr_123' }
+```
+
+### Example: Development logger with debug level
+
+```typescript
+import { bootstrap, prettyTransport, DEBUG } from '@accelint/logger';
+
+const logger = bootstrap({
+  enabled: true,
+  transports: [prettyTransport({ level: DEBUG })],
+});
+
+logger.trace('Not logged - below debug threshold');
+logger.debug('Cache miss', { key: 'user:123' });
+logger.info('Request completed', { duration: 42 });
+```
+
+### Example: Multiple transports with different levels
+
+```typescript
+import { bootstrap, prettyTransport, structuredTransport, DEBUG, WARN } from '@accelint/logger';
+
+const logger = bootstrap({
+  enabled: true,
+  transports: [
+    prettyTransport({ level: DEBUG }),    // Console shows everything
+    structuredTransport({ level: WARN }), // JSON only for warnings/errors
+  ],
+});
+
+logger.debug('Verbose debug info');  // Only in pretty console
+logger.warn('Something concerning'); // In both transports
+logger.error('Critical error');      // In both transports
+```
+
+### Example: Production logger with warning threshold
+
+```typescript
+import { bootstrap, prettyTransport, WARN } from '@accelint/logger';
+
+const logger = bootstrap({
+  enabled: true,
+  env: 'production',
+  transports: [prettyTransport({ level: WARN })],
+});
+
+logger.info('Not logged');
+logger.warn('Token expiring soon');  // Logged
+logger.error('Payment failed');      // Logged
+```
+
+### Example: Custom transport configuration for testing
+
+```typescript
+import { bootstrap, prettyTransport } from '@accelint/logger';
+import { describe, test, expect } from 'vitest';
+
+describe('Payment service', () => {
+  test('should log payment events', () => {
+    const logger = bootstrap({
+      enabled: true,
+      transports: [prettyTransport({ level: 'info' })],
+    });
+
+    logger.info('Payment processed');
+    // Readable output for debugging test failures
+  });
+});
+```
+
+### Example: Next.js development logger
+
+```typescript
+import { bootstrap, prettyTransport } from '@accelint/logger';
+
+const logger = bootstrap({
+  enabled: true,
+  env: 'development',
+  transports: [prettyTransport({ level: 'debug' })],
+  prefix: '[Next.js]',
+});
+
+logger.debug('API route called', { method: 'POST', path: '/api/users' });
+// Console output:
+// 🐛 [Next.js] API route called { method: 'POST', path: '/api/users' }
+```
+
+### Example: Error logging with stack traces
+
+```typescript
+import { bootstrap, prettyTransport } from '@accelint/logger';
+
+const logger = bootstrap({
+  enabled: true,
+  transports: [prettyTransport({ level: 'error' })],
+});
+
+try {
+  throw new Error('Database connection failed');
+} catch (error) {
+  logger.error('Critical error', { error });
+  // Pretty output includes serialized error with stack trace
+}
+```
+
+### Example: Combining with external logging service
+
+```typescript
+import { bootstrap, prettyTransport } from '@accelint/logger';
+import type { LogLayerTransport } from '@loglayer/shared';
+
+const externalTransport: LogLayerTransport = {
+  log(level, message, data) {
+    fetch('https://logs.example.com/ingest', {
+      method: 'POST',
+      body: JSON.stringify({ level, message, data }),
+    });
+  },
+};
+
+const logger = bootstrap({
+  enabled: true,
+  transports: [
+    prettyTransport({ level: 'debug' }), // Local console
+    externalTransport,                    // Remote service
+  ],
+});
+
+logger.info('Logged locally and remotely');
+```
+
+### Example: Conditional transport based on environment
+
+```typescript
+import { bootstrap, prettyTransport, structuredTransport } from '@accelint/logger';
+
+const isDevelopment = process.env.NODE_ENV === 'development';
+
+const logger = bootstrap({
+  enabled: true,
+  transports: [
+    isDevelopment
+      ? prettyTransport({ level: 'debug' })
+      : structuredTransport({ level: 'warn' }),
+  ],
+});
+
+logger.debug('Development-only debug info');
+```
+
+### Example: Using default transport implicitly
+
+```typescript
+import { getLogger } from '@accelint/logger';
+
+// Pretty transport is used automatically when pretty: true (default)
+const logger = getLogger({
+  enabled: true,
+  pretty: true,
+  level: 'info',
+});
+
+logger.info('Using default pretty transport');
+```
+
+> **Good to know:** The `message-only` view mode focuses output on the log message and data, hiding LogLayer's internal metadata. The `browser` runtime setting provides consistent colorized output across Node.js and browser environments.
+
+## Related
+
+- [structuredTransport](./structured.md) - JSON log transport
+- [getLogger](../default/index.md) - Uses prettyTransport by default when `pretty: true`
+- [bootstrap](../default/bootstrap.md) - Uses prettyTransport by default when `pretty: true`
+- [LogLayer Transport Configuration](https://loglayer.dev/configuration.html#transport-configuration) - Upstream documentation

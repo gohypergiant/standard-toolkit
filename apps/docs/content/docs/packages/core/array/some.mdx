@@ -1,0 +1,83 @@
+---
+title: "some"
+description: Tests whether any elements in the array pass the given comparator.
+source: packages/core/src/array/some/index.ts
+source_sha: eabd369840dda9ff9e8b35a862b38703a6c62921
+doc_sha: b1c2d3e4f5a6b7c8d9e0f1a2b3c4d5e6f7a8b9c0
+deprecated: false
+updated: 2026-07-13
+---
+
+## Usage
+
+```typescript
+import { some } from '@accelint/core/array/some';
+
+// Check if any number is even
+const hasEven = some((x: number) => x % 2 === 0)([1, 3, 4, 5]);
+// true
+
+const noEvens = some((x: number) => x % 2 === 0)([1, 3, 5]);
+// false
+```
+
+## Reference
+
+```typescript
+function some<T>(
+  comparator: (element: T) => boolean
+): (arr: T[]) => boolean
+```
+
+### Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `comparator` | `(element: T) => boolean` | Function called for each element. Returns `true` if element passes test, `false` otherwise. |
+
+### Returns
+
+Returns a curried function that accepts an array and returns `true` if any element passes the comparator, `false` otherwise.
+
+### Type Parameters
+
+- `T` - The type of elements in the array
+
+## Examples
+
+### Example: Checking for conditions
+
+```typescript
+import { some } from '@accelint/core/array/some';
+
+interface Product {
+  name: string;
+  inStock: boolean;
+}
+
+const products: Product[] = [
+  { name: 'Widget', inStock: false },
+  { name: 'Gadget', inStock: true }
+];
+
+const anyAvailable = some((p: Product) => p.inStock)(products);
+// true
+```
+
+### Example: Finding specific values
+
+```typescript
+import { some } from '@accelint/core/array/some';
+
+const numbers = [1, 2, 3, 4, 5];
+const hasNegative = some((n: number) => n < 0)(numbers);
+// false
+```
+
+> **Good to know:** Returns `false` for an empty array. Short-circuits on first passing element, providing early exit optimization. This is a pure function with no side effects.
+
+## Related
+
+- [every](../every/index.md) - Test if all elements pass comparator
+- [filter](../filter/index.md) - Get all elements matching predicate
+- [find](../find/index.md) - Find first element matching predicate

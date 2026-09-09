@@ -312,7 +312,7 @@ describe('CoffinCornerExtension', () => {
 
       expect(shaders?.modules).toHaveLength(1);
       expect(shaders?.modules[0]?.name).toBe('coffinCorner');
-      expect(Object.keys(shaders?.inject)).toEqual(
+      expect(Object.keys(shaders?.inject ?? {})).toEqual(
         expect.arrayContaining([
           'vs:#decl',
           'vs:#main-end',
@@ -331,22 +331,37 @@ describe('CoffinCornerExtension', () => {
       expect(shaders).toBeNull();
     });
 
-    it('exposes an overridable icon base-color hook guarded by a define', () => {
-      // IconLayer subclasses that re-color the sampled texel override
-      // `coffinCorner_iconBaseColor`; the `#ifndef` guard lets them suppress the
-      // default. This contract is part of the extension's public surface, so the
-      // hook name, guard macro, and the default texture sample must all be present.
+    it('should sample iconsTexture for the base color by default', () => {
       const layer = createMockLayer();
 
       const shaders = extension.getShaders.call(layer, extension);
-      const fsDecl = shaders?.inject['fs:#decl'] ?? '';
 
-      expect(fsDecl).toContain('coffinCorner_iconBaseColor');
-      expect(fsDecl).toContain('COFFIN_CORNER_HAS_CUSTOM_ICON_BASE_COLOR');
-      expect(fsDecl).toContain('texture(iconsTexture, textureCoords)');
       expect(shaders?.inject['fs:#main-start']).toContain(
-        'coffinCorner_iconBaseColor(vTextureCoords)',
+        'baseColor = texture(iconsTexture, vTextureCoords);',
       );
+    });
+
+    it('should splice iconBaseColorGlsl into the icon fragment main-start', () => {
+      const layer = createMockLayer();
+      const iconBaseColorGlsl = 'baseColor = vec4(1.0, 0.0, 0.0, 1.0);';
+      const customExtension = new CoffinCornerExtension({ iconBaseColorGlsl });
+
+      const shaders = customExtension.getShaders.call(layer, customExtension);
+      const fsMainStart = shaders?.inject['fs:#main-start'] ?? '';
+
+      expect(fsMainStart).toContain(iconBaseColorGlsl);
+      expect(fsMainStart).not.toContain(
+        'texture(iconsTexture, vTextureCoords)',
+      );
+    });
+
+    it('should return a stable shader config across calls', () => {
+      const layer = createMockLayer();
+
+      const first = extension.getShaders.call(layer, extension);
+      const second = extension.getShaders.call(layer, extension);
+
+      expect(first).toBe(second);
     });
   });
 

@@ -1,0 +1,373 @@
+---
+title: Drawer
+description: Slide-in panel for navigation or contextual content with stacked view support
+source: packages/design-toolkit/src/components/drawer/index.tsx
+source_sha: 777cfc7169a97a76dea66315fd7ae26c5f41971e
+doc_sha: 8e35818593c644d2f611707ffa74b6ec439c8fb5
+deprecated: false
+updated: 2026-07-13
+---
+
+## Usage
+
+```tsx
+import {
+  Drawer,
+  DrawerLayout,
+  DrawerLayoutMain,
+  DrawerPanel,
+  DrawerView,
+  DrawerHeader,
+  DrawerContent,
+  DrawerTrigger,
+  Button
+} from '@accelint/design-toolkit';
+import { uuid } from '@accelint/core';
+
+const ids = { drawer: uuid(), view: uuid() };
+
+export function MyDrawer() {
+  return (
+    <DrawerLayout push="left">
+      <DrawerLayoutMain>
+        <DrawerTrigger for={`open:${ids.view}`}>
+          <Button>Open Drawer</Button>
+        </DrawerTrigger>
+      </DrawerLayoutMain>
+
+      <Drawer id={ids.drawer} defaultView={ids.view}>
+        <DrawerPanel>
+          <DrawerView id={ids.view}>
+            <DrawerHeader title="Drawer Title" />
+            <DrawerContent>Your content here</DrawerContent>
+          </DrawerView>
+        </DrawerPanel>
+      </Drawer>
+    </DrawerLayout>
+  );
+}
+```
+
+## Reference
+
+```typescript
+interface DrawerProps {
+  id: UniqueId;
+  children: React.ReactNode;
+  className?: string;
+  defaultView?: UniqueId;
+  placement?: 'left' | 'right' | 'top' | 'bottom';
+  size?: 'small' | 'medium' | 'large';
+  onChange?: (view: UniqueId | null) => void;
+}
+```
+
+### Props
+
+| Prop | Type | Default | Required |
+|------|------|---------|----------|
+| `id` | `UniqueId` | - | Yes |
+| `children` | `React.ReactNode` | - | Yes |
+| `className` | `string` | - | No |
+| `defaultView` | `UniqueId` | - | No |
+| `placement` | `'left' \| 'right' \| 'top' \| 'bottom'` | `'left'` | No |
+| `size` | `'small' \| 'medium' \| 'large'` | `'medium'` | No |
+| `onChange` | `(view: UniqueId \| null) => void` | - | No |
+
+#### `id`
+
+Unique identifier for the drawer. Required for event handling and targeted control from outside the drawer's context.
+
+#### `defaultView`
+
+ID of the view to display initially when the drawer opens. Must match the `id` of a `DrawerView` child component.
+
+#### `placement`
+
+Edge of the viewport the drawer slides from:
+- `left` - Slides from the left edge (default)
+- `right` - Slides from the right edge
+- `top` - Slides from the top edge
+- `bottom` - Slides from the bottom edge
+
+#### `size`
+
+Controls the drawer panel dimensions:
+- `small` - Narrower panel for simple content
+- `medium` - Default balanced width
+- `large` - Wider panel for complex content
+
+#### `onChange`
+
+Callback invoked when the active view changes. Receives the new view ID or `null` when all views are closed.
+
+## Examples
+
+### Example: Basic drawer with trigger
+
+```tsx
+import {
+  Drawer,
+  DrawerLayout,
+  DrawerLayoutMain,
+  DrawerPanel,
+  DrawerView,
+  DrawerHeader,
+  DrawerContent,
+  DrawerTrigger,
+  Button
+} from '@accelint/design-toolkit';
+import { uuid } from '@accelint/core';
+
+const ids = { drawer: uuid(), view: uuid() };
+
+<DrawerLayout>
+  <DrawerLayoutMain>
+    <DrawerTrigger for={`open:${ids.view}`}>
+      <Button>Open</Button>
+    </DrawerTrigger>
+  </DrawerLayoutMain>
+
+  <Drawer id={ids.drawer} defaultView={ids.view}>
+    <DrawerPanel>
+      <DrawerView id={ids.view}>
+        <DrawerHeader title="Settings" />
+        <DrawerContent>
+          <p>Drawer content goes here</p>
+        </DrawerContent>
+      </DrawerView>
+    </DrawerPanel>
+  </Drawer>
+</DrawerLayout>
+```
+
+### Example: Right-side drawer
+
+```tsx
+import { Drawer, DrawerPanel, DrawerView, DrawerHeader, DrawerContent } from '@accelint/design-toolkit';
+import { uuid } from '@accelint/core';
+
+const ids = { drawer: uuid(), view: uuid() };
+
+<Drawer id={ids.drawer} defaultView={ids.view} placement="right">
+  <DrawerPanel>
+    <DrawerView id={ids.view}>
+      <DrawerHeader title="Notifications" />
+      <DrawerContent>
+        <p>Your notifications</p>
+      </DrawerContent>
+    </DrawerView>
+  </DrawerPanel>
+</Drawer>
+```
+
+### Example: Multiple stacked views
+
+```tsx
+import {
+  Drawer,
+  DrawerPanel,
+  DrawerView,
+  DrawerHeader,
+  DrawerContent,
+  DrawerTrigger,
+  Button
+} from '@accelint/design-toolkit';
+import { uuid } from '@accelint/core';
+
+const ids = {
+  drawer: uuid(),
+  main: uuid(),
+  settings: uuid()
+};
+
+<Drawer id={ids.drawer} defaultView={ids.main}>
+  <DrawerPanel>
+    <DrawerView id={ids.main}>
+      <DrawerHeader title="Menu" />
+      <DrawerContent>
+        <DrawerTrigger for={ids.settings}>
+          <Button>Open Settings</Button>
+        </DrawerTrigger>
+      </DrawerContent>
+    </DrawerView>
+
+    <DrawerView id={ids.settings}>
+      <DrawerHeader title="Settings" />
+      <DrawerContent>
+        <p>Settings content</p>
+      </DrawerContent>
+    </DrawerView>
+  </DrawerPanel>
+</Drawer>
+```
+
+### Example: Controlled drawer state
+
+```tsx
+import { Drawer, DrawerPanel, DrawerView, DrawerHeader, DrawerContent } from '@accelint/design-toolkit';
+import { uuid } from '@accelint/core';
+import { useState } from 'react';
+
+function ControlledDrawer() {
+  const ids = { drawer: uuid(), view: uuid() };
+  const [activeView, setActiveView] = useState(ids.view);
+
+  return (
+    <Drawer
+      id={ids.drawer}
+      defaultView={ids.view}
+      onChange={setActiveView}
+    >
+      <DrawerPanel>
+        <DrawerView id={ids.view}>
+          <DrawerHeader title="Controlled" />
+          <DrawerContent>
+            <p>Active: {activeView}</p>
+          </DrawerContent>
+        </DrawerView>
+      </DrawerPanel>
+    </Drawer>
+  );
+}
+```
+
+### Example: Large drawer with push behavior
+
+```tsx
+import {
+  Drawer,
+  DrawerLayout,
+  DrawerLayoutMain,
+  DrawerPanel,
+  DrawerView,
+  DrawerHeader,
+  DrawerContent
+} from '@accelint/design-toolkit';
+import { uuid } from '@accelint/core';
+
+const ids = { drawer: uuid(), view: uuid() };
+
+<DrawerLayout push="left">
+  <DrawerLayoutMain>
+    <p>Main content is pushed when drawer opens</p>
+  </DrawerLayoutMain>
+
+  <Drawer id={ids.drawer} defaultView={ids.view} size="large">
+    <DrawerPanel>
+      <DrawerView id={ids.view}>
+        <DrawerHeader title="Wide Panel" />
+        <DrawerContent>
+          <p>Large drawer content</p>
+        </DrawerContent>
+      </DrawerView>
+    </DrawerPanel>
+  </Drawer>
+</DrawerLayout>
+```
+
+### Example: Drawer with menu navigation
+
+```tsx
+import {
+  Drawer,
+  DrawerPanel,
+  DrawerView,
+  DrawerMenu,
+  DrawerMenuItem,
+  DrawerHeader,
+  DrawerContent,
+  Icon
+} from '@accelint/design-toolkit';
+import { Settings, Home } from '@accelint/icons';
+import { uuid } from '@accelint/core';
+
+const ids = {
+  drawer: uuid(),
+  home: uuid(),
+  settings: uuid()
+};
+
+<Drawer id={ids.drawer} defaultView={ids.home}>
+  <DrawerMenu>
+    <DrawerMenuItem for={ids.home} textValue="Home">
+      <Icon><Home /></Icon>
+    </DrawerMenuItem>
+    <DrawerMenuItem for={ids.settings} textValue="Settings">
+      <Icon><Settings /></Icon>
+    </DrawerMenuItem>
+  </DrawerMenu>
+
+  <DrawerPanel>
+    <DrawerView id={ids.home}>
+      <DrawerHeader title="Home" />
+      <DrawerContent>Home content</DrawerContent>
+    </DrawerView>
+
+    <DrawerView id={ids.settings}>
+      <DrawerHeader title="Settings" />
+      <DrawerContent>Settings content</DrawerContent>
+    </DrawerView>
+  </DrawerPanel>
+</Drawer>
+```
+
+## Multi-Part Structure
+
+Drawer is a multi-part component composed of several sub-components:
+
+- **Drawer** - Root container that manages view state and event handling
+- **DrawerLayout** - Layout wrapper that configures drawer positioning behavior
+- **DrawerLayoutMain** - Main content area adjacent to drawers
+- **DrawerPanel** - Container for drawer views
+- **DrawerView** - Individual stacked view within the drawer
+- **DrawerHeader** - Header section with title and optional actions
+- **DrawerContent** - Scrollable content area
+- **DrawerFooter** - Footer section for actions
+- **DrawerMenu** - Icon-based navigation menu
+- **DrawerMenuItem** - Individual menu item
+- **DrawerTrigger** - Button that controls drawer open/close/navigation
+- **DrawerClose** - Close button component
+- **DrawerBack** - Back navigation button
+
+See individual component pages for detailed documentation.
+
+## Event System
+
+Drawer uses a global event bus for programmatic control:
+
+### Simple Events (context-aware)
+
+- `'back'` - Navigate to previous view in stack
+- `'clear'` - Clear all views from stack
+- `'close'` - Close the current drawer
+- `'reset'` - Reset stack to default view
+- `viewId` - Push a specific view onto the stack
+
+### Targeted Events (external control)
+
+- `'open:${viewId}'` - Clear stack and open specific view
+- `'close:${drawerId}'` - Close specific drawer
+- `'toggle:${viewId}'` - Toggle view open/closed
+- `'back:${drawerId}'` - Navigate back in specific drawer
+- `'clear:${drawerId}'` - Clear specific drawer stack
+- `'reset:${drawerId}'` - Reset specific drawer stack
+
+### Chained Events
+
+Pass an array to trigger multiple events sequentially:
+
+```tsx
+<DrawerTrigger for={['reset', ids.settings, ids.profile]}>
+  <Button>Reset & Open Settings</Button>
+</DrawerTrigger>
+```
+
+> **Good to know:** Simple events only work within the context of a Drawer. Use targeted events to control drawers from outside their component tree.
+
+## Related
+
+- [DrawerLayout](./layout.mdx) - Layout configuration component
+- [DrawerView](./view.mdx) - Individual stacked view
+- [DrawerTrigger](./trigger.mdx) - Trigger button component
+- [ViewStack](../view-stack/index.mdx) - Underlying view stack implementation

@@ -1,0 +1,108 @@
+---
+title: "booleanToNumber"
+description: Convert a boolean to 1 or 0
+source: packages/converters/src/boolean-to-number/index.ts
+source_sha: 1ff38c1a14139141fb79a47dae8e6452b117844b
+doc_sha: 9be08a636c115076c83ee263b744f17fbfb70687
+deprecated: false
+updated: 2026-07-14
+---
+
+Convert a boolean to an integer using bitwise operations.
+
+## Usage
+
+```typescript
+import { booleanToNumber } from '@accelint/converters/boolean-to-number';
+
+const one = booleanToNumber(true);
+// 1
+
+const zero = booleanToNumber(false);
+// 0
+```
+
+## Reference
+
+```typescript
+function booleanToNumber(val: boolean): number
+```
+
+### Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `val` | `boolean` | The boolean value to convert to a number. |
+
+### Returns
+
+Returns `1` if `true`, `0` if `false`.
+
+## Examples
+
+### Example: Basic conversion
+
+```typescript
+import { booleanToNumber } from '@accelint/converters/boolean-to-number';
+
+console.log(booleanToNumber(true));
+// 1
+
+console.log(booleanToNumber(false));
+// 0
+```
+
+### Example: Array transformation
+
+```typescript
+import { booleanToNumber } from '@accelint/converters/boolean-to-number';
+
+const flags = [true, false, true, true, false];
+const numbers = flags.map(booleanToNumber);
+console.log(numbers);
+// [1, 0, 1, 1, 0]
+```
+
+### Example: Conditional arithmetic
+
+```typescript
+import { booleanToNumber } from '@accelint/converters/boolean-to-number';
+
+function countActive(items: { active: boolean }[]): number {
+  return items.reduce((sum, item) => sum + booleanToNumber(item.active), 0);
+}
+
+const items = [
+  { active: true },
+  { active: false },
+  { active: true }
+];
+
+console.log(countActive(items));
+// 2
+```
+
+### Example: Bitwise operations
+
+```typescript
+import { booleanToNumber } from '@accelint/converters/boolean-to-number';
+
+// Create bit flags
+const hasRead = true;
+const hasWrite = false;
+const hasExecute = true;
+
+const permissions = 
+  (booleanToNumber(hasRead) << 2) |
+  (booleanToNumber(hasWrite) << 1) |
+  booleanToNumber(hasExecute);
+
+console.log(permissions.toString(2).padStart(3, '0'));
+// "101"
+```
+
+> **Good to know:** This function uses bitwise OR with 0 (`| 0`) for efficient conversion. It's faster than using the ternary operator (`val ? 1 : 0`) or unary plus (`+val`).
+
+## Related
+
+- [toBoolean](../to-boolean/index.md) - Convert various values to boolean

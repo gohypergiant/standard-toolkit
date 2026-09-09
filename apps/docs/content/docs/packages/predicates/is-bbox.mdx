@@ -1,0 +1,101 @@
+---
+title: "isBbox"
+description: Type guard for validating bounding box arrays in [minLon, minLat, maxLon, maxLat] format
+source: packages/predicates/src/is-bbox/index.ts
+source_sha: fb3de36f72c19522f2402aa94b2225752de7e253
+doc_sha: 63d913c3689d969e3829f2349778e988d807dc73
+deprecated: false
+updated: 2026-07-13
+---
+
+Validates bounding box as array of 4 finite numbers: `[minLon, minLat, maxLon, maxLat]`.
+
+## Usage
+
+```typescript
+import { isBbox } from '@accelint/predicates';
+
+isBbox([-122.5, 37.7, -122.4, 37.8]);  // true (San Francisco area)
+isBbox([-180, -90, 180, 90]);          // true (entire world)
+isBbox([1, 2, 3]);                     // false (wrong length)
+```
+
+## Reference
+
+```typescript
+function isBbox(bbox: unknown): boolean
+```
+
+Format: `[minLongitude, minLatitude, maxLongitude, maxLatitude]`
+
+## Examples
+
+```typescript
+import { isBbox } from '@accelint/predicates/is-bbox';
+
+// Valid bounding boxes
+isBbox([-180, -90, 180, 90]);          // true (entire world)
+isBbox([-122.5, 37.7, -122.4, 37.8]);  // true (San Francisco area)
+
+// Invalid bounding boxes
+isBbox([1, 2, 3]);                     // false (wrong length)
+isBbox([1, 2, 3, 'four']);             // false (non-number)
+isBbox([1, 2, NaN, 4]);                // false (NaN not allowed)
+isBbox(null);                          // false
+```
+
+### Example: Map bounds validation
+
+```typescript
+import { isBbox } from '@accelint/predicates/is-bbox';
+
+function setMapBounds(bounds: unknown) {
+  if (!isBbox(bounds)) {
+    throw new Error('Invalid bounding box format');
+  }
+  
+  const [minLon, minLat, maxLon, maxLat] = bounds;
+  // Set map bounds...
+}
+
+setMapBounds([-122.5, 37.7, -122.4, 37.8]); // OK
+setMapBounds([1, 2, 3]);                     // Error: Invalid bounding box format
+```
+
+## Real-World Example: Complete bounding box validation
+
+```typescript
+import { isLatitude } from '@accelint/predicates/is-latitude';
+import { isLongitude } from '@accelint/predicates/is-longitude';
+import { isBbox } from '@accelint/predicates/is-bbox';
+
+function isValidBounds(bounds: unknown): bounds is [number, number, number, number] {
+  if (!isBbox(bounds)) {
+    return false;
+  }
+  
+  const [minLon, minLat, maxLon, maxLat] = bounds;
+  
+  return (
+    isLongitude(minLon) &&
+    isLatitude(minLat) &&
+    isLongitude(maxLon) &&
+    isLatitude(maxLat) &&
+    minLon < maxLon &&
+    minLat < maxLat
+  );
+}
+
+const sfBounds = [-122.5, 37.7, -122.4, 37.8];
+isValidBounds(sfBounds); // true
+```
+
+> **Good to know:** `isBbox` currently validates array length and numeric types but does not validate coordinate ranges. Use `isLatitude` and `isLongitude` for range validation as shown in the example above.
+
+## Related
+
+- [isLatitude](./is-latitude) - Validates latitude values
+- [isLongitude](./is-longitude) - Validates longitude values
+- [isBetween](../is-between/index.md) - Range validation for numbers
+- [isNumber](../is-number/index.md) - Type guard for numbers
+- [isFiniteNumber](../is-number/index.md#isfinite number) - Finite number validation

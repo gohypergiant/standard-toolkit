@@ -24,6 +24,7 @@ ignore:
   - .vscode
   - .agents
   - node_modules
+  - 'apps/docs'
   - '**/.next'
   - '**/.ladle'
   - '**/.storybook'

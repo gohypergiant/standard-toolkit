@@ -1,0 +1,165 @@
+---
+title: "nullishOr"
+description: Nullish coalescing (??) for values and function results
+source: logical/nullish-or/index.ts
+source_sha: ddd7bcb2c06b5f94c9f83d18a5d8064251967cb9
+doc_sha: 8c5f9fa90a621774bfca013146d6c0d6c8ae936b
+deprecated: false
+updated: 2026-07-13
+---
+
+## Usage
+
+```typescript
+import { nullishOr, nullishOrFn, swappedNullishOr, swappedNullishOrFn } from '@accelint/core';
+
+// Value-based nullish coalescing
+nullishOr(null)(42);
+// 42
+
+nullishOr(0)(42);
+// 0 (0 is not nullish)
+
+// Function-based nullish coalescing
+const getFromCache = (key: string): number | null => cache.get(key);
+const computeValue = (key: string): number => expensiveCalculation(key);
+
+const getValue = nullishOrFn(getFromCache)(computeValue);
+getValue('user-123');
+// Returns cached value, or computes if cache is null/undefined
+```
+
+## Reference
+
+### nullishOr
+
+```typescript
+function nullishOr<A>(a: A): <B>(b: B) => A | B
+```
+
+#### Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `a` | `A` | The possibly nullish value |
+
+#### Returns
+
+Returns a curried function that accepts a fallback value and returns the first value if not nullish, otherwise the fallback.
+
+#### Type Parameters
+
+- `A` - The type of the first input value
+- `B` - The type of the second input value
+
+### nullishOrFn
+
+```typescript
+function nullishOrFn<T, A>(
+  a: (x: T) => A
+): <B>(b: (y: T) => B) => (c: T) => A | B
+```
+
+#### Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `a` | `(x: T) => A` | The function that may return nullish |
+
+#### Returns
+
+Returns a curried function that accepts a fallback function, then accepts a value to pass to both functions, returning the first function result if not nullish, otherwise the second.
+
+#### Type Parameters
+
+- `T` - The type of the input value passed to both functions
+- `A` - The return type of the first function
+- `B` - The return type of the second function
+
+### swappedNullishOr
+
+```typescript
+function swappedNullishOr<A>(a: A): <B>(b: B) => A | B
+```
+
+Evaluates `b ?? a` instead of `a ?? b`.
+
+### swappedNullishOrFn
+
+```typescript
+function swappedNullishOrFn<T, A>(
+  a: (x: T) => A
+): <B>(b: (y: T) => B) => (c: T) => A | B
+```
+
+Evaluates `b(x) ?? a(x)` instead of `a(x) ?? b(x)`.
+
+## Examples
+
+### Example: Default values for optional fields
+
+```typescript
+import { nullishOr } from '@accelint/core';
+
+interface User {
+  name: string;
+  age?: number;
+}
+
+const getAge = (user: User) => 
+  nullishOr(user.age)(18);
+
+getAge({ name: 'Alice', age: 25 });
+// 25
+
+getAge({ name: 'Bob' });
+// 18
+
+getAge({ name: 'Charlie', age: 0 });
+// 0 (not nullish, so 0 is returned)
+```
+
+### Example: Fallback computation
+
+```typescript
+import { nullishOrFn } from '@accelint/core';
+
+const getUserPreference = (user: User): Theme | null => 
+  user.preferences?.theme ?? null;
+
+const getSystemTheme = (): Theme => 
+  window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+
+const getTheme = nullishOrFn(getUserPreference)(getSystemTheme);
+
+getTheme(user);
+// User theme if set, otherwise system theme
+```
+
+### Example: Difference from logical OR
+
+```typescript
+import { nullishOr, or } from '@accelint/core';
+
+// nullishOr preserves falsy values (except null/undefined)
+nullishOr(0)('fallback');
+// 0
+
+nullishOr(false)('fallback');
+// false
+
+nullishOr('')('fallback');
+// ''
+
+// or converts to boolean
+or(0)('fallback');
+// 'fallback'
+```
+
+> **Good to know:** Unlike `or`, `nullishOr` only treats `null` and `undefined` as absent values. Falsy values like `0`, `false`, and `''` are preserved. This matches JavaScript's `??` operator.
+
+## Related
+
+- [or](../or/index.md) - Logical disjunction (||) with truthiness
+- [and](../and/index.md) - Logical conjunction (&&)
+- [not](../not/index.md) - Logical negation (!)

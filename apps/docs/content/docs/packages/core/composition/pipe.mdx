@@ -1,0 +1,136 @@
+---
+title: "pipe"
+description: Combine two or more functions to create a new function that passes results from one function to the next, executing left-to-right.
+source: packages/core/src/composition/pipe/index.ts
+source_sha: ad3cf1f47a6cf493fc92a6fce64204625a98666b
+doc_sha: fb4f610f702232125b367be87feb4a8ab0168adb
+deprecated: false
+updated: 2026-07-13
+---
+
+## Usage
+
+```typescript
+import { pipe } from '@accelint/core/composition/pipe';
+
+// Basic usage
+const transform = pipe(
+  (x: number) => x * 2,
+  (x: number) => x + 3,
+  (x: number) => x.toString()
+);
+
+transform(5); // "13"
+```
+
+## Reference
+
+```typescript
+function pipe<Fns extends PipeArray>(
+  ...fns: Fns
+): (...args: PipeParams<Fns>) => PipeReturn<Fns>
+```
+
+### Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `...fns` | Function array | The functions to pipe. The first function can be n-ary, all subsequent functions must be unary. |
+
+### Returns
+
+Returns a function that executes the piped functions left-to-right, passing each result to the next function.
+
+### Type Parameters
+
+- `Fns` - Array of functions where the first may be n-ary and the rest must be unary
+- `PipeParams<Fns>` - Inferred parameter types of the first function
+- `PipeReturn<Fns>` - Inferred return type of the last function
+
+## Examples
+
+### Example: Data transformation pipeline
+
+```typescript
+import { pipe } from '@accelint/core/composition/pipe';
+import { filter } from '@accelint/core/array/filter';
+import { map } from '@accelint/core/array/map';
+
+interface User {
+  id: number;
+  name: string;
+  active: boolean;
+}
+
+const getActiveUserNames = pipe(
+  filter((u: User) => u.active),
+  map((u: User) => u.name)
+);
+
+const users: User[] = [
+  { id: 1, name: 'Alice', active: true },
+  { id: 2, name: 'Bob', active: false },
+  { id: 3, name: 'Charlie', active: true }
+];
+
+getActiveUserNames(users);
+// ['Alice', 'Charlie']
+```
+
+### Example: N-ary first function
+
+```typescript
+import { pipe } from '@accelint/core/composition/pipe';
+
+// First function takes multiple arguments
+const calculate = pipe(
+  (a: number, b: number) => a + b,
+  (sum: number) => sum * 2,
+  (result: number) => `Result: ${result}`
+);
+
+calculate(5, 3); // "Result: 16"
+```
+
+### Example: Complex transformations
+
+```typescript
+import { pipe } from '@accelint/core/composition/pipe';
+
+const processText = pipe(
+  (text: string) => text.toLowerCase(),
+  (text: string) => text.trim(),
+  (text: string) => text.split(' '),
+  (words: string[]) => words.filter(w => w.length > 3),
+  (words: string[]) => words.join(', ')
+);
+
+processText('  Hello World From TypeScript  ');
+// "hello, world, from, typescript"
+```
+
+### Example: Composing with reduce
+
+```typescript
+import { pipe } from '@accelint/core/composition/pipe';
+import { reduce } from '@accelint/core/array/reduce';
+import { map } from '@accelint/core/array/map';
+
+const sumSquares = pipe(
+  map((x: number) => x * x),
+  reduce((acc: number, n: number) => acc + n)(0)
+);
+
+sumSquares([1, 2, 3, 4]);
+// 30 (1 + 4 + 9 + 16)
+```
+
+> **Good to know:** `pipe` executes left-to-right (reading order), while `compose` executes right-to-left (mathematical composition). The first function can accept multiple arguments, but all subsequent functions must be unary since they receive the previous function's single return value.
+
+## Related
+
+- [compose](../compose/index.md) - Compose functions right-to-left
+- [curry](../curry/index.md) - Transform multi-argument function into curried function
+- [map](../../array/map/index.md) - Transform array elements
+- [filter](../../array/filter/index.md) - Filter array elements
+- [reduce](../../array/reduce/index.md) - Reduce array to single value

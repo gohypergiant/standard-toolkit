@@ -1,0 +1,2105 @@
+{
+  "version": "1.0",
+  "generated": "2026-07-14T20:37:58.3NZ",
+  "entries": [
+    {
+      "source": "packages/bus/src/broadcast/index.ts",
+      "doc": "apps/docs/content/docs/packages/bus/broadcast.mdx",
+      "entities": [
+        "Broadcast"
+      ],
+      "source_sha": "d4f39c5b2f8706ff3676f6dfa60b6649188cd63b",
+      "doc_sha": "7caf4628bf07f70f5b5e3b77f653f0e969ddb1ca",
+      "updated": "2026-07-14T19:53:27.000Z"
+    },
+    {
+      "source": "packages/bus/src/index.ts",
+      "doc": "apps/docs/content/docs/packages/bus/index.mdx",
+      "entities": [
+        "Broadcast",
+        "Payload",
+        "CONNECTION_EVENT_TYPES",
+        "DEFAULT_CONFIG",
+        "DEFAULT_TARGET",
+        "BasicPayload",
+        "BroadcastConfig",
+        "EmitOptions",
+        "EmitTarget",
+        "ExtractEvent",
+        "Listener",
+        "StructuredCloneableData"
+      ],
+      "source_sha": "3a165d8f4fcefdb569e96058bba87c59250d0703",
+      "doc_sha": "1ad198c4fd3a1e26a71522a436415be70a88ca5c",
+      "updated": "2026-07-14T19:53:27.000Z"
+    },
+    {
+      "source": "packages/bus/src/react/index.ts",
+      "doc": "apps/docs/content/docs/packages/bus/react.mdx",
+      "entities": [
+        "useBus",
+        "useEmit",
+        "useOn",
+        "useOnce"
+      ],
+      "source_sha": "6cf16682b1af2f7746e609f7cf851e728670dd9e",
+      "doc_sha": "8959fc6c3b44880cc6a391e331c860769998fd90",
+      "updated": "2026-07-14T19:53:27.000Z"
+    },
+    {
+      "source": "packages/constants/src/color/index.ts",
+      "doc": "apps/docs/content/docs/packages/constants/color.mdx",
+      "entities": [
+        "CSS_RGBA_LEGACY_REGEX",
+        "CSS_RGBA_MODERN_REGEX",
+        "HEX_REGEX"
+      ],
+      "source_sha": "d6cb28551a341a293027f2084e6e7f5c6c5cd467",
+      "doc_sha": "b6d51078a88222cfea127a64fe3d37333179fcdc",
+      "updated": "2026-07-14T20:01:26.000Z"
+    },
+    {
+      "source": "packages/constants/src/coordinates/index.ts",
+      "doc": "apps/docs/content/docs/packages/constants/coordinates.mdx",
+      "entities": [
+        "DEFAULT_COORDINATE"
+      ],
+      "source_sha": "baa1663be9d9bdbd5724b463df1021593f219c76",
+      "doc_sha": "927aa1f57e17f0206efad2407135e13297fc3776",
+      "updated": "2026-07-14T20:01:26.000Z"
+    },
+    {
+      "source": "packages/constants/src/index.ts",
+      "doc": "apps/docs/content/docs/packages/constants/index.mdx",
+      "entities": [
+        "CSS_RGBA_LEGACY_REGEX",
+        "CSS_RGBA_MODERN_REGEX",
+        "HEX_REGEX",
+        "DEFAULT_COORDINATE",
+        "DISTANCE_UNIT_BY_SYMBOL",
+        "DISTANCE_UNIT_SYMBOLS"
+      ],
+      "source_sha": "a812b45e237396de1f53bca79ccd4ab237ff0f6f",
+      "doc_sha": "85805f3c599bbdd1b4a34f3bd74feb73bd4707fe",
+      "updated": "2026-07-14T20:02:01.000Z"
+    },
+    {
+      "source": "packages/constants/src/units/index.ts",
+      "doc": "apps/docs/content/docs/packages/constants/units.mdx",
+      "entities": [
+        "DISTANCE_UNIT_SYMBOLS",
+        "DISTANCE_UNIT_BY_SYMBOL"
+      ],
+      "source_sha": "2eb2aeec378a8df693295660d015c4968dd924a5",
+      "doc_sha": "e97a752c0c0110c3956293da24fcf4cdc80b46e1",
+      "updated": "2026-07-14T20:01:26.000Z"
+    },
+    {
+      "source": "packages/converters/src/boolean-to-number/index.ts",
+      "doc": "apps/docs/content/docs/packages/converters/boolean-to-number.mdx",
+      "entities": [
+        "booleanToNumber"
+      ],
+      "source_sha": "1ff38c1a14139141fb79a47dae8e6452b117844b",
+      "doc_sha": "9be08a636c115076c83ee263b744f17fbfb70687",
+      "updated": "2026-07-14T20:00:00.000Z"
+    },
+    {
+      "source": "packages/converters/src/css-rgba/index.ts",
+      "doc": "apps/docs/content/docs/packages/converters/css-rgba.mdx",
+      "entities": [
+        "cssRgbaObjectToRgba255Tuple",
+        "cssRgbaStringToRgba255Tuple",
+        "cssRgbaTupleToRgba255Tuple",
+        "rgba255TupleToCssRgbaObject",
+        "rgba255TupleToCssRgbaString",
+        "rgba255TupleToCssRgbaTuple"
+      ],
+      "source_sha": "fa151112dacce74e9b1f7de18682728b6f5e2b52",
+      "doc_sha": "305a07fb20343c9c9aa1ad1db622b3c9ecdabab0",
+      "updated": "2026-07-14T20:00:00.000Z"
+    },
+    {
+      "source": "packages/converters/src/glsl/index.ts",
+      "doc": "apps/docs/content/docs/packages/converters/glsl.mdx",
+      "entities": [
+        "glslToRgba255Tuple",
+        "rgba255TupleToGlsl"
+      ],
+      "source_sha": "ff34b0e96f1ccb9e4469552484c34e9c4565046b",
+      "doc_sha": "6abd7a9bf9691298c14f809ad41e3154c2b6b3ae",
+      "updated": "2026-07-14T20:00:00.000Z"
+    },
+    {
+      "source": "packages/converters/src/hex/index.ts",
+      "doc": "apps/docs/content/docs/packages/converters/hex.mdx",
+      "entities": [
+        "hexToRgba255Tuple",
+        "rgba255TupleToHex"
+      ],
+      "source_sha": "3a4dd417a36a5ebf10a98aec73b0288af2326f9c",
+      "doc_sha": "ba9ed0f6fbc27ca377ce46f9d5ab52ce3a9fc173",
+      "updated": "2026-07-14T20:00:00.000Z"
+    },
+    {
+      "source": "packages/converters/src/index.ts",
+      "doc": "apps/docs/content/docs/packages/converters/index.mdx",
+      "entities": [
+        "booleanToNumber",
+        "cssRgbaObjectToRgba255Tuple",
+        "cssRgbaStringToRgba255Tuple",
+        "cssRgbaTupleToRgba255Tuple",
+        "rgba255TupleToCssRgbaObject",
+        "rgba255TupleToCssRgbaString",
+        "rgba255TupleToCssRgbaTuple",
+        "glslToRgba255Tuple",
+        "rgba255TupleToGlsl",
+        "hexToRgba255Tuple",
+        "rgba255TupleToHex",
+        "toBoolean",
+        "zxyToBbox"
+      ],
+      "source_sha": "4d087869282a5ba6e5392fcf5d3d1e5b94c4e125",
+      "doc_sha": "d650a775d89ac643c4879d06163b6e1477f933ca",
+      "updated": "2026-07-14T20:00:00.000Z"
+    },
+    {
+      "source": "packages/converters/src/to-boolean/index.ts",
+      "doc": "apps/docs/content/docs/packages/converters/to-boolean.mdx",
+      "entities": [
+        "toBoolean"
+      ],
+      "source_sha": "036a730d7f37943d5d0a957c9a40a3eda5404d7b",
+      "doc_sha": "b3acb64cf880023696c0170a8738905d460f9db6",
+      "updated": "2026-07-14T20:00:00.000Z"
+    },
+    {
+      "source": "packages/converters/src/zxy-to-bbox/index.ts",
+      "doc": "apps/docs/content/docs/packages/converters/zxy-to-bbox.mdx",
+      "entities": [
+        "zxyToBbox"
+      ],
+      "source_sha": "b901230c108c3798f91ecddcb71470b3bad99a8a",
+      "doc_sha": "e94eae2be5d200039f1bef8438d81f9c733a9029",
+      "updated": "2026-07-14T20:00:00.000Z"
+    },
+    {
+      "source": "packages/core/src/array/concat/index.ts",
+      "doc": "apps/docs/content/packages/core/array/concat/index.mdx",
+      "entities": [
+        "concat"
+      ],
+      "source_sha": "b9d62928b16591c9b96d402d10cd1da7da5b2b4b",
+      "doc_sha": "c1d2e3f4a5b6c7d8e9f0a1b2c3d4e5f6a7b8c9d0",
+      "updated": "2026-07-13T00:00:00.000Z"
+    },
+    {
+      "source": "packages/core/src/array/every/index.ts",
+      "doc": "apps/docs/content/packages/core/array/every/index.mdx",
+      "entities": [
+        "every"
+      ],
+      "source_sha": "9959f200a422cc0ea47f7b6a4f977e9b1689ef6a",
+      "doc_sha": "a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0",
+      "updated": "2026-07-13T00:00:00.000Z"
+    },
+    {
+      "source": "packages/core/src/array/filter/index.ts",
+      "doc": "apps/docs/content/packages/core/array/filter/index.mdx",
+      "entities": [
+        "filter"
+      ],
+      "source_sha": "5b59e552e10f3e0fe4c5fddd9c70933a11563523",
+      "doc_sha": "4ed5795a66e8e21bcea402ef4bd9706b10500809",
+      "updated": "2026-07-13T00:00:00.000Z"
+    },
+    {
+      "source": "packages/core/src/array/find/index.ts",
+      "doc": "apps/docs/content/packages/core/array/find/index.mdx",
+      "entities": [
+        "find"
+      ],
+      "source_sha": "106a32d9d7f1b657662a8183e731cd5fd4eb1cf5",
+      "doc_sha": "c5e9f8b2d4a1e6c3f7b9d2a8e4c6f1a3b5d7e9f0",
+      "updated": "2026-07-13T00:00:00.000Z"
+    },
+    {
+      "source": "packages/core/src/array/map/index.ts",
+      "doc": "apps/docs/content/packages/core/array/map/index.mdx",
+      "entities": [
+        "map"
+      ],
+      "source_sha": "ab7f109d1b6669d0f57f0f322e139db8c11160fd",
+      "doc_sha": "040f17f6a6d6ed1296ae0bd9b1b0675ca62d4803",
+      "updated": "2026-07-13T00:00:00.000Z"
+    },
+    {
+      "source": "packages/core/src/array/reduce/index.ts",
+      "doc": "apps/docs/content/packages/core/array/reduce/index.mdx",
+      "entities": [
+        "reduce"
+      ],
+      "source_sha": "3f1b18cde51c067e7a43244ec32b2ec8dbbc36a9",
+      "doc_sha": "f7bfdb1ee083c62714d9252aaebf9bc7d77056e7",
+      "updated": "2026-07-13T00:00:00.000Z"
+    },
+    {
+      "source": "packages/core/src/array/some/index.ts",
+      "doc": "apps/docs/content/packages/core/array/some/index.mdx",
+      "entities": [
+        "some"
+      ],
+      "source_sha": "eabd369840dda9ff9e8b35a862b38703a6c62921",
+      "doc_sha": "b1c2d3e4f5a6b7c8d9e0f1a2b3c4d5e6f7a8b9c0",
+      "updated": "2026-07-13T00:00:00.000Z"
+    },
+    {
+      "source": "packages/core/src/composition/compose/index.ts",
+      "doc": "apps/docs/content/packages/core/composition/compose/index.mdx",
+      "entities": [
+        "compose"
+      ],
+      "source_sha": "d6f3890ddffd1953e622c75fa7cb59500d6278b7",
+      "doc_sha": "e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0",
+      "updated": "2026-07-13T00:00:00.000Z"
+    },
+    {
+      "source": "packages/core/src/composition/curry/index.ts",
+      "doc": "apps/docs/content/packages/core/composition/curry/index.mdx",
+      "entities": [
+        "autoCurry"
+      ],
+      "source_sha": "68ac1efb06c5eee4185a0bc80326fb17e97bc033",
+      "doc_sha": "d1e2f3a4b5c6d7e8f9a0b1c2d3e4f5a6b7c8d9e0",
+      "updated": "2026-07-13T00:00:00.000Z"
+    },
+    {
+      "source": "packages/core/src/composition/pipe/index.ts",
+      "doc": "apps/docs/content/packages/core/composition/pipe/index.mdx",
+      "entities": [
+        "pipe"
+      ],
+      "source_sha": "ad3cf1f47a6cf493fc92a6fce64204625a98666b",
+      "doc_sha": "fb4f610f702232125b367be87feb4a8ab0168adb",
+      "updated": "2026-07-13T00:00:00.000Z"
+    },
+    {
+      "source": "packages/core/src/index.ts",
+      "doc": "apps/docs/content/packages/core/index.mdx",
+      "entities": [
+        "@accelint/core"
+      ],
+      "source_sha": "0cedef929d482b815f7ea13a3b82472f9df48f42",
+      "doc_sha": "71d8409d62478365fbb054f6ef63fce53399dbd4",
+      "updated": "2026-07-13T00:00:00.000Z"
+    },
+    {
+      "source": "packages/core/src/safe-enum/get-safe-enum-values/index.ts",
+      "doc": "apps/docs/content/packages/core/safe-enum/get-safe-enum-values/index.mdx",
+      "entities": [
+        "getSafeEnumValues"
+      ],
+      "source_sha": "c5628cfcc00805f122cccd2a2a337287639a6ef5",
+      "doc_sha": "f1a2b3c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9a0",
+      "updated": "2026-07-13T00:00:00.000Z"
+    },
+    {
+      "source": "packages/core/src/safe-enum/safe-enum/index.ts",
+      "doc": "apps/docs/content/packages/core/safe-enum/safe-enum/index.mdx",
+      "entities": [
+        "SafeEnum"
+      ],
+      "source_sha": "4e94ee4b5012446b51b1d79b349bdff7622fa26a",
+      "doc_sha": "da04baf166eb1e501f6ba1b46b9b984b1cf34db6",
+      "updated": "2026-07-13T00:00:00.000Z"
+    },
+    {
+      "source": "packages/dataset/src/index.ts",
+      "doc": "apps/docs/content/packages/dataset/index.mdx",
+      "entities": [
+        "datasetBackend",
+        "datasetBatchSize",
+        "datasetDataType",
+        "datasetDefaultFields",
+        "datasetDescription",
+        "datasetFields",
+        "datasetFilterDialect",
+        "datasetGeometryProperty",
+        "datasetId",
+        "datasetIdProperty",
+        "datasetLevel",
+        "datasetMaxRequests",
+        "datasetMaxZoom",
+        "datasetMetaData",
+        "datasetMinZoom",
+        "datasetMutatable",
+        "datasetName",
+        "datasetPositionFormat",
+        "datasetPresentationTypes",
+        "datasetRefetchInterval",
+        "datasetServiceLayer",
+        "datasetServiceType",
+        "datasetServiceUrls",
+        "datasetServiceVersion",
+        "datasetTable",
+        "datasetVendorParams",
+        "datasetVisible",
+        "metaDataBackend",
+        "metaDataBatchSize",
+        "metaDataDefaultFields",
+        "metaDataFilterDialect",
+        "metaDataGeometryProperty",
+        "metaDataIdProperty",
+        "metaDataMaxRequests",
+        "metaDataMaxZoom",
+        "metaDataMinZoom",
+        "metaDataPositionFormat",
+        "metaDataRefetchInterval",
+        "metaDataServiceLayer",
+        "metaDataServiceUrls",
+        "metaDataServiceVersion",
+        "metaDataTable",
+        "metaDataVendorParams",
+        "anyDatasetSchema",
+        "validateDatasetConfig",
+        "validateSchema",
+        "AnyArrowDataset",
+        "AnyDataset",
+        "AnyFSDataset",
+        "AnyGeoJsonDataset",
+        "AnyRESTDataset",
+        "AnyUnknownDataDataset",
+        "AnyUnknownDataset",
+        "AnyVTSDataset",
+        "AnyWFSDataset",
+        "AnyWMSDataset",
+        "ArrowFSDataset",
+        "ArrowRESTDataset",
+        "ArrowUnknownDataset",
+        "ArrowVTSDataset",
+        "ArrowWFSDataset",
+        "ArrowWMSDataset",
+        "FilterDialect",
+        "GeoJsonFSDataset",
+        "GeoJsonRESTDataset",
+        "GeoJsonUnknownDataset",
+        "GeoJsonVTSDataset",
+        "GeoJsonWFSDataset",
+        "GeoJsonWMSDataset",
+        "LayerConfigType",
+        "LayerDataType",
+        "LayerDataset",
+        "LayerDatasetField",
+        "LayerDatasetFieldTypes",
+        "LayerDatasetMetadata",
+        "LayerServiceType",
+        "SemVerVersion",
+        "UnknownFSDataset",
+        "UnknownRESTDataset",
+        "UnknownUnknownDataset",
+        "UnknownVTSDataset",
+        "UnknownWFSDataset",
+        "UnknownWMSDataset"
+      ],
+      "source_sha": "0072aaa45bb164912d54b4529945a71b21647496",
+      "doc_sha": "657b6f15f1765fb3fdd7f53d0c0dd70a08dd464c",
+      "updated": "2026-07-13T00:00:00.000Z"
+    },
+    {
+      "source": "packages/dataset/src/lenses.ts",
+      "doc": "apps/docs/content/packages/dataset/lenses.mdx",
+      "entities": [
+        "datasetBackend",
+        "datasetBatchSize",
+        "datasetDataType",
+        "datasetDefaultFields",
+        "datasetDescription",
+        "datasetFields",
+        "datasetFilterDialect",
+        "datasetGeometryProperty",
+        "datasetId",
+        "datasetIdProperty",
+        "datasetLevel",
+        "datasetMaxRequests",
+        "datasetMaxZoom",
+        "datasetMetaData",
+        "datasetMinZoom",
+        "datasetMutatable",
+        "datasetName",
+        "datasetPositionFormat",
+        "datasetPresentationTypes",
+        "datasetRefetchInterval",
+        "datasetServiceLayer",
+        "datasetServiceType",
+        "datasetServiceUrls",
+        "datasetServiceVersion",
+        "datasetTable",
+        "datasetVendorParams",
+        "datasetVisible",
+        "metaDataBackend",
+        "metaDataBatchSize",
+        "metaDataDefaultFields",
+        "metaDataFilterDialect",
+        "metaDataGeometryProperty",
+        "metaDataIdProperty",
+        "metaDataMaxRequests",
+        "metaDataMaxZoom",
+        "metaDataMinZoom",
+        "metaDataPositionFormat",
+        "metaDataRefetchInterval",
+        "metaDataServiceLayer",
+        "metaDataServiceUrls",
+        "metaDataServiceVersion",
+        "metaDataTable",
+        "metaDataVendorParams"
+      ],
+      "source_sha": "10b1ea922bf9625aa82fc9648cfa741b4fea379e",
+      "doc_sha": "1ae3656e60a2bf72fe496ff2c72ab5c53d9937ce",
+      "updated": "2026-07-13T00:00:00.000Z"
+    },
+    {
+      "source": "packages/dataset/src/types/datasets.ts",
+      "doc": "apps/docs/content/packages/dataset/types/datasets.mdx",
+      "entities": [
+        "SemVerVersion",
+        "LayerServiceType",
+        "LayerDataType",
+        "LayerConfigType",
+        "FilterDialect",
+        "LayerDatasetFieldTypes",
+        "LayerDatasetField",
+        "LayerDatasetMetadata",
+        "LayerDataset",
+        "GeoJsonFSDataset",
+        "GeoJsonUnknownDataset",
+        "GeoJsonVTSDataset",
+        "GeoJsonWFSDataset",
+        "GeoJsonWMSDataset",
+        "GeoJsonRESTDataset",
+        "ArrowFSDataset",
+        "ArrowUnknownDataset",
+        "ArrowVTSDataset",
+        "ArrowWFSDataset",
+        "ArrowWMSDataset",
+        "ArrowRESTDataset",
+        "UnknownFSDataset",
+        "UnknownUnknownDataset",
+        "UnknownVTSDataset",
+        "UnknownWFSDataset",
+        "UnknownWMSDataset",
+        "UnknownRESTDataset",
+        "AnyVTSDataset",
+        "AnyUnknownDataset",
+        "AnyWFSDataset",
+        "AnyWMSDataset",
+        "AnyRESTDataset",
+        "AnyFSDataset",
+        "AnyArrowDataset",
+        "AnyGeoJsonDataset",
+        "AnyUnknownDataDataset",
+        "AnyDataset"
+      ],
+      "source_sha": "01475fb2fd39a32d49facd468e94adce96ec4841",
+      "doc_sha": "b28c8cb0d6dc09f9f351352939aa4daf166d7f04",
+      "updated": "2026-07-13T00:00:00.000Z"
+    },
+    {
+      "source": "packages/dataset/src/validation.ts",
+      "doc": "apps/docs/content/packages/dataset/validation.mdx",
+      "entities": [
+        "anyDatasetSchema",
+        "validateDatasetConfig",
+        "validateSchema"
+      ],
+      "source_sha": "34400f87e6627a9af7bac8719bb8748d1ef20dc6",
+      "doc_sha": "a10858e2b920c98f635f19715ab8f200ff1eaa48",
+      "updated": "2026-07-13T00:00:00.000Z"
+    },
+    {
+      "source": "packages/design-foundation",
+      "doc": "apps/docs/content/docs/packages/design-foundation/index.mdx",
+      "entities": [
+        "tokens",
+        "lib/css",
+        "lib/utils",
+        "styles"
+      ],
+      "source_sha": "",
+      "doc_sha": "636352ba87620093b123e82492fb1e4c64cee88a",
+      "updated": "2026-07-14T20:08:58.000Z"
+    },
+    {
+      "source": "packages/design-foundation/src/lib/utils.ts",
+      "doc": "apps/docs/content/docs/packages/design-foundation/lib/utils.mdx",
+      "entities": [
+        "clsx"
+      ],
+      "source_sha": "4b2374afa10f0ffcda4f17ecc5b04c3fa85a12a4",
+      "doc_sha": "5b61fe2bcc5db0ada5345ff86c67fe65f77dec81",
+      "updated": "2026-07-14T20:08:58.000Z"
+    },
+    {
+      "source": "packages/design-foundation/src/tokens/index.ts",
+      "doc": "apps/docs/content/docs/packages/design-foundation/tokens.mdx",
+      "entities": [
+        "designTokens"
+      ],
+      "source_sha": "a93e7390ae7880416ac71ee6c3d84edc0aed68bf",
+      "doc_sha": "4c6daf7f05711589e310cc048af563833cea3ad9",
+      "updated": "2026-07-14T20:08:58.000Z"
+    },
+    {
+      "source": "packages/design-toolkit/src/components/badge/index.tsx",
+      "doc": "apps/docs/content/toolkits/design-toolkit/components/badge/index.mdx",
+      "entities": [
+        "Badge"
+      ],
+      "source_sha": "07929f0b1281248f07e82ac1550c8a27eb98d98b",
+      "doc_sha": "11613c30055b8b11625f45391e8f4bf7b572d553",
+      "updated": "2026-07-13T00:00:00.000Z"
+    },
+    {
+      "source": "packages/design-toolkit/src/components/button/index.tsx",
+      "doc": "apps/docs/content/toolkits/design-toolkit/components/button/index.mdx",
+      "entities": [
+        "Button"
+      ],
+      "source_sha": "355e6a55663d0fc215a11d6dc67efa404e847c34",
+      "doc_sha": "25f9e25e2cefd4a1afab13864cccb5c991252dbf",
+      "updated": "2026-07-13T00:00:00.000Z"
+    },
+    {
+      "source": "packages/design-toolkit/src/components/checkbox/index.tsx",
+      "doc": "apps/docs/content/toolkits/design-toolkit/components/checkbox/index.mdx",
+      "entities": [
+        "Checkbox"
+      ],
+      "source_sha": "28570e10ae713a87d4f98edee53cb571b8f0e2b0",
+      "doc_sha": "76a46cc9060371a63b4c792663d9ef1f2e4f3f0c",
+      "updated": "2026-07-13T00:00:00.000Z"
+    },
+    {
+      "source": "packages/design-toolkit/src/components/icon/index.tsx",
+      "doc": "apps/docs/content/toolkits/design-toolkit/components/icon/index.mdx",
+      "entities": [
+        "Icon"
+      ],
+      "source_sha": "4058c6151f0029df9882bd6457203cc1c1898cde",
+      "doc_sha": "e4419487ff123dede363e9d4780aff7dc7a2fa0b",
+      "updated": "2026-07-13T00:00:00.000Z"
+    },
+    {
+      "source": "packages/design-toolkit/src/components/input/index.tsx",
+      "doc": "apps/docs/content/toolkits/design-toolkit/components/input/index.mdx",
+      "entities": [
+        "Input"
+      ],
+      "source_sha": "1309572c47d78d67a1a571ec2b637cc99e0300c9",
+      "doc_sha": "0d3fa31594b3d1cec4d5441057ef6bbe6c41dcfa",
+      "updated": "2026-07-13T00:00:00.000Z"
+    },
+    {
+      "source": "packages/design-toolkit/src/components/menu/index.tsx",
+      "doc": "packages/design-toolkit/src/components/menu/index.md",
+      "entities": [
+        "Menu",
+        "MenuItem",
+        "MenuItemLabel",
+        "MenuItemDescription",
+        "MenuSection",
+        "MenuSeparator",
+        "MenuTrigger",
+        "MenuSubmenu"
+      ],
+      "source_sha": "6d3f2ffa271fa4d98a9a78af4cf953ed76546ebb",
+      "doc_sha": "c1a63127d69e08d51c27dc38ba414375af6be844",
+      "updated": "2026-05-28T00:00:00Z"
+    },
+    {
+      "source": "packages/formatters/src/iff/index.ts",
+      "doc": "apps/docs/content/docs/packages/formatters/iff.mdx",
+      "entities": [
+        "formatM1",
+        "formatM2",
+        "formatM3A",
+        "formatM4",
+        "formatM5"
+      ],
+      "source_sha": "b99fc37b50bdbb7feefad5aa41ba6d9bf4dfb429",
+      "doc_sha": "e4c349228292141c7c201c77c46c43afef29e20a",
+      "updated": "2026-07-14T20:30:00.000Z"
+    },
+    {
+      "source": "packages/formatters/src/index.ts",
+      "doc": "apps/docs/content/docs/packages/formatters/index.mdx",
+      "entities": [
+        "formatM1",
+        "formatM2",
+        "formatM3A",
+        "formatM4",
+        "formatM5"
+      ],
+      "source_sha": "7c23c79457c772768b2077efeefb86ba8df3f0c6",
+      "doc_sha": "43b1a1ed76987aa6685b6d129c658897c4f3455a",
+      "updated": "2026-07-14T20:30:00.000Z"
+    },
+    {
+      "source": "packages/geo/src/coordinates/coordinate.ts",
+      "doc": "apps/docs/content/docs/packages/geo/coordinates/coordinate.mdx",
+      "entities": [
+        "coordinateSystems",
+        "createCoordinate"
+      ],
+      "source_sha": "5f856088f6fa15afce2d4948feb777d6fc5ce60f",
+      "doc_sha": "71b6229b5f2c6e841091e4ba75b4db6c9ed38024",
+      "updated": "2026-07-13T00:00:00.000Z"
+    },
+    {
+      "source": "packages/geo/src/coordinates/latlon/decimal-degrees/formatter.ts",
+      "doc": "apps/docs/content/docs/packages/geo/coordinates/latlon/decimal-degrees/formatter.mdx",
+      "entities": [
+        "formatDecimalDegrees"
+      ],
+      "source_sha": "9b0bda7ded16af929c451e875c4c041313fec896",
+      "doc_sha": "1bf41a2e37ade59c70c1a6ae645af8841eec87f5",
+      "updated": "2026-07-13T00:00:00.000Z"
+    },
+    {
+      "source": "packages/geo/src/coordinates/latlon/decimal-degrees/parser.ts",
+      "doc": "apps/docs/content/docs/packages/geo/coordinates/latlon/decimal-degrees/parser.mdx",
+      "entities": [
+        "parseDecimalDegrees"
+      ],
+      "source_sha": "bf1df6dea46629b79b0b9caeeb5a58c6037bb73b",
+      "doc_sha": "7507898b8cb2ce0ad27d05a5a3b05f35a0658e09",
+      "updated": "2026-07-13T00:00:00.000Z"
+    },
+    {
+      "source": "packages/geo/src/coordinates/latlon/degrees-decimal-minutes/formatter.ts",
+      "doc": "apps/docs/content/docs/packages/geo/coordinates/latlon/degrees-decimal-minutes/formatter.mdx",
+      "entities": [
+        "formatDegreesDecimalMinutes"
+      ],
+      "source_sha": "e1468a38a16e6e632be2a5db43d41b34f9d00191",
+      "doc_sha": "2b67938d9b4aac1d74de39f2ce5da71e556aea8f",
+      "updated": "2026-07-13T00:00:00.000Z"
+    },
+    {
+      "source": "packages/geo/src/coordinates/latlon/degrees-decimal-minutes/parser.ts",
+      "doc": "apps/docs/content/docs/packages/geo/coordinates/latlon/degrees-decimal-minutes/parser.mdx",
+      "entities": [
+        "parseDegreesDecimalMinutes"
+      ],
+      "source_sha": "b67fb93807ca5b2135aaedc4721f412f7d94baa1",
+      "doc_sha": "6bd11bac0ef5ae7b0e0e5bf279c25842447823c7",
+      "updated": "2026-07-14T20:14:29.423Z"
+    },
+    {
+      "source": "packages/geo/src/coordinates/latlon/degrees-minutes-seconds/formatter.ts",
+      "doc": "apps/docs/content/docs/packages/geo/coordinates/latlon/degrees-minutes-seconds/formatter.mdx",
+      "entities": [
+        "formatDegreesMinutesSeconds"
+      ],
+      "source_sha": "f7bb3a67362842fc0537a0d9a45bc6f4b07b8529",
+      "doc_sha": "5e3d74217893f33cd6f3e8c62f1dd78f67145f11",
+      "updated": "2026-07-13T00:00:00.000Z"
+    },
+    {
+      "source": "packages/geo/src/coordinates/latlon/degrees-minutes-seconds/parser.ts",
+      "doc": "apps/docs/content/docs/packages/geo/coordinates/latlon/degrees-minutes-seconds/parser.mdx",
+      "entities": [
+        "parseDegreesMinutesSeconds"
+      ],
+      "source_sha": "1f613f8737155eab93ca9939e1e18092a096ad63",
+      "doc_sha": "fd64320a79a9cd73bedf58c5f31b197c509aada6",
+      "updated": "2026-07-14T20:14:29.425Z"
+    },
+    {
+      "source": "packages/geo/src/coordinates/mgrs/parser.ts",
+      "doc": "apps/docs/content/docs/packages/geo/coordinates/mgrs/parser.mdx",
+      "entities": [
+        "parseMGRS"
+      ],
+      "source_sha": "244459af6db0314d55a72a7baaa058c26d9a2b9e",
+      "doc_sha": "a86dddd2438fa3cbab8c18703db7075d53af2b68",
+      "updated": "2026-07-13T00:00:00.000Z"
+    },
+    {
+      "source": "packages/geo/src/coordinates/utm/parser.ts",
+      "doc": "apps/docs/content/docs/packages/geo/coordinates/utm/parser.mdx",
+      "entities": [
+        "parseUTM"
+      ],
+      "source_sha": "ad05873ac274fea7337184e00b0e1244e93ac411",
+      "doc_sha": "d65b9e6f4810e6f13de240dc92a3663c5eb94f79",
+      "updated": "2026-07-13T00:00:00.000Z"
+    },
+    {
+      "source": "packages/geo/src/index.ts",
+      "doc": "apps/docs/content/docs/packages/geo/index.mdx",
+      "entities": [
+        "coordinateSystems",
+        "createCoordinate",
+        "formatDecimalDegrees",
+        "parseDecimalDegrees",
+        "formatDegreesDecimalMinutes",
+        "parseDegreesDecimalMinutes",
+        "formatDegreesMinutesSeconds",
+        "parseDegreesMinutesSeconds",
+        "parseMGRS",
+        "parseUTM"
+      ],
+      "source_sha": "5886f7407bc66cfef28a4e4b589b2d08e60fadba",
+      "doc_sha": "4f1c75b0e4f53f1e535e5250d6fbaa7a3e500e3f",
+      "updated": "2026-07-14T13:34:24.000Z"
+    },
+    {
+      "source": "packages/hotkey-manager/src/index.ts",
+      "doc": "apps/docs/content/docs/packages/hotkey-manager/index.mdx",
+      "entities": [
+        "globalBind",
+        "globalUnbind",
+        "registerHotkey",
+        "unregisterHotkey",
+        "Keycode",
+        "isMac",
+        "keyToId",
+        "keyToString"
+      ],
+      "source_sha": "4ef2054b93f09d0ea3cff77bcfd643812d6e3008",
+      "doc_sha": "d62dd83ac06e7422b07c76d8045a68f20f19f0db",
+      "updated": "2026-07-14T16:16:19.614Z"
+    },
+    {
+      "source": "packages/hotkey-manager/src/react/use-hotkey.ts",
+      "doc": "apps/docs/content/docs/packages/hotkey-manager/react.mdx",
+      "entities": [
+        "useHotkey",
+        "createUseHotkey"
+      ],
+      "source_sha": "4e4d8a3bfc1c8e822f1bf886f72eccbae3fe41bd",
+      "doc_sha": "ef97376accbc55ff292621b5bccbc61bcd1db1cf",
+      "updated": "2026-07-14T16:16:11.295Z"
+    },
+    {
+      "source": "packages/icons/src/icons/index.ts",
+      "doc": "apps/docs/content/docs/packages/icons.mdx",
+      "entities": [
+        "AddFill",
+        "AddToList",
+        "Add",
+        "AirTrackHistory",
+        "Airport",
+        "Airspaces",
+        "AlertBase",
+        "Alert",
+        "Appearance",
+        "ArrangeTable",
+        "ArrowDown",
+        "ArrowKeys",
+        "ArrowLeft",
+        "ArrowNortheast",
+        "ArrowNorthwest",
+        "ArrowRight",
+        "ArrowSoutheast",
+        "ArrowSouthwest",
+        "ArrowUp",
+        "Arrow",
+        "Artcc",
+        "Ascending",
+        "Assignment",
+        "AttachFile",
+        "Attributes",
+        "BadData",
+        "BattleStation",
+        "Bell",
+        "Birds",
+        "BoltNotVisible",
+        "Bolt",
+        "Brightness",
+        "BugReport",
+        "Building",
+        "Calendar",
+        "CancelFill",
+        "Cancel",
+        "Car",
+        "CenterOn",
+        "ChartStackedBar",
+        "Check",
+        "ChevronDown",
+        "ChevronFillDown",
+        "ChevronFillLeft",
+        "ChevronFillRight",
+        "ChevronFillUp",
+        "ChevronLeft",
+        "ChevronRight",
+        "ChevronUp",
+        "CircleTool",
+        "CollapseAll",
+        "CollapseWindow",
+        "ColorPicker",
+        "CommercialShip",
+        "CommonAirTrack",
+        "CommonOperatingPic",
+        "CommonTrack",
+        "Condense",
+        "ConnectingAirports",
+        "ConnectionLost",
+        "Connection",
+        "Contrast",
+        "CopSettings",
+        "CopyToClipboard",
+        "Coverage",
+        "CreateCoa",
+        "CursorCrosshair",
+        "CursorDefault",
+        "CursorDrag",
+        "Dashboard",
+        "Data",
+        "DefendedPointCaalDal",
+        "Delete",
+        "Descending",
+        "DragHorz",
+        "DragVert",
+        "Duplicate",
+        "Edit",
+        "ElectromagneticSpectrum",
+        "EllipseTool",
+        "ExpandAll",
+        "ExpandLeftPanel",
+        "ExpandLeft",
+        "ExpandRight",
+        "ExpandWindow",
+        "Expand",
+        "ExploreData",
+        "FastForward",
+        "FastRewind",
+        "Feed",
+        "Filter",
+        "Flag",
+        "FlightPlan",
+        "Focus",
+        "FullScreen",
+        "Gantt",
+        "GlobalShare",
+        "Grid",
+        "Group",
+        "Hamburger",
+        "Handover",
+        "Handshake",
+        "Helicopter",
+        "Help",
+        "Hide",
+        "Hold",
+        "Import",
+        "Information",
+        "InsertChart",
+        "InterceptPoint",
+        "JumpToEnd",
+        "JumpToStart",
+        "JumpTo",
+        "Kebab",
+        "Keyboard",
+        "Label",
+        "Land",
+        "Landmine",
+        "LargeJet",
+        "Lasso",
+        "LayerGroup",
+        "Layers",
+        "LineTool",
+        "Link",
+        "Live",
+        "LocationFill",
+        "LocationStroke",
+        "LockFill",
+        "LockOutline",
+        "Login",
+        "Logout",
+        "Loop",
+        "MapPin",
+        "Marker",
+        "MercatorProjection",
+        "Message",
+        "MilitaryAirfield",
+        "MilitaryVessel",
+        "Minus",
+        "Missile",
+        "Missiles",
+        "Mission",
+        "Mode",
+        "MouseLeftClick",
+        "MouseMiddleClick",
+        "MouseRightClick",
+        "MouseScroll",
+        "Move",
+        "Mute",
+        "Newspaper",
+        "NonEditable",
+        "None",
+        "Note",
+        "OpenContainer",
+        "Overlays",
+        "PanelClosed",
+        "PanelOpen",
+        "PasteFromClipboard",
+        "Pause",
+        "Person",
+        "PersonalBoat",
+        "Phone",
+        "Pin",
+        "Placeholder",
+        "Play",
+        "Playback",
+        "Plots",
+        "Plus",
+        "PointFill",
+        "PointOutline",
+        "PolygonLasso",
+        "PolygonTool",
+        "PopBackIn",
+        "PopOut",
+        "PresumedTarget",
+        "Problem",
+        "Prop",
+        "RadarAnomaly",
+        "RadarSite",
+        "Radar",
+        "Radio",
+        "Record",
+        "RectangleSelect",
+        "RectangleTool",
+        "Region",
+        "Remote",
+        "RemoveFill",
+        "RemoveFromList",
+        "Remove",
+        "Reverse",
+        "Screenshot",
+        "ScrollClick",
+        "Search",
+        "Sector",
+        "SelectionList",
+        "SensorHealth",
+        "Settings",
+        "Share",
+        "Show",
+        "Skull",
+        "Slash",
+        "SmallJet",
+        "SoundAudible",
+        "SoundMute",
+        "Spotlight",
+        "SquareFill",
+        "SquareOutline",
+        "StackCards",
+        "Stack",
+        "Stadium",
+        "Star",
+        "Stop",
+        "Success",
+        "Target",
+        "Terrain",
+        "Tether",
+        "ThreatAssess",
+        "Ticket",
+        "Time",
+        "Timer",
+        "TrackChanges",
+        "TrackEtaEndpoint",
+        "TrackEta",
+        "TrackHistory",
+        "TriangleFill",
+        "TriangleOutline",
+        "UasHomePoint",
+        "Uas",
+        "Undo",
+        "UnscheduledMaintenance",
+        "UserManual",
+        "Waffle",
+        "Warning",
+        "WatchTower",
+        "Weather",
+        "WhatsNew",
+        "Wheel",
+        "Wind",
+        "ZoomIn",
+        "ZoomOut",
+        "ZoomTo"
+      ],
+      "source_sha": "0a221be83da6dbee5658d8ab9d2b0c39848ac749",
+      "doc_sha": "7a2054dbc908823f6d705c75e3e74fee170b426d",
+      "updated": "2026-07-14T20:18:47.3NZ"
+    },
+    {
+      "source": "packages/logger/src/default/bootstrap.ts",
+      "doc": "apps/docs/content/docs/packages/logger/default/bootstrap.mdx",
+      "entities": [
+        "bootstrap"
+      ],
+      "source_sha": "6b82165aa9393f8001b3830d745495efe20f7cfa",
+      "doc_sha": "4ac0f4fa726a4424a680be7b71f5858fc8ffcf65",
+      "updated": "2026-07-13T00:00:00.000Z"
+    },
+    {
+      "source": "packages/logger/src/default/index.ts",
+      "doc": "apps/docs/content/docs/packages/logger/default/index.mdx",
+      "entities": [
+        "getLogger"
+      ],
+      "source_sha": "5d8f26d3627b503804e9b8a7cdeb0a9590b09439",
+      "doc_sha": "ed4f5ff1514b5c3fe98b5765cbe67436713e65b8",
+      "updated": "2026-07-13T00:00:00.000Z"
+    },
+    {
+      "source": "packages/logger/src/definitions.ts",
+      "doc": "apps/docs/content/docs/packages/logger/definitions.mdx",
+      "entities": [
+        "DEBUG",
+        "ERROR",
+        "FATAL",
+        "INFO",
+        "TRACE",
+        "WARN",
+        "LogLevel",
+        "LoggerOptions"
+      ],
+      "source_sha": "8c730bafc8068e25285e695c913ebefcfa3c344d",
+      "doc_sha": "931ca106977dfba33174bc37eba0a962991b082f",
+      "updated": "2026-07-13T00:00:00.000Z"
+    },
+    {
+      "source": "packages/logger/src/index.ts",
+      "doc": "apps/docs/content/docs/packages/logger/index.mdx",
+      "entities": [
+        "getLogger",
+        "bootstrap",
+        "DEBUG",
+        "ERROR",
+        "FATAL",
+        "INFO",
+        "TRACE",
+        "WARN",
+        "callsitePlugin",
+        "environmentPlugin",
+        "prettyTransport",
+        "structuredTransport"
+      ],
+      "source_sha": "6590120cecd2a4cd41b06ceb0e316216a25867a5",
+      "doc_sha": "c472c0db3a3b7f5007e62322c6bde3b87735bca7",
+      "updated": "2026-07-13T00:00:00.000Z"
+    },
+    {
+      "source": "packages/logger/src/plugins/callsite.ts",
+      "doc": "apps/docs/content/docs/packages/logger/plugins/callsite.mdx",
+      "entities": [
+        "callsitePlugin"
+      ],
+      "source_sha": "2c791d5f027d5dd85ede507bd567d7324c87793d",
+      "doc_sha": "add8ed3c8e5efbbb9710af83eb5a5ee6457bb00a",
+      "updated": "2026-07-13T00:00:00.000Z"
+    },
+    {
+      "source": "packages/logger/src/plugins/environment.ts",
+      "doc": "apps/docs/content/docs/packages/logger/plugins/environment.mdx",
+      "entities": [
+        "environmentPlugin"
+      ],
+      "source_sha": "c50b933870c4c7e1eae79048fb135ccf7faf9166",
+      "doc_sha": "43e83e75c8fd5a735674f34e7f323b339cf1acc5",
+      "updated": "2026-07-13T00:00:00.000Z"
+    },
+    {
+      "source": "packages/logger/src/transports/pretty.ts",
+      "doc": "apps/docs/content/docs/packages/logger/transports/pretty.mdx",
+      "entities": [
+        "prettyTransport"
+      ],
+      "source_sha": "b10bcd365cf46b823f3374af702cca7f13c5698f",
+      "doc_sha": "0287e6483ebf1e1401062d4b9fb1e856b58db478",
+      "updated": "2026-07-13T00:00:00.000Z"
+    },
+    {
+      "source": "packages/logger/src/transports/structured.ts",
+      "doc": "apps/docs/content/docs/packages/logger/transports/structured.mdx",
+      "entities": [
+        "structuredTransport"
+      ],
+      "source_sha": "b987461bdab33a6d2c5563c2936d4b0dba79b026",
+      "doc_sha": "cde27408369783ad09d737162d0e8969890c6e04",
+      "updated": "2026-07-13T00:00:00.000Z"
+    },
+    {
+      "source": "packages/map-toolkit/src/deckgl/base-map/index.tsx",
+      "doc": "apps/docs/content/toolkits/map-toolkit/deckgl/base-map/index.mdx",
+      "entities": [
+        "BaseMap",
+        "MapEvents"
+      ],
+      "source_sha": "5449737bbb4f30acbd8cb71d09ebaf8a87387a86",
+      "doc_sha": "81e93a81ca8b4c32480ed4d62c343a755840375f",
+      "updated": "2026-07-13T00:00:00.000Z"
+    },
+    {
+      "source": "packages/map-toolkit/src/map-cursor/index.ts",
+      "doc": "apps/docs/content/toolkits/map-toolkit/map-cursor/index.mdx",
+      "entities": [
+        "useMapCursor",
+        "useMapCursorEffect",
+        "MapCursorEvents",
+        "getCursor",
+        "clearCursorState"
+      ],
+      "source_sha": "2acd8bce13156415b56717ceb928d4ebe65f9752",
+      "doc_sha": "bfc4f91f2d30944d598bb8a83e93a2a395f4b944",
+      "updated": "2026-07-13T00:00:00.000Z"
+    },
+    {
+      "source": "packages/map-toolkit/src/map-mode/index.ts",
+      "doc": "apps/docs/content/toolkits/map-toolkit/map-mode/index.mdx",
+      "entities": [
+        "useMapMode",
+        "MapModeEvents",
+        "getMode",
+        "getCurrentModeOwner",
+        "clearMapModeState"
+      ],
+      "source_sha": "b0d871531800e241bb51ecff20542ce612bf74a8",
+      "doc_sha": "23c244a1b62c06e39db06214117aec6c41c832c2",
+      "updated": "2026-07-13T00:00:00.000Z"
+    },
+    {
+      "source": "packages/math/src/clamp/index.ts",
+      "doc": "apps/docs/content/docs/packages/math/clamp.mdx",
+      "entities": [
+        "clamp"
+      ],
+      "source_sha": "af9d41f2cbd80d93eaf752583b987219960c4daa",
+      "doc_sha": "27f1b59fca22fad2155d833d43a00a28cdd0748e",
+      "updated": "2026-07-14T20:45:00.000Z"
+    },
+    {
+      "source": "packages/math/src/index.ts",
+      "doc": "apps/docs/content/docs/packages/math/index.mdx",
+      "entities": [
+        "clamp",
+        "random",
+        "randomInt",
+        "round"
+      ],
+      "source_sha": "2fde7042d193f22ca9eb29527a4576100c1ae7c7",
+      "doc_sha": "c48a9361232869b5c57fed108135850bf156c0bc",
+      "updated": "2026-07-14T20:45:00.000Z"
+    },
+    {
+      "source": "packages/math/src/random/index.ts",
+      "doc": "apps/docs/content/docs/packages/math/random.mdx",
+      "entities": [
+        "random",
+        "randomInt"
+      ],
+      "source_sha": "4db721b2f40ef197ee2668fc6433a84625a8788a",
+      "doc_sha": "1a362bb9d490ec85117f6e5591b023d29301e47e",
+      "updated": "2026-07-14T20:45:00.000Z"
+    },
+    {
+      "source": "packages/math/src/round/index.ts",
+      "doc": "apps/docs/content/docs/packages/math/round.mdx",
+      "entities": [
+        "round"
+      ],
+      "source_sha": "c5f26f19f5ca2227af188e1bd1eaa23060f6e38e",
+      "doc_sha": "38ab1b0f03e852c05c82710691e6e9a1dd7e2f10",
+      "updated": "2026-07-14T20:45:00.000Z"
+    },
+    {
+      "source": "packages/ntds/src/constants.ts",
+      "doc": "apps/docs/content/packages/ntds/constants.mdx",
+      "entities": [
+        "NTDS_COLOR_ASSUMED_FRIEND",
+        "NTDS_COLOR_FRIEND",
+        "NTDS_COLOR_HOSTILE",
+        "NTDS_COLOR_NEUTRAL",
+        "NTDS_COLOR_PENDING",
+        "NTDS_COLOR_SUSPECT",
+        "NTDS_COLOR_UNKNOWN"
+      ],
+      "source_sha": "2afe4edb087acbdddfa133120a153f7cb4d8fe91",
+      "doc_sha": "8d36f334d1d6a0f12c09f0e11cb02b0630cc0db9",
+      "updated": "2026-07-13T20:00:00.000Z"
+    },
+    {
+      "source": "packages/ntds/src/core/*.tsx",
+      "doc": "apps/docs/content/packages/ntds/core.mdx",
+      "entities": [
+        "SvgAirBaseFriend",
+        "SvgAirBaseHostile",
+        "SvgAirBaseUnknown",
+        "SvgAirFriend",
+        "SvgAirGroupFriend",
+        "SvgAirGroupHostile",
+        "SvgAirGroupUnknown",
+        "SvgAirHostile",
+        "SvgAirUnknown",
+        "SvgBaseFriend",
+        "SvgBaseHostile",
+        "SvgBaseUnknown",
+        "SvgCarrierFriend",
+        "SvgCarrierHostile",
+        "SvgCarrierUnknown",
+        "SvgCommunications",
+        "SvgHelicopterFriend",
+        "SvgHelicopterHostile",
+        "SvgHelicopterUnknown",
+        "SvgLandFriend",
+        "SvgLandHostile",
+        "SvgLandUnknown",
+        "SvgMineField",
+        "SvgMissileFriend",
+        "SvgMissileHostile",
+        "SvgMissileUnknown",
+        "SvgPol",
+        "SvgPort",
+        "SvgRunway",
+        "SvgSam",
+        "SvgStructure",
+        "SvgSubGroupFriend",
+        "SvgSubGroupHostile",
+        "SvgSubGroupUnknown",
+        "SvgSubSurfaceFriend",
+        "SvgSubSurfaceHostile",
+        "SvgSubSurfaceUnknown",
+        "SvgSurfaceFriend",
+        "SvgSurfaceGroupFriend",
+        "SvgSurfaceGroupHostile",
+        "SvgSurfaceGroupUnknown",
+        "SvgSurfaceHostile",
+        "SvgSurfaceUnknown",
+        "SvgTarget",
+        "SvgTorpedoFriend",
+        "SvgTorpedoHostile",
+        "SvgTorpedoUnknown"
+      ],
+      "source_sha": "dac866492a280115c6880b7279431d67223c0396",
+      "doc_sha": "623d010484be61e36d1e8d46279b95e6ece96430",
+      "updated": "2026-07-13T20:00:00.000Z"
+    },
+    {
+      "source": "packages/ntds/src/index.ts",
+      "doc": "apps/docs/content/packages/ntds/index.mdx",
+      "entities": [
+        "NTDS_COLOR_ASSUMED_FRIEND",
+        "NTDS_COLOR_FRIEND",
+        "NTDS_COLOR_HOSTILE",
+        "NTDS_COLOR_NEUTRAL",
+        "NTDS_COLOR_PENDING",
+        "NTDS_COLOR_SUSPECT",
+        "NTDS_COLOR_UNKNOWN",
+        "SvgAirBaseFriend",
+        "SvgAirBaseHostile",
+        "SvgAirBaseUnknown",
+        "SvgAirFriend",
+        "SvgAirGroupFriend",
+        "SvgAirGroupHostile",
+        "SvgAirGroupUnknown",
+        "SvgAirHostile",
+        "SvgAirUnknown",
+        "SvgBaseFriend",
+        "SvgBaseHostile",
+        "SvgBaseUnknown",
+        "SvgCarrierFriend",
+        "SvgCarrierHostile",
+        "SvgCarrierUnknown",
+        "SvgCommunications",
+        "SvgHelicopterFriend",
+        "SvgHelicopterHostile",
+        "SvgHelicopterUnknown",
+        "SvgLandFriend",
+        "SvgLandHostile",
+        "SvgLandUnknown",
+        "SvgMineField",
+        "SvgMissileFriend",
+        "SvgMissileHostile",
+        "SvgMissileUnknown",
+        "SvgPol",
+        "SvgPort",
+        "SvgRunway",
+        "SvgSam",
+        "SvgStructure",
+        "SvgSubGroupFriend",
+        "SvgSubGroupHostile",
+        "SvgSubGroupUnknown",
+        "SvgSubSurfaceFriend",
+        "SvgSubSurfaceHostile",
+        "SvgSubSurfaceUnknown",
+        "SvgSurfaceFriend",
+        "SvgSurfaceGroupFriend",
+        "SvgSurfaceGroupHostile",
+        "SvgSurfaceGroupUnknown",
+        "SvgSurfaceHostile",
+        "SvgSurfaceUnknown",
+        "SvgTarget",
+        "SvgTorpedoFriend",
+        "SvgTorpedoHostile",
+        "SvgTorpedoUnknown",
+        "AIR_ASSUMED_FRIEND",
+        "AIR_BASE_FRIEND",
+        "AIR_BASE_HOSTILE",
+        "AIR_BASE_UNKNOWN",
+        "AIR_FRIEND",
+        "AIR_GROUP_FRIEND",
+        "AIR_GROUP_HOSTILE",
+        "AIR_GROUP_UNKNOWN",
+        "AIR_HOSTILE",
+        "AIR_NEUTRAL",
+        "AIR_PENDING",
+        "AIR_SUSPECT",
+        "AIR_UNKNOWN",
+        "BASE_FRIEND",
+        "BASE_HOSTILE",
+        "BASE_UNKNOWN",
+        "CARRIER_FRIEND",
+        "CARRIER_HOSTILE",
+        "CARRIER_UNKNOWN",
+        "COMMUNICATIONS",
+        "HELICOPTER_FRIEND",
+        "HELICOPTER_HOSTILE",
+        "HELICOPTER_UNKNOWN",
+        "LAND_ASSUMED_FRIEND",
+        "LAND_FRIEND",
+        "LAND_HOSTILE",
+        "LAND_NEUTRAL",
+        "LAND_PENDING",
+        "LAND_SUSPECT",
+        "LAND_UNKNOWN",
+        "MINE_FIELD",
+        "MISSILE_FRIEND",
+        "MISSILE_HOSTILE",
+        "MISSILE_UNKNOWN",
+        "POL",
+        "PORT",
+        "RUNWAY",
+        "SAM",
+        "STRUCTURE",
+        "SUB_GROUP_FRIEND",
+        "SUB_GROUP_HOSTILE",
+        "SUB_GROUP_UNKNOWN",
+        "SUB_SURFACE_ASSUMED_FRIEND",
+        "SUB_SURFACE_FRIEND",
+        "SUB_SURFACE_HOSTILE",
+        "SUB_SURFACE_NEUTRAL",
+        "SUB_SURFACE_PENDING",
+        "SUB_SURFACE_SUSPECT",
+        "SUB_SURFACE_UNKNOWN",
+        "SURFACE_ASSUMED_FRIEND",
+        "SURFACE_FRIEND",
+        "SURFACE_GROUP_FRIEND",
+        "SURFACE_GROUP_HOSTILE",
+        "SURFACE_GROUP_UNKNOWN",
+        "SURFACE_HOSTILE",
+        "SURFACE_NEUTRAL",
+        "SURFACE_PENDING",
+        "SURFACE_SUSPECT",
+        "SURFACE_UNKNOWN",
+        "TARGET",
+        "TORPEDO_FRIEND",
+        "TORPEDO_HOSTILE",
+        "TORPEDO_UNKNOWN"
+      ],
+      "source_sha": "10cfbf6da0b32147d0fe03d2f5ce74405d34cb03",
+      "doc_sha": "391b435fba19976557eb1a3e7412247903bc09ca",
+      "updated": "2026-07-13T20:00:00.000Z"
+    },
+    {
+      "source": "packages/ntds/src/spritesheets/masked.ts",
+      "doc": "apps/docs/content/packages/ntds/spritesheets/masked.mdx",
+      "entities": [
+        "AIR_ASSUMED_FRIEND",
+        "AIR_BASE_FRIEND",
+        "AIR_BASE_HOSTILE",
+        "AIR_BASE_UNKNOWN",
+        "AIR_FRIEND",
+        "AIR_GROUP_FRIEND",
+        "AIR_GROUP_HOSTILE",
+        "AIR_GROUP_UNKNOWN",
+        "AIR_HOSTILE",
+        "AIR_NEUTRAL",
+        "AIR_PENDING",
+        "AIR_SUSPECT",
+        "AIR_UNKNOWN",
+        "BASE_FRIEND",
+        "BASE_HOSTILE",
+        "BASE_UNKNOWN",
+        "CARRIER_FRIEND",
+        "CARRIER_HOSTILE",
+        "CARRIER_UNKNOWN",
+        "COMMUNICATIONS",
+        "HELICOPTER_FRIEND",
+        "HELICOPTER_HOSTILE",
+        "HELICOPTER_UNKNOWN",
+        "LAND_ASSUMED_FRIEND",
+        "LAND_FRIEND",
+        "LAND_HOSTILE",
+        "LAND_NEUTRAL",
+        "LAND_PENDING",
+        "LAND_SUSPECT",
+        "LAND_UNKNOWN",
+        "MINE_FIELD",
+        "MISSILE_FRIEND",
+        "MISSILE_HOSTILE",
+        "MISSILE_UNKNOWN",
+        "POL",
+        "PORT",
+        "RUNWAY",
+        "SAM",
+        "STRUCTURE",
+        "SUB_GROUP_FRIEND",
+        "SUB_GROUP_HOSTILE",
+        "SUB_GROUP_UNKNOWN",
+        "SUB_SURFACE_ASSUMED_FRIEND",
+        "SUB_SURFACE_FRIEND",
+        "SUB_SURFACE_HOSTILE",
+        "SUB_SURFACE_NEUTRAL",
+        "SUB_SURFACE_PENDING",
+        "SUB_SURFACE_SUSPECT",
+        "SUB_SURFACE_UNKNOWN",
+        "SURFACE_ASSUMED_FRIEND",
+        "SURFACE_FRIEND",
+        "SURFACE_GROUP_FRIEND",
+        "SURFACE_GROUP_HOSTILE",
+        "SURFACE_GROUP_UNKNOWN",
+        "SURFACE_HOSTILE",
+        "SURFACE_NEUTRAL",
+        "SURFACE_PENDING",
+        "SURFACE_SUSPECT",
+        "SURFACE_UNKNOWN",
+        "TARGET",
+        "TORPEDO_FRIEND",
+        "TORPEDO_HOSTILE",
+        "TORPEDO_UNKNOWN"
+      ],
+      "source_sha": "f61c316277de9cd462c6ffa2295f6a186d3fd8f4",
+      "doc_sha": "a0614534076761205d0758be9c21afafd0530d0d",
+      "updated": "2026-07-13T20:00:00.000Z"
+    },
+    {
+      "source": "packages/postcss-tailwind-css-modules/src/index.ts",
+      "doc": "apps/docs/content/docs/tooling/postcss-tailwind-css-modules.mdx",
+      "entities": [
+        "tailwindCssModulesPlugin"
+      ],
+      "source_sha": "bdd0f75f631b52a4661629978351874c424fb901",
+      "doc_sha": "558f28e9af732293e009baebcc005d99e35fb17f",
+      "updated": "2026-07-14T20:28:49.3NZ"
+    },
+    {
+      "source": "packages/predicates/src/does-end-with/index.ts",
+      "doc": "apps/docs/content/docs/packages/predicates/does-end-with.mdx",
+      "entities": [
+        "doesEndWith"
+      ],
+      "source_sha": "50741ca2a98d704dc6b3fadfe7ea0d3465ae97c6",
+      "doc_sha": "8cfe3f7b8dc2bf345996f4337572a65549696eec",
+      "updated": "2026-07-14T20:31:10.503Z"
+    },
+    {
+      "source": "packages/predicates/src/does-not-end-with/index.ts",
+      "doc": "apps/docs/content/docs/packages/predicates/does-not-end-with.mdx",
+      "entities": [
+        "doesNotEndWith"
+      ],
+      "source_sha": "d87763b126bd53bcf3270c8f3df00c14c0e59687",
+      "doc_sha": "8f2f94c1a32af48df9b63afb7f8a8645c02143df",
+      "updated": "2026-07-14T20:31:10.503Z"
+    },
+    {
+      "source": "packages/predicates/src/does-not-start-with/index.ts",
+      "doc": "apps/docs/content/docs/packages/predicates/does-not-start-with.mdx",
+      "entities": [
+        "doesNotStartWith"
+      ],
+      "source_sha": "860f82887783f456b65ffad9fe4621ee3c967f66",
+      "doc_sha": "dab13b727b0494dfce91cb25f241a18a5edc5be1",
+      "updated": "2026-07-14T20:31:10.503Z"
+    },
+    {
+      "source": "packages/predicates/src/does-start-with/index.ts",
+      "doc": "apps/docs/content/docs/packages/predicates/does-start-with.mdx",
+      "entities": [
+        "doesStartWith"
+      ],
+      "source_sha": "d87ca7a1207018b6543932bf06c7edcbb7998726",
+      "doc_sha": "554932d341f0aea9e210bdf6763cd6c57165b1b2",
+      "updated": "2026-07-14T20:31:10.503Z"
+    },
+    {
+      "source": "packages/predicates/src/index.ts",
+      "doc": "apps/docs/content/docs/packages/predicates/index.mdx",
+      "entities": [
+        "doesEndWith",
+        "doesNotEndWith",
+        "doesNotStartWith",
+        "doesStartWith",
+        "isBbox",
+        "isBetween",
+        "isCssRgbaObject",
+        "isCssRgbaString",
+        "isEqual",
+        "isGreater",
+        "isGreaterEqual",
+        "isHexColor",
+        "isIn",
+        "isLatitude",
+        "isLesser",
+        "isLesserEqual",
+        "isLike",
+        "isLongitude",
+        "isNotBetween",
+        "isNotEqual",
+        "isNotIn",
+        "isNotLike",
+        "isNothing",
+        "isAnyFalsy",
+        "isAnyTruthy",
+        "isFalse",
+        "isNo",
+        "isOff",
+        "isOn",
+        "isTrue",
+        "isYes",
+        "isFiniteNumber",
+        "isFiniteNumeric",
+        "isNumber",
+        "isNumeric",
+        "isRgba255Tuple",
+        "isSomething",
+        "isString",
+        "isValid255Channel",
+        "isSharedWorker",
+        "isWorker"
+      ],
+      "source_sha": "4962ea46ccfda0335fb41c639234623d552ae144",
+      "doc_sha": "e403524f644e25bc2412fe38bf8d3588c2f404a5",
+      "updated": "2026-07-14T20:31:22.582Z"
+    },
+    {
+      "source": "packages/predicates/src/is-bbox/index.ts",
+      "doc": "apps/docs/content/docs/packages/predicates/is-bbox.mdx",
+      "entities": [
+        "isBbox"
+      ],
+      "source_sha": "23e65a07aede11c88c659e4d5f8a7d53148387c9",
+      "doc_sha": "91d8f9dad718fe707e45456a810ae90c88242750",
+      "updated": "2026-07-14T20:31:10.503Z"
+    },
+    {
+      "source": "packages/predicates/src/is-between/index.ts",
+      "doc": "apps/docs/content/docs/packages/predicates/is-between.mdx",
+      "entities": [
+        "isBetween"
+      ],
+      "source_sha": "a27723beec4cf1da328a37bd171300dfcbf97f4d",
+      "doc_sha": "01558fa2855997cf2a4239af275bc3b312491852",
+      "updated": "2026-07-14T20:31:10.503Z"
+    },
+    {
+      "source": "packages/predicates/src/is-css-rgba-object/index.ts",
+      "doc": "apps/docs/content/docs/packages/predicates/is-css-rgba-object.mdx",
+      "entities": [
+        "isCssRgbaObject"
+      ],
+      "source_sha": "ee86bf1366bc1f8a97d78ef4e01e1c7107ece814",
+      "doc_sha": "e686a467b329297cb51cbfa0eee69b56787f6e0b",
+      "updated": "2026-07-14T20:31:10.503Z"
+    },
+    {
+      "source": "packages/predicates/src/is-css-rgba-string/index.ts",
+      "doc": "apps/docs/content/docs/packages/predicates/is-css-rgba-string.mdx",
+      "entities": [
+        "isCssRgbaString"
+      ],
+      "source_sha": "d685277b36ae2602cc4b54f274c6273d19705916",
+      "doc_sha": "f4838a64be2403d96ba0a0d2a0b3eac02fd13ed8",
+      "updated": "2026-07-14T20:31:10.503Z"
+    },
+    {
+      "source": "packages/predicates/src/is-equal/index.ts",
+      "doc": "apps/docs/content/docs/packages/predicates/is-equal.mdx",
+      "entities": [
+        "isEqual"
+      ],
+      "source_sha": "dc5cdee83db775ee88aa2e4cffa1bd0d39663cba",
+      "doc_sha": "35fc5247662a3eae7b0ffcb8c080b3d7b812612a",
+      "updated": "2026-07-14T20:31:10.503Z"
+    },
+    {
+      "source": "packages/predicates/src/is-greater-equal/index.ts",
+      "doc": "apps/docs/content/docs/packages/predicates/is-greater-equal.mdx",
+      "entities": [
+        "isGreaterEqual"
+      ],
+      "source_sha": "a5e3b9b32fe1d80082b1157be7e3abf5875f3d61",
+      "doc_sha": "a309a7a9193cd74c8daf89f0786393857a42256d",
+      "updated": "2026-07-14T20:31:10.503Z"
+    },
+    {
+      "source": "packages/predicates/src/is-greater/index.ts",
+      "doc": "apps/docs/content/docs/packages/predicates/is-greater.mdx",
+      "entities": [
+        "isGreater"
+      ],
+      "source_sha": "a220fa651724df8a2d8ef194e8d890cd71f1884a",
+      "doc_sha": "9e5a9aed68c0b2a797da54fe11030721a2dde12a",
+      "updated": "2026-07-14T20:31:10.503Z"
+    },
+    {
+      "source": "packages/predicates/src/is-hex-color/index.ts",
+      "doc": "apps/docs/content/docs/packages/predicates/is-hex-color.mdx",
+      "entities": [
+        "isHexColor"
+      ],
+      "source_sha": "6fcefa9066602e68ac2ed28f0a90ef2e34afb5a0",
+      "doc_sha": "8d07dc0d38d737c6df876bc62f6637b20f6aaee8",
+      "updated": "2026-07-14T20:31:10.503Z"
+    },
+    {
+      "source": "packages/predicates/src/is-in/index.ts",
+      "doc": "apps/docs/content/docs/packages/predicates/is-in.mdx",
+      "entities": [
+        "isIn"
+      ],
+      "source_sha": "ae92ee8da776d4f34ce1ba73e6063154f3ce800a",
+      "doc_sha": "916b40bdf44426f40213dd8ada5df8fed0bf9289",
+      "updated": "2026-07-14T20:31:10.503Z"
+    },
+    {
+      "source": "packages/predicates/src/is-latitude/index.ts",
+      "doc": "apps/docs/content/docs/packages/predicates/is-latitude.mdx",
+      "entities": [
+        "isLatitude"
+      ],
+      "source_sha": "fb3de36f72c19522f2402aa94b2225752de7e253",
+      "doc_sha": "6aebe160841604b46ee6cf2b2fc64163ac63a7d7",
+      "updated": "2026-07-14T20:31:10.503Z"
+    },
+    {
+      "source": "packages/predicates/src/is-lesser-equal/index.ts",
+      "doc": "apps/docs/content/docs/packages/predicates/is-lesser-equal.mdx",
+      "entities": [
+        "isLesserEqual"
+      ],
+      "source_sha": "abf8af6e1c6b2ba795e09525ddee96ccc4b14e98",
+      "doc_sha": "e77514a2dff3db82839064e28b29027b03abd2d0",
+      "updated": "2026-07-14T20:31:10.503Z"
+    },
+    {
+      "source": "packages/predicates/src/is-lesser/index.ts",
+      "doc": "apps/docs/content/docs/packages/predicates/is-lesser.mdx",
+      "entities": [
+        "isLesser"
+      ],
+      "source_sha": "e14455d782d4791af4c262bd12dcfe7bb908b1e7",
+      "doc_sha": "f4e1046165b304a521098734a0139c6c77472d1a",
+      "updated": "2026-07-14T20:31:10.503Z"
+    },
+    {
+      "source": "packages/predicates/src/is-like/index.ts",
+      "doc": "apps/docs/content/docs/packages/predicates/is-like.mdx",
+      "entities": [
+        "isLike"
+      ],
+      "source_sha": "a04717bad9378529000e73cb9b152bb6f8fabf2a",
+      "doc_sha": "ea37330cd486a1876c382e270bca19121da2b26f",
+      "updated": "2026-07-14T20:31:10.503Z"
+    },
+    {
+      "source": "packages/predicates/src/is-longitude/index.ts",
+      "doc": "apps/docs/content/docs/packages/predicates/is-longitude.mdx",
+      "entities": [
+        "isLongitude"
+      ],
+      "source_sha": "b23acfa0c7a24a4571d7c551c97d42b6f2e1bf9d",
+      "doc_sha": "057dd676383fdd14378dd8d85cae05486724340b",
+      "updated": "2026-07-14T20:31:10.503Z"
+    },
+    {
+      "source": "packages/predicates/src/is-not-between/index.ts",
+      "doc": "apps/docs/content/docs/packages/predicates/is-not-between.mdx",
+      "entities": [
+        "isNotBetween"
+      ],
+      "source_sha": "e9785342e2d09473747aa4a7a2c271f0d5c125f6",
+      "doc_sha": "393e0b5001d56962df3f9df49da7430bea9a9540",
+      "updated": "2026-07-14T20:31:10.503Z"
+    },
+    {
+      "source": "packages/predicates/src/is-not-equal/index.ts",
+      "doc": "apps/docs/content/docs/packages/predicates/is-not-equal.mdx",
+      "entities": [
+        "isNotEqual"
+      ],
+      "source_sha": "37226ded6285328bd4c15ca07d90dbca0be4d062",
+      "doc_sha": "b51c6d85d830220998980acbf44354a400dffdeb",
+      "updated": "2026-07-14T20:31:10.503Z"
+    },
+    {
+      "source": "packages/predicates/src/is-not-in/index.ts",
+      "doc": "apps/docs/content/docs/packages/predicates/is-not-in.mdx",
+      "entities": [
+        "isNotIn"
+      ],
+      "source_sha": "d79400d77e1ee40129d998b73502d9e069a375bd",
+      "doc_sha": "e8d98faf3c6e88f58c31b371daa3470858938a8e",
+      "updated": "2026-07-14T20:31:10.503Z"
+    },
+    {
+      "source": "packages/predicates/src/is-not-like/index.ts",
+      "doc": "apps/docs/content/docs/packages/predicates/is-not-like.mdx",
+      "entities": [
+        "isNotLike"
+      ],
+      "source_sha": "2096b65496150ff363194a0b048a6712e3ddd5c9",
+      "doc_sha": "198db86fe6cb47eac9a32c0214e6e2e80bacb285",
+      "updated": "2026-07-14T20:31:10.503Z"
+    },
+    {
+      "source": "packages/predicates/src/is-nothing/index.ts",
+      "doc": "apps/docs/content/docs/packages/predicates/is-nothing.mdx",
+      "entities": [
+        "isNothing"
+      ],
+      "source_sha": "17bac92915e535cfe59a317fe31bef56d10a77ba",
+      "doc_sha": "bde95e9aa615319f5cde4ae119df487510a59e68",
+      "updated": "2026-07-14T20:31:10.503Z"
+    },
+    {
+      "source": "packages/predicates/src/is-noyes/index.ts",
+      "doc": "apps/docs/content/docs/packages/predicates/is-noyes.mdx",
+      "entities": [
+        "Boolean Predicates"
+      ],
+      "source_sha": "fe2498c113096c579fd622b46ec8fffa44411821",
+      "doc_sha": "a7411fe73929a8d924b3b3446f2cd04c422a0ad9",
+      "updated": "2026-07-14T20:31:10.503Z"
+    },
+    {
+      "source": "packages/predicates/src/is-number/index.ts",
+      "doc": "apps/docs/content/docs/packages/predicates/is-number.mdx",
+      "entities": [
+        "Number Predicates"
+      ],
+      "source_sha": "939c8208851b253fa1f1fe35ae1bd4c33cad1180",
+      "doc_sha": "cfd21bceb1950f07ecc8b6b4eda7e4144305ffd7",
+      "updated": "2026-07-14T20:31:10.503Z"
+    },
+    {
+      "source": "packages/predicates/src/is-rgba-255-tuple/index.ts",
+      "doc": "apps/docs/content/docs/packages/predicates/is-rgba-255-tuple.mdx",
+      "entities": [
+        "isRgba255Tuple"
+      ],
+      "source_sha": "a0051278a2818952bd7ef3b68ba779a3e763fbee",
+      "doc_sha": "3ebc8ca7e5e4c936bdda080436e3345c8f522d72",
+      "updated": "2026-07-14T20:31:10.503Z"
+    },
+    {
+      "source": "packages/predicates/src/is-something/index.ts",
+      "doc": "apps/docs/content/docs/packages/predicates/is-something.mdx",
+      "entities": [
+        "isSomething"
+      ],
+      "source_sha": "549ba6a454cf667bc13f8ee2e827a7fd2e0abd9e",
+      "doc_sha": "a462cb3fe92e61020f877986f49a34f8e4233629",
+      "updated": "2026-07-14T20:31:10.503Z"
+    },
+    {
+      "source": "packages/predicates/src/is-string/index.ts",
+      "doc": "apps/docs/content/docs/packages/predicates/is-string.mdx",
+      "entities": [
+        "isString"
+      ],
+      "source_sha": "3fe9b6a36909e697cec99cbeaa02d41db8d91c3f",
+      "doc_sha": "c61cace95db2eeb7ea0fb4e6f04041b259b9640a",
+      "updated": "2026-07-14T20:31:10.503Z"
+    },
+    {
+      "source": "packages/predicates/src/is-valid-255-channel/index.ts",
+      "doc": "apps/docs/content/docs/packages/predicates/is-valid-255-channel.mdx",
+      "entities": [
+        "isValid255Channel"
+      ],
+      "source_sha": "397171214b8f4e28254c2b79b49ca5250af8ff90",
+      "doc_sha": "d9c53fe2c72661bc24c8bb745bdd52f44e303770",
+      "updated": "2026-07-14T20:31:10.503Z"
+    },
+    {
+      "source": "packages/predicates/src/is-worker/index.ts",
+      "doc": "apps/docs/content/docs/packages/predicates/is-worker.mdx",
+      "entities": [
+        "Worker Predicates"
+      ],
+      "source_sha": "f5624274cd5c4f7e2ff7e9ee0093a7f0a4d5b870",
+      "doc_sha": "e6dbafe12ce0b4576b3ee080ba924c5b88b784a7",
+      "updated": "2026-07-14T20:31:10.503Z"
+    },
+    {
+      "source": "packages/temporal/src/index.ts",
+      "doc": "apps/docs/content/docs/packages/temporal/index.mdx",
+      "entities": [
+        "setClockInterval",
+        "setClockTimeout",
+        "callNextSecond",
+        "remainder"
+      ],
+      "source_sha": "1e3378dc7784991cf3b569b888d9ddc92b20d0a1",
+      "doc_sha": "606677c7e8787741cdac718e1dc2241ace933ab1",
+      "updated": "2026-07-14T20:31:22.582Z"
+    },
+    {
+      "source": "packages/temporal/src/timers/index.ts",
+      "doc": "apps/docs/content/docs/packages/temporal/timers/index.mdx",
+      "entities": [
+        "setClockInterval",
+        "setClockTimeout"
+      ],
+      "source_sha": "58e85118ec419fd5bc2eb25635f26ebb45f7b269",
+      "doc_sha": "a52cfde4871de0b130bf3be2b523e5b9eebda914",
+      "updated": "2026-07-14T20:31:22.582Z"
+    },
+    {
+      "source": "packages/temporal/src/timers/utils.ts",
+      "doc": "apps/docs/content/docs/packages/temporal/timers/utils.mdx",
+      "entities": [
+        "remainder",
+        "callNextSecond"
+      ],
+      "source_sha": "d7f47f79824309c5b98a6e996dac8954b3add3f4",
+      "doc_sha": "b800b2e94a8ba75f1392feb348c76fc72a10ace8",
+      "updated": "2026-07-14T20:31:22.582Z"
+    },
+    {
+      "source": "packages/web-worker/src/worker/index.ts",
+      "doc": "apps/docs/content/docs/packages/worker.mdx",
+      "entities": [
+        "create",
+        "expose",
+        "Action"
+      ],
+      "source_sha": "08d9f3e37baaf88f7d7b0c3a0e03e9b17930fe29",
+      "doc_sha": "b119bb485f91ddae5c95a22f4bc77c7ab142a336",
+      "updated": "2026-07-14T20:36:01.3NZ"
+    },
+    {
+      "source": "packages/websocket/src/index.ts",
+      "doc": "apps/docs/content/docs/packages/websocket/index.mdx",
+      "entities": [],
+      "source_sha": "7fbccbbbad290cfce003cbbc98a6857a30211764",
+      "doc_sha": "11f0c0810a411e7cc25db3c5040435094c068be3",
+      "updated": "2026-07-14T20:37:00.000Z"
+    },
+    {
+      "source": "tooling/biome-config/analyzer.json",
+      "doc": "apps/docs/content/docs/tooling/biome-config/analyzer.mdx",
+      "entities": [
+        "analyzer"
+      ],
+      "source_sha": "bf8c851054f6e0df293f29fad268bec98484489b",
+      "doc_sha": "2ea84bc23ebb52e7a99e83e5983c02548a25b0a6",
+      "updated": "2026-07-14T19:45:00.000Z"
+    },
+    {
+      "source": "tooling/biome-config/formatter.json",
+      "doc": "apps/docs/content/docs/tooling/biome-config/formatter.mdx",
+      "entities": [
+        "formatter"
+      ],
+      "source_sha": "1a0375e23e1e660d3f41b8bd0824d222525dc0ce",
+      "doc_sha": "e5bfc01fee1282628ee7f41fa3e04943491c42e2",
+      "updated": "2026-07-14T19:45:00.000Z"
+    },
+    {
+      "source": "tooling/biome-config/linter.json",
+      "doc": "apps/docs/content/docs/tooling/biome-config/linter.mdx",
+      "entities": [
+        "linter"
+      ],
+      "source_sha": "a61a1d060dac4cf5e0304f316b3395dd47d8536f",
+      "doc_sha": "797877889993728261df83cfdf71a9cd6ad6b56f",
+      "updated": "2026-07-14T19:45:00.000Z"
+    },
+    {
+      "source": "tooling/biome-config/package.json",
+      "doc": "apps/docs/content/docs/tooling/biome-config/index.mdx",
+      "entities": [
+        "@accelint/biome-config"
+      ],
+      "source_sha": "f9a42b09e0c10d44c29fdb83d7d93b8da0247fb0",
+      "doc_sha": "843fe2010a31b5910495dce98d1525dbd87ad67b",
+      "updated": "2026-07-14T19:45:00.000Z"
+    },
+    {
+      "source": "tooling/eslint-config/package.json",
+      "doc": "apps/docs/content/docs/tooling/eslint-config.mdx",
+      "entities": [
+        "@accelint/eslint-config"
+      ],
+      "source_sha": "27b5f260b4f15e9e0f01d5e1ad2b41dd411a34e6",
+      "doc_sha": "ae45ecef6d6ebe048965f88b184581701c7bdad4",
+      "updated": "2026-07-14T00:00:00.000Z"
+    },
+    {
+      "source": "tooling/prettier-config/prettier.config.js",
+      "doc": "apps/docs/content/docs/tooling/prettier-config.mdx",
+      "entities": [
+        "config"
+      ],
+      "source_sha": "53c7908e5a5c8faaad0a546c239524c18097e3e9",
+      "doc_sha": "de9c3af8b1aa20d48e0ed15cec5b36967a5814ba",
+      "updated": "2026-07-14T19:49:10.000Z"
+    },
+    {
+      "source": "tooling/smeegl/package.json",
+      "doc": "apps/docs/content/docs/tooling/smeegl/index.mdx",
+      "entities": [
+        "@accelint/smeegl"
+      ],
+      "source_sha": "42f97c48a3f97aba9cfd8b414104c6e13cc38d9c",
+      "doc_sha": "2bee37ab365619ca1fd022d4363e5b1c1c1a6aec",
+      "updated": "2026-07-14T19:24:13.000Z"
+    },
+    {
+      "source": "tooling/smeegl/src/build-react-files.ts",
+      "doc": "apps/docs/content/docs/tooling/smeegl/build-react-files.mdx",
+      "entities": [
+        "buildReactFiles"
+      ],
+      "source_sha": "fc91be4f5ec9d8ca95a1a732ea1d6c041ea62cd6",
+      "doc_sha": "3e1bad35feedc4261e23ca7ab6a4d3f5b99c0fa2",
+      "updated": "2026-07-13T19:00:00.000Z"
+    },
+    {
+      "source": "tooling/smeegl/src/build-spritesheet.ts",
+      "doc": "apps/docs/content/docs/tooling/smeegl/build-spritesheet.mdx",
+      "entities": [
+        "buildSpritesheet"
+      ],
+      "source_sha": "5bbbde907fe2a8a94e61a0cdd32b18d327e88a22",
+      "doc_sha": "384bdeaa01dd6b2c24ac01ed5e01ba496b393896",
+      "updated": "2026-07-13T19:00:00.000Z"
+    },
+    {
+      "source": "tooling/smeegl/src/lib.ts",
+      "doc": "apps/docs/content/docs/tooling/smeegl/lib.mdx",
+      "entities": [
+        "smeegl"
+      ],
+      "source_sha": "fa85d7df22f60dce567e6e2a6487564cfdaccf37",
+      "doc_sha": "01081dbd4fe4d6c9eec34e211a63af3f72589b2e",
+      "updated": "2026-07-14T20:00:00.000Z"
+    },
+    {
+      "source": "tooling/smeegl/src/log-messages.ts",
+      "doc": "apps/docs/content/docs/tooling/smeegl/log-messages.mdx",
+      "entities": [
+        "logMsg",
+        "logWarning"
+      ],
+      "source_sha": "6cc861cdcbc083ac989fdced0dd10c47e0a5e9ff",
+      "doc_sha": "6e0aea38a13f2f712440858a42604ef7b9321a37",
+      "updated": "2026-07-13T19:00:00.000Z"
+    },
+    {
+      "source": "tooling/smeegl/src/validate-input.ts",
+      "doc": "apps/docs/content/docs/tooling/smeegl/validate-input.mdx",
+      "entities": [
+        "validateInput"
+      ],
+      "source_sha": "4653936a238ef1767770d753c03ea1ba120bc628",
+      "doc_sha": "36601ce641123e194a274c8ee9e6e1651ba4c286",
+      "updated": "2026-07-13T19:00:00.000Z"
+    },
+    {
+      "source": "tooling/typescript-config/bundler",
+      "doc": "apps/docs/content/docs/tooling/typescript-config/bundler.mdx",
+      "entities": [
+        "bundler/dom",
+        "bundler/dom/app",
+        "bundler/dom/library",
+        "bundler/dom/library-monorepo",
+        "bundler/no-dom",
+        "bundler/no-dom/app",
+        "bundler/no-dom/library",
+        "bundler/no-dom/library-monorepo"
+      ],
+      "source_sha": "bee19329f6b1797ca4eee05d5370e514c9aef13b",
+      "doc_sha": "308b86fa61a0fcb894e86dcb4b86640582c71615",
+      "updated": "2026-07-14T19:29:32.000Z"
+    },
+    {
+      "source": "tooling/typescript-config/package.json",
+      "doc": "apps/docs/content/docs/tooling/typescript-config/index.mdx",
+      "entities": [
+        "@accelint/typescript-config"
+      ],
+      "source_sha": "bee19329f6b1797ca4eee05d5370e514c9aef13b",
+      "doc_sha": "57c016167acbd17022576236b3bc54f7de583aba",
+      "updated": "2026-07-14T19:29:32.000Z"
+    },
+    {
+      "source": "tooling/typescript-config/tsc",
+      "doc": "apps/docs/content/docs/tooling/typescript-config/tsc.mdx",
+      "entities": [
+        "tsc/dom/app",
+        "tsc/dom/library",
+        "tsc/dom/library-monorepo",
+        "tsc/no-dom/app",
+        "tsc/no-dom/library",
+        "tsc/no-dom/library-monorepo"
+      ],
+      "source_sha": "bee19329f6b1797ca4eee05d5370e514c9aef13b",
+      "doc_sha": "d73cc206dd8bd6a0a6725de5dde6bf38e2e2ed48",
+      "updated": "2026-07-14T19:29:32.000Z"
+    },
+    {
+      "source": "tooling/vitest-config/dom.js",
+      "doc": "apps/docs/content/docs/tooling/vitest-config/dom.mdx",
+      "entities": [
+        "dom"
+      ],
+      "source_sha": "d00b33c76fb880a9175a250ce39171a5d8223c0b",
+      "doc_sha": "165009f9331a8792ee65c03d17b8639f9bc5160d",
+      "updated": "2026-07-14T00:00:00.000Z"
+    },
+    {
+      "source": "tooling/vitest-config/mocks/broadcast-channel.ts",
+      "doc": "apps/docs/content/docs/tooling/vitest-config/mocks/broadcast-channel.mdx",
+      "entities": [
+        "mockBroadcastChannel",
+        "resetMockBroadcastChannel"
+      ],
+      "source_sha": "50cc6c58d502562339da8546cbf5953866db9fa3",
+      "doc_sha": "8ba774565cdf23d43b90ac112f97fb72990ef12d",
+      "updated": "2026-07-14T00:00:00.000Z"
+    },
+    {
+      "source": "tooling/vitest-config/no-dom.js",
+      "doc": "apps/docs/content/docs/tooling/vitest-config/no-dom.mdx",
+      "entities": [
+        "no-dom"
+      ],
+      "source_sha": "30690e739754780eeec71a96203c069b7adf0c4b",
+      "doc_sha": "1ddf92045bf6993713ec135ba614aa36e78db96f",
+      "updated": "2026-07-14T00:00:00.000Z"
+    },
+    {
+      "source": "tooling/vitest-config/package.json",
+      "doc": "apps/docs/content/docs/tooling/vitest-config/index.mdx",
+      "entities": [
+        "@accelint/vitest-config"
+      ],
+      "source_sha": "d11bf0c9cd595573047ade6929a6c0028564db50",
+      "doc_sha": "7dad6ad1027c3a643100471980faee426f5b1852",
+      "updated": "2026-07-14T00:00:00.000Z"
+    }
+  ]
+}

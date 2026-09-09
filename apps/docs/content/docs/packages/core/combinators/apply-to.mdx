@@ -1,0 +1,121 @@
+---
+title: "applyTo"
+description: Takes a value and a function, then applies the function to the value
+source: packages/core/src/combinators/apply-to/index.ts
+source_sha: b9a3fc670574398eb174276dc571249c66edc7a5
+doc_sha: 619699156072d5cd35f97554474b40d1c25b3fee
+deprecated: false
+updated: 2026-07-13
+---
+
+## Usage
+
+```typescript
+import { applyTo } from '@accelint/core';
+
+// Apply function to value
+const result = applyTo(6)((x: number) => x * 2);
+// 12
+
+// Partial application
+const with10 = applyTo(10);
+with10((x: number) => x + 5); // 15
+```
+
+## Reference
+
+```typescript
+function applyTo<A>(
+  a: A
+): <B>(b: (x: A) => B) => B
+```
+
+Lambda calculus: `λab.ba`  
+Type signature: `applyTo :: a → (a → b) → b`
+
+### Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `a` | `A` | The value to pass to the function. |
+
+### Returns
+
+Returns a curried function that accepts a unary function and applies it to the value.
+
+### Type Parameters
+
+- `A` - The type of the input value
+- `B` - The return type of the function
+
+## Examples
+
+### Example: Data transformation pipeline
+
+```typescript
+import { applyTo } from '@accelint/core';
+
+interface User {
+  name: string;
+  age: number;
+}
+
+const user: User = { name: 'Alice', age: 30 };
+
+// Pass data through transformations
+const greeting = applyTo(user)((u) => `Hello, ${u.name}!`);
+// "Hello, Alice!"
+```
+
+### Example: Method chaining alternative
+
+```typescript
+import { applyTo } from '@accelint/core';
+
+const data = [1, 2, 3, 4, 5];
+
+// Instead of: data.map(x => x * 2).filter(x => x > 5)
+const result = applyTo(data)(
+  (arr) => arr.map((x) => x * 2)
+)(
+  (arr) => arr.filter((x) => x > 5)
+);
+// Type error - need proper composition
+
+// Better with pipe:
+import { pipe } from '@accelint/core';
+const process = pipe(
+  (arr: number[]) => arr.map((x) => x * 2),
+  (arr: number[]) => arr.filter((x) => x > 5)
+);
+process(data); // [6, 8, 10]
+```
+
+### Example: Dependency injection pattern
+
+```typescript
+import { applyTo } from '@accelint/core';
+
+interface Config {
+  apiUrl: string;
+  timeout: number;
+}
+
+const config: Config = {
+  apiUrl: 'https://api.example.com',
+  timeout: 5000
+};
+
+// Pass config to functions that need it
+const makeRequest = applyTo(config)((cfg) => {
+  return `Requesting ${cfg.apiUrl} with ${cfg.timeout}ms timeout`;
+});
+```
+
+> **Good to know:** This combinator is the inverse of `apply`. It's useful when you have a value first and want to pass it through various functions. For composing multiple functions, use `pipe` or `compose` instead.
+
+## Related
+
+- [apply](../apply/index.md) - Apply function to value (normal order)
+- [pipe](../../composition/pipe/index.md) - Compose functions left-to-right
+- [identity](../identity/index.md) - Return value unchanged

@@ -10,16 +10,18 @@
  * governing permissions and limitations under the License.
  */
 
-import { createColumnHelper } from '@tanstack/react-table';
-import { useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Pagination } from '../pagination/index';
 import { TableBody } from './body';
 import { TableCell } from './cell';
+import { createTableColumnHelper } from './features';
 import { TableHeader } from './header';
 import { TableHeaderCell } from './header-cell';
 import { Table } from './index';
 import { TableRow } from './row';
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import type { RowSelectionState } from '@tanstack/react-table';
+import type { TableProps } from './types';
 
 type Person = {
   id: string;
@@ -160,7 +162,7 @@ const allData = generateData(100);
 const PAGE_SIZE = 10;
 const totalPages = Math.ceil(allData.length / PAGE_SIZE);
 
-const columnHelper = createColumnHelper<Person>();
+const columnHelper = createTableColumnHelper<Person>();
 
 const columns = [
   columnHelper.accessor('firstName', {
@@ -232,6 +234,13 @@ const meta = {
 
 export default meta;
 type Story = StoryObj<typeof meta>;
+
+// TableProps is a union (data mode | children mode); spreading the raw args
+// union alongside prop overrides makes TS try the children-mode arm (where
+// every table prop is `never`) and reject the story. Narrow to the data arm.
+function dataArgs(args: unknown) {
+  return args as Extract<TableProps<Person>, { data: Person[] }>;
+}
 
 export const Default: Story = {
   args: {
@@ -305,7 +314,7 @@ export const ColumnSizing: Story = {
   },
   render: (args) => (
     <Table
-      {...args}
+      {...dataArgs(args)}
       columns={columnsWithSizing}
       data={defaultData}
       key={JSON.stringify(args)}
@@ -323,7 +332,7 @@ export const InitialRowSelection: Story = {
     },
   },
   render: (args) => {
-    const [selectedRows, setSelectedRows] = useState<Record<string, boolean>>({
+    const [selectedRows, setSelectedRows] = useState<RowSelectionState>({
       tanner: true,
       joe: true,
     });
@@ -331,7 +340,7 @@ export const InitialRowSelection: Story = {
     return (
       <div>
         <Table
-          {...args}
+          {...dataArgs(args)}
           rowSelection={selectedRows}
           onRowSelectionChange={setSelectedRows}
           key={JSON.stringify(args)}
@@ -367,7 +376,7 @@ export const ClientSidePagination: Story = {
     return (
       <div>
         <Table
-          {...args}
+          {...dataArgs(args)}
           data={allData}
           pageSize={PAGE_SIZE}
           page={page}
@@ -389,7 +398,7 @@ export const PrePaginated: Story = {
     docs: {
       description: {
         story:
-          'Simulates server-side pagination where only the current page of data is passed to the Table. Uses `key={page}` to force remount when the page changes, since `useListData` only reads `initialItems` on mount.',
+          'Simulates server-side pagination where only the current page of data is passed to the Table. The Table reflects `data` prop changes directly, so no remount is needed when the page changes.',
       },
     },
   },
@@ -399,12 +408,50 @@ export const PrePaginated: Story = {
 
     return (
       <div>
-        <Table
-          {...args}
-          data={pageData}
-          key={`${page}-${JSON.stringify(args)}`}
-        />
+        <Table {...dataArgs(args)} data={pageData} key={JSON.stringify(args)} />
         <Pagination value={page} total={totalPages} onChange={setPage} />
+      </div>
+    );
+  },
+};
+
+export const LiveUpdates: Story = {
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "Simulates polling an endpoint: every second the `data` prop is replaced and the Visits/Profile Progress cells of a single row change, cycling through the rows; every few seconds a row is added or removed. The Table reflects each update directly — no `key` remount is needed for data changes. Manual row reordering (kebab menu → Move Up/Down) is preserved; rows that appear after a manual reorder are appended at the end. The wrapper reserves height for the maximum row count so add/remove doesn't shift the layout — in real apps, a fixed-height scroll container or `pageSize` does the same job.",
+      },
+    },
+  },
+  render: (args) => {
+    const [tick, setTick] = useState(0);
+
+    useEffect(() => {
+      const id = setInterval(() => setTick((prev) => prev + 1), 1000);
+      return () => clearInterval(id);
+    }, []);
+
+    const data = useMemo(() => {
+      // 5..9 rows, one added/removed every 7 ticks
+      const count = 5 + (Math.floor(tick / 7) % 5);
+
+      return defaultData.slice(0, count).map((person, index) => {
+        // staggered so exactly one row's cells change per tick
+        const steps = Math.floor((tick + index) / count);
+
+        return {
+          ...person,
+          visits: person.visits + steps,
+          progress: (person.progress + steps * 7) % 100,
+        };
+      });
+    }, [tick]);
+
+    return (
+      // reserve height for the max row count so add/remove doesn't shift layout
+      <div style={{ minHeight: 500 }}>
+        <Table {...dataArgs(args)} data={data} key={JSON.stringify(args)} />
       </div>
     );
   },

@@ -16,7 +16,11 @@ import { isSetEqual } from 'radashi';
 import { createLoggerDomain } from '@/shared/logger';
 import type { Rgba255Tuple } from '@accelint/predicates';
 import type { Layer, UpdateParameters } from '@deck.gl/core';
-import type { CoffinCornerExtensionProps, EntityId } from './types';
+import type {
+  CoffinCornerExtensionOptions,
+  CoffinCornerExtensionProps,
+  EntityId,
+} from './types';
 
 const logger = createLoggerDomain('[CoffinCornerExtension]');
 
@@ -230,38 +234,36 @@ vec4 coffinCorner_composite(
 // -- Layer-specific fragment shader main-start injections --
 
 /**
- * IconLayer fragment declarations: the shared SDF functions plus the
- * overridable base-color hook.
+ * Default `iconBaseColorGlsl`: the raw texel, matching plain IconLayer.
+ * `iconsTexture` and `vTextureCoords` are provided by IconLayer's fragment shader.
+ */
+const DEFAULT_ICON_BASE_COLOR_GLSL = /* glsl */ `\
+baseColor = texture(iconsTexture, vTextureCoords);`;
+
+/**
+ * Builds the IconLayer `fs:#main-start` injection: derives the base icon color
+ * from `iconBaseColorGlsl`, then composites brackets over it.
  *
  * The bracket math runs at `fs:#main-start` — before IconLayer's own
  * `if (a < icon.alphaCutoff) discard;` — so the brackets render over the
  * transparent parts of the icon quad too. That ordering means the extension
  * cannot read the host's final `fragColor` (it doesn't exist yet); it must
- * produce the base color the brackets sit on itself.
+ * produce the base color the brackets sit on itself, which is what
+ * `iconBaseColorGlsl` supplies.
  *
- * `coffinCorner_iconBaseColor` is that base color. The default samples
- * `iconsTexture` (matching plain IconLayer). An IconLayer *subclass* whose
- * fragment shader transforms the sampled texel — e.g. replacing a match color
- * with a per-instance fill — can preserve that transformation under the
- * brackets by defining `COFFIN_CORNER_HAS_CUSTOM_ICON_BASE_COLOR` and supplying
- * its own `coffinCorner_iconBaseColor` (see {@link CoffinCornerExtension} docs).
- * The guard keeps the default from colliding with the override.
+ * The statements are spliced inside `main` (not `fs:#decl`) on purpose: luma
+ * assembles `#decl` injections *before* the host layer's own shader source, so
+ * code there cannot reference `iconsTexture` or any uniform/varying a custom
+ * IconLayer declares. Inside `main`, everything the host declares is in scope.
+ *
+ * References IconLayer-specific uniforms/varyings: `iconsTexture`,
+ * `vTextureCoords`, `uv`.
+ *
+ * @param iconBaseColorGlsl - GLSL statements that assign `baseColor` (vec4).
+ * @returns The `fs:#main-start` GLSL source.
  */
-const ICON_FS_DECL = /* glsl */ `\
-${FS_DECL}
-#ifndef COFFIN_CORNER_HAS_CUSTOM_ICON_BASE_COLOR
-vec4 coffinCorner_iconBaseColor(vec2 textureCoords) {
-  return texture(iconsTexture, textureCoords);
-}
-#endif
-`;
-
-/**
- * IconLayer `fs:#main-start` — derives the base icon color via the
- * `coffinCorner_iconBaseColor` hook, then composites brackets over it.
- * References IconLayer-specific varyings: `vTextureCoords`, `uv`.
- */
-const ICON_FS_MAIN_START = /* glsl */ `\
+function buildIconFsMainStart(iconBaseColorGlsl: string): string {
+  return /* glsl */ `\
   geometry.uv = uv; // uv = texture coordinate on the icon quad (ranges -1 to 1, center is 0,0)
   bool isHovered = vInstanceHoveredEntity > 0.5;
   bool isSelected = vInstanceSelectedEntity > 0.5;
@@ -286,9 +288,10 @@ const ICON_FS_MAIN_START = /* glsl */ `\
     float fillAlpha = 1.0 - smoothstep(0.0, antiAlias, cornerDist);
 
     if (insideBox) {
-      // Base color from the overridable hook — the raw texel by default, or a
-      // subclass's color-replaced texel when overridden.
-      vec4 baseColor = coffinCorner_iconBaseColor(vTextureCoords);
+      // Base color the brackets composite over — the raw texel by default, or
+      // the consumer's color-transformed texel via iconBaseColorGlsl.
+      vec4 baseColor;
+      ${iconBaseColorGlsl}
 
       fragColor = coffinCorner_composite(baseColor, isHovered, isSelected, strokeAlpha, fillAlpha);
       DECKGL_FILTER_COLOR(fragColor, geometry);
@@ -296,6 +299,7 @@ const ICON_FS_MAIN_START = /* glsl */ `\
     }
   }
 `;
+}
 
 /**
  * ScatterplotLayer fragment declarations: adds `vQuadScale` varying
@@ -386,25 +390,32 @@ const SCATTERPLOT_FS_MAIN_START = /* glsl */ `\
 `;
 
 // -- Shader configs --
-
 /**
- * Shader injection config for IconLayer.
+ * Builds the shader injection config for IconLayer.
  *
  * deck.gl inject keys follow the pattern `<stage>:<hook>`:
  *   - `vs:#decl`       — vertex shader, top-level declarations (before main)
  *   - `vs:#main-end`   — vertex shader, end of main()
  *   - `fs:#decl`       — fragment shader, top-level declarations (before main)
  *   - `fs:#main-start` — fragment shader, start of main()
+ *
+ * @param iconBaseColorGlsl - GLSL statements that assign `baseColor` (vec4).
+ * @returns The IconLayer shader injection config.
  */
-const ICON_SHADERS = {
-  modules: [coffinCornerModule],
-  inject: {
-    'vs:#decl': VS_DECL,
-    'vs:#main-end': VS_MAIN_END,
-    'fs:#decl': ICON_FS_DECL,
-    'fs:#main-start': ICON_FS_MAIN_START,
-  },
-};
+function buildIconShaders(iconBaseColorGlsl: string) {
+  return {
+    modules: [coffinCornerModule],
+    inject: {
+      'vs:#decl': VS_DECL,
+      'vs:#main-end': VS_MAIN_END,
+      'fs:#decl': FS_DECL,
+      'fs:#main-start': buildIconFsMainStart(iconBaseColorGlsl),
+    },
+  };
+}
+
+/** IconLayer shader config for the default (unset) `iconBaseColorGlsl`. */
+const ICON_SHADERS = buildIconShaders(DEFAULT_ICON_BASE_COLOR_GLSL);
 
 /**
  * Shader injection config for ScatterplotLayer.
@@ -506,46 +517,28 @@ function syncEntitySet(
  * })
  * ```
  *
- * **Custom icon base color (IconLayer subclasses):** The bracket math runs at
+ * **Custom icon base color (custom IconLayers):** The bracket math runs at
  * `fs:#main-start`, before IconLayer's `discard`, so the extension produces the
  * base color the brackets sit on rather than reading the host's final
- * `fragColor`. By default that base color is `texture(iconsTexture, …)`. If your
- * IconLayer subclass transforms the sampled texel (e.g. replacing a match color
- * with a per-instance fill), override the `coffinCorner_iconBaseColor` hook so
- * the transform is preserved under the brackets — instead of duplicating the
- * whole bracket shader. Define `COFFIN_CORNER_HAS_CUSTOM_ICON_BASE_COLOR` to
- * suppress the default and supply your own implementation:
+ * `fragColor`. By default that is the raw `iconsTexture` texel. If your
+ * IconLayer's fragment shader transforms the sampled texel (e.g. replacing a
+ * match color with a per-instance fill), pass `iconBaseColorGlsl` so the same
+ * transform is applied under the brackets — instead of duplicating the whole
+ * bracket shader. The statements run inside the fragment `main`, so they can
+ * reference any uniform or varying your layer declares.
  *
- * @example Overriding the icon base color in a subclass
+ * @example Recoloring the icon beneath the brackets
  * ```typescript
- * class MaskedCoffinCornerExtension extends CoffinCornerExtension {
- *   static override componentName = 'MaskedCoffinCornerExtension';
- *
- *   override getShaders(this: Layer) {
- *     const shaders = super.getShaders(this);
- *     if (!shaders) return null;
- *
- *     return {
- *       ...shaders,
- *       inject: {
- *         ...shaders.inject,
- *         // Prepend the guard + override; the guard suppresses the default
- *         // coffinCorner_iconBaseColor while keeping the shared SDF decls.
- *         'fs:#decl': `\
- * #define COFFIN_CORNER_HAS_CUSTOM_ICON_BASE_COLOR
- * vec4 coffinCorner_iconBaseColor(vec2 textureCoords) {
- *   vec4 texel = texture(iconsTexture, textureCoords);
- *   // ...replace matchColor with the per-instance fill...
- *   return texel;
- * }
- * ${shaders.inject['fs:#decl']}`,
- *       },
- *     };
- *   }
- * }
+ * const extension = new CoffinCornerExtension({
+ *   iconBaseColorGlsl: `
+ *     baseColor = texture(iconsTexture, vTextureCoords);
+ *     if (all(equal(baseColor.rgb, myLayer.matchColor.rgb))) {
+ *       baseColor.rgb = vFillColor.rgb;
+ *     }`,
+ * });
  * ```
  */
-export class CoffinCornerExtension extends LayerExtension {
+export class CoffinCornerExtension extends LayerExtension<CoffinCornerExtensionOptions> {
   static override componentName = 'CoffinCornerExtension';
 
   static override defaultProps = {
@@ -678,17 +671,22 @@ export class CoffinCornerExtension extends LayerExtension {
 
   /**
    * Returns the appropriate shader injection config based on the host layer type.
-   * IconLayer gets texture-sampling shaders; ScatterplotLayer gets circle-replicating shaders.
-   * Returns null for unsupported layer types to skip shader injection.
+   * IconLayer gets texture-sampling shaders (built from `iconBaseColorGlsl` when
+   * set); ScatterplotLayer gets circle-replicating shaders. Returns null for
+   * unsupported layer types to skip shader injection.
    *
    * @returns The vertex/fragment shader injection config and uniform module, or null.
    */
-  override getShaders(this: CoffinCornerLayer, _extensions: this) {
+  override getShaders(this: CoffinCornerLayer, extension: this) {
     if (this instanceof ScatterplotLayer) {
       return SCATTERPLOT_SHADERS;
     }
     if (this instanceof IconLayer) {
-      return ICON_SHADERS;
+      const { iconBaseColorGlsl } = extension.opts ?? {};
+
+      return iconBaseColorGlsl
+        ? buildIconShaders(iconBaseColorGlsl)
+        : ICON_SHADERS;
     }
     return null;
   }
