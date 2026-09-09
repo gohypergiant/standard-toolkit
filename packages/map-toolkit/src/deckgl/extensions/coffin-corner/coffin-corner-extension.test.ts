@@ -265,6 +265,28 @@ describe('CoffinCornerExtension', () => {
         'instanceCoffinCornerState',
       );
     });
+
+    it('should invalidate once when both Sets change in the same update', () => {
+      const layer = createMockLayer();
+
+      extension.updateState.call(
+        layer,
+        createMockParams(
+          {
+            selectedEntityIds: new Set<EntityId>(['a']),
+            hoveredEntityIds: new Set<EntityId>(['b']),
+          },
+          { selectedEntityIds: undefined, hoveredEntityIds: undefined },
+        ),
+      );
+
+      expect(layer.state.selectedEntities.get('a')).toBe(1);
+      expect(layer.state.hoveredEntities.get('b')).toBe(1);
+      expect(layer.invalidate).toHaveBeenCalledTimes(1);
+      expect(layer.invalidate).toHaveBeenCalledWith(
+        'instanceCoffinCornerState',
+      );
+    });
   });
 
   describe('draw', () => {

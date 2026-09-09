@@ -463,29 +463,31 @@ function entitySetsEqual(
 
 /**
  * Sync a Set of entity IDs into an entity state map. Replaces the full
- * contents of the map when the Set contents change (value equality) and
- * invalidates the packed state attribute so it re-uploads.
+ * contents of the map when the Set contents change (value equality).
  *
  * @param entities - State map to overwrite in place.
  * @param newIds - Incoming prop value; `undefined` clears the map.
  * @param oldIds - Previous prop value, for the value-equality short-circuit.
- * @param attributeManager - Host layer's attribute manager, or null before init.
+ * @returns Whether the map was rewritten, so the caller can invalidate once.
  */
 function syncEntitySet(
   entities: Map<EntityId, number>,
   newIds: ReadonlySet<EntityId> | undefined,
   oldIds: ReadonlySet<EntityId> | undefined,
-  attributeManager: { invalidate: (name: string) => void } | null,
-): void {
-  if (!entitySetsEqual(newIds, oldIds)) {
-    entities.clear();
-    if (newIds) {
-      for (const id of newIds) {
-        entities.set(id, 1);
-      }
-    }
-    attributeManager?.invalidate(STATE_ATTRIBUTE);
+): boolean {
+  if (entitySetsEqual(newIds, oldIds)) {
+    return false;
   }
+
+  entities.clear();
+
+  if (newIds) {
+    for (const id of newIds) {
+      entities.set(id, 1);
+    }
+  }
+
+  return true;
 }
 
 // -- Extension class --
@@ -620,7 +622,8 @@ export class CoffinCornerExtension extends LayerExtension<CoffinCornerExtensionO
 
   /**
    * Syncs `selectedEntityIds` and `hoveredEntityIds` prop changes into the
-   * entity state maps and invalidates the packed state GPU attribute.
+   * entity state maps and invalidates the packed state GPU attribute once if
+   * either changed.
    *
    * No-op on unsupported layer types.
    */
@@ -632,21 +635,21 @@ export class CoffinCornerExtension extends LayerExtension<CoffinCornerExtensionO
       return;
     }
 
-    const attributeManager = this.getAttributeManager();
-
-    syncEntitySet(
+    const selectedEntitiesChanged = syncEntitySet(
       this.state.selectedEntities,
       params.props.selectedEntityIds,
       params.oldProps.selectedEntityIds,
-      attributeManager,
     );
 
-    syncEntitySet(
+    const hoveredEntitiesChanged = syncEntitySet(
       this.state.hoveredEntities,
       params.props.hoveredEntityIds,
       params.oldProps.hoveredEntityIds,
-      attributeManager,
     );
+
+    if (selectedEntitiesChanged || hoveredEntitiesChanged) {
+      this.getAttributeManager()?.invalidate(STATE_ATTRIBUTE);
+    }
   }
 
   /**
