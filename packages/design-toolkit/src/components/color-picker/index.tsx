@@ -166,12 +166,7 @@ export function ColorPicker({
               : undefined,
           )}
         >
-          {allowNull && (
-            <NoColorButton
-              isActive={selectionSource === 'none'}
-              onClick={handleNoColorClick}
-            />
-          )}
+          {allowNull && <NoColorButton onClick={handleNoColorClick} />}
 
           <ColorSwatchPicker
             {...rest}

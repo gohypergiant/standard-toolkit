@@ -130,23 +130,19 @@ export const ThemeTokens: Story = {
   },
 };
 
-export const NoColorButtonStory = {
+export const NoColorButtonStory: Story = {
   name: 'NoColorButton',
   render: () => {
-    const [isActive, setIsActive] = useState(false);
+    const [clicked, setClicked] = useState(false);
 
     return (
       <div className='flex flex-col gap-4'>
         <div className='flex items-center gap-2'>
-          <NoColorButton
-            isActive={isActive}
-            onClick={() => setIsActive(!isActive)}
-          />
-          <span>Active: {isActive ? 'Yes' : 'No'}</span>
+          <NoColorButton onClick={() => setClicked(!clicked)} />
+          <span>Clicked: {clicked ? 'Yes' : 'No'}</span>
         </div>
         <div className='flex items-center gap-2'>
           <NoColorButton
-            isActive={false}
             isDisabled
             onClick={() => {
               // Disabled button no-op
@@ -159,7 +155,7 @@ export const NoColorButtonStory = {
   },
 };
 
-export const CustomColorPickerStory = {
+export const CustomColorPickerStory: Story = {
   name: 'CustomColorPicker',
   render: () => {
     const [color, setColor] = useState(parseColor('#30D27E'));
@@ -185,7 +181,7 @@ export const CustomColorPickerStory = {
   },
 };
 
-export const CombinedColorControls = {
+export const CombinedColorControls: Story = {
   name: 'Combined Controls',
   render: () => {
     const [selectedColor, setSelectedColor] = useState<string | undefined>(
@@ -204,12 +200,14 @@ export const CombinedColorControls = {
             '#D4231D',
           ]}
           value={selectedColor}
-          onChange={(color) => setSelectedColor(color as string | undefined)}
+          onChange={(color) =>
+            setSelectedColor(color as unknown as string | undefined)
+          }
           allowNull
           showCustomPicker
         />
 
-        <div className='text-body-s fg-primary-bold'>
+        <div className='fg-primary-bold text-body-s'>
           {selectedColor ? `Selected: ${selectedColor}` : 'No color selected'}
         </div>
       </div>

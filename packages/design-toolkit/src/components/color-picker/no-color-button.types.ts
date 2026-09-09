@@ -14,8 +14,6 @@
  * Props for the NoColorButton component.
  */
 export interface NoColorButtonProps {
-  /** Whether the button is in an active state (no color selected). */
-  isActive: boolean;
   /** Whether the button is disabled. */
   isDisabled?: boolean;
   /** Click handler callback. */
