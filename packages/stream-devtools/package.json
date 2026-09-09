@@ -1,7 +1,7 @@
 {
   "name": "@accelint/stream-devtools",
   "description": "TanStack Devtools panel for @accelint/stream — every stream's status, observers, message log, and lifecycle timeline, with reconnect/close/simulate/inject actions.",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "author": "https://hypergiant.com",
   "$schema": "https://json.schemastore.org/package",
   "devDependencies": {

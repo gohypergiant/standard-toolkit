@@ -1,7 +1,7 @@
 {
   "name": "@accelint/stream",
   "description": "TanStack-Query-style caching for held-open stream connections (SSE and WebSocket): framework-agnostic core, React hooks at @accelint/stream/react.",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "author": "https://hypergiant.com",
   "$schema": "https://json.schemastore.org/package",
   "dependencies": {
