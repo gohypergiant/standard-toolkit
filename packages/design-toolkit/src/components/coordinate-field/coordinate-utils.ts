@@ -29,72 +29,43 @@ const logger = createLoggerDomain('[CoordinateField]');
  *
  * This module serves as a bridge layer to handle the impedance mismatch between:
  * - **UI Requirements**: Individual segment fields (e.g., degrees, minutes, seconds, direction)
- * - **Geo Package API**: Complete coordinate strings (e.g., "40° 42' 46" N / 74° 0' 22" W")
+ * - **Geo Package API**: numeric coordinate parts plus complete coordinate strings
  *
- * ### Why This Bridge Layer Exists
+ * ### The Two Conversion Directions
  *
- * The @accelint/geo package provides excellent coordinate parsing, validation, and conversion,
- * but its API is designed around complete coordinate strings:
+ * The @accelint/geo package exposes both structured, per-axis parts and string
+ * formatters, so each direction reads whichever surface fits:
  *
- * ```typescript
- * // What geo provides:
- * const coord = createCoordinate(coordinateSystems.ddm, 'LATLON')('40 42.768 N / 74 0.36 W');
- * coord.dd()   // Returns: "40.7128 N / 74.006 W"  (formatted string)
- * coord.ddm()  // Returns: "40 42.768 N / 74 0.36 W" (formatted string)
- * coord.raw    // Returns: { LAT: 40.7128, LON: -74.006 } (only DD numbers)
- * ```
+ * - **Display Segments → DD** builds a coordinate string from the user's segments
+ *   and hands it to geo's parser for validation and conversion to Decimal Degrees.
  *
- * The coordinate-field component needs segment-level data for individual input fields:
- * - DDM: ['40', '42.768', 'N', '74', '0.36', 'W'] ← Not provided by geo
- * - DMS: ['40', '42', '46.08', 'N', '74', '0', '21.6', 'W'] ← Not provided by geo
+ * - **DD → Display Segments** reads geo's structured parts directly —
+ *   `toDdmParts`/`toDmsParts` per axis for the angular systems, and
+ *   `toMgrsParts`/`toUtmParts` for the grid systems — and maps the numeric
+ *   `degrees`/`minutes`/`seconds` and `hemisphere` fields straight into segment
+ *   arrays. No intermediate string is formatted and re-parsed.
  *
- * ### Current Limitations and Duplication
+ * The parts API returns the exact segment components this component needs:
+ * - DDM: ['40', '42.768', 'N', '74', '0.36', 'W']
+ * - DMS: ['40', '42', '46.08', 'N', '74', '0', '21.6', 'W']
  *
- * Because the geo package only exposes:
- * 1. **Formatters** that return complete strings (coord.ddm(), coord.dms(), etc.)
- * 2. **Raw values** in Decimal Degrees only (coord.raw)
- *
- * This module must:
- * 1. Build coordinate strings from segments → Pass to geo for parsing
- * 2. Parse geo's formatted output strings → Extract segments using regex
- *
- * This creates a circular conversion flow for DD → Display Segments:
- * ```
- * DD value → String → Geo parse → Geo format → String → Regex parse → Segments
- * ```
- *
- * **Note on Duplication**: The regex parsing in this module duplicates work that the
- * geo package parsers already do internally. However, since geo doesn't expose the
- * parsed segment components (only formatted strings and raw DD values), we must
- * re-parse its output to extract the individual segments for the UI.
- *
- * ### What Would Eliminate This Duplication
- *
- * If the geo package exported component-level converters like:
- * ```typescript
- * // Hypothetical API that would eliminate the bridge layer:
- * export function ddToDdmComponents(dd: number): {
- *   degrees: number;
- *   minutes: number;
- *   direction: 'N' | 'S' | 'E' | 'W';
- * }
- * ```
- *
- * Then this bridge layer could be significantly simplified. The math for these conversions
- * exists in the geo package's formatters (e.g., formatDegreesDecimalMinutes), but it's
- * wrapped in string formatting logic rather than exposed as standalone utilities.
- *
- * ### Conversion Efficiency
- *
- * - **Efficient Path** (Display Segments → DD): Segments → String → Geo parse → DD
- *   - Uses geo package for all parsing and validation ✓
- *
- * - **Inefficient Path** (DD → Display Segments): DD → String → Geo parse → Geo format → Regex parse → Segments
- *   - Circular conversion with redundant string parsing/formatting ✗
- *   - Necessary given current geo API limitations
+ * Grid systems (MGRS/UTM) signal out-of-range latitudes through geo's
+ * discriminated `{ ok }` result rather than by matching thrown error text; an
+ * `ok: false` result maps to this module's poles sentinel.
  */
 
-import { coordinateSystems, createCoordinate } from '@accelint/geo';
+import {
+  coordinateSystems,
+  createCoordinate,
+  formatMgrsParts,
+  formatUtmParts,
+  getHemisphere,
+  isValidNumericCoordinate,
+  toDdmParts,
+  toDmsParts,
+  toMgrsParts,
+  toUtmParts,
+} from '@accelint/geo';
 import {
   COORDINATE_SYSTEMS,
   type CoordinateSystem,
@@ -144,8 +115,8 @@ function formatDDSegments(segments: string[]): string | null {
     return null;
   }
 
-  const latDir = latNum >= 0 ? 'N' : 'S';
-  const lonDir = lonNum >= 0 ? 'E' : 'W';
+  const latDir = getHemisphere(latNum, 'lat');
+  const lonDir = getHemisphere(lonNum, 'lon');
 
   return `${Math.abs(latNum)} ${latDir} / ${Math.abs(lonNum)} ${lonDir}`;
 }
@@ -275,169 +246,124 @@ function formatDecimalPrecision(value: string, decimals: number): string {
 }
 
 /**
- * Parse DD coordinate string to segments
+ * Per-format regex parsers that extract segment values from a coordinate string.
  *
- * Extracts segment values from a formatted DD coordinate string. This duplicates
- * parsing logic from @accelint/geo's parseDecimalDegrees, but is necessary because
- * geo doesn't expose the parsed components - only formatted strings and raw DD numbers.
- *
- * Part of the Geo Format → String → Regex Parse → Segments flow (circular conversion).
+ * Each entry tolerates optional degree/minute/second symbols and both `,` and `/`
+ * separators so user-typed and geo-formatted strings both parse. Keyed by
+ * coordinate system so {@link parseCoordinateStringToSegments} stays a flat lookup.
  *
  * @internal
  */
-function parseDDCoordinateString(coordString: string): string[] | null {
-  // DD formats from @accelint/geo (no degree symbols):
-  // "40.7128 N / -74.006 W" or "0 N / 180 W"
-  // Also handle user input with symbols:
-  // "89.765432° N / 123.456789° W" or "89.765432, -123.456789"
+const coordinateStringParsers: Record<
+  CoordinateSystem,
+  (coordString: string) => string[] | null
+> = {
+  dd(coordString) {
+    // DD formats: "40.7128 N / -74.006 W", "89.765432° N / 123.456789° W",
+    // or "89.765432, -123.456789" (optional degree symbols/direction letters).
+    const match = coordString.match(
+      /([-]?\d+\.?\d*)°?\s*([NS])?\s*[,/\s]+\s*([-]?\d+\.?\d*)°?\s*([EW])?/i,
+    );
 
-  // Match DD format with optional degree symbols and optional direction letters
-  const match = coordString.match(
-    /([-]?\d+\.?\d*)°?\s*([NS])?\s*[,/\s]+\s*([-]?\d+\.?\d*)°?\s*([EW])?/i,
-  );
-  if (!match) {
-    return null;
-  }
+    if (!match) {
+      return null;
+    }
 
-  let lat = match[1];
-  let lon = match[3];
+    let lat = match[1];
+    let lon = match[3];
 
-  if (!(lat && lon)) {
-    return null;
-  }
+    if (!(lat && lon)) {
+      return null;
+    }
 
-  if (match[2]?.toUpperCase() === 'S' && !lat.startsWith('-')) {
-    lat = `-${lat}`;
-  }
-  if (match[4]?.toUpperCase() === 'W' && !lon.startsWith('-')) {
-    lon = `-${lon}`;
-  }
+    if (match[2]?.toUpperCase() === 'S' && !lat.startsWith('-')) {
+      lat = `-${lat}`;
+    }
 
-  return [lat, lon];
-}
+    if (match[4]?.toUpperCase() === 'W' && !lon.startsWith('-')) {
+      lon = `-${lon}`;
+    }
 
-/**
- * Parse DDM coordinate string to segments
- *
- * Extracts segment values from a formatted DDM coordinate string. This duplicates
- * parsing logic from @accelint/geo's parseDegreesDecimalMinutes, but is necessary because
- * geo doesn't expose the parsed components - only formatted strings and raw DD numbers.
- *
- * Part of the Geo Format → String → Regex Parse → Segments flow (circular conversion).
- *
- * @internal
- */
-function parseDDMCoordinateString(coordString: string): string[] | null {
-  // DDM formats from @accelint/geo (no symbols):
-  // "40 42.768 N / 74 0.36 W"
-  // Also handle user input with symbols:
-  // "89° 45.9259' N / 123° 27.4073' W"
+    return [lat, lon];
+  },
+  ddm(coordString) {
+    // DDM formats: "40 42.768 N / 74 0.36 W" or
+    // "89° 45.9259' N / 123° 27.4073' W" (optional degree/minute symbols).
+    const match = coordString.match(
+      /(\d+)°?\s+([\d.]+)'?\s+([NS])\s*[,/]\s*(\d+)°?\s+([\d.]+)'?\s+([EW])/i,
+    );
 
-  // Match DDM format with optional degree and minute symbols
-  const match = coordString.match(
-    /(\d+)°?\s+([\d.]+)'?\s+([NS])\s*[,/]\s*(\d+)°?\s+([\d.]+)'?\s+([EW])/i,
-  );
-  if (!match) {
-    return null;
-  }
-  // Round minutes to 4 decimal places for display (CJCSI 3900.01E compliance)
-  return [
-    match[1] as string,
-    formatDecimalPrecision(match[2] as string, 4),
-    match[3] as string,
-    match[4] as string,
-    formatDecimalPrecision(match[5] as string, 4),
-    match[6] as string,
-  ];
-}
+    if (!match) {
+      return null;
+    }
 
-/**
- * Parse DMS coordinate string to segments
- *
- * Extracts segment values from a formatted DMS coordinate string. This duplicates
- * parsing logic from @accelint/geo's parseDegreesMinutesSeconds, but is necessary because
- * geo doesn't expose the parsed components - only formatted strings and raw DD numbers.
- *
- * Part of the Geo Format → String → Regex Parse → Segments flow (circular conversion).
- *
- * @internal
- */
-function parseDMSCoordinateString(coordString: string): string[] | null {
-  // DMS formats from @accelint/geo (no symbols):
-  // "40 42 46.08 N / 74 0 21.60 W"
-  // Also handle user input with symbols:
-  // "89° 45' 55.56" N / 123° 27' 24.44" W"
+    // Round minutes to 4 decimal places for display (CJCSI 3900.01E compliance)
+    return [
+      match[1] as string,
+      formatDecimalPrecision(match[2] as string, 4),
+      match[3] as string,
+      match[4] as string,
+      formatDecimalPrecision(match[5] as string, 4),
+      match[6] as string,
+    ];
+  },
+  dms(coordString) {
+    // DMS formats: "40 42 46.08 N / 74 0 21.60 W" or
+    // "89° 45' 55.56" N / 123° 27' 24.44" W" (optional degree/minute/second symbols).
+    const match = coordString.match(
+      /(\d+)°?\s+(\d+)'?\s+([\d.]+)"?\s+([NS])\s*[,/]\s*(\d+)°?\s+(\d+)'?\s+([\d.]+)"?\s+([EW])/i,
+    );
 
-  // Match DMS format with optional degree, minute, and second symbols
-  const match = coordString.match(
-    /(\d+)°?\s+(\d+)'?\s+([\d.]+)"?\s+([NS])\s*[,/]\s*(\d+)°?\s+(\d+)'?\s+([\d.]+)"?\s+([EW])/i,
-  );
-  if (!match) {
-    return null;
-  }
-  // Round seconds to 2 decimal places for display
-  return [
-    match[1] as string,
-    match[2] as string,
-    formatDecimalPrecision(match[3] as string, 2),
-    match[4] as string,
-    match[5] as string,
-    match[6] as string,
-    formatDecimalPrecision(match[7] as string, 2),
-    match[8] as string,
-  ];
-}
+    if (!match) {
+      return null;
+    }
 
-/**
- * Parse MGRS coordinate string to segments
- *
- * Extracts segment values from a formatted MGRS coordinate string. This duplicates
- * parsing logic from @accelint/geo's parseMGRS, but is necessary because
- * geo doesn't expose the parsed components - only formatted strings and raw DD numbers.
- *
- * Part of the Geo Format → String → Regex Parse → Segments flow (circular conversion).
- *
- * @internal
- */
-function parseMGRSCoordinateString(coordString: string): string[] | null {
-  // MGRS: "18T WM 12345 67890"
-  const match = coordString.match(/(\d+)([A-Z])\s+([A-Z]{2})\s+(\d+)\s+(\d+)/i);
-  if (!match) {
-    return null;
-  }
-  return [
-    match[1] as string,
-    match[2] as string,
-    match[3] as string,
-    match[4] as string,
-    match[5] as string,
-  ];
-}
+    // Round seconds to 2 decimal places for display
+    return [
+      match[1] as string,
+      match[2] as string,
+      formatDecimalPrecision(match[3] as string, 2),
+      match[4] as string,
+      match[5] as string,
+      match[6] as string,
+      formatDecimalPrecision(match[7] as string, 2),
+      match[8] as string,
+    ];
+  },
+  mgrs(coordString) {
+    // MGRS: "18T WM 12345 67890"
+    const match = coordString.match(
+      /(\d+)([A-Z])\s+([A-Z]{2})\s+(\d+)\s+(\d+)/i,
+    );
 
-/**
- * Parse UTM coordinate string to segments
- *
- * Extracts segment values from a formatted UTM coordinate string. This duplicates
- * parsing logic from @accelint/geo's parseUTM, but is necessary because
- * geo doesn't expose the parsed components - only formatted strings and raw DD numbers.
- *
- * Part of the Geo Format → String → Regex Parse → Segments flow (circular conversion).
- *
- * @internal
- */
-function parseUTMCoordinateString(coordString: string): string[] | null {
-  // UTM: "18N 585628 4511644" or "18 N 585628 4511644" (with optional space)
-  const match = coordString.match(/(\d+)\s*([NS])\s+(\d+)\s+(\d+)/i);
-  if (!match) {
-    return null;
-  }
-  return [
-    match[1] as string,
-    match[2] as string,
-    match[3] as string,
-    match[4] as string,
-  ];
-}
+    if (!match) {
+      return null;
+    }
+
+    return [
+      match[1] as string,
+      match[2] as string,
+      match[3] as string,
+      match[4] as string,
+      match[5] as string,
+    ];
+  },
+  utm(coordString) {
+    // UTM: "18N 585628 4511644" or "18 N 585628 4511644" (optional space)
+    const match = coordString.match(/(\d+)\s*([NS])\s+(\d+)\s+(\d+)/i);
+
+    if (!match) {
+      return null;
+    }
+
+    return [
+      match[1] as string,
+      match[2] as string,
+      match[3] as string,
+      match[4] as string,
+    ];
+  },
+};
 
 /**
  * Parse a coordinate string into segment values
@@ -445,31 +371,8 @@ function parseUTMCoordinateString(coordString: string): string[] | null {
  * Converts a formatted coordinate string (from @accelint/geo output or user input)
  * back into individual segment values for display.
  *
- * This is the inverse of formatSegmentsToCoordinateString.
- *
- * **Note on Duplication**: This function and its helpers (parseDDCoordinateString,
- * parseDDMCoordinateString, etc.) duplicate parsing logic that already exists in
- * the @accelint/geo package parsers:
- *
- * - Geo parsers: parseDecimalDegrees, parseDegreesDecimalMinutes, etc.
- * - These functions: parseDDCoordinateString, parseDDMCoordinateString, etc.
- *
- * Both use regex patterns to extract coordinate components from strings. The duplication
- * exists because:
- *
- * 1. **Geo parsers** extract components, validate them, convert to DD, then format back to strings
- * 2. **This function** extracts components from those formatted strings for the UI
- *
- * We're essentially undoing the formatting that geo just did. This is the second half
- * of the circular conversion described in convertDDToDisplaySegments.
- *
- * **Why we can't use geo parsers directly**: The geo parsers return coord objects with
- * only `coord.raw` (DD numbers) and formatting methods. They don't expose the parsed
- * segment components we need for the UI (e.g., the degrees, minutes, and direction values).
- *
- * **Parsing Order**:
- * - **convertDisplaySegmentsToDD**: Segments → String → **Geo parse** → DD ✓ (efficient)
- * - **convertDDToDisplaySegments**: DD → String → Geo parse → Geo format → **This parse** → Segments ✗ (circular)
+ * This is the inverse of formatSegmentsToCoordinateString and is used to extract
+ * segments from arbitrary coordinate strings (e.g. pasted text).
  *
  * @param coordString - Formatted coordinate string
  * @param format - The coordinate system format
@@ -484,20 +387,7 @@ export function parseCoordinateStringToSegments(
   }
 
   try {
-    switch (format) {
-      case 'dd':
-        return parseDDCoordinateString(coordString);
-      case 'ddm':
-        return parseDDMCoordinateString(coordString);
-      case 'dms':
-        return parseDMSCoordinateString(coordString);
-      case 'mgrs':
-        return parseMGRSCoordinateString(coordString);
-      case 'utm':
-        return parseUTMCoordinateString(coordString);
-      default:
-        return null;
-    }
+    return coordinateStringParsers[format](coordString);
   } catch (_error) {
     return null;
   }
@@ -509,40 +399,22 @@ export function parseCoordinateStringToSegments(
  * Takes a CoordinateValue in Decimal Degrees format and converts it to the
  * segment values needed for the specified display format.
  *
- * Uses @accelint/geo to ensure accurate conversion between coordinate systems.
- *
- * **Note on Circular Conversion**: This function demonstrates the circular conversion
- * pattern discussed in the module documentation. The flow is:
- *
- * 1. Start with DD value: `{ lat: 40.7128, lon: -74.0060 }`
- * 2. Convert to coordinate string: `"40.7128 / -74.006"`
- * 3. Parse with geo package (creates coord object with internal parsed state)
- * 4. Format to target system using geo: `coord.ddm()` → `"40 42.768 N / 74 0.36 W"`
- * 5. Parse the formatted string AGAIN with regex to extract segments: `['40', '42.768', 'N', ...]`
- *
- * This is inefficient because:
- * - The geo package already has the component values (degrees, minutes, direction) internally
- * - We format them into a string, then immediately parse the string back apart
- * - The regex parsing duplicates work the geo parsers already did
- *
- * However, this approach is necessary because:
- * - The geo package only exposes `coord.raw` (DD numbers) and formatted strings
- * - It doesn't expose the intermediate component values we need for the UI segments
- * - We need individual segment values for separate input fields
- *
- * **Future Improvement**: If geo package exported component extractors like:
- * ```typescript
- * coord.components.ddm // { latDeg: 40, latMin: 42.768, latDir: 'N', ... }
- * ```
- * Then we could eliminate the format→parse cycle entirely.
+ * Builds the segments directly from @accelint/geo structured parts:
+ * `toDdmParts`/`toDmsParts` per axis supply the numeric `degrees`/`minutes`/
+ * `seconds` and `hemisphere` for the angular systems, and
+ * `toMgrsParts`/`toUtmParts` supply the grid components. No coordinate string
+ * is formatted and re-parsed. A grid `{ ok: false }` result (out-of-range
+ * latitude) yields `null`.
  *
  * @param value - Coordinate value in DD format `{ lat: number, lon: number }`
  * @param format - Target display format
  * @returns Array of segment values for display, or null if conversion fails
  *
  * @example
+ * ```typescript
  * const segments = convertDDToDisplaySegments({ lat: 40.7128, lon: -74.0060 }, 'ddm');
- * // Returns: ['40', '42.7680', 'N', '74', '0.3600', 'W']
+ * // Returns: ['40', '42.768', 'N', '74', '0.36', 'W']
+ * ```
  */
 export function convertDDToDisplaySegments(
   value: CoordinateValue,
@@ -551,58 +423,92 @@ export function convertDDToDisplaySegments(
   if (
     !value ||
     typeof value.lat !== 'number' ||
-    typeof value.lon !== 'number'
+    typeof value.lon !== 'number' ||
+    !isValidNumericCoordinate(value.lat, value.lon)
   ) {
     return null;
   }
 
   try {
-    const create = createCoordinate(coordinateSystems.dd, 'LATLON');
+    const { lat, lon } = value;
 
-    // Round to 10 decimal places to match geo package internal precision
-    // Use signed numbers (not cardinal directions) for reliable conversions to all formats
-    const lat = Number(value.lat.toFixed(10));
-    const lon = Number(value.lon.toFixed(10));
-    const inputCoordString = `${lat} / ${lon}`;
-
-    const coord = create(inputCoordString);
-
-    if (!coord.valid) {
-      return null;
-    }
-
-    // we're resetting the value in the created `coord` to preserve DD precision
-    coord.raw.LAT = value.lat;
-    coord.raw.LON = value.lon;
-
-    // Format the coordinate using geo package formatters
-    // These return complete coordinate strings (e.g., "40 42.768 N / 74 0.36 W")
-    let coordString: string;
+    // Build each format's segments directly from @accelint/geo structured parts.
+    // DD keeps the raw signed magnitude (full precision); DDM/DMS use the parts
+    // functions' default display precision (minutes 4, seconds 2); MGRS/UTM read
+    // the grid parts and branch on the discriminated out-of-range result.
     switch (format) {
       case 'dd':
-        coordString = coord.dd();
-        break;
-      case 'ddm':
-        coordString = coord.ddm();
-        break;
-      case 'dms':
-        coordString = coord.dms();
-        break;
-      case 'mgrs':
-        coordString = coord.mgrs();
-        break;
-      case 'utm':
-        coordString = coord.utm();
-        break;
+        // DD segments carry the raw signed magnitudes at full precision (no
+        // rounding), matching geo's decimal-degrees renderer over the raw value.
+        return [String(lat), String(lon)];
+      case 'ddm': {
+        const latParts = toDdmParts(lat, 'lat');
+        const lonParts = toDdmParts(lon, 'lon');
+
+        return [
+          String(latParts.degrees),
+          String(latParts.minutes),
+          latParts.hemisphere,
+          String(lonParts.degrees),
+          String(lonParts.minutes),
+          lonParts.hemisphere,
+        ];
+      }
+      case 'dms': {
+        const latParts = toDmsParts(lat, 'lat');
+        const lonParts = toDmsParts(lon, 'lon');
+
+        return [
+          String(latParts.degrees),
+          String(latParts.minutes),
+          String(latParts.seconds),
+          latParts.hemisphere,
+          String(lonParts.degrees),
+          String(lonParts.minutes),
+          String(lonParts.seconds),
+          lonParts.hemisphere,
+        ];
+      }
+      case 'mgrs': {
+        const result = toMgrsParts([lat, lon]);
+
+        if (!result.ok) {
+          return null;
+        }
+
+        const { zone, band, e100k, n100k, easting, northing } = result.value;
+
+        // Mirror the geo MGRS renderer: floor within-square metres and left-pad
+        // zone to 2 digits, easting/northing to 5.
+        return [
+          zone.toString().padStart(2, '0'),
+          band,
+          `${e100k}${n100k}`,
+          Math.floor(easting).toString().padStart(5, '0'),
+          Math.floor(northing).toString().padStart(5, '0'),
+        ];
+      }
+      case 'utm': {
+        const result = toUtmParts([lat, lon]);
+
+        if (!result.ok) {
+          return null;
+        }
+
+        const { zone, hemisphere, easting, northing } = result.value;
+
+        // Mirror the geo UTM renderer: left-pad zone to 2 digits; easting and
+        // northing are already the rounded integer metres.
+        return [
+          zone.toString().padStart(2, '0'),
+          hemisphere,
+          String(easting),
+          String(northing),
+        ];
+      }
       default:
         return null;
     }
-
-    // Parse the formatted string to extract individual segment values
-    // This is the circular part: geo formatted it, now we parse it back apart
-    // Necessary because geo doesn't expose the components directly
-    const segments = parseCoordinateStringToSegments(coordString, format);
-    return segments;
   } catch (error) {
     logger
       .withMetadata({
@@ -632,18 +538,17 @@ export function convertDDToDisplaySegments(
  * This is efficient because:
  * - We let geo do what it's designed for: parsing and validating coordinate strings
  * - We extract the DD values directly from `coord.raw` (no string parsing needed)
- * - Single direction: Segments → String → Geo Parse → DD (no circular conversion)
- *
- * Contrast with `convertDDToDisplaySegments` which has the circular pattern:
- * DD → String → Geo Parse → Geo Format → String → Regex Parse → Segments
+ * - Single direction: Segments → String → Geo Parse → DD
  *
  * @param segments - Array of segment values from user input
  * @param format - The coordinate system format of the segments
  * @returns CoordinateValue in DD format, or null if invalid
  *
  * @example
- * const coord = convertDisplaySegmentsToDD(['40', '42.7680', 'N', '74', '0.3600', 'W'], 'ddm');
+ * ```typescript
+ * const coord = convertDisplaySegmentsToDD(['40', '42.768', 'N', '74', '0.36', 'W'], 'ddm');
  * // Returns: { lat: 40.7128, lon: -74.0060 }
+ * ```
  */
 export function convertDisplaySegmentsToDD(
   segments: string[],
@@ -781,78 +686,108 @@ function isValidCoordinateValue(value: CoordinateValue | null): boolean {
 }
 
 /**
- * Check if error is due to geographic limitation (poles)
+ * Build the MGRS display result for a coordinate.
+ *
+ * Composes the string from {@link toMgrsParts} via geo's `formatMgrsParts`
+ * renderer. `toMgrsParts` returns a total `GridPartsResult` that never
+ * throws, so an out-of-range latitude or the `+180°` antimeridian arrives as
+ * `{ ok: false }` and maps to the poles sentinel — no thrown error, no matched
+ * error text.
+ *
  * @internal
  */
-function isGeographicLimitationError(error: unknown): boolean {
-  const errorMessage = error instanceof Error ? error.message : String(error);
-  return (
-    errorMessage.includes('outside UTM limits') ||
-    errorMessage.includes('invalid UTM zone')
-  );
+function convertToMgrsResult(lat: number, lon: number): CoordinateFormatResult {
+  const result = toMgrsParts([lat, lon]);
+
+  if (!result.ok) {
+    return {
+      value: COORDINATE_ERROR_MESSAGES.NOT_AVAILABLE_AT_POLES,
+      isValid: false,
+    };
+  }
+
+  return {
+    value: formatMgrsParts(result.value),
+    isValid: true,
+  };
+}
+
+/**
+ * Build the UTM display result for a coordinate.
+ *
+ * Composes the string from {@link toUtmParts} via geo's `formatUtmParts`
+ * renderer. `toUtmParts` returns a total `GridPartsResult` that never
+ * throws, so an out-of-range latitude or the `+180°` antimeridian arrives as
+ * `{ ok: false }` and maps to the poles sentinel — no thrown error, no matched
+ * error text.
+ *
+ * @internal
+ */
+function convertToUtmResult(lat: number, lon: number): CoordinateFormatResult {
+  const result = toUtmParts([lat, lon]);
+
+  if (!result.ok) {
+    return {
+      value: COORDINATE_ERROR_MESSAGES.NOT_AVAILABLE_AT_POLES,
+      isValid: false,
+    };
+  }
+
+  return {
+    value: formatUtmParts(result.value),
+    isValid: true,
+  };
 }
 
 /**
  * Convert coordinate to a specific format with error handling
+ *
+ * DD reads the geo string renderer directly; DDM/DMS and MGRS/UTM compose the
+ * display string from @accelint/geo structured parts. MGRS/UTM signal
+ * out-of-range latitudes through the discriminated result rather than by
+ * matching geodesy error text, mapping to the poles sentinel.
+ *
  * @internal
  */
 function convertToFormat(
   coord: {
     dd: () => string;
-    ddm: () => string;
-    dms: () => string;
-    mgrs: () => string;
-    utm: () => string;
   },
   format: CoordinateSystem,
   value: CoordinateValue,
 ): CoordinateFormatResult {
+  const { lat, lon } = value;
+
   try {
-    let formattedValue: string;
     switch (format) {
       case 'dd':
-        formattedValue = coord.dd();
-        break;
+        return { value: coord.dd(), isValid: true };
       case 'ddm': {
-        const raw = coord.ddm();
-        const s = parseDDMCoordinateString(raw);
-        // parseDDMCoordinateString already applies 4 decimal precision to minutes
-        formattedValue = s
-          ? `${s[0]} ${s[1]} ${s[2]} / ${s[3]} ${s[4]} ${s[5]}`
-          : raw;
-        break;
+        const latParts = toDdmParts(lat, 'lat');
+        const lonParts = toDdmParts(lon, 'lon');
+
+        return {
+          value: `${latParts.degrees} ${latParts.minutes} ${latParts.hemisphere} / ${lonParts.degrees} ${lonParts.minutes} ${lonParts.hemisphere}`,
+          isValid: true,
+        };
       }
       case 'dms': {
-        const raw = coord.dms();
-        const s = parseDMSCoordinateString(raw);
-        // parseDMSCoordinateString already applies 2 decimal precision to seconds
-        formattedValue = s
-          ? `${s[0]} ${s[1]} ${s[2]} ${s[3]} / ${s[4]} ${s[5]} ${s[6]} ${s[7]}`
-          : raw;
-        break;
+        const latParts = toDmsParts(lat, 'lat');
+        const lonParts = toDmsParts(lon, 'lon');
+
+        return {
+          value: `${latParts.degrees} ${latParts.minutes} ${latParts.seconds} ${latParts.hemisphere} / ${lonParts.degrees} ${lonParts.minutes} ${lonParts.seconds} ${lonParts.hemisphere}`,
+          isValid: true,
+        };
       }
       case 'mgrs':
-        formattedValue = coord.mgrs();
-        break;
+        return convertToMgrsResult(lat, lon);
       case 'utm':
-        formattedValue = coord.utm();
-        break;
+        return convertToUtmResult(lat, lon);
       default:
         return { value: COORDINATE_ERROR_MESSAGES.INVALID, isValid: false };
     }
-    return { value: formattedValue, isValid: true };
   } catch (error) {
-    // Handle geographic limitations for MGRS/UTM
-    if (
-      (format === 'mgrs' || format === 'utm') &&
-      isGeographicLimitationError(error)
-    ) {
-      return {
-        value: COORDINATE_ERROR_MESSAGES.NOT_AVAILABLE_AT_POLES,
-        isValid: false,
-      };
-    }
-
     // Log other errors in development
     logger
       .withMetadata({

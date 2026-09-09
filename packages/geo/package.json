@@ -53,8 +53,10 @@
     "./coordinates/latlon/internal/validate": "./dist/coordinates/latlon/internal/validate.js",
     "./coordinates/latlon/internal/violation": "./dist/coordinates/latlon/internal/violation.js",
     "./coordinates/mgrs/parser": "./dist/coordinates/mgrs/parser.js",
+    "./coordinates/mgrs/parts": "./dist/coordinates/mgrs/parts.js",
     "./coordinates/mgrs/system": "./dist/coordinates/mgrs/system.js",
     "./coordinates/utm/parser": "./dist/coordinates/utm/parser.js",
+    "./coordinates/utm/parts": "./dist/coordinates/utm/parts.js",
     "./coordinates/utm/system": "./dist/coordinates/utm/system.js",
     "./patterning": "./dist/patterning.js",
     "./package.json": "./package.json"

@@ -172,15 +172,16 @@ export {
   type CoordinateInternalValue,
   type CoordinateObject,
   type CoordinateTuple,
-  type LatLonTuple,
-  type LonLatTuple,
   isCoordinateObject,
   isCoordinateTuple,
+  type LatLonTuple,
+  type LonLatTuple,
   normalizeObjectToLatLon,
   tupleToLatLon,
 } from './normalize';
 export {
   isFiniteNumber,
+  isValidNumericCoordinate,
   validateNumericCoordinate,
   validateSignedRange,
 } from './validate';

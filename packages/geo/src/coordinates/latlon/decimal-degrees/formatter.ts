@@ -11,29 +11,84 @@
  */
 
 import { createFormatter } from '../internal/format';
+import { type Axis, getHemisphere, type Hemisphere } from '../internal/ordinal';
+
+/** Default number of decimal places for decimal-degrees formatting. */
+export const DECIMAL_DEGREES_PRECISION = 6;
+
+/**
+ * Structured decimal-degrees parts for a single signed coordinate value.
+ *
+ * `degrees` is the non-negative magnitude rounded to the requested precision;
+ * the signed value is recoverable from the axis and `hemisphere`.
+ */
+export type DecimalDegreesParts = {
+  degrees: number;
+  hemisphere: Hemisphere;
+};
+
+/**
+ * Converts a single signed coordinate value into decimal-degrees parts.
+ *
+ * Returns the non-negative magnitude plus the hemisphere letter for the axis
+ * (following geo's `>= 0` convention). Decimal degrees has no minutes/seconds
+ * carry; the magnitude is simply rounded to the requested precision.
+ *
+ * @param value - The signed coordinate value.
+ * @param axis - Whether the value is a latitude (`'lat'`) or longitude (`'lon'`).
+ * @param precision - Decimal places for the magnitude (default `6`).
+ * @returns The `{ degrees, hemisphere }` parts object.
+ *
+ * @remarks pure function
+ *
+ * @example
+ * ```typescript
+ * toDecimalDegreesParts(-122.4194, 'lon');
+ * // { degrees: 122.4194, hemisphere: 'W' }
+ * ```
+ */
+export const toDecimalDegreesParts = (
+  value: number,
+  axis: Axis,
+  precision: number = DECIMAL_DEGREES_PRECISION,
+): DecimalDegreesParts => {
+  const degrees = Number(Math.abs(value).toFixed(precision));
+
+  return {
+    degrees,
+    hemisphere: getHemisphere(value, axis),
+  };
+};
 
 /**
  * Converts a coordinate value to decimal degrees format.
  *
- * @param num - The coordinate value to format.
+ * @param value - The coordinate value to format.
+ * @param axis - Whether the value is a latitude (`'lat'`) or longitude (`'lon'`).
  * @param withOrdinal - Whether to use absolute value (when ordinal directions are shown separately).
  * @returns Formatted coordinate string with degree symbol and 6 decimal places.
  *
  * @example
  * ```typescript
- * toDecimalDegrees(45.123456);
+ * toDecimalDegrees(45.123456, 'lat');
  * // '45.123456°'
  * ```
  *
  * @example
  * ```typescript
- * toDecimalDegrees(-122.4194, true);
+ * toDecimalDegrees(-122.4194, 'lon', true);
  * // '122.419400°'
  * ```
  */
-const toDecimalDegrees = (num: number, withOrdinal?: boolean): string => {
-  const value = withOrdinal ? Math.abs(num) : num;
-  return `${value.toFixed(6)}°`;
+const toDecimalDegrees = (
+  value: number,
+  axis: Axis,
+  withOrdinal?: boolean,
+): string => {
+  const { degrees } = toDecimalDegreesParts(value, axis);
+  const signed = withOrdinal || value >= 0 ? degrees : -degrees;
+
+  return `${signed.toFixed(DECIMAL_DEGREES_PRECISION)}°`;
 };
 
 /**

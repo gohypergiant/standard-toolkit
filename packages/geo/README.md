@@ -12,6 +12,8 @@ Geographic coordinate parsing, conversion, and formatting for multiple coordinat
   - Universal Transverse Mercator (UTM): `18N 585628 4511644`
 
 - **Flexible Format Ordering**: Convert between LATLON and LONLAT formats
+- **Structured Parts API**: Get the numeric pieces of a coordinate (`{ degrees, minutes, seconds, hemisphere }`, or grid components) instead of a formatted string — useful for segmented inputs and custom renderers
+- **Standalone Functions**: Per-system `format*`/`parse*` helpers and validation predicates alongside the `createCoordinate` façade
 - **Input Validation**: Detailed error messages for invalid coordinates
 - **Performance Optimized**: Immutable coordinate objects with intelligent caching
 - **Type Safe**: Full TypeScript support with complete type definitions
@@ -19,7 +21,7 @@ Geographic coordinate parsing, conversion, and formatting for multiple coordinat
 ## Installation
 
 ```sh
-npm install @accelint/geo
+pnpm add @accelint/geo
 ```
 
 ## Quick Start
@@ -205,6 +207,84 @@ import type { LatLonTuple, LonLatTuple } from '@accelint/geo';
 
 const latlon: LatLonTuple = [40.7128, -74.0060]; // [latitude, longitude]
 const lonlat: LonLatTuple = [-74.0060, 40.7128]; // [longitude, latitude]
+```
+
+## Structured Parts API
+
+When you need the numeric components of a coordinate rather than a formatted string — driving segmented inputs, building a custom renderer, or feeding another calculation — reach for the parts functions instead of parsing a formatted string back apart.
+
+### Lat/lon parts
+
+`toDecimalDegreesParts`, `toDdmParts`, and `toDmsParts` each take a single signed value plus an axis (`'lat'` or `'lon'`) and return the non-negative magnitude components plus a `hemisphere` letter. Carry is applied so `minutes` and `seconds` never reach `60`.
+
+```typescript
+import { toDecimalDegreesParts, toDdmParts, toDmsParts } from '@accelint/geo';
+
+toDecimalDegreesParts(-122.4194, 'lon');
+// { degrees: 122.4194, hemisphere: 'W' }
+
+toDdmParts(12.576, 'lat');
+// { degrees: 12, minutes: 34.56, hemisphere: 'N' }
+
+toDmsParts(-77.0369, 'lon');
+// { degrees: 77, minutes: 2, seconds: 12.84, hemisphere: 'W' }
+```
+
+Each accepts an optional trailing `precision` argument (defaults: DD `6`, DDM `4`, DMS `2`).
+
+### Grid parts
+
+`toUtmParts` and `toMgrsParts` take a signed `[latitude, longitude]` tuple and read the grid components directly. They return a discriminated `GridPartsResult`: `{ ok: true, value }` on success, or `{ ok: false, reason: 'out-of-range' }` when the coordinate is non-finite, outside the inclusive `80°S`–`84°N` grid band, or exactly `+180°` longitude (where the UTM zone is undefined). They never throw, so callers branch on `ok` instead of catching an error.
+
+```typescript
+import { toUtmParts, toMgrsParts, formatUtmParts, formatMgrsParts } from '@accelint/geo';
+
+toUtmParts([38.8977, -77.0365]);
+// { ok: true, value: { zone: 18, hemisphere: 'N', easting: 323394, northing: 4307396 } }
+
+toUtmParts([85, 0]);
+// { ok: false, reason: 'out-of-range' }
+
+toMgrsParts([-81, 0]);
+// { ok: false, reason: 'out-of-range' }
+```
+
+`formatUtmParts` / `formatMgrsParts` render grid parts back into the canonical string, so a caller that already holds parts (or wants to consume `toUtmParts`/`toMgrsParts` and render) shares one renderer:
+
+```typescript
+formatUtmParts({ zone: 18, hemisphere: 'N', easting: 323394, northing: 4307396 });
+// '18N 323394 4307396'
+```
+
+## Standalone Functions
+
+The per-system `format*` and `parse*` functions are exported directly, so you can format a `[latitude, longitude]` tuple (or parse a single system's string) without building a `createCoordinate` object.
+
+```typescript
+import { formatDecimalDegrees, formatDegreesMinutesSeconds } from '@accelint/geo';
+
+formatDecimalDegrees([37.7749, -122.4194], { separator: ' / ', withOrdinal: true });
+// '37.774900° N / 122.419400° W'
+
+formatDegreesMinutesSeconds([37.7749, -122.4194], { separator: ' / ' });
+// '37° 46' 29.64″ / 122° 25' 9.84″'
+```
+
+Parsers: `parseDecimalDegrees`, `parseDegreesDecimalMinutes`, `parseDegreesMinutesSeconds`, `parseMGRS`, and `parseUTM` parse a single system's string.
+
+### Validation
+
+`isValidNumericCoordinate` is a boolean check (finite and in range); `validateNumericCoordinate` returns an array of error messages (empty when valid).
+
+```typescript
+import { isValidNumericCoordinate, validateNumericCoordinate } from '@accelint/geo';
+
+isValidNumericCoordinate(45.5, -122.6); // true
+isValidNumericCoordinate(91, -122.6);   // false
+
+validateNumericCoordinate(45.5, -122.6); // []
+validateNumericCoordinate(91, -122.6);
+// ['[ERROR] Latitude value (91) is outside valid range (-90 to 90).']
 ```
 
 ## Coordinate System Formats

@@ -163,13 +163,13 @@ Optional configuration object:
 
 | Format | Description | Example |
 |--------|-------------|---------|
-| `dd` | Decimal Degrees | `40.712775° N / 74.005973° W` |
-| `ddm` | Degrees Decimal Minutes | `40° 42.7665' N / 74° 0.3584' W` |
-| `dms` | Degrees Minutes Seconds | `40° 42' 45.99″ N / 74° 0' 21.50″ W` |
-| `mgrs` | Military Grid Reference System* | `18T WL 83959 07350` |
-| `utm` | Universal Transverse Mercator* | `18N 583959 4507351` |
+| `dd` | Decimal Degrees | `37.774900° N / 122.419400° W` |
+| `ddm` | Degrees Decimal Minutes | `37° 46.4940' N / 122° 25.1640' W` |
+| `dms` | Degrees Minutes Seconds | `37° 46' 29.64″ N / 122° 25' 9.84″ W` |
+| `mgrs` | Military Grid Reference System* | `10S EG 51130 80998` |
+| `utm` | Universal Transverse Mercator* | `10N 551131 4180999` |
 
-**Note:** UTM and MGRS formats are only valid between 80°S and 84°N. Coordinates outside this range will display `--, --`.
+**Note:** UTM and MGRS formats are only valid from 80°S to 84°N inclusive. Coordinates outside this range will display `--- -- ---- ----`.
 
 #### Throws
 
@@ -181,8 +181,8 @@ Optional configuration object:
 
 UTM and MGRS coordinate systems have geographic limitations:
 
-- **Valid Range**: 80°S to 84°N
-- **Behavior at Poles**: When the cursor hovers over coordinates outside this range (e.g., Antarctica or Arctic regions), UTM and MGRS formats will display `--, --` (the default placeholder)
+- **Valid Range**: 80°S to 84°N (inclusive at both edges)
+- **Behavior at Poles**: When the cursor hovers over coordinates outside this range (e.g., Antarctica or Arctic regions), UTM and MGRS formats will display `--- -- ---- ----` (the default placeholder)
 - **Other Formats**: DD (Decimal Degrees), DDM (Degrees Decimal Minutes), and DMS (Degrees Minutes Seconds) work correctly at all latitudes, including polar regions
 
 **Example:**
@@ -192,7 +192,7 @@ function PolarCoordinateDisplay() {
 
   // At latitude -85° (Antarctica):
   // - DD format: "85.000000° S / 0.000000° E" ✓
-  // - UTM format: "--, --" (outside valid range)
+  // - UTM format: "--- -- ---- ----" (outside valid range)
   // - rawCoord: { latitude: -85, longitude: 0 } ✓ (always available)
 
   return <div>{formattedCoord}</div>;

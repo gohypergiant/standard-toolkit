@@ -14,6 +14,7 @@
 import { LatLon } from 'geodesy/mgrs';
 import { type Compass, type Format, SYMBOL_PATTERNS } from '../latlon/internal';
 import { parseMGRS } from './parser';
+import { formatMgrsParts, toMgrsParts } from './parts';
 import type { CoordinateSystem } from '../latlon/internal/coordinate-system';
 
 /**
@@ -66,8 +67,14 @@ export const systemMGRS: CoordinateSystem = {
       [format.slice(3), right],
     ]) as Record<'LAT' | 'LON', number>;
 
-    const latlon = new LatLon(LAT, LON);
+    const result = toMgrsParts([LAT, LON]);
 
-    return latlon.toUtm().toMgrs().toString();
+    if (!result.ok) {
+      // Surface geodesy's own RangeError for coordinates outside the MGRS
+      // grid band, preserving the pre-refactor throwing behavior.
+      return new LatLon(LAT, LON).toUtm().toMgrs().toString();
+    }
+
+    return formatMgrsParts(result.value);
   },
 };
