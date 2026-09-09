@@ -59,6 +59,58 @@ TanStack v9 renders function `cell`/`header` renderers as React components, so a
 * The Table now reflects `data` prop changes without a remount (e.g. polling or refetching) — the `key` remount workaround is no longer necessary.
 * Manual row ordering is a TanStack custom feature (`rowOrderingFeature`, exported): `table.setRowOrdering`, `row.moveUp()` / `row.moveDown()`, and `row.getCanMoveUp()` / `row.getCanMoveDown()`. Moves skip pinned rows, and open row menus survive live data updates.
 
+## Breaking Change: FloatingCard without dockview
+
+`FloatingCard` no longer depends on [dockview](https://dockview.dev/). Dragging, resizing, and stacking order are handled by the component itself.
+
+Every `FloatingCard` and `FloatingCardProvider` prop keeps its behavior, so most applications only need step 1.
+
+### 1. Remove the peer dependency
+
+`dockview-react` is no longer a peer dependency. If you installed it only for `FloatingCard`, drop it:
+
+```json
+// Remove from package.json
+"dockview-react": "^5.0.0",
+```
+
+### 2. Replace `useFloatingCard().api`
+
+The hook no longer returns `api`, which exposed the underlying `DockviewApi`. There is no equivalent, because there is no dockview instance. Use the hook's own methods instead:
+
+```typescript
+// Before
+const { api } = useFloatingCard();
+api?.getPanel(cardId)?.api.close();
+
+// After
+const { closeCard } = useFloatingCard();
+closeCard(cardId);
+```
+
+### 3. Drop `addRef` and `removeRef`
+
+The hook no longer returns `addRef` or `removeRef`. Registering a card is internal wiring between `FloatingCard` and its provider, so it moved off the value applications consume.
+
+`useFloatingCard()` still returns `cards`, `closeCard`, `togglePinCard`, `isPinned`, and `subscribeToPinState`, all unchanged.
+
+### 4. Label your custom header actions
+
+Header action buttons render an icon with no visible text. Give each one a `label` so screen readers announce something other than "button":
+
+```typescript
+// Before
+headerActions={[{ icon: <SettingsIcon />, onClick: openSettings }]}
+
+// After
+headerActions={[{ icon: <SettingsIcon />, label: 'Settings', onClick: openSettings }]}
+```
+
+## Improvements
+
+* Cards can be resized from any edge or corner. Pinning a card continues to freeze dragging and now also freezes resizing.
+* `FloatingCardProvider` accepts a `bounds` prop of `'provider'` (default) or `'viewport'`, controlling the region cards are confined to while dragging and resizing.
+
 <hr />
 <a id="v9_11"></a>
 # Upgrade to v9.11

@@ -14,15 +14,7 @@ import { clsx } from '@accelint/design-foundation/lib/utils';
 import CloseIcon from '@accelint/icons/cancel';
 import PinIcon from '@accelint/icons/pin';
 import {
-  type DockviewApi,
-  DockviewReact,
-  type DockviewReadyEvent,
-  type IDockviewPanelProps,
-} from 'dockview-react';
-import {
-  type FunctionComponent,
   useCallback,
-  useEffect,
   useMemo,
   useRef,
   useState,
@@ -31,75 +23,32 @@ import {
 import { Button } from '../button';
 import { Divider } from '../divider';
 import { Icon } from '../icon';
-import { FloatingCardContext, useFloatingCard } from './context';
+import { FloatingCardContext, FloatingCardRegistryContext } from './context';
+import type { FloatingCardRegistryValue } from './context';
+import { useCardLayout } from './hooks/use-card-layout';
+import { FloatingCardPanel } from './panel';
 import styles from './styles.module.css';
-import { createHeaderAdapter, type FloatingCardHeaderProps } from './utils';
+import { resolveMaybeFactory } from './utils';
 import type { UniqueId } from '@accelint/core/utility/uuid';
 import type {
+  Bounds,
+  Dimensions,
   FloatingCardContextValue,
+  FloatingCardHeaderAction,
+  FloatingCardLayout,
   FloatingCardProviderProps,
+  Position,
 } from './types';
 
-/**
- * Internal component that registers a DOM ref for a card container.
- *
- * Used by the floating card engine to mount portal targets. Also manages
- * the data-pinned attribute on the resize container to control drag handle visibility.
- *
- * @param props - Dockview panel props containing the card ID.
- */
-function FloatingCardContainer(props: Readonly<IDockviewPanelProps>) {
-  const { addRef, isPinned, subscribeToPinState } = useFloatingCard();
-  const cardId = props.api.id as UniqueId;
-
-  const pinned = useSyncExternalStore(
-    subscribeToPinState,
-    () => isPinned(cardId),
-    () => false,
-  );
-
-  const cardRef = useRef<HTMLDivElement | null>(null);
-
-  const refCallback = useCallback(
-    (ref: HTMLDivElement | null) => {
-      cardRef.current = ref;
-      addRef(cardId, ref);
-    },
-    [addRef, cardId],
-  );
-
-  // Toggle a data-pinned attribute on the ancestor .dv-resize-container
-  // so CSS can disable pointer-events on the drag handle.
-  useEffect(() => {
-    const el = cardRef.current;
-    const container = el?.closest<HTMLElement>('.dv-resize-container');
-
-    if (!container) {
-      return;
-    }
-
-    if (pinned) {
-      container.dataset.pinned = '';
-    } else {
-      delete container.dataset.pinned;
-    }
-  }, [pinned]);
-
-  return <div className={styles.cardContent} ref={refCallback} />;
-}
-
-/**
- * Default left header showing an optional custom icon and the card's title.
- */
-function DefaultLeftHeader({
-  title,
+/** Header shown at the start of a card: optional icon plus the title. */
+function CardHeaderStart({
   icon,
-  id,
-}: Readonly<FloatingCardHeaderProps>) {
+  title,
+}: Readonly<{ icon: React.ReactNode; title: string | undefined }>) {
   return (
     <div className={styles.headerSide}>
       {icon ? <Icon size='small'>{icon}</Icon> : null}
-      {title && title !== id ? (
+      {title ? (
         <div className={styles.headerTitleContainer}>
           <div className={styles.headerTitle}>{title}</div>
         </div>
@@ -108,53 +57,41 @@ function DefaultLeftHeader({
   );
 }
 
-/** Stable no-op subscribe for useSyncExternalStore when no pin subscription is available. */
-const noopSubscribe = () => () => undefined;
-
-/**
- * Default right header showing optional action buttons and an always-present close button.
- *
- * @remarks Handles rendering of 'divider' and 'pin' action types specially.
- */
-function DefaultRightHeader({
-  closeGroup,
-  headerActions,
+/** Action buttons for a card, ending in the always-present close button. */
+function CardHeaderActions({
+  actions,
   id,
-  togglePinCard,
   isPinned,
-  subscribeToPinState,
-}: Readonly<FloatingCardHeaderProps>) {
-  const pinned = useSyncExternalStore(
-    subscribeToPinState ?? noopSubscribe,
-    () => (id && isPinned ? isPinned(id as UniqueId) : false),
-    () => false,
-  );
-
+  onClose,
+  onTogglePin,
+}: Readonly<{
+  actions: FloatingCardHeaderAction[] | undefined;
+  id: UniqueId;
+  isPinned: boolean;
+  onClose: () => void;
+  onTogglePin: () => void;
+}>) {
   return (
-    <div className={styles.headerSide}>
-      {headerActions?.map((action, index) => {
+    <>
+      {actions?.map((action, index) => {
         if (action === 'divider') {
           return (
             // biome-ignore lint/suspicious/noArrayIndexKey: Using index as key is acceptable here because the order of actions is unlikely to change.
             <Divider key={`${id}-divider-${index}`} orientation='vertical' />
           );
         }
+
         if (action === 'pin') {
           return (
             <Button
-              className={styles.pinButton}
+              aria-label='Pin'
+              aria-pressed={isPinned}
+              color={isPinned ? 'accent' : undefined}
               // biome-ignore lint/suspicious/noArrayIndexKey: Using index as key is acceptable here because the order of actions is unlikely to change.
               key={`${id}-pin-${index}`}
-              variant='icon'
+              onPress={onTogglePin}
               size='small'
-              color={pinned ? 'accent' : undefined}
-              aria-label='Pin'
-              aria-pressed={pinned}
-              onClick={() => {
-                if (id && togglePinCard) {
-                  togglePinCard(id as UniqueId);
-                }
-              }}
+              variant='icon'
             >
               <Icon>
                 <PinIcon />
@@ -162,51 +99,50 @@ function DefaultRightHeader({
             </Button>
           );
         }
+
         return (
           <Button
-            key={`${id}-${
-              // biome-ignore lint/suspicious/noArrayIndexKey: Using index as key is acceptable here because the order of actions is unlikely to change.
-              index
-            }`}
-            variant='icon'
+            aria-label={action.label}
+            // biome-ignore lint/suspicious/noArrayIndexKey: Using index as key is acceptable here because the order of actions is unlikely to change.
+            key={`${id}-action-${index}`}
+            onPress={action.onClick}
             size='small'
-            onClick={action.onClick}
+            variant='icon'
           >
             <Icon>{action.icon}</Icon>
           </Button>
         );
       })}
-      <Button variant='icon' size='small' onClick={closeGroup}>
+      <Button aria-label='Close' onPress={onClose} size='small' variant='icon'>
         <Icon>
           <CloseIcon />
         </Icon>
       </Button>
-    </div>
+    </>
   );
 }
-
-const components: Record<string, FunctionComponent<IDockviewPanelProps>> = {
-  default: FloatingCardContainer,
-};
 
 /**
  * Provides a context and layout area for floating cards within the application.
  *
- * Wraps children with floating card context and renders a Dockview instance to manage
- * docking, dragging, and layout of floating cards.
+ * Wraps children with floating card context and renders each registered card as
+ * a draggable, resizable panel bounded by the provider's own box.
  *
  * @param props - The props for the FloatingCardProvider component.
  * @param props.children - Child components rendered inside the floating card provider.
  * @param props.icon - Optional icon rendered in all card headers (static or factory).
  * @param props.headerActions - Optional action buttons for card headers (static or factory).
+ * @param props.initialPinned - Card IDs that start pinned.
+ * @param props.bounds - Region cards are confined to. Defaults to `'provider'`.
  * @param props.className - Additional CSS class names for styling.
  * @returns The FloatingCardProvider component that manages floating card layout and context.
  *
  * @remarks
  * - Manages registration and cleanup of floating card DOM references
  * - Exposes closeCard, togglePinCard, and isPinned via context
- * - Automatically cleans up refs when cards are removed via any path (drag close, group close, API close)
- * - Cards are bounded within the viewport
+ * - Cards are bounded within the provider element by default; `bounds='viewport'`
+ *   lets them move anywhere on screen
+ * - Cards are dragged by their header; pinning a card freezes drag and resize
  *
  * @example
  * ```tsx
@@ -229,156 +165,243 @@ export function FloatingCardProvider({
   icon,
   headerActions,
   initialPinned,
+  bounds = 'provider',
   className,
 }: FloatingCardProviderProps) {
-  const [api, setApi] = useState<DockviewApi | null>(null);
+  const rootRef = useRef<HTMLDivElement | null>(null);
   const [cards, setCards] = useState<Record<UniqueId, HTMLDivElement>>({});
-  const pinnedCardsRef = useRef<Set<UniqueId>>(new Set(initialPinned));
+
+  const pinnedRef = useRef<Set<UniqueId>>(new Set(initialPinned));
   const pinListenersRef = useRef<Set<() => void>>(new Set());
 
-  const closeCard = useCallback(
-    (id: UniqueId) => {
-      api?.getPanel(id)?.api.close();
-    },
-    [api],
-  );
+  const {
+    layouts,
+    registerCard,
+    unregisterCard,
+    moveCard,
+    resizeCard,
+    bringToFront,
+  } = useCardLayout();
 
-  const togglePinCard = useCallback((id: UniqueId) => {
-    const next = new Set(pinnedCardsRef.current);
-    if (next.has(id)) {
-      next.delete(id);
-    } else {
-      next.add(id);
-    }
-    pinnedCardsRef.current = next;
+  const notifyPinChange = useCallback(() => {
     for (const listener of pinListenersRef.current) {
       listener();
     }
   }, []);
 
-  const isPinned = useCallback(
-    (id: UniqueId) => pinnedCardsRef.current.has(id),
-    [],
-  );
+  const isPinned = useCallback((id: UniqueId) => pinnedRef.current.has(id), []);
 
   const subscribeToPinState = useCallback((callback: () => void) => {
     pinListenersRef.current.add(callback);
+
     return () => {
       pinListenersRef.current.delete(callback);
     };
   }, []);
 
-  const removeRef = useCallback((view: UniqueId) => {
-    setCards((prev) => {
-      const newCards = { ...prev };
-      delete newCards[view];
-      return newCards;
-    });
-    if (pinnedCardsRef.current.has(view)) {
-      const next = new Set(pinnedCardsRef.current);
-      next.delete(view);
-      pinnedCardsRef.current = next;
-      for (const listener of pinListenersRef.current) {
-        listener();
+  const togglePinCard = useCallback(
+    (id: UniqueId) => {
+      const next = new Set(pinnedRef.current);
+
+      if (next.has(id)) {
+        next.delete(id);
+      } else {
+        next.add(id);
       }
-    }
-  }, []);
+
+      pinnedRef.current = next;
+      notifyPinChange();
+    },
+    [notifyPinChange],
+  );
+
+  const removeRef = useCallback(
+    (id: UniqueId) => {
+      setCards((current) => {
+        if (!current[id]) {
+          return current;
+        }
+
+        const next = { ...current };
+        delete next[id];
+
+        return next;
+      });
+
+      if (pinnedRef.current.has(id)) {
+        const next = new Set(pinnedRef.current);
+        next.delete(id);
+        pinnedRef.current = next;
+        notifyPinChange();
+      }
+    },
+    [notifyPinChange],
+  );
 
   const addRef = useCallback((id: UniqueId, ref: HTMLDivElement | null) => {
-    if (ref) {
-      setCards((prev) => {
-        if (prev[id]) {
-          return prev;
-        }
-        return { ...prev, [id]: ref };
-      });
-    }
-  }, []);
-
-  // Clean up stale refs when cards are removed via any path
-  // (drag close, group close, API close, etc.)
-  useEffect(() => {
-    if (!api) {
+    if (!ref) {
       return;
     }
 
-    const disposable = api.onDidRemovePanel((event) => {
-      removeRef(event.id as UniqueId);
-    });
+    setCards((current) =>
+      current[id] === ref ? current : { ...current, [id]: ref },
+    );
+  }, []);
 
-    return () => {
-      disposable.dispose();
-    };
-  }, [api, removeRef]);
+  const closeCard = useCallback(
+    (id: UniqueId) => {
+      unregisterCard(id);
+      removeRef(id);
+    },
+    [removeRef, unregisterCard],
+  );
+
+  const getBounds = useCallback((): Bounds => {
+    const element = rootRef.current;
+
+    if (!element) {
+      return { top: 0, left: 0, right: 0, bottom: 0 };
+    }
+
+    const rect = element.getBoundingClientRect();
+
+    if (bounds === 'viewport') {
+      // Cards are positioned relative to the provider, so the viewport box is
+      // expressed in that coordinate space by subtracting the provider offset.
+      return {
+        top: -rect.top,
+        left: -rect.left,
+        right: window.innerWidth - rect.left,
+        bottom: window.innerHeight - rect.top,
+      };
+    }
+
+    return { top: 0, left: 0, right: rect.width, bottom: rect.height };
+  }, [bounds]);
 
   const contextValue = useMemo<FloatingCardContextValue>(
     () => ({
       cards,
-      addRef,
-      removeRef,
       closeCard,
       togglePinCard,
       isPinned,
       subscribeToPinState,
-      api,
     }),
-    [
-      cards,
-      closeCard,
-      removeRef,
-      api,
-      addRef,
-      togglePinCard,
-      isPinned,
-      subscribeToPinState,
-    ],
+    [cards, closeCard, togglePinCard, isPinned, subscribeToPinState],
   );
 
-  const leftAdapter = useMemo(
-    () =>
-      createHeaderAdapter(DefaultLeftHeader, {
-        icon,
-      }),
-    [icon],
+  const registryValue = useMemo<FloatingCardRegistryValue>(
+    () => ({ openCard: registerCard, addRef }),
+    [registerCard, addRef],
   );
-
-  const rightAdapter = useMemo(
-    () =>
-      createHeaderAdapter(DefaultRightHeader, {
-        headerActions,
-        togglePinCard,
-        isPinned,
-        subscribeToPinState,
-      }),
-    [headerActions, togglePinCard, isPinned, subscribeToPinState],
-  );
-
-  const theme = useMemo(
-    () => ({
-      name: 'accelint',
-      className: styles.floatingCardProvider ?? '',
-    }),
-    [],
-  );
-
-  const onReady = useCallback((event: DockviewReadyEvent) => {
-    setApi(event.api);
-  }, []);
 
   return (
     <FloatingCardContext.Provider value={contextValue}>
-      <div className={clsx(styles.providerRoot, className)}>
-        <DockviewReact
-          locked
-          floatingGroupBounds={'boundedWithinViewport'}
-          components={components}
-          prefixHeaderActionsComponent={leftAdapter}
-          rightHeaderActionsComponent={rightAdapter}
-          onReady={onReady}
-          theme={theme}
-        />
-        {children}
-      </div>
+      <FloatingCardRegistryContext.Provider value={registryValue}>
+        <div className={clsx(styles.providerRoot, className)} ref={rootRef}>
+          {Object.entries(layouts).map(([id, layout]) => (
+            <CardPanel
+              actions={resolveMaybeFactory(headerActions, id)}
+              getBounds={getBounds}
+              icon={resolveMaybeFactory(icon, id)}
+              id={id as UniqueId}
+              isPinned={isPinned}
+              key={id}
+              layout={layout}
+              onAddRef={addRef}
+              onClose={closeCard}
+              onFocus={bringToFront}
+              onMove={moveCard}
+              onResize={resizeCard}
+              onTogglePin={togglePinCard}
+              subscribeToPinState={subscribeToPinState}
+            />
+          ))}
+          {children}
+        </div>
+      </FloatingCardRegistryContext.Provider>
     </FloatingCardContext.Provider>
+  );
+}
+
+type CardPanelProps = {
+  actions: FloatingCardHeaderAction[] | undefined;
+  getBounds: () => Bounds;
+  icon: React.ReactNode;
+  id: UniqueId;
+  isPinned: (id: UniqueId) => boolean;
+  layout: FloatingCardLayout;
+  onAddRef: (id: UniqueId, ref: HTMLDivElement | null) => void;
+  onClose: (id: UniqueId) => void;
+  onFocus: (id: UniqueId) => void;
+  onMove: (id: UniqueId, position: Position) => void;
+  onResize: (id: UniqueId, dimensions: Dimensions, position: Position) => void;
+  onTogglePin: (id: UniqueId) => void;
+  subscribeToPinState: (callback: () => void) => () => void;
+};
+
+/**
+ * Binds one card's identity to the provider's callbacks so {@link FloatingCardPanel}
+ * can stay a plain presentational component.
+ *
+ * @remarks
+ * Pin state lives in a mutable store rather than React state, so it is read
+ * through `useSyncExternalStore` -- only the cards whose pin state changed
+ * re-render.
+ */
+function CardPanel({
+  actions,
+  getBounds,
+  icon,
+  id,
+  isPinned,
+  layout,
+  onAddRef,
+  onClose,
+  onFocus,
+  onMove,
+  onResize,
+  onTogglePin,
+  subscribeToPinState,
+}: CardPanelProps) {
+  const { title } = layout;
+
+  const pinned = useSyncExternalStore(
+    subscribeToPinState,
+    () => isPinned(id),
+    () => false,
+  );
+
+  const contentRef = useCallback(
+    (element: HTMLDivElement | null) => {
+      onAddRef(id, element);
+    },
+    [id, onAddRef],
+  );
+
+  return (
+    <FloatingCardPanel
+      actions={
+        <CardHeaderActions
+          actions={actions}
+          id={id}
+          isPinned={pinned}
+          onClose={() => onClose(id)}
+          onTogglePin={() => onTogglePin(id)}
+        />
+      }
+      contentRef={contentRef}
+      getBounds={getBounds}
+      header={<CardHeaderStart icon={icon} title={title} />}
+      id={id}
+      isPinned={pinned}
+      // Ids are typically uuids, which read as noise to a screen reader, so an
+      // untitled card gets a generic name instead.
+      label={title ?? 'Floating card'}
+      layout={layout}
+      onFocus={() => onFocus(id)}
+      onMove={(position) => onMove(id, position)}
+      onResize={(dimensions, position) => onResize(id, dimensions, position)}
+    />
   );
 }

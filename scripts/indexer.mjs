@@ -39,6 +39,8 @@ const IGNORE_LIST = [
 
 const require = createRequire(import.meta.url);
 
+const BIOME_BIN = require.resolve('@biomejs/biome/bin/biome');
+
 const baseBabelOpt = {
   sourceType: 'module',
   plugins: ['jsx', 'typescript'],
@@ -321,7 +323,7 @@ function writeAllIndexes(indexes, ext, client) {
 
       fs.writeFile(newFile, body, 'utf-8');
 
-      return $`pnpm biome check ${newFile} --linter-enabled=false --write`;
+      return $`${process.execPath} ${BIOME_BIN} check ${newFile} --linter-enabled=false --write`;
     }),
   );
 }

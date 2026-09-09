@@ -1,0 +1,499 @@
+---
+title: Stepper
+description: Multi-step workflow navigation with progress tracking and validation
+source: packages/design-toolkit/src/components/stepper/index.tsx
+source_sha: pending
+doc_sha: pending
+deprecated: false
+updated: 2026-08-26
+---
+
+A component family for building multi-step workflows with sequential navigation, completion tracking, and accessibility features.
+
+## Usage
+
+```tsx
+import { Stepper, StepperList, StepperStep, StepperPanel, StepperNext, StepperBack } from '@accelint/design-toolkit';
+
+export function MyComponent() {
+  return (
+    <Stepper defaultStep="account">
+      <StepperList>
+        <StepperStep id="account">Account</StepperStep>
+        <StepperStep id="profile">Profile</StepperStep>
+        <StepperStep id="preferences">Preferences</StepperStep>
+      </StepperList>
+      
+      <StepperPanel id="account">
+        <h2>Account Information</h2>
+        <p>Enter your account details</p>
+        <StepperNext>Next</StepperNext>
+      </StepperPanel>
+      
+      <StepperPanel id="profile">
+        <h2>Profile Setup</h2>
+        <p>Complete your profile</p>
+        <StepperBack>Back</StepperBack>
+        <StepperNext>Next</StepperNext>
+      </StepperPanel>
+      
+      <StepperPanel id="preferences">
+        <h2>Preferences</h2>
+        <p>Set your preferences</p>
+        <StepperBack>Back</StepperBack>
+        <button>Finish</button>
+      </StepperPanel>
+    </Stepper>
+  );
+}
+```
+
+## Reference
+
+```typescript
+interface StepperProps {
+  children?: React.ReactNode;
+  className?: string;
+  style?: React.CSSProperties;
+  orientation?: 'horizontal' | 'vertical';
+  // Controlled mode
+  currentStep?: Key;
+  onStepChange?: (key: Key) => void;
+  // Uncontrolled mode
+  defaultStep?: Key;
+  // Validation
+  onBeforeStepChange?: (fromKey: Key, toKey: Key) => boolean;
+  // Completion tracking
+  completedSteps?: Set<Key>;
+  defaultCompletedSteps?: Set<Key>;
+}
+```
+
+### Props
+
+| Prop | Type | Default | Required |
+|------|------|---------|----------|
+| `children` | `React.ReactNode` | - | Yes |
+| `orientation` | `'horizontal' \| 'vertical'` | `'horizontal'` | No |
+| `currentStep` | `Key` | - | No |
+| `defaultStep` | `Key` | - | No |
+| `onStepChange` | `(key: Key) => void` | - | No |
+| `onBeforeStepChange` | `(from: Key, to: Key) => boolean` | - | No |
+| `completedSteps` | `Set<Key>` | - | No |
+| `defaultCompletedSteps` | `Set<Key>` | - | No |
+| `className` | `string` | - | No |
+| `style` | `React.CSSProperties` | - | No |
+
+#### `orientation`
+
+Controls layout direction of the steps:
+- `horizontal` - Steps appear in a row (default)
+- `vertical` - Steps appear in a column
+
+#### State Control
+
+**Uncontrolled mode** (default):
+- Use `defaultStep` to set initial step
+- Use `defaultCompletedSteps` to mark steps as pre-completed
+- Stepper manages its own state internally
+
+**Controlled mode**:
+- Use `currentStep` + `onStepChange` to control active step externally
+- Use `completedSteps` to control completion state externally
+- Useful for forms with external validation or URL synchronization
+
+#### `onBeforeStepChange`
+
+Synchronous validation callback that can block navigation by returning `false`. Called before any navigation occurs (forward, backward, or direct).
+
+```tsx
+<Stepper
+  onBeforeStepChange={(from, to) => {
+    // Validate before allowing navigation
+    if (from === 'payment' && !isPaymentValid()) {
+      return false; // Blocks navigation
+    }
+    return true; // Allows navigation
+  }}
+>
+```
+
+> **Note:** Only synchronous validation is supported. For async validation, disable navigation buttons while validating and enable them once complete.
+
+#### Completion Tracking
+
+Steps are marked as "visited" bidirectionally:
+- **Forward navigation**: marks the departed step as visited
+- **Backward navigation**: removes visited state from destination step and all steps after it
+- **Current step**: never marked as visited (current and visited are mutually exclusive)
+
+This provides clear "undo" semantics when users navigate backward to edit previous steps.
+
+## Sub-components
+
+### StepperList
+
+Container for StepperStep components. Handles keyboard navigation with arrow keys.
+
+```tsx
+<StepperList>
+  <StepperStep id="one">First</StepperStep>
+  <StepperStep id="two">Second</StepperStep>
+</StepperList>
+```
+
+**Props:**
+- Inherits standard React props (`className`, `style`)
+- Orientation and keyboard behavior inherit from parent Stepper
+
+### StepperStep
+
+Individual step button. The `id` prop must match the corresponding StepperPanel.
+
+```tsx
+<StepperStep id="profile" isDisabled>Profile</StepperStep>
+```
+
+**Props:**
+| Prop | Type | Default | Required |
+|------|------|---------|----------|
+| `id` | `Key` | auto-generated | No |
+| `isDisabled` | `boolean` | `false` | No |
+| `children` | `React.ReactNode` | - | Yes |
+| `className` | `string \| ((state) => string)` | - | No |
+
+**Data attributes** (for CSS styling):
+- `data-current="true"` - Applied when step is active
+- `data-visited="true"` - Applied when step was visited (not current)
+- `data-disabled="true"` - Applied when step is disabled
+
+### StepperPanel
+
+Content panel displayed when its corresponding StepperStep is active. The `id` prop must match a StepperStep. Inactive panels are unmounted from the DOM.
+
+```tsx
+<StepperPanel id="profile">
+  <h2>Profile Information</h2>
+  <p>Complete your profile</p>
+</StepperPanel>
+```
+
+**Props:**
+| Prop | Type | Default | Required |
+|------|------|---------|----------|
+| `id` | `Key` | - | Yes |
+| `children` | `React.ReactNode` | - | Yes |
+| `className` | `string` | - | No |
+
+> **State preservation:** Inactive panels are unmounted, so form state is not preserved by default. Lift state to a parent component if preservation is needed.
+
+### StepperNext / StepperBack
+
+Context-aware navigation buttons that automatically disable at boundaries and respect validation.
+
+```tsx
+<StepperBack>Previous</StepperBack>
+<StepperNext>Continue</StepperNext>
+```
+
+**Behavior:**
+- `StepperBack` - Disabled at first step
+- `StepperNext` - Disabled at last step or when next step is disabled
+- Both respect `onBeforeStepChange` validation
+- Can be overridden with explicit `isDisabled` prop
+
+## Examples
+
+### Example: Basic linear stepper
+
+```tsx
+import { Stepper, StepperList, StepperStep, StepperPanel, StepperNext, StepperBack } from '@accelint/design-toolkit';
+
+<Stepper defaultStep="personal">
+  <StepperList>
+    <StepperStep id="personal">Personal Info</StepperStep>
+    <StepperStep id="address">Address</StepperStep>
+    <StepperStep id="review">Review</StepperStep>
+  </StepperList>
+  
+  <StepperPanel id="personal">
+    <h2>Personal Information</h2>
+    <input placeholder="Name" />
+    <StepperNext>Next</StepperNext>
+  </StepperPanel>
+  
+  <StepperPanel id="address">
+    <h2>Address</h2>
+    <input placeholder="Street" />
+    <StepperBack>Back</StepperBack>
+    <StepperNext>Next</StepperNext>
+  </StepperPanel>
+  
+  <StepperPanel id="review">
+    <h2>Review & Submit</h2>
+    <StepperBack>Back</StepperBack>
+    <button>Submit</button>
+  </StepperPanel>
+</Stepper>
+```
+
+### Example: Controlled stepper with URL sync
+
+```tsx
+import { useRouter, useSearchParams } from 'next/navigation';
+import { Stepper, StepperList, StepperStep, StepperPanel } from '@accelint/design-toolkit';
+
+function OnboardingFlow() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const currentStep = searchParams.get('step') || 'welcome';
+
+  return (
+    <Stepper
+      currentStep={currentStep}
+      onStepChange={(key) => {
+        router.push(`?step=${key}`);
+      }}
+    >
+      <StepperList>
+        <StepperStep id="welcome">Welcome</StepperStep>
+        <StepperStep id="setup">Setup</StepperStep>
+        <StepperStep id="done">Done</StepperStep>
+      </StepperList>
+      
+      <StepperPanel id="welcome">Welcome content</StepperPanel>
+      <StepperPanel id="setup">Setup content</StepperPanel>
+      <StepperPanel id="done">Done content</StepperPanel>
+    </Stepper>
+  );
+}
+```
+
+### Example: Form validation with onBeforeStepChange
+
+```tsx
+import { useState } from 'react';
+import { Stepper, StepperList, StepperStep, StepperPanel, StepperNext } from '@accelint/design-toolkit';
+
+function FormStepper() {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+
+  return (
+    <Stepper
+      defaultStep="account"
+      onBeforeStepChange={(from, to) => {
+        // Validate before allowing navigation forward
+        if (from === 'account' && !email.includes('@')) {
+          alert('Please enter a valid email');
+          return false;
+        }
+        if (from === 'password' && password.length < 8) {
+          alert('Password must be at least 8 characters');
+          return false;
+        }
+        return true;
+      }}
+    >
+      <StepperList>
+        <StepperStep id="account">Account</StepperStep>
+        <StepperStep id="password">Password</StepperStep>
+        <StepperStep id="confirm">Confirm</StepperStep>
+      </StepperList>
+      
+      <StepperPanel id="account">
+        <input
+          type="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          placeholder="Email"
+        />
+        <StepperNext>Next</StepperNext>
+      </StepperPanel>
+      
+      <StepperPanel id="password">
+        <input
+          type="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          placeholder="Password"
+        />
+        <StepperNext>Next</StepperNext>
+      </StepperPanel>
+      
+      <StepperPanel id="confirm">
+        <p>Email: {email}</p>
+        <button>Create Account</button>
+      </StepperPanel>
+    </Stepper>
+  );
+}
+```
+
+### Example: Non-linear stepper with disabled steps
+
+```tsx
+import { useState } from 'react';
+import { Stepper, StepperList, StepperStep, StepperPanel } from '@accelint/design-toolkit';
+
+function ConditionalStepper() {
+  const [hasAccount, setHasAccount] = useState(false);
+
+  return (
+    <Stepper defaultStep="check">
+      <StepperList>
+        <StepperStep id="check">Check Account</StepperStep>
+        <StepperStep id="create" isDisabled={hasAccount}>Create Account</StepperStep>
+        <StepperStep id="login" isDisabled={!hasAccount}>Login</StepperStep>
+        <StepperStep id="dashboard">Dashboard</StepperStep>
+      </StepperList>
+      
+      <StepperPanel id="check">
+        <button onClick={() => setHasAccount(true)}>I have an account</button>
+        <button onClick={() => setHasAccount(false)}>Create new account</button>
+      </StepperPanel>
+      
+      <StepperPanel id="create">Create account form</StepperPanel>
+      <StepperPanel id="login">Login form</StepperPanel>
+      <StepperPanel id="dashboard">Dashboard content</StepperPanel>
+    </Stepper>
+  );
+}
+```
+
+### Example: Vertical stepper
+
+```tsx
+import { Stepper, StepperList, StepperStep, StepperPanel } from '@accelint/design-toolkit';
+
+<Stepper orientation="vertical" defaultStep="shipping">
+  <StepperList>
+    <StepperStep id="shipping">Shipping</StepperStep>
+    <StepperStep id="payment">Payment</StepperStep>
+    <StepperStep id="review">Review</StepperStep>
+  </StepperList>
+  
+  <div>
+    <StepperPanel id="shipping">Shipping form</StepperPanel>
+    <StepperPanel id="payment">Payment form</StepperPanel>
+    <StepperPanel id="review">Order review</StepperPanel>
+  </div>
+</Stepper>
+```
+
+### Example: Using useStepperState for custom controls
+
+```tsx
+import { Stepper, useStepperState, StepperList, StepperStep, StepperPanel } from '@accelint/design-toolkit';
+
+function CustomStepper() {
+  return (
+    <Stepper defaultStep="start">
+      <CustomProgress />
+      <StepperList>
+        <StepperStep id="start">Start</StepperStep>
+        <StepperStep id="middle">Middle</StepperStep>
+        <StepperStep id="end">End</StepperStep>
+      </StepperList>
+      
+      <StepperPanel id="start">Start content</StepperPanel>
+      <StepperPanel id="middle">Middle content</StepperPanel>
+      <StepperPanel id="end">End content</StepperPanel>
+    </Stepper>
+  );
+}
+
+function CustomProgress() {
+  const state = useStepperState();
+  const totalSteps = state.steps.size;
+  const completedCount = state.completedSteps.size;
+  const progress = (completedCount / totalSteps) * 100;
+
+  return (
+    <div>
+      <div>Progress: {Math.round(progress)}%</div>
+      <button onClick={() => state.goToStep('start')}>Reset</button>
+    </div>
+  );
+}
+```
+
+## Accessibility
+
+The Stepper component implements the ARIA wizard pattern with comprehensive keyboard and screen reader support:
+
+### Keyboard Navigation
+
+- **Arrow Keys** (Left/Right for horizontal, Up/Down for vertical): Navigate between steps
+- **Enter / Space**: Activate focused step
+- **Tab**: Move focus through interactive elements in the panel
+
+### Screen Reader Support
+
+- Step changes are announced via ARIA live regions (e.g., "Step 2 of 3: Payment")
+- Validation failures are announced when `onBeforeStepChange` blocks navigation
+- Each step announces its position and label (e.g., "Step 1 of 3: Account Information")
+
+### ARIA Attributes
+
+- Stepper container: `role="group"` with descriptive `aria-label`
+- StepperList: `role="navigation"` with `aria-label="Steps"`
+- StepperStep: `role="button"` with `aria-current="step"` when active
+- StepperPanel: `role="tabpanel"` with `aria-labelledby` linking to its step
+
+## Styling
+
+The Stepper uses data attributes for state-based styling:
+
+```css
+/* Current step */
+[data-current="true"] {
+  font-weight: bold;
+  color: var(--color-primary);
+}
+
+/* Visited (completed) step */
+[data-visited="true"] {
+  opacity: 0.7;
+}
+
+/* Disabled step */
+[data-disabled="true"] {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* Step connectors (lines between steps) */
+.step:not(:last-child)::after {
+  content: '';
+  border-top: 1px solid var(--color-border);
+}
+
+/* Completed step connectors */
+[data-visited="true"]::after {
+  border-color: var(--color-primary);
+}
+```
+
+## Best Practices
+
+### ✅ Do
+
+- Use `defaultStep` for uncontrolled forms where the stepper manages its own state
+- Use `currentStep` + `onStepChange` when you need to sync with URL parameters or external state
+- Provide clear, descriptive labels for each step
+- Use `onBeforeStepChange` for synchronous validation before navigation
+- Lift form state to parent components if you need to preserve values across panel unmounting
+
+### ❌ Don't
+
+- Don't mix controlled and uncontrolled props (`currentStep` with `defaultStep`)
+- Don't rely on panel state persisting when navigating away (panels unmount)
+- Don't use async functions in `onBeforeStepChange` (only synchronous validation is supported)
+- Don't nest Stepper components
+- Don't auto-skip disabled steps (they explicitly block navigation as designed)
+
+## Related
+
+- [Tabs](/docs/toolkits/design-toolkit/components/tabs) - For organizing content without workflow semantics
+- [Button](/docs/toolkits/design-toolkit/components/button) - Used by StepperNext/StepperBack internally
