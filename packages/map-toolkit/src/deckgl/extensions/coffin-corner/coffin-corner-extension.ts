@@ -587,8 +587,6 @@ export class CoffinCornerExtension extends LayerExtension<CoffinCornerExtensionO
    * Initializes selection and hover entity state maps and registers the
    * packed `instanceCoffinCornerState` GPU attribute (x = selected, y = hovered).
    * No-op on unsupported layer types (e.g. PathLayer, SolidPolygonLayer).
-   *
-   * @returns Nothing; registers state and attributes on the host layer.
    */
   override initializeState(this: CoffinCornerLayer): void {
     if (!CoffinCornerExtension.isSupportedLayer(this)) {
@@ -638,7 +636,6 @@ export class CoffinCornerExtension extends LayerExtension<CoffinCornerExtensionO
    * No-op on unsupported layer types.
    *
    * @param params - deck.gl update parameters with the new and old props.
-   * @returns Nothing; mutates the host layer's entity state.
    */
   override updateState(
     this: CoffinCornerLayer,
@@ -668,8 +665,6 @@ export class CoffinCornerExtension extends LayerExtension<CoffinCornerExtensionO
   /**
    * Pushes the normalized `selectedCoffinCornerColor` to the shader's `highlightColor` uniform
    * each frame. No-op on unsupported layer types.
-   *
-   * @returns Nothing; sets the host layer's shader module props.
    */
   override draw(this: CoffinCornerLayer): void {
     if (!CoffinCornerExtension.isSupportedLayer(this)) {
