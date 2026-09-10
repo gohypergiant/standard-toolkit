@@ -286,8 +286,10 @@ const coordinateStringParsers: Record<
   dd(coordString) {
     // DD formats: "40.7128 N / -74.006 W", "89.765432° N / 123.456789° W",
     // or "89.765432, -123.456789" (optional degree symbols/direction letters).
+    // Anchored, with no overlapping whitespace quantifiers: an unanchored match
+    // retries at every index and backtracks polynomially on long digit runs.
     const match = coordString.match(
-      /([-]?\d+\.?\d*)°?\s*([NS])?\s*[,/\s]+\s*([-]?\d+\.?\d*)°?\s*([EW])?/i,
+      /^\s*(-?\d+(?:\.\d*)?)°?(?:\s*([NS]))?(?:\s*[,/]\s*|\s+)(-?\d+(?:\.\d*)?)°?(?:\s*([EW]))?\s*$/i,
     );
 
     if (!match) {
@@ -315,7 +317,7 @@ const coordinateStringParsers: Record<
     // DDM formats: "40 42.768 N / 74 0.36 W" or
     // "89° 45.9259' N / 123° 27.4073' W" (optional degree/minute symbols).
     const match = coordString.match(
-      /(\d+)°?\s+([\d.]+)'?\s+([NS])\s*[,/]\s*(\d+)°?\s+([\d.]+)'?\s+([EW])/i,
+      /^\s*(\d+)°?\s+([\d.]+)'?\s+([NS])\s*[,/]\s*(\d+)°?\s+([\d.]+)'?\s+([EW])\s*$/i,
     );
 
     if (!match) {
@@ -336,7 +338,7 @@ const coordinateStringParsers: Record<
     // DMS formats: "40 42 46.08 N / 74 0 21.60 W" or
     // "89° 45' 55.56" N / 123° 27' 24.44" W" (optional degree/minute/second symbols).
     const match = coordString.match(
-      /(\d+)°?\s+(\d+)'?\s+([\d.]+)"?\s+([NS])\s*[,/]\s*(\d+)°?\s+(\d+)'?\s+([\d.]+)"?\s+([EW])/i,
+      /^\s*(\d+)°?\s+(\d+)'?\s+([\d.]+)"?\s+([NS])\s*[,/]\s*(\d+)°?\s+(\d+)'?\s+([\d.]+)"?\s+([EW])\s*$/i,
     );
 
     if (!match) {
@@ -358,7 +360,7 @@ const coordinateStringParsers: Record<
   mgrs(coordString) {
     // MGRS: "18T WM 12345 67890"
     const match = coordString.match(
-      /(\d+)([A-Z])\s+([A-Z]{2})\s+(\d+)\s+(\d+)/i,
+      /^\s*(\d+)([A-Z])\s+([A-Z]{2})\s+(\d+)\s+(\d+)\s*$/i,
     );
 
     if (!match) {
@@ -375,7 +377,7 @@ const coordinateStringParsers: Record<
   },
   utm(coordString) {
     // UTM: "18N 585628 4511644" or "18 N 585628 4511644" (optional space)
-    const match = coordString.match(/(\d+)\s*([NS])\s+(\d+)\s+(\d+)/i);
+    const match = coordString.match(/^\s*(\d+)\s*([NS])\s+(\d+)\s+(\d+)\s*$/i);
 
     if (!match) {
       return null;
@@ -396,8 +398,10 @@ const coordinateStringParsers: Record<
  * Converts a formatted coordinate string (from @accelint/geo output or user input)
  * back into individual segment values for display.
  *
- * This is the inverse of formatSegmentsToCoordinateString and is used to extract
- * segments from arbitrary coordinate strings (e.g. pasted text).
+ * This is the inverse of formatSegmentsToCoordinateString. The string must be a
+ * whole coordinate in the given format — surrounding whitespace is allowed,
+ * surrounding text is not (the patterns are anchored so pathological input
+ * cannot trigger polynomial backtracking).
  *
  * @param coordString - Formatted coordinate string
  * @param format - The coordinate system format

@@ -8,3 +8,4 @@ Two outputs change, both fixes:
 
 - **DDM/DMS carry.** Values within rounding distance of a minute or second boundary now carry into the next unit (`40.99999999°` renders as `41° 0'` instead of the invalid `40° 60'`).
 - **DD precision.** Decimal-degrees segments and the DD full-format string share one renderer: fixed notation, 10 decimal places, trailing zeros trimmed. Float artifacts round away as before, and magnitudes below `1e-6` now display as `0.0000001` rather than `1e-7` (and, with the matching `@accelint/geo` fix, parse back — within the DD parser's 10-decimal limit).
+- **`parseCoordinateStringToSegments` input.** Its patterns are now anchored: the string must be a whole coordinate (surrounding whitespace allowed, surrounding text not). This removes polynomial regex backtracking on pathological input; every coordinate shape it accepted before still parses.
