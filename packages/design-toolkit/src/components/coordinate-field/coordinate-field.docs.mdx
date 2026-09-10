@@ -212,6 +212,8 @@ The format conversion popover displays the current coordinate in all 5 supported
 
 **Note:** The popover displays format labels and values only. For detailed explanations of each coordinate system and when to use them, see the "Supported Coordinate Systems" section above.
 
+**MGRS/UTM range:** MGRS and UTM are defined only from 80°S to 84°N (inclusive). Outside that band the MGRS and UTM rows show `"Not available at poles"` and their copy action is disabled; DD, DDM, and DMS remain available at all latitudes.
+
 <Canvas of={CoordinateFieldStories.FormatPopoverDemo} />
 
 ### Paste Handling
@@ -251,7 +253,7 @@ When an invalid coordinate is pasted, the `onError` callback is invoked, allowin
 **Important:** Error display is **not automatic** - you control how and when to show paste errors to users. The `onError` callback provides the error message and context, but displaying it is the implementor's responsibility.
 
 **Common paste errors:**
-- `"Pasted text is not a valid coordinate format"` - The pasted text couldn't be parsed as any supported coordinate system
+- `"Invalid coordinate format"` - The pasted text couldn't be parsed as any supported coordinate system
 - Context includes the `pastedText` for debugging purposes
 
 **Example implementation with error display:**
@@ -318,6 +320,7 @@ Full keyboard accessibility for efficient data entry:
 | `variant` | `'inline' \| 'stacked'` | `'inline'` | Layout variant |
 | `showFormatButton` | `boolean` | `true` | Show format conversion popover button |
 | `formatButtonTooltip` | `string` | `'View/copy other formats'` | Tooltip text for the format button |
+| `icon` | `React.ReactNode` | `<GlobalShare />` | Icon to display in the format button |
 | `value` | `CoordinateValue \| null` | - | Controlled value in DD format |
 | `defaultValue` | `CoordinateValue` | - | Default uncontrolled value in DD format |
 | `onChange` | `(value: CoordinateValue \| null) => void` | - | Called when value changes (null if invalid) |
@@ -374,6 +377,7 @@ type CoordinateFieldProps = {
   variant?: 'inline' | 'stacked';  // Layout variant (default: 'inline')
   showFormatButton?: boolean;  // Whether to show the format button (default: true)
   formatButtonTooltip?: string;  // Tooltip text for the format button (default: 'View/copy other formats')
+  icon?: React.ReactNode;  // Icon to display in the format button (default: GlobalShare)
   value?: CoordinateValue;
   defaultValue?: CoordinateValue;
   onChange?: (value: CoordinateValue | null) => void;
@@ -631,6 +635,33 @@ Allowing the field to be readonly:
 ```
 
 <Canvas of={CoordinateFieldStories.Readonly} />
+
+### Custom Icon
+
+Customize the format button icon to match your application's design:
+
+```tsx
+import CopyToClipboard from '@accelint/icons/copy-to-clipboard';
+import Star from '@accelint/icons/star';
+
+// Use a different icon from @accelint/icons
+<CoordinateField
+  label="Location"
+  format="dd"
+  icon={<CopyToClipboard />}
+/>
+
+// Or any custom React element
+<CoordinateField
+  label="Location"
+  format="dd"
+  icon={<Star />}
+/>
+```
+
+The `icon` prop accepts any `React.ReactNode`, allowing you to use icons from `@accelint/icons` or custom elements. The default icon is `GlobalShare`.
+
+<Canvas of={CoordinateFieldStories.CustomIcon} />
 
 ## Best Practices
 

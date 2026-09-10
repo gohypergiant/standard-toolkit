@@ -7,6 +7,11 @@ settings:
 overrides:
   '@internationalized/date': ~3.12.1
 
+patchedDependencies:
+  geodesy@2.4.0:
+    hash: ac775cf42f387c5fca70215e6977370ea5e317592b85ca7a5b6e49d2d7075080
+    path: patches/geodesy@2.4.0.patch
+
 importers:
 
   .:
@@ -610,6 +615,9 @@ importers:
       '@accelint/logger':
         specifier: workspace:*
         version: link:../logger
+      '@accelint/math':
+        specifier: workspace:*
+        version: link:../math
       '@accelint/postcss-tailwind-css-modules':
         specifier: workspace:*
         version: link:../postcss-tailwind-css-modules
@@ -789,7 +797,7 @@ importers:
         version: 2.2.8
       geodesy:
         specifier: ^2.4.0
-        version: 2.4.0
+        version: 2.4.0(patch_hash=ac775cf42f387c5fca70215e6977370ea5e317592b85ca7a5b6e49d2d7075080)
     devDependencies:
       '@accelint/typescript-config':
         specifier: workspace:*
@@ -15114,7 +15122,7 @@ snapshots:
 
   gensync@1.0.0-beta.2: {}
 
-  geodesy@2.4.0: {}
+  geodesy@2.4.0(patch_hash=ac775cf42f387c5fca70215e6977370ea5e317592b85ca7a5b6e49d2d7075080): {}
 
   geojson-equality-ts@1.0.2:
     dependencies:

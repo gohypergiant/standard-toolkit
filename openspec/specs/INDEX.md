@@ -3,6 +3,7 @@
 | Capability | Purpose | Related | Last touched by |
 | --- | --- | --- | --- |
 | api-doc-generation | Automated generation of TypeScript/React API reference documentation from source code, outputting to a centralized documentation site structure. | | |
+| coordinate-formatting | Structured, per-part coordinate formatting (DD/DDM/DMS/MGRS/UTM) in `@accelint/geo` — the parts data model, carry/precision rules, boundary handling, and out-of-range signaling that string formatters compose over. |  | plain-decimal-coordinate-magnitudes |
 | coordinate-grid-layers | Defines requirements for the coordinate grid layer system in `@accelint/map-toolkit`. Provides `GARSLayer` and `MGRSLayer` as standalone deck.gl layers built on a shared `BaseGridLayer` abstraction. Covers rendering, zoom configuration, styling, and event bus integration. | | |
 | density-variant-type | One shared density vocabulary (`cozy | compact | crammed`) for design-toolkit collection components, exported once from the package so Tree, List, Menu, Accordion, and Table describe density with the same type instead of four drifting copies. | table-density | add-table-density-variant |
 | docs-content-structure | Organization of documentation content into a section-based folder hierarchy with navigation metadata for the fumadocs documentation site. | | |
