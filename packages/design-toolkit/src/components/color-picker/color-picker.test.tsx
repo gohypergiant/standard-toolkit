@@ -36,6 +36,21 @@ function setup(props: Partial<ColorPickerProps> = {}) {
   };
 }
 
+function getOptionByColor(color: string) {
+  const colorKey = parseColor(color).toString('hexa');
+  const option = screen
+    .getAllByRole('option')
+    .find(
+      (currentOption) => currentOption.getAttribute('data-key') === colorKey,
+    );
+
+  if (option === undefined) {
+    throw new Error(`Unable to find color option for ${color}`);
+  }
+
+  return option;
+}
+
 describe('ColorPicker', () => {
   it('should render', () => {
     setup();
@@ -57,7 +72,7 @@ describe('ColorPicker', () => {
     expect(screen.getAllByRole('option')).toHaveLength(3);
   });
 
-  it('should render with defaultValue as RGBA tuple', () => {
+  it('selects the RGBA tuple passed as defaultValue', () => {
     const rgbaItems: Rgba255Tuple[] = [
       [255, 0, 0, 255],
       [0, 255, 0, 255],
@@ -65,10 +80,27 @@ describe('ColorPicker', () => {
 
     render(<ColorPicker items={rgbaItems} defaultValue={[255, 0, 0, 255]} />);
 
-    expect(screen.getByRole('listbox')).toBeInTheDocument();
+    const [redOption, greenOption] = screen.getAllByRole('option');
+    expect(redOption).toHaveAttribute('aria-selected', 'true');
+    expect(greenOption).toHaveAttribute('aria-selected', 'false');
   });
 
-  it('should render with mixed items (strings and RGBA tuples)', () => {
+  it('renders a controlled RGBA tuple value as the selected swatch', () => {
+    const rgbaItems: Rgba255Tuple[] = [
+      [255, 0, 0, 255],
+      [0, 255, 0, 255],
+    ];
+
+    render(<ColorPicker items={rgbaItems} value={[0, 255, 0, 255]} />);
+
+    const [redOption, greenOption] = screen.getAllByRole('option');
+    expect(redOption).toHaveAttribute('aria-selected', 'false');
+    expect(greenOption).toHaveAttribute('aria-selected', 'true');
+  });
+
+  it('supports mixed string and RGBA tuple items as selectable swatches', async () => {
+    const user = userEvent.setup();
+    const onChange = vi.fn();
     const mixedItems: (string | Rgba255Tuple)[] = [
       '#FF0000',
       [0, 255, 0, 255],
@@ -76,11 +108,14 @@ describe('ColorPicker', () => {
       [255, 255, 0, 255],
     ];
 
-    render(<ColorPicker items={mixedItems} />);
+    render(<ColorPicker items={mixedItems} onChange={onChange} />);
 
-    const listbox = screen.getByRole('listbox');
-    expect(listbox).toBeInTheDocument();
-    expect(screen.getAllByRole('option')).toHaveLength(4);
+    await user.click(screen.getAllByRole('option')[1]);
+
+    expect(onChange).toHaveBeenCalledTimes(1);
+    expect(onChange.mock.calls[0][0]?.toString('hexa')).toBe(
+      parseColor('#00ff00').toString('hexa'),
+    );
   });
 
   it('should render a label when provided', () => {
@@ -103,15 +138,15 @@ describe('ColorPicker', () => {
     expect(screen.queryByText('Pick a color')).not.toBeInTheDocument();
   });
 
-  it('should render NoColorButton when allowNull is true', () => {
-    setup({ allowNull: true });
+  it('should render NoColorButton when allowEmptySelection is true', () => {
+    setup({ allowEmptySelection: true });
 
     const noColorButton = screen.getByLabelText('No color');
     expect(noColorButton).toBeInTheDocument();
   });
 
-  it('should not render NoColorButton when allowNull is false', () => {
-    setup({ allowNull: false });
+  it('should not render NoColorButton when allowEmptySelection is false', () => {
+    setup({ allowEmptySelection: false });
 
     expect(screen.queryByLabelText('No color')).not.toBeInTheDocument();
   });
@@ -132,7 +167,7 @@ describe('ColorPicker', () => {
   });
 
   it('should render both NoColorButton and CustomColorPicker when both props are true', () => {
-    setup({ allowNull: true, showCustomPicker: true });
+    setup({ allowEmptySelection: true, showCustomPicker: true });
 
     expect(screen.getByLabelText('No color')).toBeInTheDocument();
     expect(
@@ -140,15 +175,115 @@ describe('ColorPicker', () => {
     ).toBeInTheDocument();
   });
 
+  it('marks the custom picker as active when mounted with a default custom value', () => {
+    render(
+      <ColorPicker
+        items={items}
+        allowEmptySelection
+        showCustomPicker
+        defaultValue='#123456'
+      />,
+    );
+
+    expect(screen.getByLabelText('Open custom color picker')).toHaveAttribute(
+      'data-selected',
+    );
+
+    for (const option of screen.getAllByRole('option')) {
+      expect(option).toHaveAttribute('aria-selected', 'false');
+    }
+  });
+
   it('should call onChange when NoColorButton is clicked', async () => {
     const user = userEvent.setup();
     const onChange = vi.fn();
-    setup({ allowNull: true, onChange });
+    setup({ allowEmptySelection: true, onChange });
 
     const noColorButton = screen.getByLabelText('No color');
     await user.click(noColorButton);
 
     expect(onChange).toHaveBeenCalledWith(undefined);
+  });
+
+  it('clears the selected swatch after choosing no color in extra-button mode', async () => {
+    const user = userEvent.setup();
+    const onChange = vi.fn();
+
+    render(
+      <ColorPicker
+        items={items}
+        allowEmptySelection
+        showCustomPicker
+        onChange={onChange}
+      />,
+    );
+
+    const [firstOption] = screen.getAllByRole('option');
+    await user.click(firstOption);
+    expect(firstOption).toHaveAttribute('aria-selected', 'true');
+
+    await user.click(screen.getByLabelText('No color'));
+
+    expect(firstOption).toHaveAttribute('aria-selected', 'false');
+    expect(onChange).toHaveBeenLastCalledWith(undefined);
+  });
+
+  it('should call onChange with a Color when a swatch is selected', async () => {
+    const user = userEvent.setup();
+    const onChange = vi.fn();
+    setup({ onChange });
+
+    await user.click(getOptionByColor('#30D27E'));
+
+    expect(onChange).toHaveBeenCalledTimes(1);
+    expect(onChange.mock.calls[0]?.[0]?.toString('hexa')).toBe(
+      parseColor('#30D27E').toString('hexa'),
+    );
+  });
+
+  it('should select the controlled swatch when extra controls are enabled', () => {
+    setup({
+      allowEmptySelection: true,
+      showCustomPicker: true,
+      value: '#30D27E',
+    });
+
+    expect(getOptionByColor('#30D27E')).toHaveAttribute(
+      'aria-selected',
+      'true',
+    );
+    expect(
+      screen.getByLabelText('Open custom color picker'),
+    ).not.toHaveAttribute('data-selected');
+  });
+
+  it('should treat a matching defaultValue as a swatch selection when extra controls are enabled', () => {
+    setup({
+      allowEmptySelection: true,
+      showCustomPicker: true,
+      defaultValue: '#30D27E',
+    });
+
+    expect(getOptionByColor('#30D27E')).toHaveAttribute(
+      'aria-selected',
+      'true',
+    );
+    expect(
+      screen.getByLabelText('Open custom color picker'),
+    ).not.toHaveAttribute('data-selected');
+  });
+
+  it('should apply picker class render props when extra controls are enabled', () => {
+    setup({
+      allowEmptySelection: true,
+      classNames: {
+        picker: () => 'picker-class',
+      },
+    });
+
+    expect(screen.getByRole('listbox').parentElement).toHaveClass(
+      'picker-class',
+    );
   });
 });
 
@@ -159,6 +294,20 @@ describe('NoColorButton', () => {
 
     const button = screen.getByLabelText('No color');
     expect(button).toBeInTheDocument();
+  });
+
+  it('should reflect the active state', () => {
+    const onClick = vi.fn();
+    render(<NoColorButton isActive onClick={onClick} />);
+
+    expect(screen.getByLabelText('No color')).toHaveAttribute('data-selected');
+  });
+
+  it('should apply the provided className', () => {
+    const onClick = vi.fn();
+    render(<NoColorButton className='no-color-class' onClick={onClick} />);
+
+    expect(screen.getByLabelText('No color')).toHaveClass('no-color-class');
   });
 
   it('should call onClick when clicked', async () => {
@@ -189,6 +338,22 @@ describe('CustomColorPicker', () => {
 
     const button = screen.getByLabelText('Open custom color picker');
     expect(button).toBeInTheDocument();
+  });
+
+  it('should apply the provided className', () => {
+    const onChange = vi.fn();
+    const color = parseColor('#30D27E');
+    render(
+      <CustomColorPicker
+        colorValue={color}
+        className='custom-color-class'
+        onChange={onChange}
+      />,
+    );
+
+    expect(screen.getByLabelText('Open custom color picker')).toHaveClass(
+      'custom-color-class',
+    );
   });
 
   it('should render with active state', () => {

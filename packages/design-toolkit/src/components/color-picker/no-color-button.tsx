@@ -12,10 +12,12 @@
 'use client';
 
 import 'client-only';
+import { clsx } from '@accelint/design-foundation/lib/utils';
 import { None } from '@accelint/icons';
 import { Button } from '../button';
 import { Icon } from '../icon';
-import type { NoColorButtonProps } from './no-color-button.types';
+import styles from './styles.module.css';
+import type { NoColorButtonProps } from './types';
 
 /**
  * NoColorButton - A button that indicates "no color" with the None icon.
@@ -40,6 +42,8 @@ import type { NoColorButtonProps } from './no-color-button.types';
  * ```
  */
 export function NoColorButton({
+  className,
+  isActive,
   isDisabled,
   onClick,
 }: Readonly<NoColorButtonProps>) {
@@ -49,6 +53,8 @@ export function NoColorButton({
       size='xsmall'
       isDisabled={isDisabled}
       aria-label='No color'
+      className={clsx(styles.pickerControlButton, className)}
+      data-selected={isActive || null}
       onClick={onClick}
     >
       <Icon>

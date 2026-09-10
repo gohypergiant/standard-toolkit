@@ -11,6 +11,7 @@
  */
 import type { Rgba255Tuple } from '@accelint/predicates/is-rgba-255-tuple';
 import type { RefAttributes } from 'react';
+import type { Color } from 'react-aria-components';
 import type {
   ColorSwatchPickerItemProps,
   ColorSwatchPickerProps,
@@ -50,12 +51,36 @@ export type ColorPickerProps = Omit<
     /** Label text displayed above the picker. */
     label?: string;
     /** Whether to allow null/no color selection by showing the "no color" button as the first option. */
-    allowNull?: boolean;
+    allowEmptySelection?: boolean;
     /** Whether to show the custom color picker button as the last option. */
     showCustomPicker?: boolean;
-    /** Callback when color selection changes. Can be undefined when allowNull is true and no color is selected. */
-    onChange?: (value: string | Color | undefined) => void;
+    /** Callback when color selection changes. Can be undefined when allowEmptySelection is true and no color is selected. */
+    onChange?: (value: Color | undefined) => void;
   };
 
-export type { CustomColorPickerProps } from './custom-color-picker.types';
-export type { NoColorButtonProps } from './no-color-button.types';
+export interface CustomColorPickerProps {
+  /** The current color value. */
+  colorValue: Color;
+  /** Whether this picker is the active selection source. */
+  isActive?: boolean;
+  /** Whether the button is disabled. */
+  isDisabled?: boolean;
+  /** Change handler callback when color is updated. */
+  onChange: (color: Color) => void;
+  /** Additional CSS class name for the trigger button. */
+  className?: string;
+}
+
+/**
+ * Props for the NoColorButton component.
+ */
+export interface NoColorButtonProps {
+  /** Whether the button is currently active. */
+  isActive?: boolean;
+  /** Whether the button is disabled. */
+  isDisabled?: boolean;
+  /** Click handler callback. */
+  onClick: () => void;
+  /** Additional CSS class name. */
+  className?: string;
+}
