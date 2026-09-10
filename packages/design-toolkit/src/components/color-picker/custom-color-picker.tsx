@@ -12,12 +12,13 @@
 'use client';
 
 import 'client-only';
+import { clsx } from '@accelint/design-foundation/lib/utils';
 import { ColorPicker as ColorPickerIcon } from '@accelint/icons';
 import { useState } from 'react';
 import {
+  ColorPicker as AriaColorPicker,
   ColorArea,
   ColorField,
-  ColorPicker,
   ColorSlider,
   ColorThumb,
   Input,
@@ -30,7 +31,7 @@ import { DialogTrigger } from '../dialog/trigger';
 import { Icon } from '../icon';
 import { Popover } from '../popover';
 import styles from './styles.module.css';
-import type { CustomColorPickerProps } from './custom-color-picker.types';
+import type { CustomColorPickerProps } from './types';
 
 /**
  * CustomColorPicker - A color picker with full HSB and RGB controls.
@@ -58,6 +59,7 @@ import type { CustomColorPickerProps } from './custom-color-picker.types';
  * ```
  */
 export function CustomColorPicker({
+  className,
   colorValue,
   isActive,
   isDisabled,
@@ -72,8 +74,8 @@ export function CustomColorPicker({
         size='xsmall'
         isDisabled={isDisabled}
         aria-label='Open custom color picker'
+        className={clsx(styles.pickerControlButton, className)}
         data-selected={isActive || null}
-        className={styles.customColorButton}
       >
         <Icon>
           <ColorPickerIcon color={colorValue.toString('hex')} />
@@ -82,10 +84,7 @@ export function CustomColorPicker({
 
       <Popover placement='bottom start'>
         <DialogContent className='flex min-w-[220px] flex-col gap-m'>
-          <ColorPicker
-            value={colorValue}
-            onChange={(color) => onChange(color.toFormat('rgb'))}
-          >
+          <AriaColorPicker value={colorValue} onChange={onChange}>
             <ColorArea
               colorSpace='hsb'
               xChannel='saturation'
@@ -118,16 +117,16 @@ export function CustomColorPicker({
                   </Label>
                   <Input
                     className={styles.rgbFieldInput}
-                    onKeyDown={(e) => {
-                      if (e.key === 'Enter') {
-                        e.currentTarget.blur();
+                    onKeyDown={(event) => {
+                      if (event.key === 'Enter') {
+                        event.currentTarget.blur();
                       }
                     }}
                   />
                 </ColorField>
               ))}
             </div>
-          </ColorPicker>
+          </AriaColorPicker>
         </DialogContent>
       </Popover>
     </DialogTrigger>

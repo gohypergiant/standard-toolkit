@@ -200,10 +200,8 @@ export const CombinedColorControls: Story = {
             '#D4231D',
           ]}
           value={selectedColor}
-          onChange={(color) =>
-            setSelectedColor(color as unknown as string | undefined)
-          }
-          allowNull
+          onChange={(color) => setSelectedColor(color?.toString('hex'))}
+          allowEmptySelection
           showCustomPicker
         />
 

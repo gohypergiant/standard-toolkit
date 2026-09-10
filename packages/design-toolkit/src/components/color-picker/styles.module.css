@@ -46,7 +46,7 @@
     @apply size-l;
   }
 
-  .customColorButton {
+  .pickerControlButton {
     @variant selected {
       @apply rounded-none outline outline-1 outline-offset-2;
       outline-color: var(--outline-accent-primary-bold);
