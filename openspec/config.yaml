@@ -14,7 +14,7 @@ context: |
   monorepo of shared TypeScript/React packages for defense/C2 applications,
   published publicly to npm under the @accelint scope.
   Monorepo: pnpm workspaces (apps/*, packages/*, tooling/*) — 1 app
-  (apps/next demo), 20 packages, 8 tooling packages.
+  (apps/next demo), 22 packages, 8 tooling packages.
   Build orchestration: Turbo (turbo.json; build dependsOn ^index, ^build).
   Package manager: pnpm 10.25 (Node >=22); public npm registry.
 
@@ -25,11 +25,13 @@ context: |
                         isolatedModules; exactOptionalPropertyTypes NOT set.
                         Shared presets in @accelint/typescript-config
                         (tsc/bundler × dom/no-dom × app/library variants)
-  - Frameworks:         React 19; Next.js 16 with React Compiler (apps/next)
+  - Frameworks:         React 19; Next.js 16 (apps/next)
   - Key Libraries:      react-aria-components ~1.17 + react-aria ~3.48
                         (design-toolkit); deck.gl ~9.2 + maplibre-gl ^5.7 +
                         @vis.gl/react-maplibre (map-toolkit); Tailwind CSS v4;
-                        @tanstack/react-table, dockview-react, milsymbol, turf
+                        @tanstack/query-core (stream); @tanstack/devtools +
+                        solid-js (stream-devtools); @tanstack/react-table,
+                        dockview-react, milsymbol, turf
   - Data Layer:         No databases. Geospatial data formats: coordinates
                         (DD/DDM/DMS/MGRS), GeoJSON via turf, tile coords;
                         @accelint/dataset for type-safe geospatial config
@@ -47,8 +49,10 @@ context: |
                         index.ts via `pnpm indexer` (turbo `index` task)
   - CI/CD:              GitHub Actions — ci.yml (build/format/lint/test),
                         release.yml (changesets action → npm), release-beta,
-                        visual-regression (Playwright/Chromium), memlab,
-                        coverage-comment, security (TruffleHog)
+                        publish-experimental (snapshot builds),
+                        experimental-age-tracker, visual-regression
+                        (Playwright/Chromium), memlab, coverage-comment,
+                        security (TruffleHog)
   - Versioning:         Changesets (access public, baseBranch main);
                         beta prerelease mode via beta:start/beta:exit;
                         constellation-tracker updates catalog-info.yaml on
@@ -94,11 +98,22 @@ context: |
     point — tactical readout. Caution: in packages/geo, "bearing" means the
     hemisphere letter (N/S/E/W) of a coordinate, not azimuth
   - Coordinate systems: packages/geo parses/formats lat-lon in Decimal
-    Degrees, Degrees-Decimal-Minutes, Degrees-Minutes-Seconds, and MGRS via
-    composable RegExp patterning
+    Degrees, Degrees-Decimal-Minutes, Degrees-Minutes-Seconds, MGRS, and UTM
+    via composable RegExp patterning. Alongside the string formatters, geo
+    exposes a structured parts layer the string formatters compose over:
+    per-axis toDecimalDegreesParts/toDdmParts/toDmsParts (numeric
+    degrees/minutes/seconds + hemisphere letter) and grid
+    toMgrsParts/toUtmParts, which return a discriminated
+    { ok:true, value } | { ok:false, reason:'out-of-range' } for the
+    inclusive 80°S–84°N band. Consumers branch on the typed result instead of
+    string-matching geodesy error text
   - Event bus: @accelint/bus Broadcast singleton over BroadcastChannel with
     typed payloads; the app-wide decoupling mechanism between map features,
     UI, and workers
+  - Stream client: @accelint/stream provides TanStack-Query-style caching for
+    SSE/WebSocket connections with stream key-based sharing, transport
+    abstractions, and React hooks (useStream/useStreamClient);
+    @accelint/stream-devtools provides TanStack Devtools UI integration
   - Map layers & modes: deck.gl overlay layers (shape display/draw/edit,
     symbol, text, grid) coordinated with interaction modes, cursor, and
     viewport state through bus events

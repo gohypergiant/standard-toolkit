@@ -117,8 +117,14 @@ export { ClassificationBanner } from './components/classification-banner';
 export type { ClassificationBannerProps } from './components/classification-banner/types';
 export { Clock } from './components/clock';
 export type { ClockProps } from './components/clock/types';
+export { CustomColorPicker } from './components/color-picker/custom-color-picker';
 export { ColorPicker } from './components/color-picker';
-export type { ColorPickerProps } from './components/color-picker/types';
+export { NoColorButton } from './components/color-picker/no-color-button';
+export type {
+  ColorPickerProps,
+  CustomColorPickerProps,
+  NoColorButtonProps,
+} from './components/color-picker/types';
 export {
   ComboBoxFieldContext,
   ComboBoxFieldProvider,
