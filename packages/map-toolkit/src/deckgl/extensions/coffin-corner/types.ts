@@ -64,7 +64,9 @@ export type CoffinCornerExtensionOptions = {
    * (`iconsTexture`, `vTextureCoords`, plus any uniforms/varyings a custom
    * IconLayer adds). Ignored on ScatterplotLayer hosts.
    *
-   * @default 'baseColor = texture(iconsTexture, vTextureCoords);'
+   * Assign `baseColor`; do not declare it — the extension declares
+   * `vec4 baseColor;` immediately above the splice. A blank string is treated
+   * as unset. When unset, the extension samples `iconsTexture` directly.
    */
   iconBaseColorGlsl?: string;
 };

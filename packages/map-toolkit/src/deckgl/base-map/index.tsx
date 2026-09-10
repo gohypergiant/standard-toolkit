@@ -373,17 +373,10 @@ export function BaseMap({
   // below - same approach as `useMapLibre` uses for the same setter.
   // 2.5D is the only view that permits pitch (the camera store locks 2D and 3D
   // to pitch:0). `maxPitch` must allow the store-driven pitch through in 2.5D;
-  // MapLibre clamps an applied `pitch` to `maxPitch`.
-  //
-  // Raise `maxPitch` whenever the view permits tilt OR a non-zero pitch is being
-  // applied this render. A UI control emitting `setView('2.5D')` updates the
-  // store's `view` and `pitch:60` together, so `cameraState` flips to
-  // `{view:'2.5D', pitch:60}` in a single render and `mapOptions` would otherwise
-  // apply `pitch:60` against the *previous* `maxPitch:0` — MapLibre clamps the
-  // tilt back to flat. Gating on the pitch value too keeps the ceiling at or
-  // above the applied pitch in the same `setProps`, so the toggle sticks without
-  // callers re-asserting pitch on a later tick.
-  const allowTilt = cameraState.view === '2.5D' || cameraState.pitch > 0;
+  // MapLibre clamps an applied `pitch` to `maxPitch`. react-maplibre applies
+  // `maxPitch` before `pitch` within one `setProps`, so a same-render view flip
+  // to 2.5D is never clamped by the previous ceiling.
+  const allowTilt = cameraState.view === '2.5D';
 
   const mapOptions = useMemo(() => {
     const options = {
@@ -421,7 +414,6 @@ export function BaseMap({
     viewState,
     container,
     allowTilt,
-    cameraState.view,
     cameraState.transitionDuration,
     boxZoom,
     filteredMapLibreOptions,

@@ -381,13 +381,17 @@ describe('CoffinCornerExtension', () => {
       );
     });
 
-    it('should return a stable shader config across calls', () => {
+    it('should treat a blank iconBaseColorGlsl as unset', () => {
       const layer = createMockLayer();
+      const blankExtension = new CoffinCornerExtension({
+        iconBaseColorGlsl: '  \n  ',
+      });
 
-      const first = extension.getShaders.call(layer, extension);
-      const second = extension.getShaders.call(layer, extension);
+      const shaders = blankExtension.getShaders.call(layer, blankExtension);
 
-      expect(first).toBe(second);
+      expect(shaders?.inject['fs:#main-start']).toContain(
+        'baseColor = texture(iconsTexture, vTextureCoords);',
+      );
     });
   });
 
