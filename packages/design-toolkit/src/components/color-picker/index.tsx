@@ -137,11 +137,10 @@ export function ColorPicker({
   };
 
   const handleCustomColorChange = (newColor: Color) => {
-    const newValue = newColor.toString('hex');
-    setInternalValue(newValue);
-    setLastValidColor(newValue);
+    setInternalValue(newColor);
+    setLastValidColor(newColor);
     setSelectionSource('custom');
-    onChange?.(newValue);
+    onChange?.(newColor);
   };
 
   const hasExtraButtons = allowNull || showCustomPicker;

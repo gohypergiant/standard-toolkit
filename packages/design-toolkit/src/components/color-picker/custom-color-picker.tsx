@@ -82,7 +82,10 @@ export function CustomColorPicker({
 
       <Popover placement='bottom start'>
         <DialogContent className='flex min-w-[220px] flex-col gap-m'>
-          <ColorPicker value={colorValue} onChange={onChange}>
+          <ColorPicker
+            value={colorValue}
+            onChange={(color) => onChange(color.toFormat('rgb'))}
+          >
             <ColorArea
               colorSpace='hsb'
               xChannel='saturation'

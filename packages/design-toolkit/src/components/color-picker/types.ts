@@ -23,7 +23,7 @@ import type { LabelProps } from 'react-aria-components/Label';
  */
 export type ColorPickerProps = Omit<
   ColorSwatchPickerProps,
-  'children' | 'defaultValue' | 'layout' | 'value'
+  'children' | 'defaultValue' | 'layout' | 'onChange' | 'value'
 > &
   RefAttributes<HTMLDivElement> & {
     /** Custom class names for sub-elements. */
@@ -53,6 +53,8 @@ export type ColorPickerProps = Omit<
     allowNull?: boolean;
     /** Whether to show the custom color picker button as the last option. */
     showCustomPicker?: boolean;
+    /** Callback when color selection changes. Can be undefined when allowNull is true and no color is selected. */
+    onChange?: (value: string | Color | undefined) => void;
   };
 
 export type { CustomColorPickerProps } from './custom-color-picker.types';
