@@ -49,6 +49,7 @@ export type {
   MapLibreOptions,
 } from './base-map/types';
 export type {
+  CoffinCornerExtensionOptions,
   CoffinCornerExtensionProps,
   EntityId,
 } from './extensions/coffin-corner';

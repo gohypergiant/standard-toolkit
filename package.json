@@ -35,6 +35,9 @@
     "overrides": {
       "@internationalized/date": "~3.12.1"
     },
+    "patchedDependencies": {
+      "geodesy@2.4.0": "patches/geodesy@2.4.0.patch"
+    },
     "onlyBuiltDependencies": [
       "@fission-ai/openspec",
       "@parcel/watcher",

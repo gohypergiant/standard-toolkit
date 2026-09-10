@@ -212,6 +212,8 @@ The format conversion popover displays the current coordinate in all 5 supported
 
 **Note:** The popover displays format labels and values only. For detailed explanations of each coordinate system and when to use them, see the "Supported Coordinate Systems" section above.
 
+**MGRS/UTM range:** MGRS and UTM are defined only from 80°S to 84°N (inclusive). Outside that band the MGRS and UTM rows show `"Not available at poles"` and their copy action is disabled; DD, DDM, and DMS remain available at all latitudes.
+
 <Canvas of={CoordinateFieldStories.FormatPopoverDemo} />
 
 ### Paste Handling
@@ -251,7 +253,7 @@ When an invalid coordinate is pasted, the `onError` callback is invoked, allowin
 **Important:** Error display is **not automatic** - you control how and when to show paste errors to users. The `onError` callback provides the error message and context, but displaying it is the implementor's responsibility.
 
 **Common paste errors:**
-- `"Pasted text is not a valid coordinate format"` - The pasted text couldn't be parsed as any supported coordinate system
+- `"Invalid coordinate format"` - The pasted text couldn't be parsed as any supported coordinate system
 - Context includes the `pastedText` for debugging purposes
 
 **Example implementation with error display:**
