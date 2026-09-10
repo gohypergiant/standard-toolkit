@@ -11,6 +11,7 @@
  * governing permissions and limitations under the License.
  */
 
+import { wrap } from '@accelint/math';
 import { HOURS_MAPPING, MINUTES_MAPPING, MS_PER_HOUR } from '../constants';
 
 const MS_PER_SECOND = 1000;
@@ -29,23 +30,18 @@ export function roundMsToInterval(
   timestampMs: number,
   selectedTimeIntervalMs: number,
 ): number {
-  // Zero out sub-second precision (handle negative timestamps correctly)
-  const msRemainder =
-    ((timestampMs % MS_PER_SECOND) + MS_PER_SECOND) % MS_PER_SECOND;
+  // Zero out sub-second precision (wrap handles negative timestamps correctly)
+  const msRemainder = wrap(0, MS_PER_SECOND, timestampMs);
   const secondAligned = timestampMs - msRemainder;
 
   if (minutesIntervals.includes(selectedTimeIntervalMs)) {
-    const intervalRemainder =
-      ((secondAligned % selectedTimeIntervalMs) + selectedTimeIntervalMs) %
-      selectedTimeIntervalMs;
+    const intervalRemainder = wrap(0, selectedTimeIntervalMs, secondAligned);
     return secondAligned - intervalRemainder;
   }
 
   if (hoursIntervals.includes(selectedTimeIntervalMs)) {
     // Hours interval — align to interval boundary within the day
-    const msIntoDayRaw = secondAligned % MS_PER_DAY;
-    const msIntoDay =
-      msIntoDayRaw < 0 ? msIntoDayRaw + MS_PER_DAY : msIntoDayRaw;
+    const msIntoDay = wrap(0, MS_PER_DAY, secondAligned);
     const hourAligned = msIntoDay - (msIntoDay % selectedTimeIntervalMs);
     return secondAligned - msIntoDay + hourAligned;
   }

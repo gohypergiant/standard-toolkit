@@ -19,6 +19,7 @@
  * @module @accelint/map-toolkit/cursor-coordinates
  */
 
+export { formatCoordinate, normalizeLongitude } from './format-coordinate';
 export { clearCursorCoordinateState, cursorCoordinateStore } from './store';
 export { useCursorCoordinates } from './use-cursor-coordinates';
 export type {

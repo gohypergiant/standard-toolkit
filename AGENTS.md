@@ -59,9 +59,10 @@
 
 ### Before completing the task
 
-- Run the verification gate in this order and do not declare work complete until it passes: `pnpm run build`, `pnpm run test`, `pnpm run lint`, `pnpm run format`.
+- Run the verification gate in this order and do not declare work complete until it passes: `pnpm run build`, `pnpm tsc --noEmit -p tsconfig.dist.json` (in `packages/design-toolkit` and `packages/map-toolkit`), `pnpm run test`, `pnpm run lint`, `pnpm run format`.
 - Remember that CI also checks `pnpm run pre-build`, `pnpm run format:check`, `pnpm run lint:fs`, `pnpm run lint:deps`, `pnpm run lint:rac`, and `pnpm run lint:package`. Run or account for those when your change touches the relevant areas or when you are preparing work for review.
-- Do not bypass `pnpm run build` for type safety. In `packages/design-toolkit` and `packages/map-toolkit`, `tsconfig.json` is solution-style and can report false-clean results. Use `tsconfig.dist.json` or `tsconfig.dev.json` if you must run `tsc` directly there.
+- `pnpm run build` does NOT typecheck `packages/design-toolkit` or `packages/map-toolkit`: it runs tsdown (esbuild-based), which strips types and exits `0` even with real type errors, so a green build is not a green typecheck. Their `tsconfig.json` is also solution-style (`files: []` + project references) and reports false-clean. The authoritative type gate there is `pnpm tsc --noEmit -p tsconfig.dist.json` (source that ships); `tsconfig.dev.json` covers tests and Storybook. Other packages have a single `tsconfig.json` and `pnpm tsc --noEmit` works as expected.
+- Test-file type errors are low-priority. Mismatches under `tsconfig.dev.json`, especially in `*.test.ts(x)`, often come from awkward third-party generics (e.g. deck.gl accessors) while the test passes at runtime and never ships. Fix one when it is your own regression or a quick win; otherwise note it and move on. Do not block completion on it.
 - If source code changed, create or mention a changeset. Docs-only, tests-only, Storybook-only, and comment-only changes do not need one.
 - Confirm the change stayed within scope, no secrets or credentials were introduced, and any generated files were intentionally updated.
 - Report verification evidence, not just the conclusion. Include remaining gaps if something could not be run.
