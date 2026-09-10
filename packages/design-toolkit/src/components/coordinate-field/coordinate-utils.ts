@@ -57,9 +57,9 @@ const logger = createLoggerDomain('[CoordinateField]');
 import {
   coordinateSystems,
   createCoordinate,
+  formatCoordinateSystem,
   formatMgrsParts,
   formatUtmParts,
-  getHemisphere,
   isValidNumericCoordinate,
   toDdmParts,
   toDmsParts,
@@ -73,6 +73,7 @@ import {
   type CoordinateValue,
   type ParsedCoordinateMatch,
 } from './types';
+import type { GridPartsResult } from '@accelint/geo';
 
 /** Epsilon for coordinate equality comparison (≈11cm precision at equator) */
 export const COORDINATE_EPSILON = 0.000001;
@@ -97,6 +98,27 @@ export interface CoordinateFormatResult {
   isValid: boolean;
 }
 
+/** Decimal places retained when rendering a decimal-degrees value for display. */
+const DD_DISPLAY_PRECISION = 10;
+
+/**
+ * Renders a signed decimal-degrees value for display: rounded to 10 decimal
+ * places, in plain (never exponential) notation with no trailing zeros.
+ *
+ * The rounding hides float artifacts (`0.1 + 0.2` renders as `'0.3'`) and geo's
+ * `toPlainDecimalString` keeps sub-`1e-6` magnitudes parseable (`String(1e-7)`
+ * would give `'1e-7'`, which the segment parsers reject). Shared by the DD
+ * segment and full-string renderers so the two cannot disagree on precision.
+ *
+ * @param value - Signed decimal-degrees value.
+ * @returns The rendered value, e.g. `'40.7128'`, `'-74.006'`, `'0'`.
+ *
+ * @internal
+ */
+function formatDecimalDegreesValue(value: number): string {
+  return toPlainDecimalString(Number(value.toFixed(DD_DISPLAY_PRECISION)));
+}
+
 /**
  * Format DD (Decimal Degrees) segments to coordinate string
  *
@@ -105,29 +127,6 @@ export interface CoordinateFormatResult {
  *
  * @internal
  */
-/** Decimal places retained when rendering a decimal-degrees value for display. */
-const DD_DISPLAY_PRECISION = 10;
-
-/**
- * Renders a signed decimal-degrees value for display: fixed notation rounded to
- * 10 decimal places with trailing zeros trimmed.
- *
- * Fixed notation keeps sub-`1e-6` magnitudes parseable (`String(1e-7)` would
- * give `'1e-7'`, which the segment parsers reject), and the rounding hides float
- * artifacts (`0.1 + 0.2` renders as `'0.3'`). Shared by the DD segment and
- * full-string renderers so the two cannot disagree on precision.
- *
- * @param value - Signed decimal-degrees value.
- * @returns The rendered value, e.g. `'40.7128'`, `'-74.006'`, `'0'`.
- *
- * @internal
- */
-function formatDecimalDegreesValue(value: number): string {
-  const rendered = value.toFixed(DD_DISPLAY_PRECISION).replace(/\.?0+$/, '');
-
-  return rendered === '-0' ? '0' : rendered;
-}
-
 function formatDDSegments(segments: string[]): string | null {
   if (segments.length < 2) {
     return null;
@@ -139,11 +138,12 @@ function formatDDSegments(segments: string[]): string | null {
     return null;
   }
 
-  const latDir = getHemisphere(latNum, 'lat');
-  const lonDir = getHemisphere(lonNum, 'lon');
-
   // Plain notation: `${1e-7}` would be '1e-7', which geo's lexer mis-reads.
-  return `${toPlainDecimalString(Math.abs(latNum))} ${latDir} / ${toPlainDecimalString(Math.abs(lonNum))} ${lonDir}`;
+  return formatCoordinateSystem(
+    'LATLON',
+    [latNum, lonNum],
+    toPlainDecimalString,
+  );
 }
 
 /**
@@ -710,18 +710,30 @@ function isValidCoordinateValue(value: CoordinateValue | null): boolean {
 }
 
 /**
- * Build the MGRS display result for a coordinate.
+ * Build the MGRS or UTM display result for a coordinate.
  *
- * Composes the string from {@link toMgrsParts} via geo's `formatMgrsParts`
- * renderer. `toMgrsParts` returns a total `GridPartsResult` that never
+ * Composes the string from the given geo parts converter and renderer. Both
+ * `toMgrsParts` and `toUtmParts` return a total `GridPartsResult` that never
  * throws, so an out-of-range latitude or the `+180°` antimeridian arrives as
  * `{ ok: false }` and maps to the poles sentinel — no thrown error, no matched
  * error text.
  *
+ * @template Parts - The grid parts shape the converter yields.
+ * @param lat - Signed latitude in decimal degrees.
+ * @param lon - Signed longitude in decimal degrees.
+ * @param toParts - Geo grid-parts converter (`toMgrsParts` or `toUtmParts`).
+ * @param formatParts - Matching geo renderer (`formatMgrsParts` or `formatUtmParts`).
+ * @returns The rendered grid string, or the poles sentinel marked invalid.
+ *
  * @internal
  */
-function convertToMgrsResult(lat: number, lon: number): CoordinateFormatResult {
-  const result = toMgrsParts([lat, lon]);
+function convertToGridResult<Parts>(
+  lat: number,
+  lon: number,
+  toParts: (coordinate: [number, number]) => GridPartsResult<Parts>,
+  formatParts: (parts: Parts) => string,
+): CoordinateFormatResult {
+  const result = toParts([lat, lon]);
 
   if (!result.ok) {
     return {
@@ -731,34 +743,7 @@ function convertToMgrsResult(lat: number, lon: number): CoordinateFormatResult {
   }
 
   return {
-    value: formatMgrsParts(result.value),
-    isValid: true,
-  };
-}
-
-/**
- * Build the UTM display result for a coordinate.
- *
- * Composes the string from {@link toUtmParts} via geo's `formatUtmParts`
- * renderer. `toUtmParts` returns a total `GridPartsResult` that never
- * throws, so an out-of-range latitude or the `+180°` antimeridian arrives as
- * `{ ok: false }` and maps to the poles sentinel — no thrown error, no matched
- * error text.
- *
- * @internal
- */
-function convertToUtmResult(lat: number, lon: number): CoordinateFormatResult {
-  const result = toUtmParts([lat, lon]);
-
-  if (!result.ok) {
-    return {
-      value: COORDINATE_ERROR_MESSAGES.NOT_AVAILABLE_AT_POLES,
-      isValid: false,
-    };
-  }
-
-  return {
-    value: formatUtmParts(result.value),
+    value: formatParts(result.value),
     isValid: true,
   };
 }
@@ -784,7 +769,11 @@ function convertToFormat(
     switch (format) {
       case 'dd':
         return {
-          value: `${formatDecimalDegreesValue(Math.abs(lat))} ${getHemisphere(lat, 'lat')} / ${formatDecimalDegreesValue(Math.abs(lon))} ${getHemisphere(lon, 'lon')}`,
+          value: formatCoordinateSystem(
+            'LATLON',
+            [lat, lon],
+            formatDecimalDegreesValue,
+          ),
           isValid: true,
         };
       case 'ddm': {
@@ -806,9 +795,9 @@ function convertToFormat(
         };
       }
       case 'mgrs':
-        return convertToMgrsResult(lat, lon);
+        return convertToGridResult(lat, lon, toMgrsParts, formatMgrsParts);
       case 'utm':
-        return convertToUtmResult(lat, lon);
+        return convertToGridResult(lat, lon, toUtmParts, formatUtmParts);
       default:
         return { value: COORDINATE_ERROR_MESSAGES.INVALID, isValid: false };
     }

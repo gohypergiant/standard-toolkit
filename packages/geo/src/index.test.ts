@@ -114,12 +114,17 @@ describe('creating a coordinate object', () => {
 
     // 80°S and 84°N are inclusive edges of the UTM/MGRS grid band.
     it.each`
-      label     | lat
-      ${'84°N'} | ${84}
-      ${'80°S'} | ${-80}
-    `('accepts the inclusive boundary $label', ({ lat }) => {
-      expect(toUtmParts([lat, 0]).ok).toBe(true);
-      expect(toMgrsParts([lat, 0]).ok).toBe(true);
+      label                          | lat    | lon
+      ${'84°N'}                      | ${84}  | ${0}
+      ${'80°S'}                      | ${-80} | ${0}
+      ${'84°N in zone 33X (lon 9)'}  | ${84}  | ${9}
+      ${'84°N in zone 33X (lon 20)'} | ${84}  | ${20}
+      ${'84°N in zone 37X (lon 33)'} | ${84}  | ${33}
+    `('accepts the inclusive boundary $label', ({ lat, lon }) => {
+      // The Svalbard rows sit where UTM northing peaks (~9331737 m); geodesy's
+      // default northing bound rejected them even though they're in band.
+      expect(toUtmParts([lat, lon]).ok).toBe(true);
+      expect(toMgrsParts([lat, lon]).ok).toBe(true);
     });
 
     // Just past either edge falls outside the projected grid.

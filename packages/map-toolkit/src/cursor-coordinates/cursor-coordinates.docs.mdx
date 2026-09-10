@@ -175,6 +175,41 @@ Optional configuration object:
 
 - `Error` if no `id` is provided and hook is used outside of `MapProvider`
 
+## Formatting API
+
+The hook's formatting is exposed as two plain functions from `@accelint/map-toolkit/cursor-coordinates`, for rendering a coordinate string outside the hook (a tooltip, a label, a log line) without re-deriving the grid conversion.
+
+### `formatCoordinate(coord, format)`
+
+Formats a `[longitude, latitude]` tuple into the requested system. Longitude is normalized to -180..180 first. Precision matches the hook: DD 6 decimal places, DDM 4 for minutes, DMS 2 for seconds.
+
+```tsx
+import { formatCoordinate } from '@accelint/map-toolkit/cursor-coordinates';
+
+formatCoordinate([-122.4194, 37.7749], 'dd');   // '37.774900° N / 122.419400° W'
+formatCoordinate([-122.4194, 37.7749], 'mgrs'); // '10S EG 51130 80998'
+formatCoordinate([-122.4194, 37.7749], 'utm');  // '10N 551131 4180999'
+formatCoordinate([0, 85], 'mgrs');              // '--- -- ---- ----' (outside 80°S–84°N)
+```
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `coord` | `[number, number]` | `[longitude, latitude]` in decimal degrees |
+| `format` | `CoordinateFormatTypes` | Target system: `'dd'`, `'ddm'`, `'dms'`, `'mgrs'`, or `'utm'` |
+
+**Returns:** the formatted string, or the `--- -- ---- ----` placeholder for MGRS/UTM outside 80°S–84°N.
+
+### `normalizeLongitude(lon)`
+
+Wraps a longitude into -180..180, including multi-revolution values. `180` maps to `-180` (the range is half-open at the upper edge).
+
+```tsx
+import { normalizeLongitude } from '@accelint/map-toolkit/cursor-coordinates';
+
+normalizeLongitude(190);  // -170
+normalizeLongitude(-540); // -180
+```
+
 ## Coordinate Format Limitations
 
 ### Polar Regions

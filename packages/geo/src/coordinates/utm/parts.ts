@@ -132,17 +132,23 @@ export const toUtmParts = ([lat, lon]: [
     return { ok: false, reason: 'out-of-range' };
   }
 
-  const utm = new LatLon(lat, lon).toUtm();
+  try {
+    const utm = new LatLon(lat, lon).toUtm();
 
-  return {
-    ok: true,
-    value: {
-      zone: utm.zone,
-      hemisphere: utm.hemisphere as 'N' | 'S',
-      easting: Math.round(utm.easting),
-      northing: Math.round(utm.northing),
-    },
-  };
+    return {
+      ok: true,
+      value: {
+        zone: utm.zone,
+        hemisphere: utm.hemisphere as 'N' | 'S',
+        easting: Math.round(utm.easting),
+        northing: Math.round(utm.northing),
+      },
+    };
+  } catch {
+    // geodesy applies its own bounds after projecting; keep the result total
+    // rather than leaking a RangeError (e.g. an unpatched geodesy at 84°N).
+    return { ok: false, reason: 'out-of-range' };
+  }
 };
 
 /**

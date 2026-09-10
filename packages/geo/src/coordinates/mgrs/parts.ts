@@ -62,19 +62,25 @@ export const toMgrsParts = ([lat, lon]: [
     return { ok: false, reason: 'out-of-range' };
   }
 
-  const mgrs = new LatLon(lat, lon).toUtm().toMgrs();
+  try {
+    const mgrs = new LatLon(lat, lon).toUtm().toMgrs();
 
-  return {
-    ok: true,
-    value: {
-      zone: mgrs.zone,
-      band: mgrs.band,
-      e100k: mgrs.e100k,
-      n100k: mgrs.n100k,
-      easting: mgrs.easting,
-      northing: mgrs.northing,
-    },
-  };
+    return {
+      ok: true,
+      value: {
+        zone: mgrs.zone,
+        band: mgrs.band,
+        e100k: mgrs.e100k,
+        n100k: mgrs.n100k,
+        easting: mgrs.easting,
+        northing: mgrs.northing,
+      },
+    };
+  } catch {
+    // geodesy re-verifies UTM bounds when building the MGRS reference; keep
+    // the result total rather than leaking a RangeError.
+    return { ok: false, reason: 'out-of-range' };
+  }
 };
 
 /**

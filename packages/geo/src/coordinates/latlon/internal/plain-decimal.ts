@@ -18,13 +18,17 @@
 const EXPANDED_FRACTION_DIGITS = 20;
 
 /**
- * Renders a number in plain decimal notation, never exponential.
+ * Renders a small number in plain decimal notation instead of exponential.
  *
  * JavaScript's default number-to-string conversion switches to exponential
  * notation below `1e-6` (`String(0.0000001)` is `'1e-7'`), which the
  * coordinate lexer would mis-tokenize (`-7` reads as a sign) and which the
  * round-trip formatters must not emit. Values that already render plainly are
  * returned unchanged, so this is a no-op for ordinary coordinates.
+ *
+ * Only negative exponents are expanded, to at most 20 fraction digits — enough
+ * for any coordinate magnitude. Numbers at or above `1e21` (positive exponent)
+ * are returned as JavaScript renders them.
  *
  * @param value - The number to render.
  * @returns The value in plain decimal notation with no trailing zeros.
@@ -46,7 +50,7 @@ const EXPANDED_FRACTION_DIGITS = 20;
 export const toPlainDecimalString = (value: number): string => {
   const rendered = `${value}`;
 
-  if (!rendered.includes('e')) {
+  if (!rendered.includes('e-')) {
     return rendered;
   }
 

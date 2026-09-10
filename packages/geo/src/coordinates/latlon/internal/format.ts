@@ -13,8 +13,13 @@
 // __private-exports
 
 import { BEARINGS, type Format, SYMBOLS } from '.';
-import { type Axis, getHemisphere } from './ordinal';
+import { getHemisphere } from './ordinal';
 
+/**
+ * Display options for the `format*` coordinate formatters: text wrapped around
+ * the whole string, the divider between axes, and whether each axis carries
+ * its `N`/`S`/`E`/`W` letter.
+ */
 export type FormatOptions = {
   prefix: string;
   suffix: string;
@@ -66,8 +71,10 @@ export const formatCoordinateSystem = (
  *
  * @example
  * ```typescript
- * const formatDD = createFormatter((num) => `${num.toFixed(6)}°`);
- * formatDD([37.7749, -122.4194]);
+ * const formatDD = createFormatter(
+ *   (value, withOrdinal) => `${(withOrdinal ? Math.abs(value) : value).toFixed(6)}°`,
+ * );
+ * formatDD([37.7749, -122.4194], { withOrdinal: true });
  * // '37.774900° N, 122.419400° W'
  * ```
  *
@@ -79,7 +86,7 @@ export const formatCoordinateSystem = (
  * ```
  */
 export const createFormatter =
-  (fn: (coord: number, axis: Axis, withOrdinal?: boolean) => string) =>
+  (fn: (coord: number, withOrdinal?: boolean) => string) =>
   (coordinates: [number, number], config?: FormatOptions): string => {
     const [latitude, longitude] = coordinates;
     const latOrdinal = config?.withOrdinal
@@ -88,8 +95,8 @@ export const createFormatter =
     const lonOrdinal = config?.withOrdinal
       ? ` ${getHemisphere(longitude, 'lon')}`
       : '';
-    const latValue = fn(latitude, 'lat', config?.withOrdinal);
-    const lonValue = fn(longitude, 'lon', config?.withOrdinal);
+    const latValue = fn(latitude, config?.withOrdinal);
+    const lonValue = fn(longitude, config?.withOrdinal);
     const prefix = config?.prefix ?? '';
     const suffix = config?.suffix ?? '';
     const separator = config?.separator ?? ', ';

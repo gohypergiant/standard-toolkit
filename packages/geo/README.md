@@ -256,6 +256,23 @@ formatUtmParts({ zone: 18, hemisphere: 'N', easting: 323394, northing: 4307396 }
 // '18N 323394 4307396'
 ```
 
+### Helpers
+
+The pieces the parts layer is built from are exported too:
+
+- `getHemisphere(value, axis)` returns the typed `'N' | 'S' | 'E' | 'W'` letter for a signed value on `'lat'` or `'lon'` (`0` maps to `N`/`E`). `Axis` and `Hemisphere` are the matching types; `getOrdinal` is the older boolean-axis form of the same function.
+- `isWithinGridBand(lat)`, `isOnEasternAntimeridian(lon)`, and `isGridProjectable([lat, lon])` are the checks behind `toUtmParts`/`toMgrsParts`, with the band edges exported as `GRID_LATITUDE_MIN` (`-80`) and `GRID_LATITUDE_MAX` (`84`).
+- `DECIMAL_DEGREES_PRECISION` (`6`), `DDM_PRECISION` (`4`), and `DMS_PRECISION` (`2`) are the parts functions' default precisions.
+- `toPlainDecimalString(value)` renders a number in plain decimal notation. JavaScript switches to exponential notation below `1e-6` (`String(0.0000001)` is `'1e-7'`); use this when building a coordinate string by hand from very small magnitudes.
+
+```typescript
+import { getHemisphere, isGridProjectable, toPlainDecimalString } from '@accelint/geo';
+
+getHemisphere(-77.0369, 'lon');    // 'W'
+isGridProjectable([85, 0]);        // false
+toPlainDecimalString(0.0000001);   // '0.0000001'
+```
+
 ## Standalone Functions
 
 The per-system `format*` and `parse*` functions are exported directly, so you can format a `[latitude, longitude]` tuple (or parse a single system's string) without building a `createCoordinate` object.

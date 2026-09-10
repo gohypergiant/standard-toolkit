@@ -11,7 +11,6 @@
  * governing permissions and limitations under the License.
  */
 
-import { LatLon } from 'geodesy/mgrs';
 import { type Compass, type Format, SYMBOL_PATTERNS } from '../latlon/internal';
 import { parseMGRS } from './parser';
 import { formatMgrsParts, toMgrsParts } from './parts';
@@ -70,9 +69,11 @@ export const systemMGRS: CoordinateSystem = {
     const result = toMgrsParts([LAT, LON]);
 
     if (!result.ok) {
-      // Surface geodesy's own RangeError for coordinates outside the MGRS
-      // grid band, preserving the pre-refactor throwing behavior.
-      return new LatLon(LAT, LON).toUtm().toMgrs().toString();
+      // The legacy `toFormat` contract throws for coordinates the grid cannot
+      // represent; the parts API returns `{ ok: false }` for the same inputs.
+      throw new RangeError(
+        `Coordinate [${LAT}, ${LON}] cannot be represented in MGRS (outside 80°S–84°N, on the +180° antimeridian, or not finite).`,
+      );
     }
 
     return formatMgrsParts(result.value);

@@ -71,6 +71,20 @@ describe('formatCoordinate', () => {
       mgrs: '31C DM 41867 16915',
       utm: '31S 441868 1116915',
     },
+    // 84°N in the extended Svalbard zones, where UTM northing peaks (~9331737);
+    // geodesy's default northing bound rejected these even though they're in band.
+    {
+      label: '84°N in zone 33X (Svalbard)',
+      coord: [9, 84] as [number, number],
+      mgrs: '33X VP 30104 31736',
+      utm: '33N 430105 9331737',
+    },
+    {
+      label: '84°N in zone 37X (Svalbard)',
+      coord: [33, 84] as [number, number],
+      mgrs: '37X DP 30104 31736',
+      utm: '37N 430105 9331737',
+    },
   ])('converts the $label latitude boundary', ({ coord, mgrs, utm }) => {
     expect(formatCoordinate(coord, 'mgrs')).toBe(mgrs);
     expect(formatCoordinate(coord, 'utm')).toBe(utm);
