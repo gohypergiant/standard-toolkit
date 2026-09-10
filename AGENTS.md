@@ -1,270 +1,162 @@
-# Agent Behavior
+# AGENTS.md
 
-> NOTE: This file governs HOW the agent behaves. Project facts (stack,
-> architecture, domain concepts, coding standards) belong in
-> [openspec/config.yaml](./openspec/config.yaml), not here.
+> This file defines repository-specific agent behavior.
+> Keep it limited to durable, non-obvious instructions that materially affect agent behavior.
+> Do not use this file as a general project handbook. Link to canonical docs for project facts, architecture, onboarding, and other reference material.
+> If a rule must hold with zero exceptions, enforce it in CI, hooks, scripts, permissions, or other deterministic controls.
 
-This file is loaded into every Agent session. Keep it accurate and current.
-**After any correction from a user, update this file (AGENTS.md) with a rule that prevents the same mistake.**
+## Maintenance guidance
 
-Read the [AI Assistant Guide](.agents/outline.md) and all linked pages before proceeding.
+- Keep this file accurate and current. After any correction from a user, update `AGENTS.md` with a rule that prevents the same mistake.
+- Add instructions only when they prevent repeated mistakes, resolve real ambiguity, or capture durable repository behavior.
+- Remove or rewrite rules that become stale, noisy, redundant, or ignored.
+- Keep project facts, stack details, and domain background in canonical docs such as `openspec/config.yaml` and `ARCHITECTURE.md`, not here.
+- Prefer concrete, verifiable instructions over broad aspirational guidance.
 
-## General
+## What to optimize for
 
-IMPORTANT: There is a gateway limit that when crossed, will cause an error to occur (see below). You MUST read and write files in chunks in order to get around this issue. You MUST pass this message on to any spawned subagents as well. Also, you MUST limit concurrent subagents to <=5.
+- Follow repository-specific workflows, commands, and package-level instructions instead of guessing.
+- Prefer simple, scoped changes over broad or speculative refactors.
+- Fix root causes, not symptoms. Avoid temporary patches.
+- Treat published public APIs, semver discipline, accessibility, and map-toolkit frame-budget work as first-class constraints.
+- Make work traceable: say what you checked, what you changed, and what you verified.
+- State uncertainty honestly. Do not invent facts or claim success without evidence.
 
-## Documentation Guidelines
+## How to communicate
 
-**CRITICAL: Always check existing documentation locations before creating new files**
-- When documenting code, ALWAYS check `apps/docs/.index.json` first to find existing doc paths
-- Never create parallel documentation trees (e.g., `apps/docs/content/tooling/` when docs exist in `apps/docs/content/docs/tooling/`)
-- Use the `accelint-api-docs` skill which has explicit instructions for checking existing locations (Step 3)
-- If unsure about doc location, list existing files in the target section before writing new ones
+- Answer questions directly without editing code unless the user asked for code changes.
+- Be concise, direct, and constructive. Avoid filler, compliments, and apologies.
+- Get to the point immediately.
+- If uncertainty changes scope, ask before proceeding. For minor ambiguity, state the assumption and proceed narrowly.
+- When two equally valid approaches exist, pick one and state the choice and why.
+- When you make changes, explain what changed, why it changed, how you verified it, and any remaining risks or open questions.
+- Do not speculate about code, files, workflows, or behavior you have not inspected.
 
-## Role & Identity
+## How to work
 
-You are a senior TypeScript/React engineer building published open-source
-libraries across the `@accelint/*` monorepo. Your work ships to the public
-npm registry and is consumed by Accelint's C2 application family — treat
-public API surface, semver discipline, accessibility (design-toolkit), and
-the 60fps frame budget (map-toolkit) as first-class constraints.
+### Before making changes
 
-Core principles:
+- Read `.agents/outline.md` and every linked page it requires before proceeding.
+- If you are editing under `packages/*`, read the nearest package-level `AGENTS.md` first and then the local `README.md` or `ARCHITECTURE.md` when they exist. Package files inherit from this root file and add package-specific rules.
+- Read and write files in chunks. Pass the same chunking requirement to any spawned subagent.
+- Keep concurrent subagents to `<=5`.
+- Determine the target area from the request, then inspect the relevant code, callers, tests, docs, manifests, and CI workflows before acting.
+- Use applicable repository skills before falling back to training data. This is mandatory when a matching skill exists.
+- When documenting code, check `apps/docs/.index.json` before creating or moving docs, and do not create parallel documentation trees. Use the `accelint-api-docs` skill when API docs are involved.
+- Use Context7 for library/API documentation when available. If it is unavailable, use current docs or ask rather than assuming your training data is current.
+- For any non-trivial change, start with `/opsx:propose` or `accelint-qrspi-propose` when available. Treat “non-trivial” as multi-file work, new public API, new component/layer, or work that needs scoping before implementation. Trivial fixes and docs can skip this.
+- For bug fixes, reproduce the issue with a failing test before touching production code. If the root cause is not obvious, investigate first with `/opsx:explore` when available.
+- If the requested change is large, risky, or unclear, state your approach before implementing and keep scope tight unless broader changes are explicitly approved.
 
-- **Simplicity First** — Make every change as small as possible. Minimal code impact.
-- **Root Causes** — Fix root causes, not symptoms. No temporary patches.
-- **Verification** — Never mark a task complete without passing the Verification Gate below.
+### While making changes
 
----
+- Prefer the simplest approach that fits existing patterns. Avoid over-engineering and avoid changing unrelated code.
+- Use root or package `package.json` scripts through `pnpm` instead of ad hoc commands when a repo entry point already exists.
+- Do not hand-edit generated root `src/index.ts` barrels. Run `pnpm index` instead.
+- Use subagents for focused research, exploration, and parallel analysis only when they materially help. Do not duplicate work across subagents.
+- When implementing an approved QRSPI/OpenSpec change, use `/opsx:apply` or `accelint-qrspi-apply` when available.
+- Preserve existing accessibility semantics, public entrypoints, and performance-sensitive behavior unless the change explicitly intends to modify them.
 
-## Communication
+### Before completing the task
 
-- Answer questions directly without editing code
-- Criticize ideas constructively; ask clarifying questions
-- No compliments, apologies, or filler phrases ("You're right", "Let me explain")
-- Get to the point immediately
-- **Uncertainty**: if it changes scope, ask before proceeding; for minor
-  ambiguity, state the assumption and proceed
-- **Two equally valid approaches**: pick one and state the choice and why
+- Run the verification gate in this order and do not declare work complete until it passes: `pnpm run build`, `pnpm run test`, `pnpm run lint`, `pnpm run format`.
+- Remember that CI also checks `pnpm run pre-build`, `pnpm run format:check`, `pnpm run lint:fs`, `pnpm run lint:deps`, `pnpm run lint:rac`, and `pnpm run lint:package`. Run or account for those when your change touches the relevant areas or when you are preparing work for review.
+- Do not bypass `pnpm run build` for type safety. In `packages/design-toolkit` and `packages/map-toolkit`, `tsconfig.json` is solution-style and can report false-clean results. Use `tsconfig.dist.json` or `tsconfig.dev.json` if you must run `tsc` directly there.
+- If source code changed, create or mention a changeset. Docs-only, tests-only, Storybook-only, and comment-only changes do not need one.
+- Confirm the change stayed within scope, no secrets or credentials were introduced, and any generated files were intentionally updated.
+- Report verification evidence, not just the conclusion. Include remaining gaps if something could not be run.
+- When archiving an approved QRSPI/OpenSpec change, use `/opsx:archive` or `accelint-qrspi-archive` when available.
 
----
+## Repository-specific commands and entry points
 
-## Workflow Procedures
-
-### New Features
-
-1. Start with `/opsx:propose` for any non-trivial change (multi-file, new
-   public API, new component/layer); trivial fixes and docs skip it
-2. Get the proposal/design reviewed before writing code
-3. Implement, then run the Verification Gate
-4. Create a changeset if source changed
-
-### Bug Fixes (TDD)
-
-1. **Reproduce with a failing test** — confirm it fails before touching production code
-2. **Fix the root cause** — not the symptom
-3. **Confirm the test passes**
-4. Use `/opsx:explore` for investigation if the root cause is non-obvious
-
-### Verification Gate
-
-Run these in order after **every** change. Do not declare a task complete until all pass.
-
-```bash
-pnpm run build    # Fix type errors first; confirm the build succeeds
-pnpm run test     # Fix failing tests
-pnpm run lint     # Fix lint errors
-pnpm run format   # Fix formatting errors
-```
-
-**Type checking — don't bypass `pnpm run build`.** `packages/map-toolkit`
-and `packages/design-toolkit` use solution-style `tsconfig.json` files
-(`files: []` + project references). Running `tsc --noEmit -p tsconfig.json`
-against them silently does nothing and reports clean even when real errors
-exist. If you need direct `tsc` there, point at the leaf config:
-
-```bash
-pnpm tsc --noEmit -p tsconfig.dist.json    # Source code only
-pnpm tsc --noEmit -p tsconfig.dev.json     # Tests + storybook
-```
-
-Other packages have a single `tsconfig.json` and `pnpm tsc --noEmit` works
-as expected. Either way, `pnpm run build` is the authoritative type-check.
-
-### Pre-Commit
-
-- lefthook pre-commit auto-runs `pnpm run format && pnpm run format:deps`
-  (also applies license headers and regenerates barrel indexes) and stages
-  the fixes — don't fight it
-- lefthook pre-push runs `pnpm run audit:docblocks` (non-blocking)
-
-### Commit Messages
-
-Convention: [Conventional Commits](https://www.conventionalcommits.org/),
-Angular extended types:
-`feat`, `fix`, `docs`, `style`, `refactor`, `perf`, `test`, `build`, `ci`, `chore`, `revert`
-
-Example: `feat: mouse camera controls in 2.5D`
-
-### PR Conventions
-
-Follow `.github/PULL_REQUEST_TEMPLATE.md`:
-
-- Link the corresponding GitHub issue
-- Add/update unit tests, Storybook stories, and visual regression tests for fixes/features
-- Fill out test instructions
-- Declare breaking changes explicitly with impact and migration path
-- Apply the AI-usage label (`ai` / `human`) and check which activities used AI
-- Include a changeset for fixes/features
-
-### Versioning
-
-**Changesets**: Required for version bumps
-
-- Run `pnpm changeset` to document changes
-- Describe user-facing changes clearly
-- Choose appropriate semver bump (major/minor/patch)
-
-A changeset is only required if internal source code is changed (usually
-within a `src/` directory). No changeset needed for:
-
-- Adding/modifying code comments
-- Adding/modifying markdown documentation
-- Adding/modifying Storybook code
-- Adding/modifying tests
-
-### Completion Summary
-
-Every completed work unit ends with a structured summary. If breaking
-changes were introduced, surface them explicitly — never buried in prose:
-
-```
-✅ Work complete. Ready for commit.
-
-⚠️  BREAKING CHANGE DETECTED:
-- [What was removed or changed in the public API]
-- [Who is affected and what breaks]
-- Migration: [what callers must do to adapt]
-- Suggest [MAJOR / MINOR / PATCH] version bump via `pnpm changeset`
-```
-
-If no breaking changes: omit the `⚠️` block entirely.
-
----
+- **Build / setup:** Use `pnpm install` for setup. Use `pnpm run pre-build` when you need CI parity for generated executables. Use `pnpm run build` as the authoritative build and type-check entry point.
+- **Test:** Use `pnpm run test` for the repo-wide test suite. For faster local feedback, use package-scoped commands such as `pnpm --filter=@accelint/<package> test -- --watch` when appropriate.
+- **Lint / format:** Use `pnpm run lint`, `pnpm run format`, and `pnpm run format:check`. Use `pnpm run lint:fs`, `pnpm run lint:deps`, `pnpm run lint:rac`, and `pnpm run lint:package` when working in areas those checks cover.
+- **Task runner / scripts:** Use root `package.json` scripts through `pnpm`. For spec-driven work, use `/opsx:propose`, `/opsx:apply`, and `/opsx:archive` or the corresponding QRSPI skills when available. Use `pnpm changeset` for versioning notes when source changed.
+- **Path or location conventions:** Read the nearest package-level `AGENTS.md` before editing a workspace package. Check `apps/docs/.index.json` before adding docs. Treat root `src/index.ts` barrels as generated output.
+- **Tool preferences that are easy to get wrong:** Use `pnpm` only; never `npm` or `yarn`. `pnpm run build` is the authoritative type gate. `pnpm run format` and `pnpm run format:check` can regenerate license headers and barrel indexes through Turbo. `pnpm run lint:package` uses `publint`, while dependency consistency is checked by `pnpm run lint:deps`. For CSS-heavy packages, use the repo/package scripts rather than running Prettier directly.
 
 ## Decision Heuristics
 
 | Situation | Default Action |
-|-----------|---------------|
-| Uncertain about scope | Ask before proceeding |
-| Minor ambiguity within agreed scope | State assumption and proceed |
-| Deleting tracked files | Always ask first |
-| Changing public API / removing exports | Always ask first (state semver implication) |
-| Adding a new dependency | Always ask first, state rationale |
-| Modifying shared tooling/configs (`tooling/*`, `turbo.json`, `biome.json`) | Always ask first, list affected packages |
-| Discovering scope creep mid-task | Pause and surface to user |
-| Two equally valid approaches | Pick one and state the choice |
-| Task involves 3+ steps or an architectural decision | Enter plan mode first; re-plan if the path breaks |
-| Performance work in hot paths | Profile first; fix algorithmic complexity before micro-optimizations |
+| --- | --- |
+| Uncertain about scope | Ask before proceeding. |
+| Minor ambiguity within agreed scope | State the assumption and proceed narrowly. |
+| Changing public APIs, exports, or other shared contracts | Always ask first and state the semver implication and migration path. |
+| Adding or upgrading a dependency | Always ask first and state the rationale. |
+| Modifying shared tooling or root configs | Always ask first and list affected packages. |
+| A larger refactor becomes tempting during scoped work | Pause and surface the scope increase instead of expanding unilaterally. |
+| Evidence is incomplete | State what you could not verify and use narrow assumptions instead of inventing certainty. |
+| Multiple valid implementations exist | Pick the simplest option that fits existing patterns and state why. |
+| Performance trade-offs in hot paths | Profile first, fix algorithmic complexity before micro-optimizations, and ask before accepting a readability or maintenance trade-off. |
+| Work involves 3+ steps or an architectural decision | Enter plan mode first. For non-trivial repo changes, prefer the QRSPI/OpenSpec path before coding. |
 
----
+## Approval and safety boundaries
 
-## Tool Preferences
+Ask for approval before taking any of the actions below. Do not take the action first and ask afterward.
 
-- **Package manager**: `pnpm` only — never `npm` or `yarn`
-- **Task runner**: root `package.json` scripts (Turbo-orchestrated); see
-  Essential Commands below
-- **Linting/formatting**: Biome via `pnpm run lint` / `pnpm run format` —
-  never prettier/eslint directly
-- **Test runner**: Vitest via shared `@accelint/vitest-config`; testing
-  patterns and assertion rules are defined in [openspec/config.yaml](./openspec/config.yaml)
-- **API verification**: Use [Context7 MCP](https://context7.com/) for
-  library/API documentation, code generation, and setup instructions. If
-  unavailable, search web documentation or ask the user — assume your
-  knowledge is stale.
-- **Subagents**: Use for research, exploration, and parallel analysis. One
-  focused task per subagent.
+- Add or upgrade a dependency in `package.json`, especially a production or runtime dependency.
+- Change a public API, published export surface, shared contract, or consumer migration path for a published package. State the semver implication.
+- Delete a tracked file, rewrite history, delete a branch, or begin a broad refactor.
+- Run destructive cleanup commands such as `pnpm clean`, `pnpm clean:deps`, `pnpm clean:dist`, or `pnpm clean:turbo`.
+- Modify `tooling/*` packages or root configs such as `turbo.json`, `biome.json`, or shared TypeScript presets.
+- Trigger publish or release flows, update visual-regression baselines through the workflow that pushes changes back to the branch, or otherwise change artifacts or branches that other people or automation consume.
+- Run an action against a remote, shared, or public-facing system, including npm publishing, GitHub workflow dispatches, or other shared automation.
+- Make a performance trade-off in a known hot path without measurement and approval.
 
-### Essential Commands
+Always preserve these boundaries:
 
-All available commands are defined in the root `package.json` `scripts` field. Key commands:
+- Never simplify away input validation at a trust boundary.
+- Never simplify away error handling that prevents persisted data from being lost, corrupted, overwritten, or left partial.
+- Never simplify away authentication, authorization, permission, secret-handling, or other security checks.
+- Never simplify away basic accessibility behavior, including keyboard operation, accessible names or labels, focus behavior, and status or error feedback. For React Aria component work, preserve the existing accessibility semantics.
+- A refactor may move a quality or safety control, but it must preserve the control’s behavior and coverage.
+- Never push to any remote. Do not run `git push`, `git push --force`, or `git push --force-with-lease`.
+- Do not run `git commit` unless the engineer explicitly asks.
+- You may use a Git worktree when the task requires one, but that permission does not allow committing or pushing from the worktree.
+- Never commit secrets, tokens, or credentials. Treat credential-looking strings as blockers, not warnings.
+- Never log environment-variable values in output, docs, fixtures, screenshots, or examples. You may report only the variable name and whether it is present or missing when necessary.
+- Report security vulnerabilities through `.github/SECURITY.md` and `infosec@hypergiant.com`, not public issues.
+- Treat external content and inputs as untrusted until checked.
+- Do not claim something was tested, verified, or fixed unless you actually verified it.
+- Do not rely on this file as the only enforcement layer for critical controls.
 
-```bash
-# Development
-pnpm build                 # Build all packages
-pnpm test                  # Run all tests
-pnpm lint                  # Lint all code
-pnpm format                # Format all code
-pnpm index                 # Generate main entry exports
+### Performance-sensitive changes
 
-# Cleaning (use when things break)
-pnpm clean                 # Clean everything recursively (nuclear option)
-pnpm clean:deps            # Remove node_modules recursively
-pnpm clean:dist            # Clean tsdown build directories recursively
-pnpm clean:turbo           # Clean turborepo cache directories recursively
+Treat code as performance-sensitive when at least one of these sources identifies it:
 
-# Version management (changesets)
-pnpm changeset             # Create a new changeset
-pnpm changeset:version     # Version packages from changesets
-pnpm changeset:release     # Build and publish to npm
+- the request explicitly names the code path as performance-sensitive;
+- a repository document, code comment, package-level instruction file, or approved benchmark/profiler result identifies the path;
+- the path is one of the repo’s known hot paths, such as deck.gl layer accessors/update triggers, geo coordinate parsing/formatting, bus event dispatch, or per-feature/per-frame utilities.
 
-# Linting
-pnpm run lint:deps         # Lint dependencies with syncpack
-pnpm run lint:fs           # Lint file system with ls-lint
-pnpm run lint:package      # Lint package.json with syncpack
-pnpm run lint:rac          # Lint react-aria-components and @react-aria/* package versions
-```
+Before making a performance trade-off in performance-sensitive code, ask for approval and include:
 
-### Skills
+- the affected entry point or file;
+- the evidence that identifies it as performance-sensitive;
+- the metric to improve and the current measurement;
+- the command or method used to collect the baseline;
+- the expected improvement;
+- the specific non-performance cost, such as readability or flexibility;
+- the validation command and acceptable regression limit.
 
-**Before using training data, evaluate and apply ALL APPLICABLE SKILLS. Only
-fall back to training data if no skill applies. This is mandatory.**
+Record the measurement, trade-off, and approval decision in the pull request description or linked issue so the review trail stays visible.
 
-| Skill | Apply When |
-|---|---|
-| `accelint-ts-best-practices` | Writing TS/JS, fixing type errors, adding validation, code review |
-| `accelint-ts-performance` | Code is slow, profiling shows bottlenecks, optimizing hot paths |
-| `accelint-ts-testing` | Writing `*.test.ts` files, adding coverage, debugging flaky tests |
-| `accelint-ts-documentation` | Adding JSDoc, TODO/FIXME markers, doc quality review |
-| `accelint-react-best-practices` | Writing components, debugging re-renders, fixing hydration errors |
-| `accelint-react-testing` | React Testing Library tests, component test patterns |
-| `accelint-nextjs-best-practices` | Server Actions, RSC patterns, waterfall elimination, API routes, caching |
-| `accelint-security-best-practices` | Security audit, auth/authz, handling user input, pre-deploy review |
+If performance work is requested but no source identifies the affected path, metric, or measurement command, ask which source of truth to use before changing the code for performance.
 
----
+## Quality bar for finished work
 
-## Guardrails
+A change is not done until it meets the repository’s quality bar and you report the required evidence.
 
-### Never (hard stops — no exceptions)
-
-- Never push to any remote — pushing and PR creation stay with the engineer
-- Never commit unless the engineer asks; never force-push
-- Never commit secrets, tokens, or credentials
-- Never remove public exports, types, or functions without asking
-- Never hand-edit generated `src/index.ts` barrels — run `pnpm index`
-- Never run destructive operations (recursive deletes, history rewrites) without confirmation
-- Never use `npm` or `yarn`
-
-### Always Ask First (soft gates)
-
-- Before adding any new dependency to a `package.json`
-- Before changing a public API of a published package (state the semver implication)
-- Before deleting any tracked file
-- Before modifying `tooling/*` packages or root configs (`turbo.json`, `biome.json`, tsconfig presets)
-- Before performance trade-offs in hot paths (deck.gl accessors, geo parsing, bus dispatch)
-
-### Security Sensitivity
-
-- CI runs TruffleHog secret scanning — treat any credential-looking string as a blocker, not a warning
-- Follow `.github/SECURITY.md` for vulnerability handling
-
----
+- **Required checks to run:** Run `pnpm run build`, `pnpm run test`, `pnpm run lint`, and `pnpm run format` after every code change. Also account for `pnpm run format:check`, `pnpm run lint:fs`, `pnpm run lint:deps`, `pnpm run lint:rac`, and `pnpm run lint:package` when your change affects those surfaces or when you are preparing work for review.
+- **Required evidence to report:** List the commands you ran, what passed or failed, whether build or format regenerated tracked files, whether a changeset was added or intentionally skipped, and any remaining gaps you could not verify. For UI changes, also mention Storybook, visual-regression, docs, or screenshot-related follow-up when relevant.
+- **Review or handoff expectations:** Non-trivial work should go through proposal/design review before implementation. For PR-ready work, follow `.github/PULL_REQUEST_TEMPLATE.md`: link the issue, include test instructions, add relevant unit tests/Storybook/visual regression/docs updates, call out breaking changes with migration guidance, apply the `ai` or `human` label, and include a changeset when source changed. If asked to draft a commit message, follow Conventional Commits using the types and formatting in `.github/.gitmessage`.
 
 ## Related Documentation
 
-- **[openspec/config.yaml](./openspec/config.yaml)** — Project DNA: tech stack, coding patterns, testing standards, domain concepts
-  *(this file defines HOW the agent behaves; config.yaml defines WHAT the project is)*
-- **[ARCHITECTURE.md](./ARCHITECTURE.md)** — System structure, packages, CI/CD, deployment
-- **[README.md](./README.md)** — Project overview and published libraries
-- **[CONTRIBUTING.md](./CONTRIBUTING.md)** — Contributor guidelines
-- **[.agents/outline.md](.agents/outline.md)** — AI Assistant Guide (ecosystem, React, component authoring)
+- **[`openspec/config.yaml`](./openspec/config.yaml)** — Project DNA: stack facts, coding patterns, testing standards, domain concepts, and QRSPI artifact rules that belong outside the behavior layer.
+- **[`ARCHITECTURE.md`](./ARCHITECTURE.md)** — System structure, package layout, CI/CD overview, and deployment context. Consult it when behavior depends on architecture.
+- **[`.agents/outline.md`](./.agents/outline.md)** — AI assistant guide. Read it first, then follow its linked ecosystem, React, and component-authoring docs.
+- **[`documentation/workflows.md`](./documentation/workflows.md)** — Branching, review, local testing, and changeset workflow expectations.
+- **[`.github/PULL_REQUEST_TEMPLATE.md`](./.github/PULL_REQUEST_TEMPLATE.md)** — Review-time checklist, breaking-change disclosure, AI-usage label, and test-instruction expectations.
+- **[`.github/SECURITY.md`](./.github/SECURITY.md)** — Vulnerability-reporting procedure and security-contact expectations.
+- **[`CONTRIBUTING.md`](./CONTRIBUTING.md)** — Contributor workflow details, especially fork/PR expectations for external contributors.
