@@ -192,6 +192,22 @@ describe('callNextSecond', () => {
 
       expect(cb).not.toHaveBeenCalled();
     });
+
+    it('supports idempotent cancellation', () => {
+      vi.spyOn(Date, 'now').mockReturnValue(12_345);
+
+      const cb = vi.fn();
+
+      const cancel = callNextSecond(cb);
+
+      cancel();
+      cancel();
+      cancel();
+
+      vi.advanceTimersByTime(1000);
+
+      expect(cb).not.toHaveBeenCalled();
+    });
   });
 
   describe('error handling', () => {

@@ -94,9 +94,11 @@ Executes a callback precisely at the start of the next clock second.
 ```typescript
 import { callNextSecond } from '@accelint/temporal/timers/utils';
 
-callNextSecond(() => {
+const cancel = callNextSecond(() => {
   console.log('Executed at second boundary');
 });
+
+cancel();
 ```
 
 ## Use Cases
@@ -173,13 +175,15 @@ Calculates remaining time until next interval boundary.
 
 **Returns:** Remaining milliseconds
 
-### `callNextSecond(callback: () => void): void`
+### `callNextSecond(callback: () => void): () => void`
 
 Executes callback at the start of the next clock second.
 
 **Parameters:**
 
 - `callback` - Function to execute at next second boundary
+
+**Returns:** Cleanup function to cancel the scheduled callback
 
 ## TypeScript Support
 

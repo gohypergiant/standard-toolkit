@@ -13,11 +13,12 @@
 import { callNextSecond, remainder } from './utils';
 
 /**
- * Works the same way as setInterval but will wait to fire until next clock second.
+ * Schedules a callback to start on the next clock second and repeat at a drift-corrected interval.
  *
  * @param cb - The callback to execute immediately and after each duration.
  * @param ms - The time, in ms, between callback execution.
  * @returns A function to clear the timeout.
+ * @throws {Error} Propagates any error thrown by `cb` during execution.
  *
  * @example
  * ```typescript
@@ -30,33 +31,47 @@ import { callNextSecond, remainder } from './utils';
  * cleanup();
  * ```
  */
-export function setClockInterval(cb: () => void, ms: number) {
+export function setClockInterval(cb: () => void, ms: number): () => void {
   let timeout: number | undefined;
+  let isCancelled = false;
 
-  function repeat() {
+  function repeat(): void {
+    if (isCancelled) {
+      return;
+    }
+
     cb();
+
+    if (isCancelled) {
+      return;
+    }
+
     clearTimeout(timeout);
 
     // Catch any potential drift and correct it for next setTimeout call
     const adjustedMs = remainder(ms);
-
     timeout = setTimeout(repeat, adjustedMs);
   }
 
   const cancelNextSecond = callNextSecond(repeat);
 
-  return () => {
+  return (): void => {
+    isCancelled = true;
     cancelNextSecond();
-    if (timeout !== undefined) clearTimeout(timeout);
+
+    if (timeout !== undefined) {
+      clearTimeout(timeout);
+    }
   };
 }
 
 /**
- * Works the same way as setTimeout but will wait to fire until next clock second.
+ * Schedules a one-time callback to start on the next clock second after the requested delay.
  *
  * @param cb - The callback to execute after each duration.
  * @param ms - The time, in ms, between callback execution.
  * @returns A function to clear the timeout.
+ * @throws {Error} Propagates any error thrown by `cb` during execution.
  *
  * @example
  * ```typescript
@@ -69,14 +84,26 @@ export function setClockInterval(cb: () => void, ms: number) {
  * cleanup();
  * ```
  */
-export function setClockTimeout(cb: () => void, ms: number) {
+export function setClockTimeout(cb: () => void, ms: number): () => void {
   let timeout: number | undefined;
+  let isCancelled = false;
 
-  function execute() {
+  function execute(): void {
+    if (isCancelled) {
+      return;
+    }
+
     timeout = setTimeout(cb, ms);
   }
 
-  callNextSecond(execute);
+  const cancelNextSecond = callNextSecond(execute);
 
-  return () => clearTimeout(timeout);
+  return (): void => {
+    isCancelled = true;
+    cancelNextSecond();
+
+    if (timeout !== undefined) {
+      clearTimeout(timeout);
+    }
+  };
 }

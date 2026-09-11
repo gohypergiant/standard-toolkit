@@ -21,6 +21,10 @@ afterEach(() => {
   vi.useRealTimers();
 });
 
+function setCurrentTime(now: number): void {
+  vi.setSystemTime(now);
+}
+
 describe('setClockInterval', () => {
   const ms = 1000;
 
@@ -40,8 +44,7 @@ describe('setClockInterval', () => {
     it('should execute multiple times with drift correction', () => {
       const callback = vi.fn();
       const interval = 250;
-      const now = 1500;
-      vi.setSystemTime(now);
+      setCurrentTime(1500);
 
       const cleanup = setClockInterval(callback, interval);
 
@@ -63,8 +66,7 @@ describe('setClockInterval', () => {
     it('should execute exact number of times based on elapsed time', () => {
       const callback = vi.fn();
       const interval = 200;
-      const now = 1000;
-      vi.setSystemTime(now);
+      setCurrentTime(1000);
 
       const cleanup = setClockInterval(callback, interval);
 
@@ -105,8 +107,7 @@ describe('setClockInterval', () => {
     it('should handle multiple rapid cleanup calls without errors', () => {
       const callback = vi.fn();
       const interval = 2000;
-      const now = 1000;
-      vi.setSystemTime(now);
+      setCurrentTime(1000);
 
       const cleanup = setClockInterval(callback, interval);
 
@@ -118,6 +119,21 @@ describe('setClockInterval', () => {
       cleanup();
 
       vi.advanceTimersByTime(interval * 10);
+      expect(callback).toHaveBeenCalledTimes(1);
+    });
+
+    it('should stop scheduling when cleanup is called within callback', () => {
+      let cleanup: (() => void) | undefined;
+      const callback = vi.fn(() => {
+        cleanup?.();
+      });
+
+      cleanup = setClockInterval(callback, 250);
+
+      vi.advanceTimersByTime(ms);
+      expect(callback).toHaveBeenCalledTimes(1);
+
+      vi.advanceTimersByTime(250 * 10);
       expect(callback).toHaveBeenCalledTimes(1);
     });
   });
@@ -168,8 +184,7 @@ describe('setClockInterval', () => {
     it('should handle fractional interval values', () => {
       const callback = vi.fn();
       const interval = 250.75;
-      const now = 1000;
-      vi.setSystemTime(now);
+      setCurrentTime(1000);
 
       const cleanup = setClockInterval(callback, interval);
 
@@ -246,8 +261,7 @@ describe('setClockTimeout', () => {
     it('should execute callback only once', () => {
       const callback = vi.fn();
       const timeout = 500;
-      const now = 1000;
-      vi.setSystemTime(now);
+      setCurrentTime(1000);
 
       const cleanup = setClockTimeout(callback, timeout);
 
@@ -268,8 +282,7 @@ describe('setClockTimeout', () => {
     it('should prevent callback execution when cleanup is called', () => {
       const callback = vi.fn();
       const timeout = 500;
-      const now = 1500;
-      vi.setSystemTime(now);
+      setCurrentTime(1500);
 
       const cleanup = setClockTimeout(callback, timeout);
 
@@ -285,11 +298,40 @@ describe('setClockTimeout', () => {
       expect(callback).not.toHaveBeenCalled();
     });
 
+    it('should clear an already scheduled timeout during cleanup', () => {
+      const callback = vi.fn();
+      const timeout = 500;
+      setCurrentTime(1000);
+
+      const cleanup = setClockTimeout(callback, timeout);
+
+      vi.advanceTimersByTime(ms);
+      expect(callback).not.toHaveBeenCalled();
+
+      cleanup();
+
+      vi.advanceTimersByTime(timeout * 2);
+      expect(callback).not.toHaveBeenCalled();
+    });
+
+    it('should prevent the next-second scheduling when cleanup is called early', () => {
+      vi.spyOn(Date, 'now').mockReturnValue(12_900);
+
+      const callback = vi.fn();
+
+      const cleanup = setClockTimeout(callback, 500);
+
+      cleanup();
+
+      vi.advanceTimersByTime(1_000);
+
+      expect(callback).not.toHaveBeenCalled();
+    });
+
     it('should handle multiple rapid cleanup calls without errors', () => {
       const callback = vi.fn();
       const timeout = 500;
-      const now = 1000;
-      vi.setSystemTime(now);
+      setCurrentTime(1000);
 
       const cleanup = setClockTimeout(callback, timeout);
 
@@ -305,15 +347,23 @@ describe('setClockTimeout', () => {
   });
 
   describe('edge cases', () => {
-    it.each([
-      { timeout: 0, description: 'zero' },
-      { timeout: -1000, description: 'negative' },
-    ])('should treat $description timeout as immediate execution', ({
-      timeout,
-    }) => {
+    it('should treat zero timeout as immediate execution', () => {
       const callback = vi.fn();
 
-      const cleanup = setClockTimeout(callback, timeout);
+      const cleanup = setClockTimeout(callback, 0);
+
+      vi.advanceTimersByTime(ms);
+
+      expect(callback).toHaveBeenCalledTimes(1);
+      expect(typeof cleanup).toBe('function');
+
+      cleanup();
+    });
+
+    it('should treat negative timeout as immediate execution', () => {
+      const callback = vi.fn();
+
+      const cleanup = setClockTimeout(callback, -1000);
 
       vi.advanceTimersByTime(ms);
 
@@ -340,8 +390,7 @@ describe('setClockTimeout', () => {
     it('should handle fractional timeout values', () => {
       const callback = vi.fn();
       const timeout = 500.75;
-      const now = 1000;
-      vi.setSystemTime(now);
+      setCurrentTime(1000);
 
       const cleanup = setClockTimeout(callback, timeout);
 
@@ -361,8 +410,7 @@ describe('setClockTimeout', () => {
         throw new Error('Timeout callback error');
       });
       const timeout = 500;
-      const now = 1000;
-      vi.setSystemTime(now);
+      setCurrentTime(1000);
 
       const cleanup = setClockTimeout(throwingCallback, timeout);
 
@@ -378,33 +426,20 @@ describe('setClockTimeout', () => {
       cleanup();
     });
   });
+});
 
-  describe('setClockInterval', () => {
-    beforeEach(() => {
-      vi.useFakeTimers();
-    });
+describe('setClockInterval cleanup before alignment', () => {
+  it('cleanup prevents the initial next-second scheduled callback', () => {
+    vi.spyOn(Date, 'now').mockReturnValue(12_900);
 
-    afterEach(() => {
-      vi.useRealTimers();
-      vi.restoreAllMocks();
-    });
+    const cb = vi.fn();
 
-    it('cleanup prevents the initial next-second scheduled callback', () => {
-      // Suppose "now" is 12.900s => next second in 100ms
-      vi.spyOn(Date, 'now').mockReturnValue(12_900);
+    const cleanup = setClockInterval(cb, 1000);
 
-      const cb = vi.fn();
+    cleanup();
 
-      const cleanup = setClockInterval(cb, 1000);
+    vi.advanceTimersByTime(200);
 
-      // Immediately cleanup before the next-second boundary occurs
-      cleanup();
-
-      // Cross the boundary
-      vi.advanceTimersByTime(200);
-
-      // If callNextSecond can't be cancelled, this will be 1 (leak)
-      expect(cb).not.toHaveBeenCalled();
-    });
+    expect(cb).not.toHaveBeenCalled();
   });
 });
