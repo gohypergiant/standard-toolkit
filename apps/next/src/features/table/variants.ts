@@ -10,6 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
+import type { DensityVariant } from '@accelint/design-toolkit';
 import type { RowSelectionState } from '@tanstack/react-table';
 
 export type Person = {
@@ -52,6 +53,12 @@ export const DATA: Person[] = [
   },
 ];
 
+export const DATA_LONG: Person[] = DATA.map((row) =>
+  row.id === 'cassius'
+    ? { ...row, status: 'Reaper 21 / MQ-9 / on station until 2130Z' }
+    : row,
+);
+
 export type ScenarioName =
   | 'default'
   | 'empty'
@@ -63,7 +70,11 @@ export type ScenarioName =
   | 'kebab position left'
   | 'full width'
   | 'minimal'
-  | 'hidden peripherals';
+  | 'hidden peripherals'
+  | 'compact'
+  | 'crammed'
+  | 'crammed all features'
+  | 'crammed truncation';
 
 export type TableScenario = {
   name: ScenarioName;
@@ -81,6 +92,11 @@ export type TableScenario = {
   defaultRowSelection?: RowSelectionState;
   emptyData?: boolean;
   isSorted?: 'asc' | 'desc';
+  variant?: DensityVariant;
+  longData?: boolean;
+  // Applied to the table element itself; utilities listed here are scanned by
+  // Tailwind from app source, unlike classes inside design-toolkit dist.
+  tableClassName?: string;
 };
 
 export const PROP_COMBOS: TableScenario[] = [
@@ -163,5 +179,38 @@ export const PROP_COMBOS: TableScenario[] = [
     persistRowKebabMenu: false,
     persistHeaderKebabMenu: false,
     persistNumerals: false,
+  },
+  {
+    name: 'compact',
+    className: 'inline-block',
+    screenshotName: 'table-compact.png',
+    variant: 'compact',
+  },
+  {
+    name: 'crammed',
+    className: 'inline-block',
+    screenshotName: 'table-crammed.png',
+    variant: 'crammed',
+  },
+  {
+    name: 'crammed all features',
+    className: 'inline-block',
+    screenshotName: 'table-crammed-all-features.png',
+    variant: 'crammed',
+    showCheckbox: true,
+    persistNumerals: true,
+    persistRowKebabMenu: true,
+    persistHeaderKebabMenu: true,
+    enableRowActions: true,
+    kebabPosition: 'right',
+  },
+  {
+    name: 'crammed truncation',
+    className: 'inline-block',
+    screenshotName: 'table-crammed-truncation.png',
+    variant: 'crammed',
+    fullWidth: true,
+    longData: true,
+    tableClassName: 'table-fixed',
   },
 ];

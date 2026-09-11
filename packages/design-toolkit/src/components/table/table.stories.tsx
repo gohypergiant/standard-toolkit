@@ -216,8 +216,13 @@ const meta = {
     enableColumnReordering: true,
     enableRowActions: true,
     fullWidth: false,
+    variant: 'cozy',
   },
   argTypes: {
+    variant: {
+      control: 'select',
+      options: ['cozy', 'compact', 'crammed'],
+    },
     kebabPosition: {
       control: {
         type: 'radio',
@@ -265,6 +270,44 @@ export const SortableColumns: Story = {
       description: {
         story:
           'Use the column header menu (kebab) to sort ascending, descending, or clear sorting; uncontrolled by default.',
+      },
+    },
+  },
+  render: (args) => <Table {...args} key={JSON.stringify(args)} />,
+};
+
+export const CompactDensity: Story = {
+  args: {
+    variant: 'compact',
+    showCheckbox: true,
+    persistNumerals: true,
+    kebabPosition: 'right',
+    persistRowKebabMenu: true,
+  },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'The `compact` variant steps header cell and cell padding down one token on the spacing scale, from 12px (`p-m`) to 8px (`p-s`). Numeral, selection, and kebab cells follow the same step, and the kebab menus open at Menu `compact` density.',
+      },
+    },
+  },
+  render: (args) => <Table {...args} key={JSON.stringify(args)} />,
+};
+
+export const CrammedDensity: Story = {
+  args: {
+    variant: 'crammed',
+    showCheckbox: true,
+    persistNumerals: true,
+    kebabPosition: 'right',
+    persistRowKebabMenu: true,
+  },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'The `crammed` variant is the densest step: header cell and cell padding drop to 2px (`p-xxs`) and cells render single-line (`whitespace-nowrap`) so the 2px padding stays usable. Meta columns stay 32px wide and the checkbox and kebab button keep their normal size; the kebab menus open at Menu `compact` density because Menu has no `crammed` step.',
       },
     },
   },
@@ -616,7 +659,7 @@ export const Static: Story = {
     docs: {
       description: {
         story:
-          'Manual table composition using sub-components (`TableHeader`, `TableBody`, `TableRow`, `TableHeaderCell`, `TableCell`) for full control over rendering.',
+          'Manual table composition using sub-components (`TableHeader`, `TableBody`, `TableRow`, `TableHeaderCell`, `TableCell`) for full control over rendering. Custom-children mode has no `variant` prop and always renders at `cozy` density; to hand-compose a denser table, wrap the sub-components in a `TableContext.Provider` whose value sets `variant` to `compact` or `crammed`.',
       },
     },
   },

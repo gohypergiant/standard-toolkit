@@ -45,7 +45,8 @@ export function TableCell<T extends RowData>({
   cell,
   ...rest
 }: TableCellProps<T>) {
-  const { columnSelection, persistNumerals } = useContext(TableContext);
+  const { columnSelection, persistNumerals, variant } =
+    useContext(TableContext);
   const isNumeral = cell?.column.id === HeaderColumnAction.NUMERAL;
   const isSelected = cell?.column.id === columnSelection;
   const notPersistNums = isNumeral && !persistNumerals;
@@ -56,6 +57,7 @@ export function TableCell<T extends RowData>({
       ref={ref}
       className={clsx(
         styles.cell,
+        styles[variant],
         notPersistNums && styles.hideInRow,
         className,
       )}

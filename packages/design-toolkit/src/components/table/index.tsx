@@ -36,11 +36,13 @@ import { MenuItem } from '../menu/item';
 import { MenuSeparator } from '../menu/separator';
 import { MenuTrigger } from '../menu/trigger';
 import { TableBody } from './body';
+import { DEFAULT_TABLE_VARIANT } from './constants/table';
 import { TableContext } from './context';
 import { tableFeatures } from './features';
 import { TableHeader } from './header';
 import styles from './styles.module.css';
 import { useTableControlledState } from './use-table-controlled-state';
+import { toMenuVariant } from './utils';
 import type { Key } from '@react-types/shared';
 import type { TableFeatures } from './features';
 import type { RowOrderingState } from './row-ordering-feature';
@@ -70,7 +72,8 @@ type RowActionsMenuProps<T extends RowData> = {
 };
 
 function RowActionsMenu<T extends RowData>({ row }: RowActionsMenuProps<T>) {
-  const { enableRowActions, persistRowKebabMenu } = useContext(TableContext);
+  const { enableRowActions, persistRowKebabMenu, variant } =
+    useContext(TableContext);
   const isPinned = !!row.getIsPinned();
   const hideRowKebab = !persistRowKebabMenu;
 
@@ -83,7 +86,7 @@ function RowActionsMenu<T extends RowData>({ row }: RowActionsMenuProps<T>) {
               <Kebab />
             </Icon>
           </Button>
-          <Menu>
+          <Menu variant={toMenuVariant(variant)}>
             <MenuItem onAction={() => row.pin(isPinned ? false : 'top')}>
               {isPinned ? 'Unpin' : 'Pin'}
             </MenuItem>
@@ -183,6 +186,7 @@ export function Table<T extends { id: Key }>({
   onColumnReorderChange,
   onRowSelectionChange,
   fullWidth = false,
+  variant = DEFAULT_TABLE_VARIANT,
   pageSize,
   page: pageProp,
   defaultPage = 1,
@@ -471,6 +475,7 @@ export function Table<T extends { id: Key }>({
         manualSorting,
         handleSortChange,
         handleColumnReordering,
+        variant,
       }}
     >
       <table {...rest} className={className}>

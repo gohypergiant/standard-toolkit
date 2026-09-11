@@ -11,6 +11,7 @@
  */
 
 import { createContext } from 'react';
+import { DEFAULT_TABLE_VARIANT } from './constants/table';
 import type { TableContextValue } from './types';
 
 /** Context for sharing table configuration across subcomponents */
@@ -28,4 +29,5 @@ export const TableContext = createContext<TableContextValue>({
   manualSorting: false,
   handleSortChange: () => undefined,
   handleColumnReordering: () => undefined,
+  variant: DEFAULT_TABLE_VARIANT,
 });

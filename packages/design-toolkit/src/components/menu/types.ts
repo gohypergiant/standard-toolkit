@@ -19,6 +19,7 @@ import type {
   TextProps as AriaTextProps,
   PopoverProps,
 } from 'react-aria-components/Menu';
+import type { DensityVariant } from '@/lib/types';
 import type { IconProps } from '../icon/types';
 
 /**
@@ -35,8 +36,9 @@ export type MenuProps<T> = Omit<AriaMenuProps<T>, 'className'> &
     };
     /** Props passed to the internal Popover component. */
     popoverProps?: Omit<AriaPopoverProps, 'children' | 'className'>;
+    // Provisional subset (no 'crammed') until align-collection-density-scale revisits it.
     /** Visual density variant for the menu. */
-    variant?: 'compact' | 'cozy';
+    variant?: Exclude<DensityVariant, 'crammed'>;
   };
 
 /**
