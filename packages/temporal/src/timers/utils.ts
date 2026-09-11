@@ -32,7 +32,7 @@ const SECOND = 1000;
  * console.log(msUntilNextSecond); // e.g., 347 (milliseconds until next second)
  * ```
  */
-export function remainder(interval: number) {
+export function remainder(interval: number): number {
   return interval - (Date.now() % interval);
 }
 
@@ -44,21 +44,25 @@ export function remainder(interval: number) {
  * timer functions.
  *
  * @param callback - The function to execute at the next second boundary.
+ * @returns A function that cancels the scheduled callback.
  *
  * @example
  * ```typescript
  * import { callNextSecond } from '@accelint/temporal/timers/utils';
  *
- * callNextSecond(() => {
+ * const cancel = callNextSecond(() => {
  *   console.log('This runs at the next second boundary');
  * });
+ *
+ * cancel();
  * ```
  */
-export function callNextSecond(callback: () => void) {
+export function callNextSecond(callback: () => void): () => void {
   const nextTick = remainder(SECOND);
 
   const timeout = setTimeout(() => {
     callback();
-    clearTimeout(timeout);
   }, nextTick);
+
+  return () => clearTimeout(timeout);
 }
