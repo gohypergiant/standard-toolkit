@@ -23,6 +23,7 @@ import {
   type RowData,
   type RowPinningState,
   type RowSelectionState,
+  type SortingState,
   useTable,
 } from '@tanstack/react-table';
 import { useCallback, useContext, useMemo, useState } from 'react';
@@ -39,6 +40,7 @@ import { TableContext } from './context';
 import { tableFeatures } from './features';
 import { TableHeader } from './header';
 import styles from './styles.module.css';
+import { useTableControlledState } from './use-table-controlled-state';
 import type { Key } from '@react-types/shared';
 import type { TableFeatures } from './features';
 import type { RowOrderingState } from './row-ordering-feature';
@@ -50,6 +52,18 @@ import type { TableProps } from './types';
 // - Row selection (checkbox)
 // These columns should not need to grow with table width
 const META_COLUMN_WIDTH = 32;
+
+// Stable default so an uncontrolled selection slice does not re-seed on
+// every render.
+const EMPTY_ROW_SELECTION: RowSelectionState = {};
+
+// Stable default so an uncontrolled pinning slice does not re-seed on every
+// render.
+const EMPTY_ROW_PINNING: RowPinningState = { top: [], bottom: [] };
+
+// Stable default so an uncontrolled sort slice does not re-seed on every
+// render.
+const EMPTY_SORT: SortingState = [];
 
 type RowActionsMenuProps<T extends RowData> = {
   row: Row<TableFeatures, T>;
@@ -103,7 +117,13 @@ function RowActionsMenu<T extends RowData>({ row }: RowActionsMenuProps<T>) {
  * @param props.columns - Column definitions for data-driven mode.
  * @param props.data - Data array for data-driven mode.
  * @param props.showCheckbox - Whether to show selection checkboxes.
- * @param props.rowSelection - Initial row selection state.
+ * @param props.rowSelection - Controlled row selection state; without
+ * `onRowSelectionChange` the selection stays frozen at this value.
+ * @param props.defaultRowSelection - Initial row selection state for uncontrolled use.
+ * @param props.rowPinning - Controlled row pinning state; without
+ * `onRowPinningChange` the pinning stays frozen at this value.
+ * @param props.defaultRowPinning - Initial row pinning state for uncontrolled use.
+ * @param props.onRowPinningChange - Callback receiving the plain next row pinning state.
  * @param props.kebabPosition - Position of row action menu.
  * @param props.persistRowKebabMenu - Keep row kebab menu visible.
  * @param props.persistHeaderKebabMenu - Keep header kebab menu visible.
@@ -111,16 +131,32 @@ function RowActionsMenu<T extends RowData>({ row }: RowActionsMenuProps<T>) {
  * @param props.enableSorting - Enable column sorting.
  * @param props.enableColumnReordering - Enable column reordering.
  * @param props.enableRowActions - Enable row action menu.
- * @param props.manualSorting - Use server-side sorting.
- * @param props.onSortChange - Callback when sort changes.
+ * @param props.manualSorting - Use server-side sorting; rows keep the `data` order.
+ * @param props.sort - Controlled sort state; without `onSortChange` the
+ * sort stays frozen at this value.
+ * @param props.defaultSort - Initial sort state for uncontrolled use.
+ * @param props.onSortChange - Callback receiving the plain next
+ * `SortingState`, in both client-side and `manualSorting` modes.
  * @param props.onColumnReorderChange - Callback when column order changes.
- * @param props.onRowSelectionChange - Callback when row selection changes.
+ * @param props.onRowSelectionChange - Callback receiving the plain next row selection state.
  * @param props.fullWidth - Whether table uses full width.
+ * @param props.pageSize - Rows per page; enables built-in pagination when set.
+ * @param props.page - Controlled current page (1-indexed).
+ * @param props.defaultPage - Initial page (1-indexed) for uncontrolled use.
+ * @param props.onPageChange - Callback receiving the plain next page number.
  * @returns The rendered Table component.
  *
  * @example
  * ```tsx
  * <Table columns={columns} data={rows} enableSorting showCheckbox />
+ * ```
+ *
+ * @example
+ * ```tsx
+ * // Controlled sorting: the handler receives the plain next SortingState
+ * const [sort, setSort] = useState<SortingState>([]);
+ *
+ * <Table columns={columns} data={rows} sort={sort} onSortChange={setSort} />;
  * ```
  */
 export function Table<T extends { id: Key }>({
@@ -129,6 +165,10 @@ export function Table<T extends { id: Key }>({
   data: dataProp,
   showCheckbox,
   rowSelection: rowSelectionProp,
+  defaultRowSelection = EMPTY_ROW_SELECTION,
+  rowPinning: rowPinningProp,
+  defaultRowPinning = EMPTY_ROW_PINNING,
+  onRowPinningChange,
   kebabPosition = 'right',
   persistRowKebabMenu = true,
   persistHeaderKebabMenu = true,
@@ -137,6 +177,8 @@ export function Table<T extends { id: Key }>({
   enableColumnReordering = true,
   enableRowActions = true,
   manualSorting = false,
+  sort: sortProp,
+  defaultSort = EMPTY_SORT,
   onSortChange,
   onColumnReorderChange,
   onRowSelectionChange,
@@ -196,14 +238,24 @@ export function Table<T extends { id: Key }>({
     return ordered;
   }, [dataProp, rowOrdering]);
 
-  const [rowSelection, setRowSelection] = useState<RowSelectionState>(
-    rowSelectionProp ?? {},
+  const [rowSelection, setRowSelection] = useTableControlledState(
+    rowSelectionProp,
+    defaultRowSelection,
+    onRowSelectionChange,
   );
   const [columnSelection, setColumnSelection] = useState<string | null>(null);
-  const [rowPinning, setRowPinning] = useState<RowPinningState>({
-    top: [],
-    bottom: [],
-  });
+
+  const [rowPinning, setRowPinning] = useTableControlledState(
+    rowPinningProp,
+    defaultRowPinning,
+    onRowPinningChange,
+  );
+
+  const [sort, setSort] = useTableControlledState(
+    sortProp,
+    defaultSort,
+    onSortChange,
+  );
 
   const [currentPage, setCurrentPage] = useControlledState(
     pageProp,
@@ -298,28 +350,21 @@ export function Table<T extends { id: Key }>({
     [showCheckbox, columnsProp, kebabPosition, actionColumn],
   );
 
-  const handleSortChange = (
-    columnId: string,
-    sortDirection: 'asc' | 'desc' | null,
-  ) => {
-    onSortChange?.(columnId, sortDirection);
-  };
+  // Single write path for both sort modes: the header menu emits at most one
+  // column entry; the adapter resolves it and fires onSortChange with the
+  // plain SortingState.
+  const handleSortChange = useCallback(
+    (columnId: string, sortDirection: 'asc' | 'desc' | null) => {
+      setSort(
+        sortDirection ? [{ id: columnId, desc: sortDirection === 'desc' }] : [],
+      );
+    },
+    [setSort],
+  );
 
   const handleColumnReordering = (index: number) => {
     onColumnReorderChange?.(index);
   };
-
-  const handleRowSelectionChange = useCallback(
-    (
-      updaterOrValue:
-        | RowSelectionState
-        | ((old: RowSelectionState) => RowSelectionState),
-    ) => {
-      setRowSelection(updaterOrValue);
-      onRowSelectionChange?.(updaterOrValue);
-    },
-    [onRowSelectionChange],
-  );
 
   const {
     getHeaderGroups,
@@ -334,12 +379,12 @@ export function Table<T extends { id: Key }>({
     enableSorting,
     initialState: {
       columnOrder: columns.map(({ id }) => id ?? ''),
-      rowSelection: rowSelectionProp ?? {},
     },
     state: {
       rowSelection,
       rowPinning,
       rowOrdering,
+      sorting: sort,
       ...(pagination != null && { pagination }),
     },
     getRowId: (row, index) => {
@@ -351,7 +396,8 @@ export function Table<T extends { id: Key }>({
     manualSorting: manualSorting,
     // no pageSize → paginated row model passes rows through untouched
     manualPagination: pagination == null,
-    onRowSelectionChange: handleRowSelectionChange,
+    onRowSelectionChange: setRowSelection,
+    onSortingChange: setSort,
     onRowPinningChange: setRowPinning,
     onRowOrderingChange: setRowOrdering,
     onPaginationChange: handlePaginationChange,

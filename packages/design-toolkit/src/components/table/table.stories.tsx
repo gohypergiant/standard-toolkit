@@ -11,6 +11,7 @@
  */
 
 import { useEffect, useMemo, useState } from 'react';
+import { Button } from '../button';
 import { Pagination } from '../pagination/index';
 import { TableBody } from './body';
 import { TableCell } from './cell';
@@ -20,7 +21,11 @@ import { TableHeaderCell } from './header-cell';
 import { Table } from './index';
 import { TableRow } from './row';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import type { RowSelectionState } from '@tanstack/react-table';
+import type {
+  RowPinningState,
+  RowSelectionState,
+  SortingState,
+} from '@tanstack/react-table';
 import type { TableProps } from './types';
 
 type Person = {
@@ -259,11 +264,94 @@ export const SortableColumns: Story = {
     docs: {
       description: {
         story:
-          'Columns are sortable by clicking the headers. Click a header to sort ascending, descending, or clear sorting.',
+          'Use the column header menu (kebab) to sort ascending, descending, or clear sorting; uncontrolled by default.',
       },
     },
   },
   render: (args) => <Table {...args} key={JSON.stringify(args)} />,
+};
+
+export const ControlledSorting: Story = {
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'The `sort` prop is the controlled sort value: pair it with `onSortChange`, which always receives the plain next `SortingState` (`[{ id, desc }]` or `[]`), never an updater function. The current sort state is rendered below the table as JSON.',
+      },
+    },
+  },
+  render: (args) => {
+    const [sort, setSort] = useState<SortingState>([]);
+
+    return (
+      <div>
+        <Table
+          {...dataArgs(args)}
+          sort={sort}
+          onSortChange={setSort}
+          key={JSON.stringify(args)}
+        />
+        <div style={{ marginTop: '1rem' }}>
+          <strong>Sort state:</strong>
+          <p>{JSON.stringify(sort)}</p>
+        </div>
+      </div>
+    );
+  },
+};
+
+export const ServerSideSorting: Story = {
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'Server-side sorting with `manualSorting`: the table never reorders rows itself and renders `data` as given. The story holds the controlled `sort` state and re-sorts the data in a `useMemo` from `sort[0]` (standing in for a server query). The header still shows the sort arrow and `aria-sort` because the sort state feeds the table in both modes.',
+      },
+    },
+  },
+  render: (args) => {
+    const [sort, setSort] = useState<SortingState>([]);
+
+    const sortedData = useMemo(() => {
+      const entry = sort[0];
+
+      if (!entry) {
+        return defaultData;
+      }
+
+      const key = entry.id as keyof Person;
+      const direction = entry.desc ? -1 : 1;
+
+      return [...defaultData].sort((a, b) => {
+        if (a[key] < b[key]) {
+          return -direction;
+        }
+
+        if (a[key] > b[key]) {
+          return direction;
+        }
+
+        return 0;
+      });
+    }, [sort]);
+
+    return (
+      <div>
+        <Table
+          {...dataArgs(args)}
+          data={sortedData}
+          manualSorting
+          sort={sort}
+          onSortChange={setSort}
+          key={JSON.stringify(args)}
+        />
+        <div style={{ marginTop: '1rem' }}>
+          <strong>Sort state:</strong>
+          <p>{JSON.stringify(sort)}</p>
+        </div>
+      </div>
+    );
+  },
 };
 
 const columnsWithSizing = [
@@ -327,35 +415,100 @@ export const InitialRowSelection: Story = {
     docs: {
       description: {
         story:
-          "Use the `rowSelection` prop to specify which rows should be selected initially, and `onRowSelectionChange` to track selection changes. The callback receives an updater function or direct value following TanStack Table's API pattern. In this example, the first two rows (tanner and joe) are pre-selected, and selected row IDs are displayed below the table.",
+          'Use the `defaultRowSelection` prop to specify which rows start selected, and `onRowSelectionChange` to track selection changes. The callback always receives the plain next `RowSelectionState`, never an updater function. In this example, tanner and joe start selected, and the last callback payload is rendered below the table as JSON.',
       },
     },
   },
   render: (args) => {
-    const [selectedRows, setSelectedRows] = useState<RowSelectionState>({
+    const [lastPayload, setLastPayload] = useState<RowSelectionState | null>(
+      null,
+    );
+
+    return (
+      <div>
+        <Table
+          {...dataArgs(args)}
+          defaultRowSelection={{ tanner: true, joe: true }}
+          onRowSelectionChange={setLastPayload}
+          key={JSON.stringify(args)}
+        />
+        <div style={{ marginTop: '1rem' }}>
+          <strong>Last onRowSelectionChange payload:</strong>
+          <p>{lastPayload ? JSON.stringify(lastPayload) : 'No changes yet'}</p>
+        </div>
+      </div>
+    );
+  },
+};
+
+export const ControlledRowSelection: Story = {
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'The `rowSelection` prop is the controlled selection value: pair it with `onRowSelectionChange` and the table reflects every prop change after mount. The "Clear selection" button drives the checkboxes from outside the table without a remount.',
+      },
+    },
+  },
+  render: (args) => {
+    const [selection, setSelection] = useState<RowSelectionState>({
       tanner: true,
       joe: true,
+    });
+    const selectedIds = Object.keys(selection).filter((id) => selection[id]);
+
+    return (
+      <div>
+        <Table
+          {...dataArgs(args)}
+          rowSelection={selection}
+          onRowSelectionChange={setSelection}
+          key={JSON.stringify(args)}
+        />
+        <div style={{ marginTop: '1rem' }}>
+          <Button onPress={() => setSelection({})}>Clear selection</Button>
+          <p>
+            <strong>Selected Row IDs:</strong>{' '}
+            {selectedIds.length > 0
+              ? selectedIds.join(', ')
+              : 'No rows selected'}
+          </p>
+        </div>
+      </div>
+    );
+  },
+};
+
+export const ControlledRowPinning: Story = {
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'The `rowPinning` prop is the controlled pinning value: pair it with `onRowPinningChange`, which always receives the plain next `RowPinningState` (`{ top, bottom }`), never an updater function. Pin or unpin rows via the row kebab menu; the "Unpin all" button clears the pinning from outside the table without a remount. The current pinning state is rendered below the table as JSON.',
+      },
+    },
+  },
+  render: (args) => {
+    const [pinning, setPinning] = useState<RowPinningState>({
+      top: ['joe'],
+      bottom: [],
     });
 
     return (
       <div>
         <Table
           {...dataArgs(args)}
-          rowSelection={selectedRows}
-          onRowSelectionChange={setSelectedRows}
+          rowPinning={pinning}
+          onRowPinningChange={setPinning}
           key={JSON.stringify(args)}
         />
         <div style={{ marginTop: '1rem' }}>
-          <strong>Selected Row IDs:</strong>
-          {Object.values(selectedRows).filter(Boolean).length > 0 ? (
-            <p>
-              {Object.keys(selectedRows)
-                .filter((id) => selectedRows[id])
-                .join(', ')}
-            </p>
-          ) : (
-            <p>No rows selected</p>
-          )}
+          <Button onPress={() => setPinning({ top: [], bottom: [] })}>
+            Unpin all
+          </Button>
+          <p>
+            <strong>Pinning state:</strong> {JSON.stringify(pinning)}
+          </p>
         </div>
       </div>
     );
