@@ -34,7 +34,7 @@ import { RbzHandler } from '@/maplibre';
 import { isActiveMap, setActiveMap } from '@/maplibre/active-map-store';
 import { useMapCamera } from '../../camera';
 import { CameraEventTypes } from '../../camera/events';
-import { cameraStore } from '../../camera/store';
+import { cameraStore, MAX_PITCH } from '../../camera/store';
 import { getCursor } from '../../map-cursor/store';
 import { getMapGeneration } from '../../shared/cleanup';
 import { DEFAULT_VIEW_STATE } from '../../shared/constants';
@@ -371,13 +371,6 @@ export function BaseMap({
   // guard on its `_updateStyleComponents` path. maplibre's `setProjection`
   // then throws "Style is not done loading." Sync via the post-load pattern
   // below - same approach as `useMapLibre` uses for the same setter.
-  // 2.5D is the only view that permits pitch (the camera store locks 2D and 3D
-  // to pitch:0). `maxPitch` must allow the store-driven pitch through in 2.5D;
-  // MapLibre clamps an applied `pitch` to `maxPitch`. react-maplibre applies
-  // `maxPitch` before `pitch` within one `setProps`, so a same-render view flip
-  // to 2.5D is never clamped by the previous ceiling.
-  const allowTilt = cameraState.view === '2.5D';
-
   const mapOptions = useMemo(() => {
     const options = {
       attributionControl: DEFAULT_ATTRIBUTION_CONTROL,
@@ -392,7 +385,15 @@ export function BaseMap({
       dragRotate: false,
       pitchWithRotate: false,
       rollEnabled: false,
-      maxPitch: allowTilt ? 85 : 0,
+      // A constant ceiling, never toggled per view. The camera store already
+      // locks 2D and 3D to pitch 0 and MapLibre's own pitch handlers are off, so
+      // a 0 ceiling in flat views adds nothing — and toggling it is harmful:
+      // from maplibre-gl 5.2x, `map.setMaxPitch` runs the camera through
+      // `transformCameraUpdate` (where react-maplibre re-applies the current
+      // props) and then fires `move` carrying the pre-props camera, which
+      // `onMove` below would write back into the store, undoing the pitch of a
+      // 2D → 2.5D flip in the same tick.
+      maxPitch: MAX_PITCH,
       canvasContextAttributes: CANVAS_CONTEXT_ATTRIBUTES,
       boxZoom,
     };
@@ -413,7 +414,6 @@ export function BaseMap({
   }, [
     viewState,
     container,
-    allowTilt,
     cameraState.transitionDuration,
     boxZoom,
     filteredMapLibreOptions,
@@ -576,9 +576,10 @@ export function BaseMap({
         pitch: liveCamera.pitch,
       };
 
-      // Promote a flat 2D view to 2.5D so pitch can apply. Doing it here (not in
-      // `handleDrag`) gives the view flip — which raises `maxPitch` from 0 to 85
-      // — a full frame to reach MapLibre before the first tilt delta arrives.
+      // Promote a flat 2D view to 2.5D so pitch can apply: the store locks 2D to
+      // pitch 0, so tilt deltas only stick once the view is 2.5D. Doing it here
+      // (not in `handleDrag`) flips the view once per gesture, before the first
+      // tilt delta arrives.
       if (liveCamera.view === '2D') {
         emitSetView({ id, view: '2.5D' });
       }
