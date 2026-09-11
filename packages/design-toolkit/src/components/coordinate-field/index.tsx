@@ -84,6 +84,7 @@ import type { CoordinateFieldProps } from './types';
  * @param props.size - Size variant of the field.
  * @param props.variant - Layout variant (inline or stacked).
  * @param props.showFormatButton - Whether to show the format conversion button.
+ * @param props.icon - Icon to display in the format button (defaults to GlobalShare).
  * @param props.isDisabled - Whether the field is disabled.
  * @param props.isInvalid - Whether the field is in an invalid state.
  * @param props.isRequired - Whether the field is required.
@@ -165,6 +166,7 @@ export function CoordinateField({ ref, ...props }: CoordinateFieldProps) {
     variant = 'inline',
     showFormatButton = true,
     formatButtonTooltip = 'View/copy other formats',
+    icon = <GlobalShare />,
     isDisabled = false,
     isInvalid: isInvalidProp = false,
     isRequired = false,
@@ -401,9 +403,7 @@ export function CoordinateField({ ref, ...props }: CoordinateFieldProps) {
                   aria-label='View coordinate in all formats'
                   isDisabled={!copy.isFormatButtonEnabled}
                 >
-                  <Icon>
-                    <GlobalShare />
-                  </Icon>
+                  <Icon>{icon}</Icon>
                 </Button>
                 <Popover classNames={{ popover: styles.popover }}>
                   <PopoverTitle className={styles.popoverTitle}>

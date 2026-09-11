@@ -55,6 +55,25 @@ deck.gl `LayerExtension` that injects coffin corner shader code into the host la
 
 **Supported layers:** `IconLayer` (and subclasses like `SymbolLayer`) and `ScatterplotLayer`. Each layer type gets its own shader path — IconLayer samples `iconsTexture` to composite brackets over the icon, while ScatterplotLayer replicates the circle fill/stroke logic and expands the quad to make room for brackets beyond the circle edge.
 
+**Constructor options:**
+
+| Option | Type | Default | Description |
+|--------|------|---------|-------------|
+| `iconBaseColorGlsl` | `string \| undefined` | samples `iconsTexture` | GLSL statements that assign `baseColor` (`vec4`) — the icon color the brackets composite over. Runs inside the fragment `main`, so it can reference anything the host IconLayer declares. Use it when a custom IconLayer transforms the sampled texel (e.g. replaces a match color with a per-instance fill) so the same transform shows beneath the brackets. Assign `baseColor`; do not declare it. A blank string is treated as unset. Ignored on `ScatterplotLayer`. |
+
+```tsx
+// Keep a custom IconLayer's color replacement visible under the brackets.
+// `myLayer.matchColor` and `vFillColor` stand in for the uniform and varying
+// YOUR IconLayer subclass declares — the stock IconLayer has neither.
+const extension = new CoffinCornerExtension({
+  iconBaseColorGlsl: `
+    baseColor = texture(iconsTexture, vTextureCoords);
+    if (all(equal(baseColor.rgb, myLayer.matchColor.rgb))) {
+      baseColor.rgb = vFillColor.rgb;
+    }`,
+});
+```
+
 **Props (added to the host layer):**
 
 | Prop | Type | Default | Description |
@@ -83,6 +102,7 @@ const extension = new CoffinCornerExtension();
 
 ```ts
 import type {
+  CoffinCornerExtensionOptions,
   CoffinCornerExtensionProps,
   EntityId,
 } from '@accelint/map-toolkit/deckgl';
@@ -91,6 +111,7 @@ import type {
 | Type | Description |
 |------|-------------|
 | `EntityId` | `string \| number` |
+| `CoffinCornerExtensionOptions` | Constructor options (`iconBaseColorGlsl`) |
 | `CoffinCornerExtensionProps<TLayerProps>` | Props the extension adds to the host layer |
 
 ## Examples
@@ -261,3 +282,5 @@ const hoveredIds = useMemo(() => new Set(highlighted.keys()), [highlighted]);
 - **IconLayer and ScatterplotLayer only.** Other layer types (PathLayer, SolidPolygonLayer, etc.) are not supported — the extension returns `null` from `getShaders()` for unsupported types.
 
 - **Globe mode (ScatterplotLayer).** The scatterplot quad expansion uses clip-space XY manipulation, which conflicts with globe projection depth. The extension skips bracket rendering on ScatterplotLayer in globe mode to prevent points from disappearing. IconLayer brackets are unaffected. This is related to a known deck.gl globe occlusion issue (PR #9975).
+
+- **Vertex attribute budget.** WebGL caps a shader program at 16 vertex attributes. `IconLayer` uses 11 and this extension adds one (`instanceCoffinCornerState`, a packed `vec2` of selected/hovered), so a custom `IconLayer` can add at most 4 of its own before the program fails to link.

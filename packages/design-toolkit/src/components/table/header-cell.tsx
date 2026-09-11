@@ -46,7 +46,6 @@ function HeaderCellMenu<T extends RowData>({
     moveColumnRight,
     persistHeaderKebabMenu,
     setColumnSelection,
-    manualSorting,
     handleSortChange,
     handleColumnReordering,
     variant,
@@ -113,31 +112,23 @@ function HeaderCellMenu<T extends RowData>({
           {enableSorting && (
             <>
               <MenuItem
-                onAction={() => {
-                  manualSorting
-                    ? handleSortChange?.(header.column.id, SortDirection.ASC)
-                    : header.column.toggleSorting(false);
-                }}
+                onAction={() =>
+                  handleSortChange?.(header.column.id, SortDirection.ASC)
+                }
                 isDisabled={sort === SortDirection.ASC}
               >
                 Sort Ascending
               </MenuItem>
               <MenuItem
-                onAction={() => {
-                  manualSorting
-                    ? handleSortChange?.(header.column.id, SortDirection.DESC)
-                    : header.column.toggleSorting(true);
-                }}
+                onAction={() =>
+                  handleSortChange?.(header.column.id, SortDirection.DESC)
+                }
                 isDisabled={sort === SortDirection.DESC}
               >
                 Sort Descending
               </MenuItem>
               <MenuItem
-                onAction={() => {
-                  manualSorting
-                    ? handleSortChange?.(header.column.id, null)
-                    : header.column.clearSorting();
-                }}
+                onAction={() => handleSortChange?.(header.column.id, null)}
                 isDisabled={!sort}
               >
                 Clear Sort
