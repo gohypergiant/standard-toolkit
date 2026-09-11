@@ -280,4 +280,10 @@ export type CoordinateFieldProps = Omit<
      * @default 'View/copy other formats'
      */
     formatButtonTooltip?: string;
+
+    /**
+     * Icon to display in the format button
+     * @default GlobalShare
+     */
+    icon?: React.ReactNode;
   };

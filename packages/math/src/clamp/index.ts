@@ -28,7 +28,7 @@
  * const value = clamp(15, 5, 10); // RangeError
  * ```
  */
-export function clamp(min: number, max: number, value: number) {
+export function clamp(min: number, max: number, value: number): number {
   if (min > max) {
     throw new RangeError('min exceeded max');
   }

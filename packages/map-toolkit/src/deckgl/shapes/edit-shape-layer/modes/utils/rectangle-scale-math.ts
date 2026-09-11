@@ -10,6 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
+import { wrap } from '@accelint/math';
 import { latToMercatorY, mercatorYToLat } from './mercator';
 import type { Position } from 'geojson';
 
@@ -61,7 +62,7 @@ export function recomputeRectangleCorners(
     return null;
   }
 
-  const draggedIdx = ((draggedIndex % 4) + 4) % 4;
+  const draggedIdx = wrap(0, 4, draggedIndex);
   const oppositeIdx = (draggedIdx + 2) % 4;
   const adjUIdx = (draggedIdx + 1) % 4;
   const adjVIdx = (draggedIdx + 3) % 4;

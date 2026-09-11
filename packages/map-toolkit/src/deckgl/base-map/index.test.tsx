@@ -10,6 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
+import { Broadcast } from '@accelint/bus/broadcast';
 import { uuid } from '@accelint/core';
 import { act, render, screen } from '@testing-library/react';
 import {
@@ -21,11 +22,13 @@ import {
   type Mock,
   vi,
 } from 'vitest';
+import { CameraEventTypes } from '../../camera/events';
 import { cameraStore, clearCameraState } from '../../camera/store';
 import { BaseMap, stripLockedMapLibreOptions } from './index';
 import { LOCKED_MAP_LIBRE_OPTION_KEYS } from './types';
 import type { MapOptions } from 'maplibre-gl';
 import type { MjolnirGestureEvent } from 'mjolnir.js';
+import type { CameraEvent } from '../../camera/types';
 import type { MapLibreOptions } from './types';
 
 interface FakeMap {
@@ -335,6 +338,29 @@ describe('BaseMap', () => {
         pitchWithRotate: false,
         maxPitch,
       });
+    });
+
+    it('flattens the map when a UI toggle flips 2.5D → 2D', () => {
+      // The store's `setView` handler must zero the pitch on the way out of
+      // 2.5D. `maxPitch` follows the view, so a pitch left in the store would
+      // otherwise render a tilted "2D" map until the next pan re-synced it.
+      const id = uuid();
+      useFakeMap(createFakeMap());
+
+      render(<BaseMap id={id} defaultView='2.5D' />);
+
+      expect(capturedMapProps).toMatchObject({ maxPitch: 85, pitch: 60 });
+
+      act(() => {
+        Broadcast.getInstance<CameraEvent>().emit(CameraEventTypes.setView, {
+          id,
+          view: '2D',
+        });
+      });
+
+      expect(capturedMapProps).toMatchObject({ maxPitch: 0, pitch: 0 });
+
+      clearCameraState(id);
     });
   });
 });
