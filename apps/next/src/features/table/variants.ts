@@ -53,6 +53,12 @@ export const DATA: Person[] = [
   },
 ];
 
+export const DATA_LONG: Person[] = DATA.map((row) =>
+  row.id === 'cassius'
+    ? { ...row, status: 'Reaper 21 / MQ-9 / on station until 2130Z' }
+    : row,
+);
+
 export type ScenarioName =
   | 'default'
   | 'empty'
@@ -67,7 +73,8 @@ export type ScenarioName =
   | 'hidden peripherals'
   | 'compact'
   | 'crammed'
-  | 'crammed all features';
+  | 'crammed all features'
+  | 'crammed truncation';
 
 export type TableScenario = {
   name: ScenarioName;
@@ -86,6 +93,10 @@ export type TableScenario = {
   emptyData?: boolean;
   isSorted?: 'asc' | 'desc';
   variant?: DensityVariant;
+  longData?: boolean;
+  // Applied to the table element itself; utilities listed here are scanned by
+  // Tailwind from app source, unlike classes inside design-toolkit dist.
+  tableClassName?: string;
 };
 
 export const PROP_COMBOS: TableScenario[] = [
@@ -192,5 +203,14 @@ export const PROP_COMBOS: TableScenario[] = [
     persistHeaderKebabMenu: true,
     enableRowActions: true,
     kebabPosition: 'right',
+  },
+  {
+    name: 'crammed truncation',
+    className: 'inline-block',
+    screenshotName: 'table-crammed-truncation.png',
+    variant: 'crammed',
+    fullWidth: true,
+    longData: true,
+    tableClassName: 'table-fixed',
   },
 ];

@@ -51,9 +51,11 @@ of the design-foundation spacing scale: `cozy` = `--spacing-m` (12px),
 `compact` = `--spacing-s` (8px), `crammed` = `--spacing-xxs` (2px). Header
 cells SHALL keep zero right padding at `cozy` and `compact` (as today); at
 `crammed` the 2px padding applies on all sides. Only `crammed` SHALL
-additionally force single-line content (no wrapping) on header and body cells
-and remove the 16px minimum width from body cells; `cozy` and `compact` SHALL
-keep the 16px minimum width and normal wrapping. The density rules SHALL live
+additionally force single-line content (no wrapping) on header and body cells,
+remove the 16px minimum width from body cells, and clip overflowing content
+with an ellipsis (`overflow: hidden` + `text-overflow: ellipsis`) so long
+values cannot bleed into neighboring cells under a fixed table layout;
+`cozy` and `compact` SHALL keep the 16px minimum width and normal wrapping. The density rules SHALL live
 in the table's CSS module at the same cascade layer as the base cell rules so
 consumer `className` utilities still win.
 
@@ -66,6 +68,11 @@ consumer `className` utilities still win.
 - **GIVEN** the tracks table rendered with `variant='crammed'` and a long text column value `'Reaper 21 / MQ-9 / on station until 2130Z'`
 - **WHEN** that body cell and its header cell are measured
 - **THEN** both have 2px padding on all sides, the text renders on a single line, and the body cell's minimum width is 0 so it can shrink below 16px
+
+#### Scenario: Crammed truncation under fixed layout
+- **GIVEN** the tracks table rendered with `variant='crammed'`, `fullWidth` (fixed table layout), and a long text column value `'Reaper 21 / MQ-9 / on station until 2130Z'` in a column narrower than its text
+- **WHEN** that body cell is measured
+- **THEN** the text is clipped at the cell boundary with a trailing ellipsis instead of overflowing into the neighboring cell; under the default auto table layout the column may still widen to fit and no ellipsis appears
 
 #### Scenario: Cozy is unchanged from the pre-change table
 - **GIVEN** the tracks table rendered with `variant='cozy'`
