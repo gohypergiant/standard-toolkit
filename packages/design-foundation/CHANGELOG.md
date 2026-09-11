@@ -1,5 +1,10 @@
 # @accelint/design-toolkit
 
+## 3.2.1
+### Patch Changes
+
+  - @accelint/converters@1.0.2
+
 ## 3.2.0
 ### Minor Changes
 

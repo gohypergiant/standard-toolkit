@@ -1,5 +1,59 @@
 # @accelint/design-toolkit
 
+## 11.0.0
+### Major Changes
+
+- f2631a4: Rename the `ColorPicker` prop `allowNull` to `allowEmptySelection`.
+  
+  Also fix `ColorPicker` selection state when optional empty-selection and custom-color controls are enabled, align the helper control props/docs with runtime behavior, and normalize `ColorPicker` change callbacks to return `Color` objects or `undefined` when cleared.
+- ece7990: Give Table one controlled-state convention: every Table-owned state slice is exposed as `x` / `defaultX` / `onXChange`, uncontrolled by default, controlled when `x` is provided, with change callbacks receiving plain values.
+  
+  BREAKING CHANGES:
+  
+  - `rowSelection` is now the controlled value of the selection slice. It was previously read only on mount as an initial value, so later prop changes never reached the table. For uncontrolled usage pass `defaultRowSelection` as the starting selection and the table manages it from there; keep `rowSelection` (paired with `onRowSelectionChange`) to drive selection from your own state. A static `rowSelection` with no callback now renders a frozen selection.
+  - `onRowSelectionChange` receives the plain next `RowSelectionState` instead of TanStack's updater-or-value. Wiring a `useState` setter keeps working unchanged; remove any `typeof updater === 'function'` branches, which are now dead code.
+  - `onSortChange` receives the plain next `SortingState` in both client-side and `manualSorting` modes, instead of `(columnId, direction)` in `manualSorting` mode only. Read `sort[0]?.id` and `sort[0]?.desc` in place of the old arguments; an empty array means sorting was cleared.
+  
+  New:
+  
+  - `defaultRowSelection`: initial row selection for uncontrolled use.
+  - `rowPinning` / `defaultRowPinning` / `onRowPinningChange`: the row pinning slice (previously internal) is now controllable; the row kebab Pin / Unpin actions are unchanged.
+  - `sort` / `defaultSort`: the sort slice is now controllable. In `manualSorting` mode the sort indicator, the menu items' disabled states, and `aria-sort` now reflect the active sort.
+  
+  The state value types (`RowSelectionState`, `RowPinningState`, `SortingState`) are not re-exported; import them from the `@tanstack/react-table` peer dependency.
+
+### Minor Changes
+
+- a514e00: feat(table): `variant` density prop (`cozy` | `compact` | `crammed`, default
+  `cozy`) applied to header cells, body cells, meta columns, and kebab menus;
+  new shared `DensityVariant` type in `lib/types`, aliased by Tree/List/Menu/
+  Accordion under their existing names; new `DEFAULT_TABLE_VARIANT` constant.
+  Crammed cells clip overflowing content with an ellipsis so long values
+  cannot bleed into neighboring cells under a fixed table layout (`fullWidth`).
+  No breaking changes.
+- 99cc584: Enable coordinate field to take in icon prop
+
+### Patch Changes
+
+- dcaba41: `CoordinateField` now computes its display segments from `@accelint/geo`'s coordinate parts API (`toDdmParts`/`toDmsParts`/`toMgrsParts`/`toUtmParts`) instead of formatting a coordinate to a string and parsing it back apart with regexes. The five private regex parse-back helpers were removed, and `getAllCoordinateFormats` no longer builds a `createCoordinate` object. The public `parseCoordinateStringToSegments`, `convertDDToDisplaySegments`, and `getAllCoordinateFormats` keep their signatures, segment shapes, and ordering.
+  
+  Two outputs change, both fixes:
+  
+  - **DDM/DMS carry.** Values within rounding distance of a minute or second boundary now carry into the next unit (`40.99999999°` renders as `41° 0'` instead of the invalid `40° 60'`).
+  - **DD precision.** Decimal-degrees segments and the DD full-format string share one renderer: fixed notation, 10 decimal places, trailing zeros trimmed. Float artifacts round away as before, and magnitudes below `1e-6` now display as `0.0000001` rather than `1e-7` (and, with the matching `@accelint/geo` fix, parse back — within the DD parser's 10-decimal limit).
+  - **`parseCoordinateStringToSegments` input.** Its patterns are now anchored: the string must be a whole coordinate (surrounding whitespace allowed, surrounding text not). This removes polynomial regex backtracking on pathological input; every coordinate shape it accepted before still parses.
+- c573231: Replace the hand-rolled signed-modulo idioms in the Gantt `roundMsToInterval` date utility with `@accelint/math`'s `wrap` primitive (adds `@accelint/math` as a dependency). Output is unchanged for every input, including negative timestamps; this only consolidates the sub-second, interval, and into-day boundary math onto one tested implementation.
+- Updated dependencies [747ea86]
+- Updated dependencies [dcaba41]
+- Updated dependencies [9345871]
+- Updated dependencies [c573231]
+- Updated dependencies [8f1842a]
+  - @accelint/geo@0.7.0
+  - @accelint/math@0.2.0
+  - @accelint/temporal@0.1.5
+  - @accelint/converters@1.0.2
+  - @accelint/design-foundation@3.2.1
+
 ## 10.1.0
 ### Minor Changes
 

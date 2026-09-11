@@ -1,5 +1,25 @@
 # @accelint/geo
 
+## 0.7.0
+
+### Minor Changes
+
+- dcaba41: Add a coordinate "parts" API that returns the structured pieces of a formatted coordinate instead of only a finished string. `toDecimalDegreesParts(value, axis, precision?)`, `toDdmParts(value, axis, precision?)`, and `toDmsParts(value, axis, precision?)` take a signed number plus its axis and return the non-negative `degrees`/`minutes`/`seconds` numbers and the `hemisphere` letter (`'N' | 'S' | 'E' | 'W'`), with the `60″ → +1′ → +1°` and `60′ → +1°` carry already applied. `toMgrsParts([lat, lon])` and `toUtmParts([lat, lon])` read the grid fields directly and return a discriminated result — `{ ok: true, value: … }` for in-band coordinates or `{ ok: false, reason: 'out-of-range' }` for latitudes outside the inclusive `80°S`–`84°N` band, and for a longitude of exactly `+180°` (the antimeridian, where the UTM zone is undefined) — so callers can branch on validity without matching thrown error text, and never have to guard against a thrown exception. The result stays total even when `geodesy` itself rejects a coordinate (for example an unpatched `geodesy@2.4.0` at the 84°N edge): that also maps to `{ ok: false }`. The supporting types (`DecimalDegreesParts`, `DdmParts`, `DmsParts`, `MgrsParts`, `UtmParts`, `GridPartsResult`) are exported alongside them.
+
+  `formatMgrsParts(MgrsParts)` and `formatUtmParts(UtmParts)` render grid parts back into their canonical strings, so callers that already hold parts (or want to consume `toMgrsParts`/`toUtmParts` and render without re-deriving the pad/floor/join logic) share one renderer instead of duplicating it. The boolean `isValidNumericCoordinate(lat, lon)` predicate is also exported for callers that need a finite-and-in-range check without the error-message array `validateNumericCoordinate` builds.
+
+  The existing `format*`/`parse*` functions and `createCoordinate(...).mgrs()`/`.utm()` now compose over this parts layer internally; their string output is byte-identical to before.
+
+  Also newly exported, since the parts layer is built from them: `getHemisphere(value, axis)` with the `Axis` and `Hemisphere` types (the typed core behind the existing `getOrdinal`); the grid-band helpers `isWithinGridBand(lat)`, `isOnEasternAntimeridian(lon)`, and `isGridProjectable([lat, lon])` with the `GRID_LATITUDE_MIN` / `GRID_LATITUDE_MAX` bounds; the display-precision defaults `DECIMAL_DEGREES_PRECISION`, `DDM_PRECISION`, and `DMS_PRECISION`; and `formatCoordinateSystem`, the lossless round-trip scaffold the `CoordinateSystem` `toFormat` implementations share (distinct from the display formatters — it applies no rounding or carry).
+
+### Patch Changes
+
+- 747ea86: Export `formatCoordinate` and `normalizeLongitude` from `@accelint/map-toolkit/cursor-coordinates`. `formatCoordinate(lonLat, format)` is the pure formatter behind `useCursorCoordinates` — reach for it to render a DD/DDM/DMS/MGRS/UTM string outside the hook instead of re-deriving the grid-conversion logic.
+
+  Also stop a `RangeError` escaping `formatCoordinate` at the UTM/MGRS latitude boundaries (84°N and 80°S). Both are valid in those systems, but `geodesy@2.4.0` rejected them — 84°N via too-strict northing bounds (widest in the extended Svalbard zones), 80°S via a floating-point error in the latitude-band lookup. Two layers: this monorepo patches `geodesy` (`patches/geodesy@2.4.0.patch`, a workspace-only pnpm patch that does not ship in the published package), and `@accelint/geo`'s grid-parts functions now return `{ ok: false }` instead of throwing whenever geodesy rejects a coordinate — so `formatCoordinate` shows the `--- -- ---- ----` placeholder rather than crashing, even against an unpatched `geodesy`. Coordinates outside the valid band still report `valid: false` as before.
+
+- 9345871: Fix parsing and formatting of coordinate magnitudes below `1e-6°` (within about 11 cm of the equator or prime meridian). JavaScript renders such numbers in exponential notation (`String(0.0000001)` is `'1e-7'`), which the lexer mis-tokenized — the `-7` read as a sign, so `'0.0000001 N / 0 E'` failed with "Bearing (N) conflicts with negative number" — and which `createCoordinate(...).dd()`/`.ddm()`/`.dms()` emitted verbatim. Both paths now use the new `toPlainDecimalString(value)` helper, which renders any number in plain decimal notation; ordinary coordinates are unaffected.
+
 ## 0.6.1
 
 ### Patch Changes
