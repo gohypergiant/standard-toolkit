@@ -9,7 +9,7 @@ import * as TableStories from './table.stories';
 Configurable data table with sorting, selection, and row actions built on TanStack React Table.
 
 ```tsx
-import { createColumnHelper } from '@tanstack/react-table';
+import { createTableColumnHelper } from '@accelint/design-toolkit';
 
 type Person = {
   id: string;
@@ -17,7 +17,9 @@ type Person = {
   lastName: string;
 };
 
-const columnHelper = createColumnHelper<Person>();
+// Pre-bound to the Table's feature set. TanStack v9's own `createColumnHelper`
+// needs a second type argument, so use this helper instead.
+const columnHelper = createTableColumnHelper<Person>();
 
 const columns = [
   columnHelper.accessor('firstName', {
