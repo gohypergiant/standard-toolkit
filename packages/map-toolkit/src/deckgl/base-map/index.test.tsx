@@ -12,7 +12,9 @@
 
 import { Broadcast } from '@accelint/bus/broadcast';
 import { uuid } from '@accelint/core';
+import type { UniqueId } from '@accelint/core';
 import { act, render, screen } from '@testing-library/react';
+import { useLayoutEffect, useRef } from 'react';
 import {
   afterEach,
   beforeEach,
@@ -23,12 +25,12 @@ import {
   vi,
 } from 'vitest';
 import { CameraEventTypes } from '../../camera/events';
-import { cameraStore, clearCameraState } from '../../camera/store';
+import { cameraStore, clearCameraState, MAX_PITCH } from '../../camera/store';
 import { BaseMap, stripLockedMapLibreOptions } from './index';
 import { LOCKED_MAP_LIBRE_OPTION_KEYS } from './types';
 import type { MapOptions } from 'maplibre-gl';
 import type { MjolnirGestureEvent } from 'mjolnir.js';
-import type { CameraEvent } from '../../camera/types';
+import type { CameraEvent, ViewType } from '../../camera/types';
 import type { MapLibreOptions } from './types';
 
 interface FakeMap {
@@ -68,18 +70,44 @@ vi.mock('react-map-gl/maplibre', () => ({
   Map: ({
     children,
     onLoad,
+    onMove,
     ref,
     ...rest
   }: {
     children?: React.ReactNode;
     onLoad?: () => void;
+    onMove?: (evt: { viewState: Record<string, unknown> }) => void;
     ref?: { current: unknown };
   } & Record<string, unknown>) => {
+    // maplibre-gl 5.17.0+ runs `setMaxPitch` through its camera hook and fires
+    // a `move` whose viewState is the camera as it was before the new props
+    // applied. Model that: when `maxPitch` changes between renders, echo the
+    // previous render's pitch through `onMove`. A constant `maxPitch` never
+    // triggers it.
+    const previousProps = useRef<Record<string, unknown> | null>(null);
+
+    useLayoutEffect(() => {
+      const previous = previousProps.current;
+      previousProps.current = rest;
+
+      if (previous && previous.maxPitch !== rest.maxPitch) {
+        onMove?.({
+          viewState: {
+            longitude: rest.longitude,
+            latitude: rest.latitude,
+            zoom: rest.zoom,
+            bearing: rest.bearing,
+            pitch: previous.pitch,
+          },
+        });
+      }
+    });
+
     if (ref && typeof ref === 'object') {
       ref.current = { getMap: () => activeMap };
     }
     capturedOnLoad = onLoad;
-    capturedMapProps = rest;
+    capturedMapProps = { onMove, ...rest };
 
     return <div data-testid='maplibre-mock'>{children}</div>;
   },
@@ -316,19 +344,23 @@ describe('BaseMap', () => {
     });
   });
 
-  describe('mouse pitch/rotate gating by view', () => {
-    // MapLibre's own rotate/pitch handlers stay disabled in every view — the
-    // camera is driven through the store from the deck.gl `onDrag` handler. Only
-    // `maxPitch` varies by view: it opens to 85° in 2.5D (so the store-driven
-    // pitch can apply) and stays clamped to 0 in flat 2D and fixed-orientation 3D.
+  describe('MapLibre handler and maxPitch invariants', () => {
+    // `maxPitch` is constant across views; see the note on `mapOptions` in
+    // index.tsx for why toggling it per view broke 2D → 2.5D.
+    function flipView(id: UniqueId, view: ViewType): void {
+      act(() => {
+        Broadcast.getInstance<CameraEvent>().emit(CameraEventTypes.setView, {
+          id,
+          view,
+        });
+      });
+    }
+
     it.each([
-      { view: '2D' as const, maxPitch: 0 },
-      { view: '2.5D' as const, maxPitch: 85 },
-      { view: '3D' as const, maxPitch: 0 },
-    ])('keeps MapLibre rotate/pitch off and sets maxPitch for the $view view', ({
-      view,
-      maxPitch,
-    }) => {
+      '2D',
+      '2.5D',
+      '3D',
+    ] as const)('keeps MapLibre rotate/pitch off and a constant maxPitch in the %s view', (view) => {
       useFakeMap(createFakeMap());
 
       render(<BaseMap id={uuid()} defaultView={view} />);
@@ -336,29 +368,83 @@ describe('BaseMap', () => {
       expect(capturedMapProps).toMatchObject({
         dragRotate: false,
         pitchWithRotate: false,
-        maxPitch,
+        maxPitch: MAX_PITCH,
       });
+    });
+
+    it('keeps a 2D view flat when MapLibre reports a tilted camera through onMove', () => {
+      // With a constant ceiling, MapLibre no longer clamps a touch or keyboard
+      // tilt in 2D; the camera store's 2D variant is what zeroes it.
+      const id = uuid();
+      useFakeMap(createFakeMap());
+
+      render(<BaseMap id={id} defaultView='2D' />);
+
+      expect(capturedMapProps?.onMove).toBeTypeOf('function');
+      const onMove = capturedMapProps?.onMove as (evt: {
+        viewState: Record<string, number>;
+      }) => void;
+
+      act(() => {
+        onMove({
+          viewState: {
+            longitude: 10,
+            latitude: 20,
+            zoom: 5,
+            pitch: 30,
+            bearing: 0,
+          },
+        });
+      });
+
+      expect(cameraStore.get(id)).toMatchObject({
+        view: '2D',
+        pitch: 0,
+        longitude: 10,
+        latitude: 20,
+        zoom: 5,
+      });
+      expect(capturedMapProps).toMatchObject({ pitch: 0 });
+
+      clearCameraState(id);
+    });
+
+    it('keeps the 60° tilt after a UI toggle flips 2D → 2.5D', () => {
+      // Regression: with a per-view ceiling, `maxPitch` changed in the same
+      // render as the pitch, and the Map mock's echo (like maplibre-gl 5.17.0+)
+      // wrote the pre-flip pitch 0 back into the store.
+      const id = uuid();
+      useFakeMap(createFakeMap());
+
+      render(<BaseMap id={id} defaultView='2D' />);
+
+      expect(capturedMapProps).toMatchObject({ pitch: 0 });
+
+      flipView(id, '2.5D');
+
+      expect(cameraStore.get(id).pitch).toBe(60);
+      expect(capturedMapProps).toMatchObject({ pitch: 60 });
+
+      clearCameraState(id);
     });
 
     it('flattens the map when a UI toggle flips 2.5D → 2D', () => {
       // The store's `setView` handler must zero the pitch on the way out of
-      // 2.5D. `maxPitch` follows the view, so a pitch left in the store would
-      // otherwise render a tilted "2D" map until the next pan re-synced it.
+      // 2.5D; a pitch left in the store would otherwise render a tilted "2D"
+      // map until the next pan re-synced it.
       const id = uuid();
       useFakeMap(createFakeMap());
 
       render(<BaseMap id={id} defaultView='2.5D' />);
 
-      expect(capturedMapProps).toMatchObject({ maxPitch: 85, pitch: 60 });
-
-      act(() => {
-        Broadcast.getInstance<CameraEvent>().emit(CameraEventTypes.setView, {
-          id,
-          view: '2D',
-        });
+      expect(capturedMapProps).toMatchObject({
+        maxPitch: MAX_PITCH,
+        pitch: 60,
       });
 
-      expect(capturedMapProps).toMatchObject({ maxPitch: 0, pitch: 0 });
+      flipView(id, '2D');
+
+      expect(capturedMapProps).toMatchObject({ maxPitch: MAX_PITCH, pitch: 0 });
 
       clearCameraState(id);
     });
