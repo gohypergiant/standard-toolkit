@@ -431,25 +431,24 @@ describe('BaseGridLayer', () => {
         shouldShowFine: true,
         reason: 'zoom <= maxZoom (10 <= 10)',
       },
-    ])('boundary test at zoom $zoom: $reason', ({
-      zoom,
-      shouldShowCoarse,
-      shouldShowFine,
-    }) => {
-      const layer = new BaseGridLayer({
-        id: 'test-layer',
-        definition: mockDefinition,
-      });
+    ])(
+      'boundary test at zoom $zoom: $reason',
+      ({ zoom, shouldShowCoarse, shouldShowFine }) => {
+        const layer = new BaseGridLayer({
+          id: 'test-layer',
+          definition: mockDefinition,
+        });
 
-      setLayerContext(layer, { ...mockViewport, zoom });
+        setLayerContext(layer, { ...mockViewport, zoom });
 
-      const renderedLayers = layer.renderLayers();
-      const hasCoarse = renderedLayers.some((l) => l.id.includes('coarse'));
-      const hasFine = renderedLayers.some((l) => l.id.includes('fine'));
+        const renderedLayers = layer.renderLayers();
+        const hasCoarse = renderedLayers.some((l) => l.id.includes('coarse'));
+        const hasFine = renderedLayers.some((l) => l.id.includes('fine'));
 
-      expect(hasCoarse).toBe(shouldShowCoarse);
-      expect(hasFine).toBe(shouldShowFine);
-    });
+        expect(hasCoarse).toBe(shouldShowCoarse);
+        expect(hasFine).toBe(shouldShowFine);
+      },
+    );
   });
 
   describe('Update Logic', () => {

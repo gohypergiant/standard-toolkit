@@ -248,32 +248,28 @@ describe('Geometry Type Predicates', () => {
       expect(isPolygonGeometry(geo(type))).toBe(true);
     });
 
-    it.each([
-      'Point',
-      'LineString',
-      'MultiLineString',
-      'MultiPoint',
-    ])('returns false for %s', (type) => {
-      expect(isPolygonGeometry(geo(type))).toBe(false);
-    });
+    it.each(['Point', 'LineString', 'MultiLineString', 'MultiPoint'])(
+      'returns false for %s',
+      (type) => {
+        expect(isPolygonGeometry(geo(type))).toBe(false);
+      },
+    );
   });
 
   describe('isLineGeometry', () => {
-    it.each([
-      'LineString',
-      'MultiLineString',
-    ])('returns true for %s', (type) => {
-      expect(isLineGeometry(geo(type))).toBe(true);
-    });
+    it.each(['LineString', 'MultiLineString'])(
+      'returns true for %s',
+      (type) => {
+        expect(isLineGeometry(geo(type))).toBe(true);
+      },
+    );
 
-    it.each([
-      'Point',
-      'Polygon',
-      'MultiPolygon',
-      'MultiPoint',
-    ])('returns false for %s', (type) => {
-      expect(isLineGeometry(geo(type))).toBe(false);
-    });
+    it.each(['Point', 'Polygon', 'MultiPolygon', 'MultiPoint'])(
+      'returns false for %s',
+      (type) => {
+        expect(isLineGeometry(geo(type))).toBe(false);
+      },
+    );
   });
 
   describe('isPointGeometry', () => {
@@ -281,14 +277,12 @@ describe('Geometry Type Predicates', () => {
       expect(isPointGeometry(geo(type))).toBe(true);
     });
 
-    it.each([
-      'LineString',
-      'MultiLineString',
-      'Polygon',
-      'MultiPolygon',
-    ])('returns false for %s', (type) => {
-      expect(isPointGeometry(geo(type))).toBe(false);
-    });
+    it.each(['LineString', 'MultiLineString', 'Polygon', 'MultiPolygon'])(
+      'returns false for %s',
+      (type) => {
+        expect(isPointGeometry(geo(type))).toBe(false);
+      },
+    );
   });
 });
 
@@ -310,11 +304,12 @@ describe('Granular Geometry Predicates', () => {
       expect(isPointType(geo('Point'))).toBe(true);
     });
 
-    it.each(
-      allTypes.filter((t) => t !== 'Point'),
-    )('returns false for %s', (type) => {
-      expect(isPointType(geo(type))).toBe(false);
-    });
+    it.each(allTypes.filter((t) => t !== 'Point'))(
+      'returns false for %s',
+      (type) => {
+        expect(isPointType(geo(type))).toBe(false);
+      },
+    );
   });
 
   describe('isMultiPointType', () => {
@@ -322,11 +317,12 @@ describe('Granular Geometry Predicates', () => {
       expect(isMultiPointType(geo('MultiPoint'))).toBe(true);
     });
 
-    it.each(
-      allTypes.filter((t) => t !== 'MultiPoint'),
-    )('returns false for %s', (type) => {
-      expect(isMultiPointType(geo(type))).toBe(false);
-    });
+    it.each(allTypes.filter((t) => t !== 'MultiPoint'))(
+      'returns false for %s',
+      (type) => {
+        expect(isMultiPointType(geo(type))).toBe(false);
+      },
+    );
   });
 
   describe('isLineStringType', () => {
@@ -334,11 +330,12 @@ describe('Granular Geometry Predicates', () => {
       expect(isLineStringType(geo('LineString'))).toBe(true);
     });
 
-    it.each(
-      allTypes.filter((t) => t !== 'LineString'),
-    )('returns false for %s', (type) => {
-      expect(isLineStringType(geo(type))).toBe(false);
-    });
+    it.each(allTypes.filter((t) => t !== 'LineString'))(
+      'returns false for %s',
+      (type) => {
+        expect(isLineStringType(geo(type))).toBe(false);
+      },
+    );
   });
 
   describe('isMultiLineStringType', () => {
@@ -346,11 +343,12 @@ describe('Granular Geometry Predicates', () => {
       expect(isMultiLineStringType(geo('MultiLineString'))).toBe(true);
     });
 
-    it.each(
-      allTypes.filter((t) => t !== 'MultiLineString'),
-    )('returns false for %s', (type) => {
-      expect(isMultiLineStringType(geo(type))).toBe(false);
-    });
+    it.each(allTypes.filter((t) => t !== 'MultiLineString'))(
+      'returns false for %s',
+      (type) => {
+        expect(isMultiLineStringType(geo(type))).toBe(false);
+      },
+    );
   });
 
   describe('isPolygonType', () => {
@@ -358,11 +356,12 @@ describe('Granular Geometry Predicates', () => {
       expect(isPolygonType(geo('Polygon'))).toBe(true);
     });
 
-    it.each(
-      allTypes.filter((t) => t !== 'Polygon'),
-    )('returns false for %s', (type) => {
-      expect(isPolygonType(geo(type))).toBe(false);
-    });
+    it.each(allTypes.filter((t) => t !== 'Polygon'))(
+      'returns false for %s',
+      (type) => {
+        expect(isPolygonType(geo(type))).toBe(false);
+      },
+    );
   });
 
   describe('isMultiPolygonType', () => {
@@ -370,11 +369,12 @@ describe('Granular Geometry Predicates', () => {
       expect(isMultiPolygonType(geo('MultiPolygon'))).toBe(true);
     });
 
-    it.each(
-      allTypes.filter((t) => t !== 'MultiPolygon'),
-    )('returns false for %s', (type) => {
-      expect(isMultiPolygonType(geo(type))).toBe(false);
-    });
+    it.each(allTypes.filter((t) => t !== 'MultiPolygon'))(
+      'returns false for %s',
+      (type) => {
+        expect(isMultiPolygonType(geo(type))).toBe(false);
+      },
+    );
   });
 
   describe('isGeometryCollectionType', () => {
@@ -382,11 +382,12 @@ describe('Granular Geometry Predicates', () => {
       expect(isGeometryCollectionType(geo('GeometryCollection'))).toBe(true);
     });
 
-    it.each(
-      allTypes.filter((t) => t !== 'GeometryCollection'),
-    )('returns false for %s', (type) => {
-      expect(isGeometryCollectionType(geo(type))).toBe(false);
-    });
+    it.each(allTypes.filter((t) => t !== 'GeometryCollection'))(
+      'returns false for %s',
+      (type) => {
+        expect(isGeometryCollectionType(geo(type))).toBe(false);
+      },
+    );
   });
 });
 

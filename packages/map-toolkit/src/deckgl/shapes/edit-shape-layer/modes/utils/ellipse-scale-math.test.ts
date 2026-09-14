@@ -168,62 +168,65 @@ describe('recomputeEllipseScaleFactors', () => {
     },
   ];
 
-  it.each(cases)('$label', ({
-    centerLon,
-    centerLat,
-    xSemiDeg,
-    ySemiDeg,
-    rotationDeg,
-    handle,
-    dragDistance,
-    lockAspect,
-    expectedXScale,
-    expectedYScale,
-  }) => {
-    const { plusX, plusY } = buildAxisEndpoints(
+  it.each(cases)(
+    '$label',
+    ({
       centerLon,
       centerLat,
       xSemiDeg,
       ySemiDeg,
       rotationDeg,
-    );
-    const center: Position = [centerLon, centerLat];
-
-    // Compute the dragged endpoint's new position by applying
-    // dragDistance along the handle's outward axis direction in Mercator,
-    // then converting back to (lon, lat) so the math function exercises
-    // its own Mercator pipeline end-to-end.
-    const handleEndpoint = handle.startsWith('plus')
-      ? handle === 'plusX'
-        ? plusX
-        : plusY
-      : handle === 'minusX'
-        ? reflectAcrossCenter(center, plusX)
-        : reflectAcrossCenter(center, plusY);
-
-    const newCorner = applyOutwardDisplacement(
-      center,
-      handleEndpoint,
-      dragDistance,
-    );
-
-    const result = recomputeEllipseScaleFactors(
-      center,
-      plusX,
-      plusY,
       handle,
-      newCorner,
+      dragDistance,
       lockAspect,
-    );
+      expectedXScale,
+      expectedYScale,
+    }) => {
+      const { plusX, plusY } = buildAxisEndpoints(
+        centerLon,
+        centerLat,
+        xSemiDeg,
+        ySemiDeg,
+        rotationDeg,
+      );
+      const center: Position = [centerLon, centerLat];
 
-    expect(result).not.toBeNull();
-    if (!result) {
-      return;
-    }
+      // Compute the dragged endpoint's new position by applying
+      // dragDistance along the handle's outward axis direction in Mercator,
+      // then converting back to (lon, lat) so the math function exercises
+      // its own Mercator pipeline end-to-end.
+      const handleEndpoint = handle.startsWith('plus')
+        ? handle === 'plusX'
+          ? plusX
+          : plusY
+        : handle === 'minusX'
+          ? reflectAcrossCenter(center, plusX)
+          : reflectAcrossCenter(center, plusY);
 
-    expect(result.xScale).toBeCloseTo(expectedXScale, 4);
-    expect(result.yScale).toBeCloseTo(expectedYScale, 4);
-  });
+      const newCorner = applyOutwardDisplacement(
+        center,
+        handleEndpoint,
+        dragDistance,
+      );
+
+      const result = recomputeEllipseScaleFactors(
+        center,
+        plusX,
+        plusY,
+        handle,
+        newCorner,
+        lockAspect,
+      );
+
+      expect(result).not.toBeNull();
+      if (!result) {
+        return;
+      }
+
+      expect(result.xScale).toBeCloseTo(expectedXScale, 4);
+      expect(result.yScale).toBeCloseTo(expectedYScale, 4);
+    },
+  );
 
   it('returns null when the +x axis has zero length', () => {
     const center: Position = [0, 0];
