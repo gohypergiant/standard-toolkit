@@ -649,6 +649,7 @@ describe('RbzHandler', () => {
       expect(fitBounds).toHaveBeenCalledOnce();
 
       // fitBounds([sw, ne], opts) → calls[0][0] is the [sw, ne] array
+      // biome-ignore lint/correctness/noUnsafeOptionalChaining: fitBounds.mock.calls[0] might be undefined
       const [sw, ne] = fitBounds.mock.calls[0]?.[0] as [
         { lng: number; lat: number },
         { lng: number; lat: number },
@@ -679,6 +680,7 @@ describe('RbzHandler', () => {
       result?.cameraAnimation?.(map as never);
 
       expect(unproject).toHaveBeenCalledTimes(2);
+      // biome-ignore lint/correctness/noUnsafeOptionalChaining: fitBounds.mock.calls[0] might be undefined
       const [sw, ne] = fitBounds.mock.calls[0]?.[0] as [
         { lng: number; lat: number },
         { lng: number; lat: number },

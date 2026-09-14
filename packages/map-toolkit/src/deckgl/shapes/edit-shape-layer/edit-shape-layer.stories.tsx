@@ -109,7 +109,7 @@ function parseCssColor(value: string): Color {
     const r = Number(parts[0]);
     const g = Number(parts[1]);
     const b = Number(parts[2]);
-    const a = parts[3] !== undefined ? Math.round(Number(parts[3]) * 255) : 255;
+    const a = parts[3] === undefined ? 255 : Math.round(Number(parts[3]) * 255);
 
     return [r, g, b, a];
   }
@@ -609,7 +609,7 @@ export const CombinedDrawAndEdit: Story = {
           )}
 
           <p className='text-body-xs text-content-secondary'>
-            {shapes.length} shape{shapes.length !== 1 ? 's' : ''} on map
+            {shapes.length} shape{shapes.length === 1 ? '' : 's'} on map
           </p>
         </div>
       </div>

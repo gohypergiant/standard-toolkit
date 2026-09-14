@@ -511,6 +511,7 @@
     "bench": "pnpm vitest bench --run --dir src",
     "build": "pnpm tsdown",
     "build-storybook": "pnpm storybook build",
+    "check": "pnpm biome check --write .",
     "constellation-tracker": "pnpm exec constellation-tracker",
     "dev": "pnpm tsc --watch",
     "format": "pnpm format:biome && pnpm format:prettier",

@@ -243,7 +243,10 @@ export const cursorStore = createMapStore<CursorState, CursorActions>({
           // Calculate new cursor with updated state
           const newCursor = getEffectiveCursor(mapId, newState);
 
-          if (previousCursor !== newCursor) {
+          if (previousCursor === newCursor) {
+            // Still need to update state even if cursor didn't change visually
+            set(newState);
+          } else {
             set(newState);
             cursorBus.emit(MapCursorEvents.changed, {
               previousCursor,
@@ -251,9 +254,6 @@ export const cursorStore = createMapStore<CursorState, CursorActions>({
               owner: requestOwner,
               id: mapId,
             });
-          } else {
-            // Still need to update state even if cursor didn't change visually
-            set(newState);
           }
         } else if (isAnyModeOwner) {
           // Store but don't apply: requester owns a different mode (pending or not current).
