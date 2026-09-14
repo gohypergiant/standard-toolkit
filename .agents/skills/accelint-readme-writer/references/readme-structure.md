@@ -6,7 +6,7 @@ Detailed guide for README section ordering, content requirements, and formatting
 
 ## Section Order
 
-READMEs must follow this section order. Users expect to find information in predictable locations.
+READMEs must follow this section order. Users expect to find information in predictable places.
 
 ```
 1.  Heading Area
@@ -19,7 +19,8 @@ READMEs must follow this section order. Users expect to find information in pred
 8.  Examples
 9.  Further Reading (optional)
 10. License
-11. Contributing (optional)
+11. Architecture & Development Guides (optional)
+12. Contributing (optional)
 ```
 
 ---
@@ -82,7 +83,7 @@ Include only for READMEs over ~200 lines. Place after heading area.
 - [License](#license)
 ```
 
-Keep to 2 levels deep maximum.
+Keep the TOC to 2 levels deep maximum.
 
 ---
 
@@ -119,7 +120,7 @@ TypeScript types are included — no separate `@types` package needed.
 
 ## 4. Quick Start
 
-Minimal working example. Get users to "hello world" fast.
+Minimal working example. Help users reach a working result quickly.
 
 ### Requirements
 
@@ -189,9 +190,9 @@ Explain why this package was created and what makes it different.
 
 ### Requirements
 
-- The problem that motivated creation
-- What alternatives exist and why this is different
-- Who should use this (and who shouldn't)
+- The problem that motivated its creation
+- What alternatives exist and why this package is different
+- Who should use this and who should not
 
 **✅ Correct**
 ```markdown
@@ -350,7 +351,30 @@ MIT - see [LICENSE](./LICENSE) for details.
 
 ---
 
-## 11. Contributing (Optional)
+## 11. Architecture & Development Guides (Optional)
+
+<!-- Include this section only if any of these files exist: openspec/config.yml, ARCHITECTURE.md, AGENTS.md -->
+
+Links to deeper technical and behavioral documentation that complements the README.
+
+**✅ Correct**
+```markdown
+## Architecture & Development Guides
+
+For deeper technical and behavioral context:
+
+- **[openspec/config.yml](./openspec/config.yml)** — Tech stack, coding patterns, and domain concepts
+- **[ARCHITECTURE.md](./ARCHITECTURE.md)** — System architecture, deployment, and data flows
+- **[AGENTS.md](./AGENTS.md)** — How AI agents should behave when working in this codebase
+
+These documents form a layered guidance system: config.yml defines what the project is, ARCHITECTURE.md explains how it's structured and deployed, and AGENTS.md governs how agents collaborate on it.
+```
+
+**Note:** Include only files that actually exist. Check for openspec/config.yml or `config.yaml`, `ARCHITECTURE.md`, and `AGENTS.md` or `CLAUDE.md` before you add this section. If none exist, omit this section entirely.
+
+---
+
+## 12. Contributing (Optional)
 
 How to contribute to the project.
 

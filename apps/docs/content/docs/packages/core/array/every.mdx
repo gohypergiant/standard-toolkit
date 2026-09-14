@@ -1,0 +1,83 @@
+---
+title: "every"
+description: Tests whether all elements in the array pass the given comparator.
+source: packages/core/src/array/every/index.ts
+source_sha: 9959f200a422cc0ea47f7b6a4f977e9b1689ef6a
+doc_sha: a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0
+deprecated: false
+updated: 2026-07-13
+---
+
+## Usage
+
+```typescript
+import { every } from '@accelint/core/array/every';
+
+// Check if all numbers are even
+const allEven = every((x: number) => x % 2 === 0)([2, 4, 6, 8]);
+// true
+
+const notAllEven = every((x: number) => x % 2 === 0)([2, 3, 4]);
+// false
+```
+
+## Reference
+
+```typescript
+function every<T>(
+  comparator: (element: T) => boolean
+): (arr: T[]) => boolean
+```
+
+### Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `comparator` | `(element: T) => boolean` | Function called for each element. Returns `true` if element passes test, `false` otherwise. |
+
+### Returns
+
+Returns a curried function that accepts an array and returns `true` if all elements pass the comparator, `false` otherwise.
+
+### Type Parameters
+
+- `T` - The type of elements in the array
+
+## Examples
+
+### Example: Validating objects
+
+```typescript
+import { every } from '@accelint/core/array/every';
+
+interface User {
+  id: number;
+  verified: boolean;
+}
+
+const users: User[] = [
+  { id: 1, verified: true },
+  { id: 2, verified: true }
+];
+
+const allVerified = every((u: User) => u.verified)(users);
+// true
+```
+
+### Example: Type guards
+
+```typescript
+import { every } from '@accelint/core/array/every';
+
+const values: Array<string | number> = ['a', 'b', 'c'];
+const allStrings = every((v: string | number) => typeof v === 'string')(values);
+// true
+```
+
+> **Good to know:** Returns `true` for an empty array. Short-circuits on first failing element, providing early exit optimization. This is a pure function with no side effects.
+
+## Related
+
+- [some](../some/index.md) - Test if any element passes comparator
+- [filter](../filter/index.md) - Get all elements matching predicate
+- [find](../find/index.md) - Find first element matching predicate

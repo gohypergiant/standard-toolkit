@@ -16,7 +16,11 @@ import { isSetEqual } from 'radashi';
 import { createLoggerDomain } from '@/shared/logger';
 import type { Rgba255Tuple } from '@accelint/predicates';
 import type { Layer, UpdateParameters } from '@deck.gl/core';
-import type { CoffinCornerExtensionProps, EntityId } from './types';
+import type {
+  CoffinCornerExtensionOptions,
+  CoffinCornerExtensionProps,
+  EntityId,
+} from './types';
 
 const logger = createLoggerDomain('[CoffinCornerExtension]');
 
@@ -56,27 +60,37 @@ uniform coffinCornerUniforms {
 } coffinCorner;
 `,
   uniformTypes: {
-    highlightColor: 'vec4<f32>', // WGSL-style type: 4-component vector of 32-bit floats (deck.gl convention)
+    // WGSL-style type: 4-component vector of 32-bit floats (deck.gl convention)
+    highlightColor: 'vec4<f32>',
   },
 };
 
 // -- Shared shader injections (IconLayer and ScatterplotLayer) --
 
 /**
- * Vertex declarations: per-instance attributes for selection/hover state,
- * passed to the fragment shader as varyings.
+ * Name of the single instanced attribute carrying selection/hover state.
+ *
+ * Both flags are packed into one `vec2` (x = selected, y = hovered) rather than
+ * two float attributes: WebGL caps a program at 16 vertex attributes, IconLayer
+ * already uses 11, and custom IconLayers add their own — so every attribute
+ * this extension claims is one a host layer can't.
+ */
+const STATE_ATTRIBUTE = 'instanceCoffinCornerState';
+
+/**
+ * Vertex declarations: the packed per-instance selection/hover attribute,
+ * unpacked into two varyings for the fragment shader.
  */
 const VS_DECL = /* glsl */ `\
-in float instanceSelectedEntity;
-in float instanceHoveredEntity;
+in vec2 ${STATE_ATTRIBUTE}; // x = selected, y = hovered
 out float vInstanceSelectedEntity; // v prefix is conventional for "varying"
 out float vInstanceHoveredEntity;
 `;
 
-/** Vertex main-end: forward per-instance attributes to the fragment shader. */
+/** Vertex main-end: unpack the per-instance state into the fragment varyings. */
 const VS_MAIN_END = /* glsl */ `\
-vInstanceSelectedEntity = instanceSelectedEntity;
-vInstanceHoveredEntity = instanceHoveredEntity;
+vInstanceSelectedEntity = ${STATE_ATTRIBUTE}.x;
+vInstanceHoveredEntity = ${STATE_ATTRIBUTE}.y;
 `;
 
 // -- ScatterplotLayer-specific vertex shader injections --
@@ -107,7 +121,7 @@ ${VS_MAIN_END}
 // Skip expansion in globe mode — clip-space XY manipulation causes depth conflicts
 // with the globe surface (known deck.gl limitation, see PR #9975).
 vQuadScale = 1.0;
-if ((instanceSelectedEntity > 0.5 || instanceHoveredEntity > 0.5)
+if ((${STATE_ATTRIBUTE}.x > 0.5 || ${STATE_ATTRIBUTE}.y > 0.5)
     && project.projectionMode != PROJECTION_MODE_GLOBE) {
   vQuadScale = 2.0;
   // Add extra offset in clip space (works for both billboard and non-billboard)
@@ -230,11 +244,36 @@ vec4 coffinCorner_composite(
 // -- Layer-specific fragment shader main-start injections --
 
 /**
- * IconLayer `fs:#main-start` — samples `iconsTexture` to get the base icon color,
- * then composites brackets over it. References IconLayer-specific uniforms/varyings:
- * `iconsTexture`, `vTextureCoords`, `uv`.
+ * Default `iconBaseColorGlsl`: the raw texel, matching plain IconLayer.
+ * `iconsTexture` and `vTextureCoords` are provided by IconLayer's fragment shader.
  */
-const ICON_FS_MAIN_START = /* glsl */ `\
+const DEFAULT_ICON_BASE_COLOR_GLSL = /* glsl */ `\
+baseColor = texture(iconsTexture, vTextureCoords);`;
+
+/**
+ * Builds the IconLayer `fs:#main-start` injection: derives the base icon color
+ * from `iconBaseColorGlsl`, then composites brackets over it.
+ *
+ * The bracket math runs at `fs:#main-start` — before IconLayer's own
+ * `if (a < icon.alphaCutoff) discard;` — so the brackets render over the
+ * transparent parts of the icon quad too. That ordering means the extension
+ * cannot read the host's final `fragColor` (it doesn't exist yet); it must
+ * produce the base color the brackets sit on itself, which is what
+ * `iconBaseColorGlsl` supplies.
+ *
+ * The statements are spliced inside `main` (not `fs:#decl`) on purpose: luma
+ * assembles `#decl` injections *before* the host layer's own shader source, so
+ * code there cannot reference `iconsTexture` or any uniform/varying a custom
+ * IconLayer declares. Inside `main`, everything the host declares is in scope.
+ *
+ * References IconLayer-specific uniforms/varyings: `iconsTexture`,
+ * `vTextureCoords`, `uv`.
+ *
+ * @param iconBaseColorGlsl - GLSL statements that assign `baseColor` (vec4).
+ * @returns The `fs:#main-start` GLSL source.
+ */
+function buildIconFsMainStart(iconBaseColorGlsl: string): string {
+  return /* glsl */ `\
   geometry.uv = uv; // uv = texture coordinate on the icon quad (ranges -1 to 1, center is 0,0)
   bool isHovered = vInstanceHoveredEntity > 0.5;
   bool isSelected = vInstanceSelectedEntity > 0.5;
@@ -259,8 +298,10 @@ const ICON_FS_MAIN_START = /* glsl */ `\
     float fillAlpha = 1.0 - smoothstep(0.0, antiAlias, cornerDist);
 
     if (insideBox) {
-      // Sample icon texture (iconsTexture and vTextureCoords are provided by IconLayer's shader)
-      vec4 baseColor = texture(iconsTexture, vTextureCoords);
+      // Base color the brackets composite over — the raw texel by default, or
+      // the consumer's color-transformed texel via iconBaseColorGlsl.
+      vec4 baseColor;
+      ${iconBaseColorGlsl}
 
       fragColor = coffinCorner_composite(baseColor, isHovered, isSelected, strokeAlpha, fillAlpha);
       DECKGL_FILTER_COLOR(fragColor, geometry);
@@ -268,6 +309,7 @@ const ICON_FS_MAIN_START = /* glsl */ `\
     }
   }
 `;
+}
 
 /**
  * ScatterplotLayer fragment declarations: adds `vQuadScale` varying
@@ -359,31 +401,42 @@ const SCATTERPLOT_FS_MAIN_START = /* glsl */ `\
 
 // -- Shader configs --
 
+/** deck.gl shader injection config: the uniform module plus per-hook GLSL. */
+type ShaderConfig = {
+  modules: [typeof coffinCornerModule];
+  inject: Record<string, string>;
+};
+
 /**
- * Shader injection config for IconLayer.
+ * Builds the shader injection config for IconLayer.
  *
  * deck.gl inject keys follow the pattern `<stage>:<hook>`:
  *   - `vs:#decl`       — vertex shader, top-level declarations (before main)
  *   - `vs:#main-end`   — vertex shader, end of main()
  *   - `fs:#decl`       — fragment shader, top-level declarations (before main)
  *   - `fs:#main-start` — fragment shader, start of main()
+ *
+ * @param iconBaseColorGlsl - GLSL statements that assign `baseColor` (vec4).
+ * @returns The IconLayer shader injection config.
  */
-const ICON_SHADERS = {
-  modules: [coffinCornerModule],
-  inject: {
-    'vs:#decl': VS_DECL,
-    'vs:#main-end': VS_MAIN_END,
-    'fs:#decl': FS_DECL,
-    'fs:#main-start': ICON_FS_MAIN_START,
-  },
-};
+function buildIconShaders(iconBaseColorGlsl: string): ShaderConfig {
+  return {
+    modules: [coffinCornerModule],
+    inject: {
+      'vs:#decl': VS_DECL,
+      'vs:#main-end': VS_MAIN_END,
+      'fs:#decl': FS_DECL,
+      'fs:#main-start': buildIconFsMainStart(iconBaseColorGlsl),
+    },
+  };
+}
 
 /**
  * Shader injection config for ScatterplotLayer.
  * Uses scatterplot-specific vertex injections for quad expansion and
  * scatterplot-specific fragment declarations for the `vQuadScale` varying.
  */
-const SCATTERPLOT_SHADERS = {
+const SCATTERPLOT_SHADERS: ShaderConfig = {
   modules: [coffinCornerModule],
   inject: {
     'vs:#decl': SCATTERPLOT_VS_DECL,
@@ -399,7 +452,13 @@ const DEFAULT_SELECTED_CORNER_FILL: Rgba255Tuple = [57, 183, 250, 255];
 /** Layer types supported by this extension. */
 const SUPPORTED_LAYERS = [IconLayer, ScatterplotLayer];
 
-/** Value equality for two optional Sets. */
+/**
+ * Value equality for two optional Sets.
+ *
+ * @param a - First Set, or `undefined`.
+ * @param b - Second Set, or `undefined`.
+ * @returns `true` when both are the same reference or hold the same members.
+ */
 function entitySetsEqual(
   a: ReadonlySet<EntityId> | undefined,
   b: ReadonlySet<EntityId> | undefined,
@@ -416,23 +475,30 @@ function entitySetsEqual(
 /**
  * Sync a Set of entity IDs into an entity state map. Replaces the full
  * contents of the map when the Set contents change (value equality).
+ *
+ * @param entities - State map to overwrite in place.
+ * @param newIds - Incoming prop value; `undefined` clears the map.
+ * @param oldIds - Previous prop value, for the value-equality short-circuit.
+ * @returns Whether the map was rewritten, so the caller can invalidate once.
  */
 function syncEntitySet(
   entities: Map<EntityId, number>,
   newIds: ReadonlySet<EntityId> | undefined,
   oldIds: ReadonlySet<EntityId> | undefined,
-  attributeManager: { invalidate: (name: string) => void } | null,
-  attributeName: string,
-): void {
-  if (!entitySetsEqual(newIds, oldIds)) {
-    entities.clear();
-    if (newIds) {
-      for (const id of newIds) {
-        entities.set(id, 1);
-      }
-    }
-    attributeManager?.invalidate(attributeName);
+): boolean {
+  if (entitySetsEqual(newIds, oldIds)) {
+    return false;
   }
+
+  entities.clear();
+
+  if (newIds) {
+    for (const id of newIds) {
+      entities.set(id, 1);
+    }
+  }
+
+  return true;
 }
 
 // -- Extension class --
@@ -477,8 +543,21 @@ function syncEntitySet(
  *   hoveredEntityIds: hoveredSet,
  * })
  * ```
+ *
+ * **Custom icon base color (custom IconLayers):** The bracket math runs at
+ * `fs:#main-start`, before IconLayer's `discard`, so the extension produces the
+ * base color the brackets sit on rather than reading the host's final
+ * `fragColor`. By default that is the raw `iconsTexture` texel. If your
+ * IconLayer's fragment shader transforms the sampled texel (e.g. replacing a
+ * match color with a per-instance fill), pass `iconBaseColorGlsl` so the same
+ * transform is applied under the brackets — instead of duplicating the whole
+ * bracket shader. The statements run inside the fragment `main`, so they can
+ * reference any uniform or varying your layer declares. Assign `baseColor`;
+ * do not declare it — the extension declares `vec4 baseColor;` immediately
+ * above the splice. See the Storybook docs (`coffin-corner.docs.mdx`) for a
+ * worked recolor example.
  */
-export class CoffinCornerExtension extends LayerExtension {
+export class CoffinCornerExtension extends LayerExtension<CoffinCornerExtensionOptions> {
   static override componentName = 'CoffinCornerExtension';
 
   static override defaultProps = {
@@ -494,17 +573,22 @@ export class CoffinCornerExtension extends LayerExtension {
     },
   };
 
-  /** Returns true if the host layer is a supported type. */
+  /**
+   * Returns true if the host layer is a supported type.
+   *
+   * @param layer - The host layer.
+   * @returns Whether the layer is an IconLayer or ScatterplotLayer (or subclass).
+   */
   private static isSupportedLayer(layer: Layer): boolean {
     return SUPPORTED_LAYERS.some((LayerType) => layer instanceof LayerType);
   }
 
   /**
-   * Initializes selection and hover entity state maps and registers
-   * `instanceSelectedEntity` / `instanceHoveredEntity` GPU attributes.
+   * Initializes selection and hover entity state maps and registers the
+   * packed `instanceCoffinCornerState` GPU attribute (x = selected, y = hovered).
    * No-op on unsupported layer types (e.g. PathLayer, SolidPolygonLayer).
    */
-  override initializeState(this: CoffinCornerLayer) {
+  override initializeState(this: CoffinCornerLayer): void {
     if (!CoffinCornerExtension.isSupportedLayer(this)) {
       logger.warn(
         `CoffinCornerExtension supports IconLayer and ScatterplotLayer (and subclasses). Received: ${(this.constructor as typeof Layer).layerName}`,
@@ -520,75 +604,69 @@ export class CoffinCornerExtension extends LayerExtension {
       return;
     }
 
-    const makeUpdateCallback =
-      (stateKey: 'selectedEntities' | 'hoveredEntities') =>
-      (
-        attribute: { value: unknown },
-        { data }: { data: unknown[] | undefined },
-      ) => {
-        const entities = this.state[stateKey];
-        const getId =
-          (this.props as unknown as CoffinCornerExtensionProps).getEntityId ??
-          // biome-ignore lint/suspicious/noExplicitAny: Default accessor assumes item.id exists.
-          ((item: any) => item.id as EntityId);
-        const items = data ?? [];
-        const value = attribute.value as Float32Array;
-
-        for (let i = 0; i < items.length; i++) {
-          value[i] = entities.get(getId(items[i])) ?? 0;
-        }
-      };
-
     attributeManager.addInstanced({
-      instanceSelectedEntity: {
-        size: 1,
-        update: makeUpdateCallback('selectedEntities'),
-      },
-      instanceHoveredEntity: {
-        size: 1,
-        update: makeUpdateCallback('hoveredEntities'),
+      [STATE_ATTRIBUTE]: {
+        size: 2,
+        update: (
+          attribute: { value: unknown },
+          { data }: { data: unknown[] | undefined },
+        ) => {
+          const { selectedEntities, hoveredEntities } = this.state;
+          const getId =
+            (this.props as unknown as CoffinCornerExtensionProps).getEntityId ??
+            ((item: unknown) => (item as { id: EntityId }).id);
+          const items = data ?? [];
+          const value = attribute.value as Float32Array;
+
+          for (let i = 0; i < items.length; i++) {
+            const id = getId(items[i]);
+            value[i * 2] = selectedEntities.get(id) ?? 0;
+            value[i * 2 + 1] = hoveredEntities.get(id) ?? 0;
+          }
+        },
       },
     });
   }
 
   /**
    * Syncs `selectedEntityIds` and `hoveredEntityIds` prop changes into the
-   * entity state maps and invalidates the corresponding GPU attributes.
+   * entity state maps and invalidates the packed state GPU attribute once if
+   * either changed.
    *
    * No-op on unsupported layer types.
+   *
+   * @param params - deck.gl update parameters with the new and old props.
    */
   override updateState(
     this: CoffinCornerLayer,
     params: UpdateParameters<Layer<CoffinCornerExtensionProps>>,
-  ) {
+  ): void {
     if (!CoffinCornerExtension.isSupportedLayer(this)) {
       return;
     }
 
-    const attributeManager = this.getAttributeManager();
-
-    syncEntitySet(
+    const selectedEntitiesChanged = syncEntitySet(
       this.state.selectedEntities,
       params.props.selectedEntityIds,
       params.oldProps.selectedEntityIds,
-      attributeManager,
-      'instanceSelectedEntity',
     );
 
-    syncEntitySet(
+    const hoveredEntitiesChanged = syncEntitySet(
       this.state.hoveredEntities,
       params.props.hoveredEntityIds,
       params.oldProps.hoveredEntityIds,
-      attributeManager,
-      'instanceHoveredEntity',
     );
+
+    if (selectedEntitiesChanged || hoveredEntitiesChanged) {
+      this.getAttributeManager()?.invalidate(STATE_ATTRIBUTE);
+    }
   }
 
   /**
    * Pushes the normalized `selectedCoffinCornerColor` to the shader's `highlightColor` uniform
    * each frame. No-op on unsupported layer types.
    */
-  override draw(this: CoffinCornerLayer) {
+  override draw(this: CoffinCornerLayer): void {
     if (!CoffinCornerExtension.isSupportedLayer(this)) {
       return;
     }
@@ -611,18 +689,31 @@ export class CoffinCornerExtension extends LayerExtension {
 
   /**
    * Returns the appropriate shader injection config based on the host layer type.
-   * IconLayer gets texture-sampling shaders; ScatterplotLayer gets circle-replicating shaders.
-   * Returns null for unsupported layer types to skip shader injection.
+   * IconLayer gets texture-sampling shaders (built from `iconBaseColorGlsl` when
+   * set); ScatterplotLayer gets circle-replicating shaders. Returns null for
+   * unsupported layer types to skip shader injection.
    *
+   * @param extension - The extension instance, for its constructor options.
    * @returns The vertex/fragment shader injection config and uniform module, or null.
    */
-  override getShaders(this: CoffinCornerLayer, _extensions: this) {
+  override getShaders(
+    this: CoffinCornerLayer,
+    extension: this,
+  ): ShaderConfig | null {
     if (this instanceof ScatterplotLayer) {
       return SCATTERPLOT_SHADERS;
     }
+
     if (this instanceof IconLayer) {
-      return ICON_SHADERS;
+      // A blank option would leave `baseColor` unassigned in the shader; treat
+      // it as unset. deck.gl only calls this when the host rebuilds its model.
+      const iconBaseColorGlsl = extension.opts?.iconBaseColorGlsl?.trim();
+
+      return buildIconShaders(
+        iconBaseColorGlsl || DEFAULT_ICON_BASE_COLOR_GLSL,
+      );
     }
+
     return null;
   }
 }

@@ -1,0 +1,204 @@
+---
+title: Log Level Constants
+description: Log level constants for configuring logger verbosity
+source: packages/logger/src/definitions.ts
+source_sha: 8c730bafc8068e25285e695c913ebefcfa3c344d
+doc_sha: 931ca106977dfba33174bc37eba0a962991b082f
+deprecated: false
+updated: 2026-07-13
+---
+
+## Usage
+
+```typescript
+import { getLogger, DEBUG, INFO, WARN, ERROR } from '@accelint/logger';
+
+// Use constants for type safety
+const devLogger = getLogger({ enabled: true, level: DEBUG });
+const prodLogger = getLogger({ enabled: true, level: WARN });
+```
+
+## Reference
+
+```typescript
+const TRACE: LogLevelType = 'trace';
+const DEBUG: LogLevelType = 'debug';
+const INFO: LogLevelType = 'info';
+const WARN: LogLevelType = 'warn';
+const ERROR: LogLevelType = 'error';
+const FATAL: LogLevelType = 'fatal';
+
+type LogLevel = 'trace' | 'debug' | 'info' | 'warn' | 'error' | 'fatal';
+```
+
+### Constants
+
+## TRACE
+
+Use for fine-grained debugging information, more verbose than debug.
+
+```typescript
+import { getLogger, TRACE } from '@accelint/logger';
+
+const logger = getLogger({ level: TRACE, enabled: true });
+logger.trace('Entering function', { args: [1, 2, 3] });
+```
+
+## DEBUG
+
+Use for detailed diagnostic information useful during development.
+
+```typescript
+import { getLogger, DEBUG } from '@accelint/logger';
+
+const logger = getLogger({ level: DEBUG, enabled: true });
+logger.debug('Cache miss', { key: 'user:123' });
+```
+
+## INFO
+
+Use for general informational messages about application progress.
+
+```typescript
+import { getLogger, INFO } from '@accelint/logger';
+
+const logger = getLogger({ level: INFO, enabled: true });
+logger.info('Server started', { port: 3000 });
+```
+
+## WARN
+
+Use for potentially harmful situations that don't prevent execution.
+
+```typescript
+import { getLogger, WARN } from '@accelint/logger';
+
+const logger = getLogger({ level: WARN, enabled: true });
+logger.warn('API rate limit approaching', { remaining: 10 });
+```
+
+## ERROR
+
+Use for critical errors that require immediate attention.
+
+```typescript
+import { getLogger, ERROR } from '@accelint/logger';
+
+const logger = getLogger({ level: ERROR, enabled: true });
+logger.error('Payment processing failed', { orderId: 'ord_123' });
+```
+
+## FATAL
+
+Use for severe errors that may cause the application to terminate.
+
+```typescript
+import { getLogger, FATAL } from '@accelint/logger';
+
+const logger = getLogger({ level: FATAL, enabled: true });
+logger.fatal('Database connection lost', { error });
+```
+
+## LogLevel Type
+
+The `LogLevel` type represents all valid log level strings. Use this for type annotations when accepting log levels as parameters.
+
+```typescript
+import type { LogLevel } from '@accelint/logger';
+
+function createLogger(level: LogLevel) {
+  return getLogger({ enabled: true, level });
+}
+
+createLogger('info'); // ✓ Valid
+createLogger('verbose'); // ✗ Type error
+```
+
+## LoggerOptions Type
+
+Configuration options for the logger.
+
+```typescript
+type LoggerOptions = {
+  enabled: boolean;
+  level?: LogLevel;
+  env?: 'production' | 'development';
+  pretty?: boolean;
+  prefix?: string;
+  plugins?: LogLayerPlugin[];
+  transports?: LogLayerTransport[];
+  groups?: LogGroupsConfig;
+}
+```
+
+### Properties
+
+| Property | Type | Default | Description |
+|----------|------|---------|-------------|
+| `enabled` | `boolean` | Required | Whether logging is enabled; `false` makes all calls no-ops |
+| `level` | `LogLevel` | `'debug'` | Minimum log level to output |
+| `env` | `'production' \| 'development'` | `'development'` | Runtime environment; controls server detection |
+| `pretty` | `boolean` | `true` | Use pretty console output; `false` emits structured JSON |
+| `prefix` | `string` | `''` | String prepended to all log messages |
+| `plugins` | `LogLayerPlugin[]` | `[]` | Additional plugins applied after the built-in ones |
+| `transports` | `LogLayerTransport[]` | `[]` | Custom transports that replace the default console transport |
+| `groups` | `LogGroupsConfig` | `{}` | Named group configuration for conditional group logging |
+
+## Examples
+
+### Example: Log level hierarchy
+
+```typescript
+import { getLogger, WARN } from '@accelint/logger';
+
+// Logger set to WARN level
+const logger = getLogger({ enabled: true, level: WARN });
+
+logger.trace('Not logged'); // Below threshold
+logger.debug('Not logged'); // Below threshold
+logger.info('Not logged');  // Below threshold
+logger.warn('Logged');      // At threshold
+logger.error('Logged');     // Above threshold
+logger.fatal('Logged');     // Above threshold
+```
+
+### Example: Dynamic log level
+
+```typescript
+import { getLogger, DEBUG, INFO, WARN, type LogLevel } from '@accelint/logger';
+
+function getLogLevel(): LogLevel {
+  if (process.env.DEBUG === 'true') return DEBUG;
+  if (process.env.NODE_ENV === 'production') return WARN;
+  return INFO;
+}
+
+const logger = getLogger({
+  enabled: true,
+  level: getLogLevel(),
+});
+```
+
+### Example: Type-safe logger configuration
+
+```typescript
+import type { LoggerOptions } from '@accelint/logger';
+import { getLogger, WARN } from '@accelint/logger';
+
+const config: LoggerOptions = {
+  enabled: process.env.LOGGING_ENABLED === 'true',
+  level: WARN,
+  env: process.env.NODE_ENV as 'production' | 'development',
+  prefix: '[API]',
+};
+
+const logger = getLogger(config);
+```
+
+> **Good to know:** Log levels are hierarchical. Setting the logger to a specific level enables that level and all higher (more severe) levels. For example, setting `level: WARN` will output warn, error, and fatal logs, but suppress trace, debug, and info logs.
+
+## Related
+
+- [getLogger](./default/index.md) - Singleton logger factory
+- [bootstrap](./default/bootstrap.md) - Direct logger initialization
+- [LogLayer Log Levels](https://loglayer.dev/logging-api/adjusting-log-levels.html) - Upstream documentation

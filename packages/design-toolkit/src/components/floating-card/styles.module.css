@@ -13,21 +13,36 @@
 @reference '@accelint/design-foundation/styles';
 
 @layer components.l3 {
-  .cardContent {
-    @apply h-full w-full;
-  }
-
+  /* The provider covers its container but stays transparent to pointer events,
+     so only the cards themselves are interactive and the application content
+     beneath keeps working normally. */
   .providerRoot {
     @apply pointer-events-none absolute inset-0;
+  }
+
+  .panel {
+    @apply bg-surface-default rounded-large shadow-elevation-overlay-bold pointer-events-auto absolute flex flex-col overflow-hidden;
+  }
+
+  .header {
+    @apply p-xs gap-xs text-header-m @container/floating-card-header flex h-32 shrink-0 cursor-grab items-center;
+  }
+
+  /* A pinned card cannot be moved, so its header stops advertising a drag. */
+  .panel[data-pinned] .header {
+    @apply cursor-default;
   }
 
   .headerSide {
     @apply gap-xs flex h-full items-center;
   }
 
-  /* Zero width + pointer-events-none lets the title visually overflow the
-     flex row without consuming drag-handle space or intercepting pointer
-     gestures meant for dockview's drag handle (.dv-void-container). */
+  .headerActions {
+    @apply gap-xs ml-auto flex h-full items-center;
+  }
+
+  /* Zero width + pointer-events-none lets the title visually overflow the flex
+     row without consuming space or swallowing the header's drag gesture. */
   .headerTitleContainer {
     @apply text-header-m pl-xs pointer-events-none h-full w-0;
   }
@@ -42,37 +57,76 @@
     @apply h-full truncate leading-24 @min-[1rem]/floating-card-header:w-[calc(100cqw-10rem)];
   }
 
-  .floatingCardProvider {
-    @apply absolute inset-0;
-    :global(.dv-dockview) {
-      --dv-group-view-background-color: transparent;
-      --dv-tabs-and-actions-container-background-color: var(
-        --bg-surface-default
-      );
-      --dv-floating-box-shadow: var(--shadow-elevation-overlay-bold);
-    }
-    :global(.dv-groupview) {
-      --dv-group-view-background-color: var(--bg-surface-default);
-      @apply pointer-events-auto;
-    }
-    :global(.dv-resize-container) {
-      @apply rounded-large pointer-events-auto;
-    }
+  .content {
+    @apply min-h-0 flex-1;
+  }
 
-    :global(.dv-tabs-and-actions-container) {
-      --dv-tabs-and-actions-container-height: 32px;
-      @apply p-xs text-header-m @container/floating-card-header;
-    }
-    :global(.dv-scrollable) {
-      display: none;
-    }
-    :global(.dv-void-container) {
-      cursor: grab;
-    }
+  /* Resize handles are invisible hit areas laid over the card's edges and
+     corners. Corners sit above edges so the diagonal cursors win where the two
+     overlap. */
+  .resize-n,
+  .resize-s,
+  .resize-e,
+  .resize-w,
+  .resize-ne,
+  .resize-nw,
+  .resize-se,
+  .resize-sw {
+    @apply absolute;
+  }
 
-    :global(.dv-resize-container[data-pinned]) :global(.dv-void-container) {
-      pointer-events: none;
-      cursor: default;
-    }
+  .resize-n,
+  .resize-s {
+    @apply h-xxs inset-x-0;
+    cursor: ns-resize;
+  }
+
+  .resize-e,
+  .resize-w {
+    @apply w-xxs inset-y-0;
+    cursor: ew-resize;
+  }
+
+  .resize-n {
+    @apply top-0;
+  }
+
+  .resize-s {
+    @apply bottom-0;
+  }
+
+  .resize-e {
+    @apply right-0;
+  }
+
+  .resize-w {
+    @apply left-0;
+  }
+
+  .resize-ne,
+  .resize-nw,
+  .resize-se,
+  .resize-sw {
+    @apply size-s z-1;
+  }
+
+  .resize-ne {
+    @apply top-0 right-0;
+    cursor: nesw-resize;
+  }
+
+  .resize-nw {
+    @apply top-0 left-0;
+    cursor: nwse-resize;
+  }
+
+  .resize-se {
+    @apply right-0 bottom-0;
+    cursor: nwse-resize;
+  }
+
+  .resize-sw {
+    @apply bottom-0 left-0;
+    cursor: nesw-resize;
   }
 }

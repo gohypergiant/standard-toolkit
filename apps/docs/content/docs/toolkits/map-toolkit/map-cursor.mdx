@@ -1,0 +1,311 @@
+---
+title: Map Cursor
+description: Coordinate cursor styling across map features with ownership-based priority.
+source: packages/map-toolkit/src/map-cursor/index.ts
+source_sha: 2acd8bce13156415b56717ceb928d4ebe65f9752
+doc_sha: bfc4f91f2d30944d598bb8a83e93a2a395f4b944
+deprecated: false
+updated: 2026-07-13
+---
+
+## Usage
+
+```tsx
+import { useMapCursor, useMapCursorEffect } from '@accelint/map-toolkit/map-cursor';
+import type { UniqueId } from '@accelint/core';
+import type { PickingInfo } from '@deck.gl/core';
+
+// Inside MapProvider - read and update cursor
+function InteractiveLayer() {
+  const { cursor, requestCursorChange, clearCursor } = useMapCursor();
+  
+  const handleHover = (info: PickingInfo) => {
+    if (info.object) {
+      requestCursorChange('pointer', 'layer-id');
+    } else {
+      clearCursor('layer-id');
+    }
+  };
+  
+  return <ScatterplotLayer onHover={handleHover} />;
+}
+
+// Lifecycle-based cursor (auto-cleanup on unmount)
+function DrawingMode() {
+  useMapCursorEffect('crosshair', 'drawing-mode');
+  return <div>Drawing active</div>;
+}
+```
+
+## Reference
+
+### `useMapCursor(id?: UniqueId): UseMapCursorReturn`
+
+Hook to access cursor state and actions. Uses `useSyncExternalStore` for concurrent-safe updates with a fan-out pattern.
+
+**Owner-based Priority System:**
+- Mode owners (from MapModeStore) have highest priority
+- Non-owners can set cursors only in default/ownerless modes
+- Rejected requests emit events with rejection reasons
+
+#### Parameters
+
+- `id` (optional) - Map instance ID. If omitted, uses `MapContext` (requires being within `MapProvider`).
+
+#### Returns
+
+```typescript
+type UseMapCursorReturn = {
+  cursor: CSSCursorType;
+  requestCursorChange: (cursor: CSSCursorType, requestOwner: string) => void;
+  clearCursor: (owner: string) => void;
+};
+```
+
+- `cursor` - Current active cursor (CSS cursor string)
+- `requestCursorChange` - Request cursor change with ownership
+- `clearCursor` - Clear cursor for specific owner
+
+#### Throws
+
+Error if no `id` is provided and hook is used outside `MapProvider`.
+
+### `useMapCursorEffect(cursorType: CSSCursorType, owner: string, id?: UniqueId): void`
+
+Lifecycle hook that automatically manages cursor for a component.
+
+Requests cursor on mount, maintains it while mounted, and clears on unmount. Does NOT re-render on cursor state changes—use `useMapCursor` if you need to read current cursor value.
+
+#### Parameters
+
+- `cursorType` - The CSS cursor string to request
+- `owner` - Owner identifier for priority management
+- `id` (optional) - Map instance ID
+
+#### Throws
+
+Error if no `id` is provided and hook is used outside `MapProvider`.
+
+### Events
+
+Cursor management uses event-driven coordination:
+
+#### `MapCursorEvents.changeRequest`
+
+Emitted when cursor change is requested.
+
+```typescript
+type CursorChangeRequestPayload = {
+  cursor: CSSCursorType;
+  owner: string;
+  id: UniqueId;
+};
+```
+
+#### `MapCursorEvents.changed`
+
+Emitted when cursor successfully changes.
+
+```typescript
+type CursorChangedPayload = {
+  previousCursor: CSSCursorType;
+  currentCursor: CSSCursorType;
+  owner: string;
+  id: UniqueId;
+};
+```
+
+#### `MapCursorEvents.rejected`
+
+Emitted when cursor request is rejected due to priority.
+
+```typescript
+type CursorRejectionPayload = {
+  rejectedCursor: CSSCursorType;
+  rejectedOwner: string;
+  currentOwner: string;
+  reason: string;
+  id: UniqueId;
+};
+```
+
+### Store Functions
+
+```typescript
+// Get current cursor
+getCursor(id: UniqueId): CSSCursorType;
+
+// Clear state for cleanup
+clearCursorState(id: UniqueId): void;
+
+// Low-level store access
+cursorStore.useSelector(id: UniqueId, selector: (state) => T): T;
+cursorStore.actions(id: UniqueId): { requestCursorChange, clearCursor };
+```
+
+### Types
+
+```typescript
+// CSS cursor string from React CSSProperties
+type CSSCursorType = NonNullable<React.CSSProperties['cursor']>;
+```
+
+Includes all standard CSS cursor keywords (`pointer`, `crosshair`, `move`, etc.) and custom `url()` syntax.
+
+## Examples
+
+### Example: Hover-based cursor change
+
+```tsx
+import { useMapCursor } from '@accelint/map-toolkit/map-cursor';
+import { ScatterplotLayer } from '@deck.gl/layers';
+import type { PickingInfo } from '@deck.gl/core';
+
+function PointLayer() {
+  const { requestCursorChange, clearCursor } = useMapCursor();
+  
+  const handleHover = (info: PickingInfo) => {
+    if (info.object) {
+      // Show pointer when hovering over a point
+      requestCursorChange('pointer', 'point-layer');
+    } else {
+      // Clear cursor when not hovering
+      clearCursor('point-layer');
+    }
+  };
+  
+  return (
+    <ScatterplotLayer
+      id="points"
+      data={points}
+      onHover={handleHover}
+      getPosition={(d) => d.position}
+      getRadius={10}
+    />
+  );
+}
+```
+
+### Example: Mode-coordinated cursor
+
+```tsx
+import { useMapMode } from '@accelint/map-toolkit/map-mode';
+import { useMapCursorEffect } from '@accelint/map-toolkit/map-cursor';
+
+function DrawingMode() {
+  const { mode } = useMapMode();
+  
+  // Automatically set crosshair cursor when in drawing mode
+  useMapCursorEffect(
+    mode === 'drawing' ? 'crosshair' : 'default',
+    'drawing-mode'
+  );
+  
+  return mode === 'drawing' ? <DrawControls /> : null;
+}
+```
+
+### Example: Custom cursor with icon
+
+```tsx
+import { useMapCursor } from '@accelint/map-toolkit/map-cursor';
+
+function CustomCursorControl() {
+  const { requestCursorChange } = useMapCursor();
+  
+  const setCustomCursor = () => {
+    // Use custom cursor image
+    requestCursorChange(
+      'url(/cursors/crosshair.svg) 16 16, crosshair',
+      'custom-control'
+    );
+  };
+  
+  return <button onClick={setCustomCursor}>Use Custom Cursor</button>;
+}
+```
+
+### Example: Priority-aware cursor management
+
+```tsx
+import { useMapMode } from '@accelint/map-toolkit/map-mode';
+import { useMapCursor } from '@accelint/map-toolkit/map-cursor';
+import { useEffect } from 'react';
+
+function ModeAwareCursor() {
+  const { mode } = useMapMode();
+  const { requestCursorChange, clearCursor } = useMapCursor();
+  
+  useEffect(() => {
+    // Mode owners have priority
+    if (mode === 'editing') {
+      requestCursorChange('move', 'editing-mode');
+    } else {
+      clearCursor('editing-mode');
+    }
+  }, [mode, requestCursorChange, clearCursor]);
+  
+  return null;
+}
+```
+
+### Example: Listening to cursor rejections
+
+```tsx
+import { useOn } from '@accelint/bus/react';
+import { MapCursorEvents } from '@accelint/map-toolkit/map-cursor';
+import type { CursorRejectedEvent } from '@accelint/map-toolkit/map-cursor';
+
+function CursorRejectionLogger({ mapId }: { mapId: UniqueId }) {
+  useOn<CursorRejectedEvent>(MapCursorEvents.rejected, (event) => {
+    if (event.payload.id === mapId) {
+      console.warn(
+        `Cursor request rejected: ${event.payload.reason}`,
+        `Owner: ${event.payload.rejectedOwner}`
+      );
+    }
+  });
+  
+  return null;
+}
+```
+
+### Example: Conditional cursor in layer
+
+```tsx
+import { useMapCursor } from '@accelint/map-toolkit/map-cursor';
+import { IconLayer } from '@deck.gl/layers';
+import type { PickingInfo } from '@deck.gl/core';
+
+function IconMarkerLayer({ editable }: { editable: boolean }) {
+  const { requestCursorChange, clearCursor } = useMapCursor();
+  
+  const handleHover = (info: PickingInfo) => {
+    if (!editable) return;
+    
+    if (info.object) {
+      requestCursorChange('grab', 'icon-layer');
+    } else {
+      clearCursor('icon-layer');
+    }
+  };
+  
+  return (
+    <IconLayer
+      id="markers"
+      data={markers}
+      onHover={handleHover}
+      getPosition={(d) => d.position}
+      getIcon={() => 'marker'}
+    />
+  );
+}
+```
+
+> **Good to know:** Cursor changes respect map mode ownership. If a mode owner sets a cursor, non-owners' requests will be rejected until the mode changes.
+
+## Related
+
+- [BaseMap](../deckgl/base-map/index.mdx) - Automatically creates MapProvider for cursor management
+- [useMapMode](../map-mode/index.mdx) - Coordinate map modes with cursor ownership
+- [@accelint/bus](../../../packages/bus/index.mdx) - Event bus used for cursor coordination

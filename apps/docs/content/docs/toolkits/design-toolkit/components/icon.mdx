@@ -1,0 +1,130 @@
+---
+title: Icon
+description: A wrapper component for displaying SVG icons with consistent sizing and accessibility support
+source: packages/design-toolkit/src/components/icon/index.tsx
+source_sha: 4058c6151f0029df9882bd6457203cc1c1898cde
+doc_sha: e4419487ff123dede363e9d4780aff7dc7a2fa0b
+deprecated: false
+updated: 2026-07-13
+---
+
+## Usage
+
+```tsx
+import { Icon } from '@accelint/design-toolkit';
+import { Settings } from '@accelint/icons';
+
+export function MyComponent() {
+  return (
+    <Icon>
+      <Settings />
+    </Icon>
+  );
+}
+```
+
+## Reference
+
+```typescript
+interface IconProps extends ComponentPropsWithRef<'span'> {
+  size?: 'xsmall' | 'small' | 'medium' | 'large';
+  children: React.ReactNode;
+  className?: string;
+}
+```
+
+### Props
+
+| Prop | Type | Default | Required |
+|------|------|---------|----------|
+| `children` | `React.ReactNode` | - | Yes |
+| `size` | `'xsmall' \| 'small' \| 'medium' \| 'large'` | `'medium'` | No |
+| `className` | `string` | - | No |
+
+#### `size`
+
+Controls the icon dimensions. Available sizes:
+- `xsmall` - Extra small for compact UI elements
+- `small` - Small for inline text or dense layouts
+- `medium` - Default size for most use cases
+- `large` - Large for prominent visual elements
+
+#### Context-aware sizing
+
+Icon automatically inherits sizing from parent components like Button via `IconProvider`. When used inside a Button, the icon size matches the button size automatically.
+
+## Examples
+
+### Example: Basic icon
+
+```tsx
+import { Icon } from '@accelint/design-toolkit';
+import { Home } from '@accelint/icons';
+
+<Icon>
+  <Home />
+</Icon>
+```
+
+### Example: Different sizes
+
+```tsx
+import { Icon } from '@accelint/design-toolkit';
+import { Star } from '@accelint/icons';
+
+<>
+  <Icon size="xsmall"><Star /></Icon>
+  <Icon size="small"><Star /></Icon>
+  <Icon size="medium"><Star /></Icon>
+  <Icon size="large"><Star /></Icon>
+</>
+```
+
+### Example: Icon in button (automatic sizing)
+
+```tsx
+import { Button, Icon } from '@accelint/design-toolkit';
+import { Plus, Save } from '@accelint/icons';
+
+<>
+  <Button size="small">
+    <Icon><Plus /></Icon>
+    Add
+  </Button>
+  
+  <Button size="large">
+    <Icon><Save /></Icon>
+    Save Changes
+  </Button>
+</>
+```
+
+> **Good to know:** When Icon is used inside a Button, the icon automatically inherits the button's size. No need to set the size prop manually.
+
+### Example: Custom styling
+
+```tsx
+import { Icon } from '@accelint/design-toolkit';
+import { Alert } from '@accelint/icons';
+
+<Icon className="text-critical">
+  <Alert />
+</Icon>
+```
+
+### Example: Icon-only button
+
+```tsx
+import { Button, Icon } from '@accelint/design-toolkit';
+import { Settings } from '@accelint/icons';
+
+<Button variant="icon" aria-label="Settings">
+  <Icon><Settings /></Icon>
+</Button>
+```
+
+## Related
+
+- [Button](../button/index.md) - Button component that provides icon sizing context
+- [IconProvider](./context.md) - Context provider for managing icon sizes
+- [@accelint/icons](../../packages/icons/index.md) - Icon library package

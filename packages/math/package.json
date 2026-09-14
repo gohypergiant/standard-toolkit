@@ -1,7 +1,7 @@
 {
   "name": "@accelint/math",
   "description": "A simple, lightweight JavaScript library that provides a collection of basic mathematical functions.",
-  "version": "0.1.9",
+  "version": "0.2.0",
   "author": "https://hypergiant.com",
   "$schema": "https://json.schemastore.org/package",
   "devDependencies": {
@@ -20,6 +20,7 @@
     "./clamp": "./dist/clamp/index.js",
     "./random": "./dist/random/index.js",
     "./round": "./dist/round/index.js",
+    "./wrap": "./dist/wrap/index.js",
     "./package.json": "./package.json"
   },
   "files": [

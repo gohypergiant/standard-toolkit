@@ -1,0 +1,97 @@
+---
+title: "findLastIndex"
+description: Returns the index of the last element in an array that satisfies a predicate function
+source: packages/core/src/array/find-last-index/index.ts
+source_sha: 7e65956eb3d6c600c707707693452afcbb4ddead
+doc_sha: 34d8b95a10ab4a52ac62c2508ddddab743c5174e
+deprecated: false
+updated: 2026-07-13
+---
+
+## Usage
+
+```typescript
+import { findLastIndex } from '@accelint/core';
+
+// Find index of last even number
+const lastEvenIndex = findLastIndex((x: number) => x % 2 === 0)([1, 2, 3, 4, 5]);
+// 3
+
+// Partial application
+const findLastNegative = findLastIndex((x: number) => x < 0);
+findLastNegative([5, -3, 10, -8]); // 3
+```
+
+## Reference
+
+```typescript
+function findLastIndex<T>(
+  predicate: (element: T, index: number) => boolean
+): (arr: T[]) => number
+```
+
+### Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `predicate` | `(element: T, index: number) => boolean` | Function called for each element from the end until it returns `true`. Receives the element and its index. |
+
+### Returns
+
+Returns a curried function that accepts an array and returns the index of the last matching element, or `-1` if no match is found.
+
+### Type Parameters
+
+- `T` - The type of elements in the array
+
+## Examples
+
+### Example: Finding last occurrence
+
+```typescript
+import { findLastIndex } from '@accelint/core';
+
+const data = [1, 2, 3, 2, 1];
+const lastTwoIndex = findLastIndex((x: number) => x === 2)(data);
+// 3 (finds the second occurrence of 2)
+```
+
+### Example: Finding by complex condition
+
+```typescript
+import { findLastIndex } from '@accelint/core';
+
+interface Task {
+  id: number;
+  completed: boolean;
+  priority: 'low' | 'medium' | 'high';
+}
+
+const tasks: Task[] = [
+  { id: 1, completed: true, priority: 'high' },
+  { id: 2, completed: false, priority: 'medium' },
+  { id: 3, completed: true, priority: 'low' }
+];
+
+const lastCompletedIndex = findLastIndex((t: Task) => t.completed)(tasks);
+// 2
+```
+
+### Example: Using index parameter
+
+```typescript
+import { findLastIndex } from '@accelint/core';
+
+// Find last element where value equals index
+const data = [0, 2, 2, 3, 5];
+const index = findLastIndex((value: number, idx: number) => value === idx)(data);
+// 3 (value 3 at index 3)
+```
+
+> **Good to know:** The search starts from the end of the array and moves backward. The predicate is called only until a matching element is found, then iteration stops immediately.
+
+## Related
+
+- [findIndex](../find-index/index.md) - Find index from the start of array
+- [findLast](../find-last/index.md) - Find the last matching element
+- [find](../find/index.md) - Find the first matching element

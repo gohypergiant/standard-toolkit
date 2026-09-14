@@ -23,7 +23,9 @@ ignore:
   - .turbo
   - .vscode
   - .agents
+  - .pi
   - node_modules
+  - 'apps/docs'
   - '**/.next'
   - '**/.ladle'
   - '**/.storybook'

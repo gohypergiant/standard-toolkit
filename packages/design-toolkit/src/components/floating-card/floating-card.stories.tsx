@@ -17,6 +17,16 @@ import { Button } from '../button';
 import { FloatingCard } from './index';
 import { FloatingCardProvider } from './provider';
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import type { ComponentProps, ReactNode } from 'react';
+import type { FloatingCardProviderProps } from './types';
+
+function CardContent({ children }: Readonly<{ children: ReactNode }>) {
+  return (
+    <div className='flex h-full flex-col items-center justify-center gap-m self-stretch rounded-medium bg-base-surface p-m outline outline-dashed outline-1 outline-interactive-hover'>
+      <p className='text-base-text-secondary text-xs'>{children}</p>
+    </div>
+  );
+}
 
 const panelIds = {
   a: uuid(),
@@ -39,11 +49,28 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Default: Story = {
-  render: (args) => {
+/** Default story args: the card's own props plus the provider's `bounds`. */
+type DefaultStoryArgs = ComponentProps<typeof FloatingCard> & {
+  bounds: FloatingCardProviderProps['bounds'];
+};
+
+export const Default: StoryObj<DefaultStoryArgs> = {
+  args: {
+    bounds: 'provider',
+  },
+  argTypes: {
+    bounds: {
+      control: 'inline-radio',
+      description:
+        'Region cards are confined to while dragging and resizing. Drag the card past the outlined box to compare.',
+      options: ['provider', 'viewport'],
+      table: { defaultValue: { summary: 'provider' } },
+    },
+  },
+  render: ({ bounds, ...args }) => {
     return (
       <div className='relative h-800 w-600 p-l outline outline-info-bold'>
-        <FloatingCardProvider>
+        <FloatingCardProvider bounds={bounds}>
           <FloatingCard {...args}>
             <div className='flex h-full flex-col items-center justify-center gap-m self-stretch rounded-medium outline outline-dashed outline-1 outline-interactive-hover'>
               Panel Content
@@ -64,6 +91,7 @@ export const WithHeaderActions: Story = {
           headerActions={[
             {
               icon: <span className='text-lg'>⚙️</span>,
+              label: 'Action',
               onClick: () => alert('Action clicked'),
             },
           ]}
@@ -83,34 +111,58 @@ export const WithHeaderActions: Story = {
   },
 };
 
+export const Pinnable: Story = {
+  render: () => {
+    return (
+      <div className='relative h-800 w-600 p-l outline outline-info-bold'>
+        <FloatingCardProvider icon={<Placeholder />} headerActions={['pin']}>
+          <FloatingCard id={panelIds.a} title='Pinnable Card'>
+            <CardContent>
+              Click the pin button in the header — dragging will be disabled
+              while pinned.
+            </CardContent>
+          </FloatingCard>
+        </FloatingCardProvider>
+      </div>
+    );
+  },
+};
+
 export const MultipleCards: Story = {
   render: () => {
     return (
       <div className='relative h-1000 w-600 p-l outline outline-info-bold'>
-        <FloatingCardProvider>
-          <FloatingCard id={panelIds.a} title='Card A'>
-            <div className='flex h-full flex-col items-center justify-center gap-m self-stretch rounded-medium bg-base-surface p-m outline outline-dashed outline-1 outline-interactive-hover'>
-              <div className='font-semibold text-sm'>Card A</div>
-              <p className='text-base-text-secondary text-xs'>
-                Draggable floating panel
-              </p>
-            </div>
+        <FloatingCardProvider
+          icon={<Placeholder />}
+          headerActions={(id) => (id === panelIds.a ? ['pin'] : [])}
+        >
+          <FloatingCard
+            id={panelIds.a}
+            title='Card A'
+            initialPosition={{ x: 24, y: 24 }}
+          >
+            <CardContent>
+              The header actions factory matched this card's id, so it has a pin
+              button.
+            </CardContent>
           </FloatingCard>
-          <FloatingCard id={panelIds.b} title='Card B'>
-            <div className='flex h-full flex-col items-center justify-center gap-m self-stretch rounded-medium bg-base-surface p-m outline outline-dashed outline-1 outline-interactive-hover'>
-              <div className='font-semibold text-sm'>Card B</div>
-              <p className='text-base-text-secondary text-xs'>
-                Another independent card
-              </p>
-            </div>
+          <FloatingCard
+            id={panelIds.b}
+            title='Card B'
+            initialPosition={{ x: 132, y: 260 }}
+          >
+            <CardContent>
+              The same factory returned no actions for this card.
+            </CardContent>
           </FloatingCard>
-          <FloatingCard id={panelIds.c} title='Card C'>
-            <div className='flex h-full flex-col items-center justify-center gap-m self-stretch rounded-medium bg-base-surface p-m outline outline-dashed outline-1 outline-interactive-hover'>
-              <div className='font-semibold text-sm'>Card C</div>
-              <p className='text-base-text-secondary text-xs'>
-                Try dragging us around!
-              </p>
-            </div>
+          <FloatingCard
+            id={panelIds.c}
+            title='Card C'
+            initialPosition={{ x: 240, y: 496 }}
+          >
+            <CardContent>
+              Each card is independently draggable and resizable.
+            </CardContent>
           </FloatingCard>
         </FloatingCardProvider>
       </div>
@@ -127,6 +179,7 @@ export const CustomDimensions: Story = {
             id={panelIds.a}
             title='Small Card'
             initialDimensions={{ width: 250, height: 200 }}
+            initialPosition={{ x: 24, y: 24 }}
           >
             <div className='flex h-full flex-col items-center justify-center gap-m self-stretch rounded-medium outline outline-dashed outline-1 outline-interactive-hover'>
               Small dimensions
@@ -136,6 +189,7 @@ export const CustomDimensions: Story = {
             id={panelIds.b}
             title='Large Card'
             initialDimensions={{ width: 500, height: 400 }}
+            initialPosition={{ x: 24, y: 268 }}
           >
             <div className='flex h-full flex-col items-center justify-center gap-m self-stretch rounded-medium outline outline-dashed outline-1 outline-interactive-hover'>
               Larger dimensions for more content
@@ -156,20 +210,24 @@ export const WithHeaderActionDividers: Story = {
           headerActions={[
             {
               icon: <span>📌</span>,
+              label: 'Pin',
               onClick: () => alert('Pin clicked'),
             },
             {
               icon: <span className='text-lg'>🔗</span>,
+              label: 'Share',
               onClick: () => alert('Share clicked'),
             },
             'divider',
             {
               icon: <span className='text-lg'>⚙️</span>,
+              label: 'Settings',
               onClick: () => alert('Settings clicked'),
             },
             'divider',
             {
               icon: <span className='text-lg'>🗑️</span>,
+              label: 'Delete',
               onClick: () => alert('Delete clicked'),
             },
           ]}
@@ -228,38 +286,6 @@ export const WithScrollableContent: Story = {
                 </p>
               ))}
             </div>
-          </FloatingCard>
-        </FloatingCardProvider>
-      </div>
-    );
-  },
-};
-
-function PinnableCardContent() {
-  return (
-    <div className='flex h-full flex-col items-center justify-center gap-m self-stretch rounded-medium bg-base-surface p-m outline outline-dashed outline-1 outline-interactive-hover'>
-      <div className='font-semibold text-sm'>Pinnable Card</div>
-      <p className='text-base-text-secondary text-xs'>
-        Click the pin button in the header — dragging will be disabled while
-        pinned.
-      </p>
-    </div>
-  );
-}
-
-export const Pinnable: Story = {
-  render: () => {
-    return (
-      <div className='relative h-800 w-600 p-l outline outline-info-bold'>
-        <FloatingCardProvider
-          icon={<Placeholder />}
-          headerActions={(id) => (id === panelIds.a ? ['pin'] : [])}
-        >
-          <FloatingCard id={panelIds.a} title='Pinnable Card'>
-            <PinnableCardContent />
-          </FloatingCard>
-          <FloatingCard id={panelIds.b} title='Pinnable Card'>
-            <PinnableCardContent />
           </FloatingCard>
         </FloatingCardProvider>
       </div>

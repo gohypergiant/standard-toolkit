@@ -1,0 +1,233 @@
+---
+title: DateField
+description: A comprehensive date input component with segmented editing and keyboard navigation
+source: packages/design-toolkit/src/components/date-field/index.tsx
+source_sha: 23f145e244183ac6bcb1e7b6653e05d934cb430a
+doc_sha: d7079e733e2d506bd899a590005514a44a0e9d89
+deprecated: false
+updated: 2026-07-13
+---
+
+A comprehensive date input component with segmented editing, providing accessible date input with separate segments for day, month, and year. Includes calendar icon, validation states, and international date format support with keyboard navigation between segments.
+
+## Usage
+
+```tsx
+import { DateField } from '@accelint/design-toolkit';
+
+export function MyForm() {
+  return <DateField label="Birth Date" />;
+}
+```
+
+## Reference
+
+```typescript
+interface DateFieldProps<T extends DateValue> {
+  label?: string;
+  description?: string;
+  errorMessage?: string;
+  size?: 'small' | 'medium';
+  shortMonth?: boolean;
+  shouldForceLeadingZeros?: boolean;
+  isDisabled?: boolean;
+  isInvalid?: boolean;
+  isRequired?: boolean;
+  isReadOnly?: boolean;
+  value?: T;
+  defaultValue?: T;
+  onChange?: (value: T) => void;
+  classNames?: {
+    field?: string;
+    label?: string;
+    control?: string;
+    input?: string;
+    segment?: string;
+    description?: string;
+    error?: string;
+  };
+  inputProps?: Omit<DateInputProps, 'children' | 'className'>;
+}
+```
+
+### Props
+
+| Prop | Type | Default | Required |
+|------|------|---------|----------|
+| `label` | `string` | - | No |
+| `description` | `string` | - | No |
+| `errorMessage` | `string` | - | No |
+| `size` | `'small' \| 'medium'` | `'medium'` | No |
+| `shortMonth` | `boolean` | `true` | No |
+| `shouldForceLeadingZeros` | `boolean` | `true` | No |
+| `isDisabled` | `boolean` | `false` | No |
+| `isInvalid` | `boolean` | `false` | No |
+| `isRequired` | `boolean` | `false` | No |
+| `isReadOnly` | `boolean` | `false` | No |
+| `value` | `DateValue` | - | No |
+| `defaultValue` | `DateValue` | - | No |
+| `onChange` | `(value: DateValue) => void` | - | No |
+| `classNames` | `object` | - | No |
+| `inputProps` | `DateInputProps` | - | No |
+
+#### `size`
+
+Controls the visual size of the date field:
+- `medium` - Default size with calendar icon and full label
+- `small` - Compact size without calendar icon or visible label (label used for aria-label only)
+
+#### `shortMonth`
+
+When `true`, displays month as a 3-letter abbreviation (e.g., "JAN", "FEB") when the month segment is not focused. When focused, displays numeric value for editing.
+
+#### `shouldForceLeadingZeros`
+
+Whether to force leading zeros in date segments. For example, `01/05/2024` vs `1/5/2024`.
+
+#### `classNames`
+
+Custom class names for sub-elements:
+- `field` - The outer field container
+- `label` - The label element
+- `control` - The control wrapper containing icon and input
+- `input` - The date input element
+- `segment` - Individual date segments (day, month, year)
+- `description` - The description text
+- `error` - The error message element
+
+### Inherited Props
+
+DateField inherits all props from React Aria's `DateField` component, including:
+- `minValue` - Minimum allowed date
+- `maxValue` - Maximum allowed date
+- `placeholderValue` - Placeholder date shown when empty
+- `granularity` - Which fields to display (e.g., "day", "hour", "minute")
+
+See [React Aria DateField](https://react-spectrum.adobe.com/react-aria/DateField.html) for full API reference.
+
+## Examples
+
+### Example: Basic date field
+
+```tsx
+import { DateField } from '@accelint/design-toolkit';
+
+<DateField label="Birth Date" />
+```
+
+### Example: Required with validation
+
+```tsx
+import { DateField } from '@accelint/design-toolkit';
+import { parseDate } from '@internationalized/date';
+
+<DateField
+  label="Event Date"
+  isRequired
+  minValue={parseDate('2024-01-01')}
+  errorMessage="Please select a valid date after January 1, 2024"
+/>
+```
+
+### Example: Controlled value
+
+```tsx
+import { DateField } from '@accelint/design-toolkit';
+import { parseDate } from '@internationalized/date';
+import { useState } from 'react';
+
+export function ControlledDateField() {
+  const [date, setDate] = useState(parseDate('2024-06-15'));
+
+  return (
+    <DateField
+      label="Selected Date"
+      value={date}
+      onChange={setDate}
+    />
+  );
+}
+```
+
+### Example: Compact size
+
+```tsx
+import { DateField } from '@accelint/design-toolkit';
+
+<DateField
+  label="Due Date"
+  size="small"
+  description="When is this task due?"
+/>
+```
+
+> **Good to know:** In `small` size, the label is not visually displayed but is used for the `aria-label` attribute for accessibility.
+
+### Example: Full month names
+
+```tsx
+import { DateField } from '@accelint/design-toolkit';
+
+<DateField
+  label="Meeting Date"
+  shortMonth={false}
+/>
+```
+
+### Example: Read-only state
+
+```tsx
+import { DateField } from '@accelint/design-toolkit';
+import { parseDate } from '@internationalized/date';
+
+<DateField
+  label="Created At"
+  value={parseDate('2024-01-15')}
+  isReadOnly
+/>
+```
+
+### Example: With description and error
+
+```tsx
+import { DateField } from '@accelint/design-toolkit';
+import { useState } from 'react';
+
+export function ValidatedDateField() {
+  const [isInvalid, setIsInvalid] = useState(false);
+
+  return (
+    <DateField
+      label="Appointment Date"
+      description="Select a date for your appointment"
+      isInvalid={isInvalid}
+      errorMessage={isInvalid ? 'Date is outside available range' : undefined}
+      onChange={(value) => {
+        // Validate date
+        setIsInvalid(value.year < 2024);
+      }}
+    />
+  );
+}
+```
+
+### Example: Custom styling
+
+```tsx
+import { DateField } from '@accelint/design-toolkit';
+
+<DateField
+  label="Custom Styled Date"
+  classNames={{
+    field: 'custom-field-class',
+    input: 'custom-input-class',
+    segment: 'custom-segment-class',
+  }}
+/>
+```
+
+## Related
+
+- [TimeField](../time-field/index.md) - Time input with segmented editing
+- [Label](../label/index.md) - Label component used internally
+- [Icon](../icon/index.md) - Icon component for calendar icon

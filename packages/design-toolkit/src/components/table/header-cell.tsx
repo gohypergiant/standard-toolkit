@@ -15,7 +15,7 @@ import { clsx } from '@accelint/design-foundation/lib/utils';
 import ArrowDown from '@accelint/icons/arrow-down';
 import ArrowUp from '@accelint/icons/arrow-up';
 import Kebab from '@accelint/icons/kebab';
-import { flexRender, type Header } from '@tanstack/react-table';
+import { flexRender, type Header, type RowData } from '@tanstack/react-table';
 import { useContext, useState } from 'react';
 import { Button } from '../button';
 import { Icon } from '../icon';
@@ -30,9 +30,15 @@ import {
 } from './constants/table';
 import { TableContext } from './context';
 import styles from './styles.module.css';
+import { toMenuVariant } from './utils';
+import type { TableFeatures } from './features';
 import type { TableHeaderCellProps } from './types';
 
-function HeaderCellMenu<T>({ header }: { header: Header<T, unknown> }) {
+function HeaderCellMenu<T extends RowData>({
+  header,
+}: {
+  header: Header<TableFeatures, T, unknown>;
+}) {
   const {
     enableColumnReordering,
     enableSorting,
@@ -40,9 +46,9 @@ function HeaderCellMenu<T>({ header }: { header: Header<T, unknown> }) {
     moveColumnRight,
     persistHeaderKebabMenu,
     setColumnSelection,
-    manualSorting,
     handleSortChange,
     handleColumnReordering,
+    variant,
   } = useContext(TableContext);
 
   const [hoveredArrow, setHoveredArrow] = useState(false);
@@ -77,7 +83,7 @@ function HeaderCellMenu<T>({ header }: { header: Header<T, unknown> }) {
             {!hoveredArrow && sort === SortDirection.ASC && <ArrowUp />}
           </Icon>
         </Button>
-        <Menu>
+        <Menu variant={toMenuVariant(variant)}>
           {enableColumnReordering && (
             <>
               <MenuItem
@@ -106,31 +112,23 @@ function HeaderCellMenu<T>({ header }: { header: Header<T, unknown> }) {
           {enableSorting && (
             <>
               <MenuItem
-                onAction={() => {
-                  manualSorting
-                    ? handleSortChange?.(header.column.id, SortDirection.ASC)
-                    : header.column.toggleSorting(false);
-                }}
+                onAction={() =>
+                  handleSortChange?.(header.column.id, SortDirection.ASC)
+                }
                 isDisabled={sort === SortDirection.ASC}
               >
                 Sort Ascending
               </MenuItem>
               <MenuItem
-                onAction={() => {
-                  manualSorting
-                    ? handleSortChange?.(header.column.id, SortDirection.DESC)
-                    : header.column.toggleSorting(true);
-                }}
+                onAction={() =>
+                  handleSortChange?.(header.column.id, SortDirection.DESC)
+                }
                 isDisabled={sort === SortDirection.DESC}
               >
                 Sort Descending
               </MenuItem>
               <MenuItem
-                onAction={() => {
-                  manualSorting
-                    ? handleSortChange?.(header.column.id, null)
-                    : header.column.clearSorting();
-                }}
+                onAction={() => handleSortChange?.(header.column.id, null)}
                 isDisabled={!sort}
               >
                 Clear Sort
@@ -164,14 +162,14 @@ function HeaderCellMenu<T>({ header }: { header: Header<T, unknown> }) {
  * @param props.header - TanStack table header object.
  * @returns The rendered TableHeaderCell component.
  */
-export function TableHeaderCell<T>({
+export function TableHeaderCell<T extends RowData>({
   ref,
   children,
   className,
   header,
   ...rest
 }: TableHeaderCellProps<T>) {
-  const { columnSelection } = useContext(TableContext);
+  const { columnSelection, variant } = useContext(TableContext);
   const renderProps = header?.getContext();
   const sortLabel =
     header?.column.getIsSorted() === SortDirection.ASC
@@ -188,7 +186,12 @@ export function TableHeaderCell<T>({
       style={{ width: header?.getSize() }}
     >
       <div
-        className={clsx('group/header-cell', styles.headerCell, className)}
+        className={clsx(
+          'group/header-cell',
+          styles.headerCell,
+          styles[variant],
+          className,
+        )}
         data-selected={header?.column.id === columnSelection || null}
       >
         {children ||

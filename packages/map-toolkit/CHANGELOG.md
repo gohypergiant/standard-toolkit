@@ -1,5 +1,27 @@
 # @accelint/map-toolkit
 
+## 6.0.0
+
+### Minor Changes
+
+- 747ea86: Add an `iconBaseColorGlsl` constructor option to `CoffinCornerExtension`. Custom IconLayers that re-color the sampled texel (e.g. replacing a match color with a per-instance fill) can now pass GLSL statements that assign `baseColor` so the same transform is applied beneath the brackets, instead of re-implementing the whole bracket shader. The statements are spliced inside the fragment `main`, so they can reference any uniform or varying the host layer declares. When unset, the extension samples `iconsTexture` as before, so existing behavior is unchanged.
+- 747ea86: Export `formatCoordinate` and `normalizeLongitude` from `@accelint/map-toolkit/cursor-coordinates`. `formatCoordinate(lonLat, format)` is the pure formatter behind `useCursorCoordinates` — reach for it to render a DD/DDM/DMS/MGRS/UTM string outside the hook instead of re-deriving the grid-conversion logic.
+
+  Also stop a `RangeError` escaping `formatCoordinate` at the UTM/MGRS latitude boundaries (84°N and 80°S). Both are valid in those systems, but `geodesy@2.4.0` rejected them — 84°N via too-strict northing bounds (widest in the extended Svalbard zones), 80°S via a floating-point error in the latitude-band lookup. Two layers: this monorepo patches `geodesy` (`patches/geodesy@2.4.0.patch`, a workspace-only pnpm patch that does not ship in the published package), and `@accelint/geo`'s grid-parts functions now return `{ ok: false }` instead of throwing whenever geodesy rejects a coordinate — so `formatCoordinate` shows the `--- -- ---- ----` placeholder rather than crashing, even against an unpatched `geodesy`. Coordinates outside the valid band still report `valid: false` as before.
+
+### Patch Changes
+
+- 747ea86: Fix the camera store leaving a stale tilt when a UI control switches the view from 2.5D to 2D. The `setView` bus handler only reset pitch on the way into 3D, so a 2.5D → 2D toggle stored `{ view: '2D', pitch: 60 }` and `BaseMap` rendered a tilted "2D" map until the next pan re-synced it. `setView` now rebuilds state through the same path as every other camera event, so 2D and 3D are always flat and 2.5D enters at its default 60° tilt.
+- 088f86c: `CoffinCornerExtension` now uses a single packed `vec2` vertex attribute (`instanceCoffinCornerState`) for selection and hover state instead of two float attributes. WebGL caps a program at 16 vertex attributes and `IconLayer` already uses 11, so this frees one for custom `IconLayer` hosts that add their own per-instance attributes — previously an `IconLayer` subclass adding four attributes failed to link with the extension attached. Rendering is unchanged.
+- dcaba41: `cursor-coordinates` now renders MGRS and UTM strings from `@accelint/geo`'s grid-parts API (`toMgrsParts`/`toUtmParts`) instead of round-tripping through a `createCoordinate(...)` string conversion. Output for in-band coordinates is unchanged, and out-of-range latitudes still show the `--- -- ---- ----` sentinel. As a result of aligning with geo's inclusive boundary, `80°S` (`-80`) latitude is now treated as valid for MGRS/UTM rather than being rejected.
+- c573231: Replace the hand-rolled `((x % range) + range) % range` modulo idiom in `normalizeLongitude` (cursor-coordinates), the shape-editing angle normalizer, and the rectangle-scale corner-index normalization with `@accelint/math`'s new `wrap` primitive. Output is unchanged for every input; this only consolidates the shared wrap math onto one tested implementation.
+- Updated dependencies [747ea86]
+- Updated dependencies [dcaba41]
+- Updated dependencies [9345871]
+- Updated dependencies [c573231]
+  - @accelint/geo@0.7.0
+  - @accelint/math@0.2.0
+
 ## 5.2.1
 
 ### Patch Changes

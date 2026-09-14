@@ -1,0 +1,162 @@
+---
+title: StatusIndicator
+description: Visual indicator for displaying connection or service status with good, degraded, or poor states
+source: packages/design-toolkit/src/components/status-indicator/index.tsx
+source_sha: 43430e4966fa3471925879dcf9e1848c2236f0f4
+doc_sha: 58065cafd86452245e30bc3e60b663637f282dea
+deprecated: false
+updated: 2026-07-13
+---
+
+Visual indicator for displaying connection or service status with three severity states: good, degraded, or poor.
+
+## Usage
+
+```tsx
+import { StatusIndicator } from '@accelint/design-toolkit';
+
+export function ConnectionStatus() {
+  return <StatusIndicator status="good" />;
+}
+```
+
+## Reference
+
+```typescript
+interface StatusIndicatorProps {
+  className?: string;
+  status?: 'good' | 'degraded' | 'poor';
+}
+```
+
+### Props
+
+| Prop | Type | Default | Required |
+|------|------|---------|----------|
+| `className` | `string` | - | No |
+| `status` | `'good' \| 'degraded' \| 'poor'` | `'good'` | No |
+
+#### `status`
+
+Visual state indicator:
+- `good` - Healthy status (green)
+- `degraded` - Partial functionality or warning (yellow)
+- `poor` - Critical issue or offline (red)
+
+## Examples
+
+### Example: Good status
+
+```tsx
+import { StatusIndicator } from '@accelint/design-toolkit';
+
+<StatusIndicator status="good" />
+```
+
+### Example: Degraded status
+
+```tsx
+import { StatusIndicator } from '@accelint/design-toolkit';
+
+<StatusIndicator status="degraded" />
+```
+
+### Example: Poor status
+
+```tsx
+import { StatusIndicator } from '@accelint/design-toolkit';
+
+<StatusIndicator status="poor" />
+```
+
+### Example: With label text
+
+```tsx
+import { StatusIndicator } from '@accelint/design-toolkit';
+
+<div className="flex items-center gap-2">
+  <StatusIndicator status="good" />
+  <span>All systems operational</span>
+</div>
+```
+
+### Example: Dynamic status
+
+```tsx
+import { StatusIndicator } from '@accelint/design-toolkit';
+
+function ServiceStatus({ isOnline, hasIssues }) {
+  const status = !isOnline ? 'poor' : hasIssues ? 'degraded' : 'good';
+  
+  return (
+    <div className="flex items-center gap-2">
+      <StatusIndicator status={status} />
+      <span>
+        {status === 'good' && 'Connected'}
+        {status === 'degraded' && 'Limited connectivity'}
+        {status === 'poor' && 'Disconnected'}
+      </span>
+    </div>
+  );
+}
+```
+
+### Example: Status list
+
+```tsx
+import { StatusIndicator } from '@accelint/design-toolkit';
+
+const services = [
+  { name: 'API Server', status: 'good' },
+  { name: 'Database', status: 'good' },
+  { name: 'Cache', status: 'degraded' },
+  { name: 'Queue', status: 'poor' },
+];
+
+<ul className="space-y-2">
+  {services.map(service => (
+    <li key={service.name} className="flex items-center gap-2">
+      <StatusIndicator status={service.status} />
+      <span>{service.name}</span>
+    </li>
+  ))}
+</ul>
+```
+
+### Example: Inline with text
+
+```tsx
+import { StatusIndicator } from '@accelint/design-toolkit';
+
+<p className="flex items-center gap-1">
+  Connection:
+  <StatusIndicator status="degraded" />
+  Reconnecting...
+</p>
+```
+
+## Accessibility
+
+StatusIndicator is purely presentational. Always provide accompanying text or aria-labels for accessibility:
+
+```tsx
+<div role="status" aria-label="Service status: operational">
+  <StatusIndicator status="good" />
+  <span aria-hidden="true">Operational</span>
+</div>
+```
+
+## Use Cases
+
+- **System health dashboards** - Show service or component status
+- **Connection indicators** - Display network connectivity state
+- **Resource availability** - Indicate resource health or capacity
+- **Real-time monitoring** - Visualize live system metrics
+
+> **Good to know:** StatusIndicator is a presentational component only. It does not include text labels or tooltips — compose it with your own text or UI elements.
+
+## Related
+
+- [Badge](../badge/index.mdx) - Text badge with status colors
+- [Chip](../chip/index.mdx) - Tag component with color variants
+- [Notice](../notice/index.mdx) - Notification component with severity levels

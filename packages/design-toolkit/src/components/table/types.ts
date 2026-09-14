@@ -17,7 +17,10 @@ import type {
   Header,
   HeaderGroup,
   Row,
+  RowData,
+  RowPinningState,
   RowSelectionState,
+  SortingState,
 } from '@tanstack/react-table';
 import type {
   ComponentPropsWithRef,
@@ -25,16 +28,18 @@ import type {
   PropsWithChildren,
   SetStateAction,
 } from 'react';
+import type { DensityVariant } from '@/lib/types';
+import type { TableFeatures } from './features';
 
 type BaseTableProps = Omit<ComponentPropsWithRef<'table'>, 'children'>;
 
 type ExtendedTableProps<T extends { id: Key }> = {
   /**
-   * An array of column definitions, one for each key in `T`.
+   * An array of column definitions. Build them with
+   * `createTableColumnHelper<T>()`.
    */
-  columns: {
-    [K in keyof Required<T>]: ColumnDef<T, T[K]>;
-  }[keyof T][];
+  // biome-ignore lint/suspicious/noExplicitAny: mirrors TanStack's own ColumnHelper['columns'] typing — ColumnDef is invariant in TValue, and only `any` accepts column-helper output
+  columns: ColumnDef<TableFeatures, T, any>[];
   /**
    * An array of data objects of type `T`.
    * Each object must have a unique `id` property.
@@ -47,11 +52,56 @@ type ExtendedTableProps<T extends { id: Key }> = {
   showCheckbox?: boolean;
 
   /**
-   * Initial row selection state.
+   * Controlled row selection state.
    * An object mapping row IDs to their selection state (true = selected).
    * Example: { 'row-1': true, 'row-2': true }
+   *
+   * The slice is controlled when this prop is not `undefined`; pair it with
+   * `onRowSelectionChange` to apply changes, otherwise the selection stays
+   * frozen at this value.
    */
   rowSelection?: RowSelectionState;
+
+  /**
+   * Initial row selection state for uncontrolled use.
+   * Ignored while `rowSelection` is provided.
+   */
+  defaultRowSelection?: RowSelectionState;
+
+  /**
+   * Controlled row pinning state.
+   * Arrays of row IDs pinned to the top and bottom of the table.
+   * Example: { top: ['row-1'], bottom: [] }
+   *
+   * The slice is controlled when this prop is not `undefined`; pair it with
+   * `onRowPinningChange` to apply changes, otherwise the pinning stays frozen
+   * at this value. IDs absent from `data` are skipped when rendering, never
+   * pruned - the controlling owner is responsible for pruning stale IDs.
+   */
+  rowPinning?: RowPinningState;
+
+  /**
+   * Initial row pinning state for uncontrolled use.
+   * Ignored while `rowPinning` is provided.
+   * @default { top: [], bottom: [] }
+   */
+  defaultRowPinning?: RowPinningState;
+
+  /**
+   * Callback function triggered when row pinning changes (for example via the
+   * row kebab menu's Pin / Unpin actions).
+   * Receives the plain next pinning state; functional updaters from the
+   * table engine are resolved internally and never reach this callback.
+   * IDs absent from `data` are skipped, not pruned, so they never trigger
+   * this callback on their own.
+   *
+   * @param rowPinning - The next row pinning state.
+   *
+   * @example
+   * // Using with a state setter
+   * onRowPinningChange={setRowPinning}
+   */
+  onRowPinningChange?: (rowPinning: RowPinningState) => void;
 
   /**
    * Position of the kebab menu, either 'left' or 'right'.
@@ -106,16 +156,35 @@ type ExtendedTableProps<T extends { id: Key }> = {
    ***/
   manualSorting?: boolean;
   /**
-   * Callback function triggered when the sorting state changes.
+   * Controlled sort state.
+   * An array of `{ id, desc }` entries keyed by column id; the header menu
+   * writes at most one entry (no multi-column sort).
+   * Example: [{ id: 'age', desc: true }]
    *
-   * @param columnId - The ID of the column whose sort direction changed.
-   * @param sortDirection - The new sort direction for the column:
-   * `'asc'` for ascending, `'desc'` for descending, or `null` to clear sorting.
+   * The slice is controlled when this prop is not `undefined`; pair it with
+   * `onSortChange` to apply changes, otherwise the sort stays frozen at this
+   * value. Applies in both client-side and `manualSorting` modes.
    */
-  onSortChange?: (
-    columnId: string,
-    sortDirection: 'asc' | 'desc' | null,
-  ) => void;
+  sort?: SortingState;
+  /**
+   * Initial sort state for uncontrolled use.
+   * Ignored while `sort` is provided.
+   * @default []
+   */
+  defaultSort?: SortingState;
+  /**
+   * Callback function triggered when the sorting state changes.
+   * Receives the plain next `SortingState` in both client-side and
+   * `manualSorting` modes; functional updaters from the table engine are
+   * resolved internally and never reach this callback.
+   *
+   * @param sort - The next sort state: `[{ id, desc }]` or `[]` when cleared.
+   *
+   * @example
+   * // Using with a state setter
+   * onSortChange={setSort}
+   */
+  onSortChange?: (sort: SortingState) => void;
   /**
    * Callback function triggered when a column is reordered via drag-and-drop or other mechanism.
    *
@@ -124,33 +193,31 @@ type ExtendedTableProps<T extends { id: Key }> = {
   onColumnReorderChange?: (index: number) => void;
   /**
    * Callback function triggered when row selection changes.
-   * Receives an updater function or direct value following TanStack Table's API pattern.
+   * Receives the plain next selection state; functional updaters from the
+   * table engine are resolved internally and never reach this callback.
    *
-   * @param updaterOrValue - Either a function that receives the old state and returns new state,
-   * or a direct RowSelectionState object.
+   * @param rowSelection - The next row selection state.
    *
    * @example
-   * // Using with state setter
+   * // Using with a state setter
    * onRowSelectionChange={setSelectedRows}
-   *
-   * @example
-   * // Using with custom handler
-   * onRowSelectionChange={(updater) => {
-   *   const newState = typeof updater === 'function' ? updater(oldState) : updater;
-   *   console.log('Selected rows:', newState);
-   * }}
    */
-  onRowSelectionChange?: (
-    updaterOrValue:
-      | RowSelectionState
-      | ((old: RowSelectionState) => RowSelectionState),
-  ) => void;
+  onRowSelectionChange?: (rowSelection: RowSelectionState) => void;
   /**
    * Whether the table should take full width and use fixed layout.
    * When true, applies 'w-full table-fixed' classes.
    * @default false
    */
   fullWidth?: boolean;
+
+  /**
+   * Density of header and body cells, one step on the spacing scale per value:
+   * `'cozy'` (12px padding), `'compact'` (8px), `'crammed'` (2px, single-line
+   * cells with no minimum width). Meta columns follow the same padding; row
+   * height follows the cells.
+   * @default DEFAULT_TABLE_VARIANT ('cozy')
+   */
+  variant?: DensityVariant;
 
   /**
    * Number of rows per page. Enables built-in pagination when set.
@@ -215,9 +282,10 @@ export type TableProps<T extends { id: Key }> = BaseTableProps &
  * @see {@link HTMLAttributes}
  * @see {@link RefAttributes}
  */
-export type TableBodyProps<T> = ComponentPropsWithRef<'tbody'> & {
-  rows?: Row<T>[];
-};
+export type TableBodyProps<T extends RowData> =
+  ComponentPropsWithRef<'tbody'> & {
+    rows?: Row<TableFeatures, T>[];
+  };
 
 /**
  * Props for a table row (`<tr>`) component.
@@ -228,8 +296,8 @@ export type TableBodyProps<T> = ComponentPropsWithRef<'tbody'> & {
  * @see {@link HTMLAttributes}
  * @see {@link RefAttributes}
  */
-export type TableRowProps<T> = ComponentPropsWithRef<'tr'> & {
-  row?: Row<T>;
+export type TableRowProps<T extends RowData> = ComponentPropsWithRef<'tr'> & {
+  row?: Row<TableFeatures, T>;
 };
 
 /**
@@ -244,8 +312,8 @@ export type TableRowProps<T> = ComponentPropsWithRef<'tr'> & {
  * @property ref - Optional React ref for the table cell element.
  * @property className - Optional class name for custom styling.
  */
-export type TableCellProps<T> = ComponentPropsWithRef<'td'> & {
-  cell?: Cell<T, unknown>;
+export type TableCellProps<T extends RowData> = ComponentPropsWithRef<'td'> & {
+  cell?: Cell<TableFeatures, T, unknown>;
 };
 
 /**
@@ -256,9 +324,10 @@ export type TableCellProps<T> = ComponentPropsWithRef<'td'> & {
  *
  * @see {@link RefAttributes}
  */
-export type TableHeaderCellProps<T> = ComponentPropsWithRef<'th'> & {
-  header?: Header<T, unknown>;
-};
+export type TableHeaderCellProps<T extends RowData> =
+  ComponentPropsWithRef<'th'> & {
+    header?: Header<TableFeatures, T, unknown>;
+  };
 
 /**
  * Props for the table header (`<thead>`) component.
@@ -268,16 +337,17 @@ export type TableHeaderCellProps<T> = ComponentPropsWithRef<'th'> & {
  * @see {@link HTMLAttributes}
  * @see {@link RefAttributes}
  */
-export type TableHeaderProps<T> = ComponentPropsWithRef<'thead'> & {
-  /**
-   * Array of header groups of the table
-   */
-  headerGroups?: HeaderGroup<T>[];
-  /**
-   * The currently selected column ID
-   */
-  columnSelection?: string | null;
-};
+export type TableHeaderProps<T extends RowData> =
+  ComponentPropsWithRef<'thead'> & {
+    /**
+     * Array of header groups of the table
+     */
+    headerGroups?: HeaderGroup<TableFeatures, T>[];
+    /**
+     * The currently selected column ID
+     */
+    columnSelection?: string | null;
+  };
 
 /**
  * Context value for table configuration and state.
@@ -299,4 +369,6 @@ export type TableContextValue = {
     direction: 'asc' | 'desc' | null,
   ) => void;
   handleColumnReordering?: (index: number) => void;
+  /** Active density, applied by header cells and body cells as a module class. */
+  variant: DensityVariant;
 };

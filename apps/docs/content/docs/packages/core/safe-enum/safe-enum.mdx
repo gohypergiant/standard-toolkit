@@ -1,0 +1,173 @@
+---
+title: "SafeEnum"
+description: Type-safe alternative to TypeScript enums that is compatible with structural typing and avoids enum pitfalls.
+source: packages/core/src/safe-enum/safe-enum/index.ts
+source_sha: 4e94ee4b5012446b51b1d79b349bdff7622fa26a
+doc_sha: da04baf166eb1e501f6ba1b46b9b984b1cf34db6
+deprecated: false
+updated: 2026-07-13
+---
+
+## Usage
+
+```typescript
+import type { SafeEnum } from '@accelint/core/safe-enum/safe-enum';
+
+// Define the value object
+export const Status = Object.freeze({
+  Active: 'active',
+  Inactive: 'inactive',
+  Pending: 'pending',
+} as const);
+
+// Extract the type
+export type Status = SafeEnum<typeof Status>;
+
+// Use in code
+const currentStatus: Status = Status.Active; // 'active'
+```
+
+## Reference
+
+```typescript
+type SafeEnum<TObject extends ValidEnumStructures> =
+  IsLiteralEnum<TObject> extends true
+    ? TObject[keyof TObject]
+    : '[SafeEnum Error] Enum is not `as const` or has mixed values';
+```
+
+### Type Parameters
+
+| Parameter | Description |
+|-----------|-------------|
+| `TObject` | The frozen object created with `as const` representing enum values |
+
+### Returns
+
+Returns a union type of all the enum values, or a helpful error message if the enum is improperly structured.
+
+## Examples
+
+### Example: String enum
+
+```typescript
+import type { SafeEnum } from '@accelint/core/safe-enum/safe-enum';
+
+export const LogLevel = Object.freeze({
+  Debug: 'debug',
+  Info: 'info',
+  Warn: 'warn',
+  Error: 'error',
+} as const);
+
+export type LogLevel = SafeEnum<typeof LogLevel>;
+
+function log(level: LogLevel, message: string) {
+  console.log(`[${level}] ${message}`);
+}
+
+log(LogLevel.Info, 'Application started'); // ✓ Valid
+log('info', 'Direct string'); // ✓ Valid - structural typing
+log('invalid', 'Bad level'); // ✗ Type error
+```
+
+### Example: Number enum
+
+```typescript
+import type { SafeEnum } from '@accelint/core/safe-enum/safe-enum';
+
+export const HttpStatus = Object.freeze({
+  Ok: 200,
+  NotFound: 404,
+  ServerError: 500,
+} as const);
+
+export type HttpStatus = SafeEnum<typeof HttpStatus>;
+
+function handleResponse(status: HttpStatus) {
+  if (status === HttpStatus.Ok) {
+    return 'Success';
+  }
+  if (status === 404) { // ✓ Direct number comparison works
+    return 'Not found';
+  }
+}
+```
+
+### Example: Enum values extraction
+
+```typescript
+import type { SafeEnum } from '@accelint/core/safe-enum/safe-enum';
+import { getSafeEnumValues } from '@accelint/core/safe-enum/get-safe-enum-values';
+
+export const Color = Object.freeze({
+  Red: 'red',
+  Green: 'green',
+  Blue: 'blue',
+} as const);
+
+export type Color = SafeEnum<typeof Color>;
+
+// Get all values as array
+const colors = getSafeEnumValues(Color);
+// ['red', 'green', 'blue']
+
+// Validate user input
+function isValidColor(input: string): input is Color {
+  return colors.includes(input as Color);
+}
+```
+
+### Example: Compile-time error detection
+
+```typescript
+import type { SafeEnum } from '@accelint/core/safe-enum/safe-enum';
+
+// ✗ Missing `as const` - compile error
+const BadEnum1 = Object.freeze({
+  A: 'a',
+  B: 'b',
+});
+type BadEnum1 = SafeEnum<typeof BadEnum1>;
+// Type: '[SafeEnum Error] Enum is not `as const` or has mixed values'
+
+// ✗ Mixed value types - compile error
+const BadEnum2 = Object.freeze({
+  A: 'a',
+  B: 123,
+} as const);
+type BadEnum2 = SafeEnum<typeof BadEnum2>;
+// Type: '[SafeEnum Error] Enum is not `as const` or has mixed values'
+
+// ✓ Properly structured
+const GoodEnum = Object.freeze({
+  A: 'a',
+  B: 'b',
+} as const);
+type GoodEnum = SafeEnum<typeof GoodEnum>;
+// Type: 'a' | 'b'
+```
+
+> **Good to know:** SafeEnum solves TypeScript enum problems: reverse mappings pollution, numeric enum coercion bugs, and incompatibility with structural typing. The `Object.freeze()` is recommended but not required—`as const` is sufficient for type safety. Values can be used directly (e.g., `'active'`) thanks to structural typing.
+
+## Why SafeEnum over TypeScript Enums?
+
+**Problems with TypeScript enums:**
+1. **Reverse mappings**: Numeric enums create unwanted reverse key-value pairs
+2. **Type coercion**: Numbers are silently coerced, causing runtime bugs
+3. **Structural incompatibility**: Enums use nominal typing, breaking interop with plain values
+4. **Bundle size**: Generates extra runtime code
+
+**SafeEnum advantages:**
+- Pure TypeScript types, zero runtime overhead
+- Structural typing—works with plain strings/numbers
+- No reverse mapping pollution
+- No silent coercion
+- Tree-shakeable
+- Compile-time validation with helpful error messages
+
+## Related
+
+- [getSafeEnumValues](../get-safe-enum-values/index.md) - Extract enum values as array
+- [isLiteralEnum](../is-literal-enum/index.md) - Type guard for literal enums
+- [ValidEnumStructures](../valid-enum-structures/index.md) - Base constraint for valid enums

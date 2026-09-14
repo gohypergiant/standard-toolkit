@@ -1,0 +1,108 @@
+---
+title: "apply"
+description: Takes a function and applies it to a value
+source: packages/core/src/combinators/apply/index.ts
+source_sha: 7fdc1d3d95d75b4c847e74a7b98c39907bbf197f
+doc_sha: b06f3bfbb8500badfddc489938b23d17797d04a3
+deprecated: false
+updated: 2026-07-13
+---
+
+Takes a unary function and applies it to a value. Also known as the A combinator in lambda calculus.
+
+## Usage
+
+```typescript
+import { apply } from '@accelint/core';
+
+// Apply function to value
+const result = apply((a: number) => a + 6)(3);
+// 9
+
+// Partial application
+const applyDouble = apply((x: number) => x * 2);
+applyDouble(5); // 10
+```
+
+## Reference
+
+```typescript
+function apply<T, R>(
+  f: (x: T) => R
+): (x: T) => R
+```
+
+Lambda calculus: `λab.ab`  
+Type signature: `apply :: (a → b) → a → b`
+
+### Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `f` | `(x: T) => R` | The function to apply to the value. |
+
+### Returns
+
+Returns a curried function that accepts a value and applies the function to it.
+
+### Type Parameters
+
+- `T` - The type of the input value
+- `R` - The return type of the function
+
+## Examples
+
+### Example: Function application
+
+```typescript
+import { apply } from '@accelint/core';
+
+const double = (x: number) => x * 2;
+const addTen = (x: number) => x + 10;
+
+apply(double)(5); // 10
+apply(addTen)(5); // 15
+```
+
+### Example: With complex types
+
+```typescript
+import { apply } from '@accelint/core';
+
+interface User {
+  name: string;
+  age: number;
+}
+
+const getAge = (user: User) => user.age;
+const getName = (user: User) => user.name;
+
+const user: User = { name: 'Alice', age: 30 };
+
+apply(getAge)(user); // 30
+apply(getName)(user); // 'Alice'
+```
+
+### Example: Mapping over arrays
+
+```typescript
+import { apply, map } from '@accelint/core';
+
+const functions = [
+  (x: number) => x + 1,
+  (x: number) => x * 2,
+  (x: number) => x - 3
+];
+
+// Apply each function to a value
+const results = map((fn: (x: number) => number) => apply(fn)(5))(functions);
+// [6, 10, 2]
+```
+
+> **Good to know:** This is equivalent to standard function application `f(x)`, but in curried form. It's useful for composing with higher-order functions or when you need to pass function application as a value.
+
+## Related
+
+- [applyTo](../apply-to/index.md) - Apply value to function (inverse)
+- [identity](../identity/index.md) - Return value unchanged
+- [pipe](../../composition/pipe/index.md) - Compose functions left-to-right

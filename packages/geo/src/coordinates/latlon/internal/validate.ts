@@ -120,3 +120,40 @@ export function validateNumericCoordinate(lat: number, lon: number): string[] {
 
   return errors;
 }
+
+/**
+ * Reports whether latitude and longitude are both finite and in range.
+ *
+ * A boolean-only probe for hot paths that need validity but not the error
+ * messages: it short-circuits on the first finite/range failure and allocates
+ * nothing, unlike {@link validateNumericCoordinate}, which builds an error
+ * array. Use that function when the messages are consumed.
+ *
+ * @param lat - The latitude value to validate (must be -90 to 90).
+ * @param lon - The longitude value to validate (must be -180 to 180).
+ * @returns `true` when both values are finite and within range.
+ *
+ * @remarks pure function
+ *
+ * @example
+ * ```typescript
+ * isValidNumericCoordinate(45.5, -122.6);
+ * // => true
+ * ```
+ *
+ * @example
+ * ```typescript
+ * isValidNumericCoordinate(91, -122.6);
+ * // => false
+ * ```
+ */
+export function isValidNumericCoordinate(lat: number, lon: number): boolean {
+  return (
+    isFiniteNumber(lat) &&
+    isFiniteNumber(lon) &&
+    lat >= -LAT_LIMIT &&
+    lat <= LAT_LIMIT &&
+    lon >= -LON_LIMIT &&
+    lon <= LON_LIMIT
+  );
+}

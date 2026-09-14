@@ -1,0 +1,314 @@
+---
+title: Tree
+description: Hierarchical tree view with selection, visibility control, and drag-and-drop support
+source: packages/design-toolkit/src/components/tree/index.tsx
+source_sha: 744252aa2dd73e71e3c6f9e16281e12eb6c65d01
+doc_sha: cd29454791804c77d6705ce6006f1aed01ad0859
+deprecated: false
+updated: 2026-07-13
+---
+
+## Usage
+
+```tsx
+import { Tree, TreeItem, TreeItemContent, TreeItemLabel } from '@accelint/design-toolkit';
+
+export function FileExplorer() {
+  return (
+    <Tree>
+      <TreeItem id="root" textValue="Root">
+        <TreeItemContent>
+          <TreeItemLabel>Root Folder</TreeItemLabel>
+        </TreeItemContent>
+        <TreeItem id="child" textValue="Child">
+          <TreeItemContent>
+            <TreeItemLabel>Child Folder</TreeItemLabel>
+          </TreeItemContent>
+        </TreeItem>
+      </TreeItem>
+    </Tree>
+  );
+}
+```
+
+## Reference
+
+```typescript
+interface TreeProps<T> {
+  children: React.ReactNode | ((item: TreeNode<T>) => React.ReactNode);
+  className?: string;
+  disabledKeys?: Set<Key>;
+  dragAndDropConfig?: DragAndDropConfig;
+  expandedKeys?: Set<Key>;
+  items?: Iterable<TreeNode<T>>;
+  selectedKeys?: Set<Key>;
+  selectionMode?: 'none' | 'single' | 'multiple';
+  showRuleLines?: boolean;
+  showVisibility?: boolean;
+  variant?: 'cozy' | 'compact' | 'crammed';
+  visibleKeys?: Set<Key>;
+  onSelectionChange?: (keys: Set<Key>) => void;
+  onVisibilityChange?: (keys: Set<Key>) => void;
+}
+```
+
+### Props
+
+| Prop | Type | Default | Required |
+|------|------|---------|----------|
+| `children` | `React.ReactNode \| ((item: TreeNode<T>) => React.ReactNode)` | - | Yes |
+| `className` | `string` | - | No |
+| `disabledKeys` | `Set<Key>` | - | No |
+| `dragAndDropConfig` | `DragAndDropConfig` | - | No |
+| `expandedKeys` | `Set<Key>` | - | No |
+| `items` | `Iterable<TreeNode<T>>` | - | No |
+| `selectedKeys` | `Set<Key>` | - | No |
+| `selectionMode` | `'none' \| 'single' \| 'multiple'` | `'multiple'` | No |
+| `showRuleLines` | `boolean` | `true` | No |
+| `showVisibility` | `boolean` | `true` | No |
+| `variant` | `'cozy' \| 'compact' \| 'crammed'` | `'cozy'` | No |
+| `visibleKeys` | `Set<Key>` | - | No |
+| `onSelectionChange` | `(keys: Set<Key>) => void` | - | No |
+| `onVisibilityChange` | `(keys: Set<Key>) => void` | - | No |
+
+#### `children`
+
+For static trees, pass TreeItem components directly as children. For dynamic trees (when using `items`), provide a render function that receives a `TreeNode<T>` and returns a TreeItem.
+
+#### `items`
+
+Data source for dynamic collections. When provided, `children` must be a render function. Creates a data-driven tree from an external data structure.
+
+> **Good to know:** Tree should only be controlled with state from either `items` (dynamic) or keys props (static), not both. Mixing these patterns will throw an error.
+
+#### `selectionMode`
+
+Controls how items can be selected:
+- `none` - Selection disabled
+- `single` - Only one item can be selected at a time
+- `multiple` - Multiple items can be selected (default)
+
+#### `variant`
+
+Visual density variant that controls spacing and sizing:
+- `cozy` - Default comfortable spacing
+- `compact` - Reduced spacing for denser layouts
+- `crammed` - Minimal spacing for maximum density
+
+The `variant` prop automatically flows through context to all TreeItem components.
+
+#### `showRuleLines`
+
+Whether to show connecting lines between tree items. These lines help visualize the hierarchical structure.
+
+#### `showVisibility`
+
+Whether to show visibility toggle buttons on each item. When enabled, users can toggle item visibility, which cascades to child items.
+
+#### `dragAndDropConfig`
+
+Configuration object for drag-and-drop behavior. Enables reordering and moving items within the tree or between trees.
+
+### Type Parameters
+
+- `T` - The type of custom values stored in tree nodes (accessed via `node.values`). Use this to attach application-specific data to each tree node.
+
+## Examples
+
+### Example: Static tree with nested items
+
+```tsx
+import { Tree, TreeItem, TreeItemContent, TreeItemLabel } from '@accelint/design-toolkit';
+
+<Tree>
+  <TreeItem id="documents" textValue="Documents">
+    <TreeItemContent>
+      <TreeItemLabel>Documents</TreeItemLabel>
+    </TreeItemContent>
+    <TreeItem id="readme" textValue="README.md">
+      <TreeItemContent>
+        <TreeItemLabel>README.md</TreeItemLabel>
+      </TreeItemContent>
+    </TreeItem>
+    <TreeItem id="license" textValue="LICENSE">
+      <TreeItemContent>
+        <TreeItemLabel>LICENSE</TreeItemLabel>
+      </TreeItemContent>
+    </TreeItem>
+  </TreeItem>
+</Tree>
+```
+
+### Example: Dynamic tree with data source
+
+```tsx
+import { Tree, TreeItem, TreeItemContent, TreeItemLabel } from '@accelint/design-toolkit';
+
+const items = [
+  {
+    key: 'src',
+    label: 'src',
+    children: [
+      { key: 'index.ts', label: 'index.ts' },
+      { key: 'utils.ts', label: 'utils.ts' },
+    ],
+  },
+];
+
+<Tree items={items}>
+  {(node) => (
+    <TreeItem id={node.key} textValue={node.label}>
+      <TreeItemContent>
+        <TreeItemLabel>{node.label}</TreeItemLabel>
+      </TreeItemContent>
+    </TreeItem>
+  )}
+</Tree>
+```
+
+### Example: Controlled selection
+
+```tsx
+import { Tree, TreeItem, TreeItemContent, TreeItemLabel } from '@accelint/design-toolkit';
+import { useState } from 'react';
+
+function ControlledTree() {
+  const [selectedKeys, setSelectedKeys] = useState(new Set(['readme']));
+
+  return (
+    <Tree
+      selectedKeys={selectedKeys}
+      onSelectionChange={setSelectedKeys}
+      selectionMode="multiple"
+    >
+      <TreeItem id="readme" textValue="README">
+        <TreeItemContent>
+          <TreeItemLabel>README.md</TreeItemLabel>
+        </TreeItemContent>
+      </TreeItem>
+      <TreeItem id="license" textValue="LICENSE">
+        <TreeItemContent>
+          <TreeItemLabel>LICENSE</TreeItemLabel>
+        </TreeItemContent>
+      </TreeItem>
+    </Tree>
+  );
+}
+```
+
+### Example: Tree with custom node values
+
+```tsx
+import { Tree, TreeItem, TreeItemContent, TreeItemLabel, TreeItemPrefixIcon } from '@accelint/design-toolkit';
+import { Folder } from '@accelint/icons';
+
+type FileMetadata = {
+  icon: React.ReactNode;
+  size?: string;
+};
+
+const items: TreeNode<FileMetadata>[] = [
+  {
+    key: 'documents',
+    label: 'Documents',
+    values: {
+      icon: <Folder />,
+    },
+  },
+];
+
+<Tree items={items}>
+  {(node) => (
+    <TreeItem id={node.key} textValue={node.label}>
+      <TreeItemContent>
+        <TreeItemPrefixIcon>{node.values.icon}</TreeItemPrefixIcon>
+        <TreeItemLabel>{node.label}</TreeItemLabel>
+      </TreeItemContent>
+    </TreeItem>
+  )}
+</Tree>
+```
+
+### Example: Compact variant for dense layouts
+
+```tsx
+import { Tree, TreeItem, TreeItemContent, TreeItemLabel } from '@accelint/design-toolkit';
+
+<Tree variant="compact" showRuleLines={false}>
+  <TreeItem id="root" textValue="Root">
+    <TreeItemContent>
+      <TreeItemLabel>Compact Item</TreeItemLabel>
+    </TreeItemContent>
+  </TreeItem>
+</Tree>
+```
+
+### Example: Single selection mode
+
+```tsx
+import { Tree, TreeItem, TreeItemContent, TreeItemLabel } from '@accelint/design-toolkit';
+
+<Tree selectionMode="single">
+  <TreeItem id="option1" textValue="Option 1">
+    <TreeItemContent>
+      <TreeItemLabel>Option 1</TreeItemLabel>
+    </TreeItemContent>
+  </TreeItem>
+  <TreeItem id="option2" textValue="Option 2">
+    <TreeItemContent>
+      <TreeItemLabel>Option 2</TreeItemLabel>
+    </TreeItemContent>
+  </TreeItem>
+</Tree>
+```
+
+### Example: Visibility control
+
+```tsx
+import { Tree, TreeItem, TreeItemContent, TreeItemLabel } from '@accelint/design-toolkit';
+import { useState } from 'react';
+
+function VisibilityTree() {
+  const [visibleKeys, setVisibleKeys] = useState(new Set(['item1', 'item2']));
+
+  return (
+    <Tree
+      showVisibility
+      visibleKeys={visibleKeys}
+      onVisibilityChange={setVisibleKeys}
+    >
+      <TreeItem id="item1" textValue="Item 1">
+        <TreeItemContent>
+          <TreeItemLabel>Item 1</TreeItemLabel>
+        </TreeItemContent>
+      </TreeItem>
+      <TreeItem id="item2" textValue="Item 2">
+        <TreeItemContent>
+          <TreeItemLabel>Item 2</TreeItemLabel>
+        </TreeItemContent>
+      </TreeItem>
+    </Tree>
+  );
+}
+```
+
+## Multi-Part Structure
+
+Tree is a multi-part component composed of several sub-components:
+
+- **Tree** - Root container that manages state and context
+- **TreeItem** - Individual node in the hierarchy
+- **TreeItemContent** - Content wrapper for item children
+- **TreeItemLabel** - Primary text label for the item
+- **TreeItemDescription** - Optional secondary description text
+- **TreeItemPrefixIcon** - Optional icon displayed before the label
+- **TreeItemActions** - Action buttons displayed on hover/focus
+
+See individual component pages for detailed documentation.
+
+## Related
+
+- [TreeItem](./item.mdx) - Individual tree node component
+- [TreeItemContent](./item-content.mdx) - Content wrapper component
+- [TreeItemLabel](./item-label.mdx) - Label component
+- [useTree](../../../hooks/use-tree.mdx) - Hook for tree state management

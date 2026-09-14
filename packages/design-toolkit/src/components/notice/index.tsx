@@ -72,6 +72,7 @@ export function Notice({
   message,
   primary,
   secondary,
+  metadata,
   hideIcon,
   showClose,
   shouldCloseOnAction,
@@ -107,7 +108,7 @@ export function Notice({
                 {...primary}
                 size={size}
                 onPress={() => {
-                  onPrimaryAction?.();
+                  onPrimaryAction?.(metadata);
 
                   if (shouldCloseOnAction) {
                     onClose?.();
@@ -122,7 +123,7 @@ export function Notice({
                 {...secondary}
                 size={size}
                 onPress={() => {
-                  onSecondaryAction?.();
+                  onSecondaryAction?.(metadata);
 
                   if (shouldCloseOnAction) {
                     onClose?.();

@@ -12,7 +12,7 @@
 
 import { Broadcast } from '@accelint/bus';
 import { uuid } from '@accelint/core';
-import { act, render, screen, waitFor } from '@testing-library/react';
+import { act, cleanup, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { NoticeEventTypes } from './events';
@@ -28,6 +28,10 @@ function setup(props: NoticeListProps) {
 }
 
 describe('NoticeList', () => {
+  afterEach(() => {
+    cleanup();
+  });
+
   it('should render message', async () => {
     setup({});
     bus.emit(NoticeEventTypes.queue, {
@@ -252,4 +256,8 @@ describe('NoticeList', () => {
       expect(screen.getByText('Persistent message')).toBeInTheDocument();
     });
   });
+
+  // TODO: Add integration tests for dequeue filtering
+  // Unit tests for matchesDequeueFilter logic exist in utils.test.ts
+  // Integration tests with NoticeList are complex due to async bus event timing
 });

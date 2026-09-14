@@ -34,6 +34,24 @@ A notification component for displaying temporary messages, alerts, and user fee
 />
 ```
 
+## With Metadata
+
+Attach custom metadata to pass context to action callbacks:
+
+```tsx
+<Notice
+  id="notice-with-metadata"
+  message="Layer failed to load"
+  primary={{ children: "Retry" }}
+  metadata={{ layerId: 'layer-123', mapId: 'map-456' }}
+  onPrimaryAction={(metadata) => {
+    // Metadata is passed to the callback
+    const { layerId, mapId } = metadata;
+    retryLayerLoad(layerId, mapId);
+  }}
+/>
+```
+
 ## With Close Button
 
 ```tsx
@@ -56,11 +74,12 @@ A notification component for displaying temporary messages, alerts, and user fee
 | `size` | `'medium' \| 'small'` | `'medium'` | Size variant |
 | `primary` | `ButtonProps` | - | Primary action button config |
 | `secondary` | `ButtonProps` | - | Secondary action button config |
+| `metadata` | `Record<string, StructuredCloneableData>` | - | Custom metadata passed to callbacks |
 | `hideIcon` | `boolean` | `false` | Whether to hide the icon |
 | `showClose` | `boolean` | `false` | Whether to show close button |
 | `shouldCloseOnAction` | `boolean` | `false` | Close on action press |
-| `onPrimaryAction` | `() => void` | - | Primary button callback |
-| `onSecondaryAction` | `() => void` | - | Secondary button callback |
+| `onPrimaryAction` | `(metadata?) => void` | - | Primary button callback (receives metadata) |
+| `onSecondaryAction` | `(metadata?) => void` | - | Secondary button callback (receives metadata) |
 | `onClose` | `() => void` | - | Close button callback |
 | `classNames` | `{ notice?, content?, message?, actions? }` | - | Custom class names |
 

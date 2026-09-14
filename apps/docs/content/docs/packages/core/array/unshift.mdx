@@ -1,0 +1,124 @@
+---
+title: "unshift"
+description: Returns a new array with a value added to the start
+source: packages/core/src/array/unshift/index.ts
+source_sha: 5f206b8c2bcee7fd5ddfd449c702dbff34544658
+doc_sha: f52641f57001a2e879375f67bd2c658fb7f5d91b
+deprecated: false
+updated: 2026-07-13
+---
+
+## Usage
+
+```typescript
+import { unshift } from '@accelint/core';
+
+// Add element to start
+const withZero = unshift([1, 2, 3, 4])(0);
+// [0, 1, 2, 3, 4]
+
+// Partial application
+const addToNumbers = unshift([2, 3, 4]);
+addToNumbers(1); // [1, 2, 3, 4]
+```
+
+## Reference
+
+```typescript
+function unshift<T>(
+  arr: T[]
+): (x: T) => T[]
+```
+
+### Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `arr` | `T[]` | The array to add an element to. |
+
+### Returns
+
+Returns a curried function that accepts a value and returns a new array with that value added to the start.
+
+### Type Parameters
+
+- `T` - The type of elements in the array
+
+## Examples
+
+### Example: Building arrays immutably
+
+```typescript
+import { unshift } from '@accelint/core';
+
+let numbers: number[] = [];
+numbers = unshift(numbers)(3);
+numbers = unshift(numbers)(2);
+numbers = unshift(numbers)(1);
+// [1, 2, 3]
+
+// Original array unchanged
+const original = [2, 3, 4];
+const extended = unshift(original)(1);
+// original: [2, 3, 4]
+// extended: [1, 2, 3, 4]
+```
+
+### Example: Stack operations
+
+```typescript
+import { unshift, shift } from '@accelint/core';
+
+// Push to stack
+let stack: number[] = [2, 3, 4];
+stack = unshift(stack)(1);
+// [1, 2, 3, 4]
+
+// Pop from stack
+const [top, newStack] = shift(stack);
+// top: 1
+// newStack: [2, 3, 4]
+```
+
+### Example: Prepending headers
+
+```typescript
+import { unshift } from '@accelint/core';
+
+interface LogEntry {
+  timestamp: Date;
+  message: string;
+}
+
+const logs: LogEntry[] = [
+  { timestamp: new Date('2026-07-13T10:00:00'), message: 'Event 1' },
+  { timestamp: new Date('2026-07-13T10:01:00'), message: 'Event 2' }
+];
+
+const newLog = { timestamp: new Date('2026-07-13T09:59:00'), message: 'Event 0' };
+const updatedLogs = unshift(logs)(newLog);
+// newLog is now at the start
+```
+
+### Example: Composing with pipe
+
+```typescript
+import { unshift, map, pipe } from '@accelint/core';
+
+const addHeaderAndDouble = (header: number) =>
+  pipe(
+    map((x: number) => x * 2),
+    unshift(header)
+  );
+
+addHeaderAndDouble(0)([1, 2, 3]);
+// [0, 2, 4, 6]
+```
+
+> **Good to know:** This is a pure function that always returns a new array. The original array is never modified.
+
+## Related
+
+- [push](../push/index.md) - Add element to the end
+- [shift](../shift/index.md) - Extract first element and tail
+- [concat](../concat/index.md) - Concatenate multiple arrays

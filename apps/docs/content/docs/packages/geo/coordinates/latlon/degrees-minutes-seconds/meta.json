@@ -1,0 +1,7 @@
+{
+  "title": "Degrees Minutes Seconds",
+  "pages": [
+    "formatter",
+    "parser"
+  ]
+}

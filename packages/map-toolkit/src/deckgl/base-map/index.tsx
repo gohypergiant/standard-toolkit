@@ -376,7 +376,9 @@ export function BaseMap({
   // below - same approach as `useMapLibre` uses for the same setter.
   // 2.5D is the only view that permits pitch (the camera store locks 2D and 3D
   // to pitch:0). `maxPitch` must allow the store-driven pitch through in 2.5D;
-  // MapLibre clamps an applied `pitch` to `maxPitch`.
+  // MapLibre clamps an applied `pitch` to `maxPitch`. react-maplibre applies
+  // `maxPitch` before `pitch` within one `setProps`, so a same-render view flip
+  // to 2.5D is never clamped by the previous ceiling.
   const allowTilt = cameraState.view === '2.5D';
 
   const mapOptions = useMemo(() => {
@@ -415,7 +417,6 @@ export function BaseMap({
     viewState,
     container,
     allowTilt,
-    cameraState.view,
     cameraState.transitionDuration,
     boxZoom,
     filteredMapLibreOptions,
@@ -566,7 +567,10 @@ export function BaseMap({
       if (info.coordinate) {
         emitDragStart({
           id,
-          coordinate: [info.coordinate[0], info.coordinate[1]],
+          coordinate: [info.coordinate[0], info.coordinate[1]] as [
+            number,
+            number,
+          ],
           shiftKey: event.srcEvent.shiftKey,
           ctrlKey: event.srcEvent.ctrlKey,
           altKey: event.srcEvent.altKey,
@@ -610,7 +614,10 @@ export function BaseMap({
       if (info.coordinate) {
         emitDrag({
           id,
-          coordinate: [info.coordinate[0], info.coordinate[1]],
+          coordinate: [info.coordinate[0], info.coordinate[1]] as [
+            number,
+            number,
+          ],
           shiftKey: event.srcEvent.shiftKey,
           ctrlKey: event.srcEvent.ctrlKey,
           altKey: event.srcEvent.altKey,
@@ -654,7 +661,10 @@ export function BaseMap({
       if (info.coordinate) {
         emitDragEnd({
           id,
-          coordinate: [info.coordinate[0], info.coordinate[1]],
+          coordinate: [info.coordinate[0], info.coordinate[1]] as [
+            number,
+            number,
+          ],
           shiftKey: event.srcEvent.shiftKey,
           ctrlKey: event.srcEvent.ctrlKey,
           altKey: event.srcEvent.altKey,

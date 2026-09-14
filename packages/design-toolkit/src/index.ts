@@ -117,8 +117,14 @@ export { ClassificationBanner } from './components/classification-banner';
 export type { ClassificationBannerProps } from './components/classification-banner/types';
 export { Clock } from './components/clock';
 export type { ClockProps } from './components/clock/types';
+export { CustomColorPicker } from './components/color-picker/custom-color-picker';
 export { ColorPicker } from './components/color-picker';
-export type { ColorPickerProps } from './components/color-picker/types';
+export { NoColorButton } from './components/color-picker/no-color-button';
+export type {
+  ColorPickerProps,
+  CustomColorPickerProps,
+  NoColorButtonProps,
+} from './components/color-picker/types';
 export {
   ComboBoxFieldContext,
   ComboBoxFieldProvider,
@@ -266,10 +272,15 @@ export type {
 export { FloatingCard } from './components/floating-card';
 export { FloatingCardProvider } from './components/floating-card/provider';
 export type {
+  Bounds,
+  Dimensions,
   FloatingCardContextValue,
   FloatingCardHeaderAction,
+  FloatingCardLayout,
   FloatingCardProps,
   FloatingCardProviderProps,
+  Position,
+  ResizeHandle,
 } from './components/floating-card/types';
 export { GanttContentContainer } from './components/gantt/components/containers/external/gantt-content-container';
 export { GanttPanelContainer } from './components/gantt/components/containers/external/gantt-panel-container';
@@ -440,7 +451,10 @@ export type {
   NoticeProps,
   NoticeQueueEvent,
 } from './components/notice/types';
-export { matchesMetadata } from './components/notice/utils';
+export {
+  matchesDequeueFilter,
+  matchesMetadata,
+} from './components/notice/utils';
 export { OptionsContext } from './components/options/context';
 export { Options } from './components/options';
 export { OptionsItemContent } from './components/options/item-content';
@@ -550,10 +564,39 @@ export type {
 } from './components/slider/types';
 export { StatusIndicator } from './components/status-indicator';
 export type { StatusIndicatorProps } from './components/status-indicator/types';
+export { StepperBack } from './components/stepper/back';
+export {
+  StepperContext,
+  useStepperContext,
+} from './components/stepper/context';
+export { StepperList } from './components/stepper/list';
+export { StepperNext } from './components/stepper/next';
+export { StepperPanel } from './components/stepper/panel';
+export { StepperStep } from './components/stepper/step';
+export { Stepper } from './components/stepper/stepper';
+export type {
+  Orientation,
+  StepperBackProps,
+  StepperListProps,
+  StepperListRenderState,
+  StepperNextProps,
+  StepperPanelProps,
+  StepperPanelRenderState,
+  StepperProps,
+  StepperRenderState,
+  StepperStepProps,
+  StepperStepRenderState,
+} from './components/stepper/types';
+export { useStepperState } from './components/stepper/use-stepper-state';
+export type {
+  StepperState,
+  UseStepperStateProps,
+} from './components/stepper/use-stepper-state';
 export { SwitchContext, SwitchProvider } from './components/switch/context';
 export { Switch } from './components/switch';
 export type { SwitchProps } from './components/switch/types';
 export {
+  DEFAULT_TABLE_VARIANT,
   HeaderColumnAction,
   SortDirection,
   headerColumnActionValues,
@@ -564,7 +607,20 @@ export type {
   SortDirectionState,
 } from './components/table/constants/table';
 export { TableContext } from './components/table/context';
+export {
+  createTableColumnHelper,
+  tableFeatures,
+} from './components/table/features';
+export type { TableFeatures } from './components/table/features';
 export { Table } from './components/table';
+export { rowOrderingFeature } from './components/table/row-ordering-feature';
+export type {
+  RowOrderingRowApis,
+  RowOrderingState,
+  RowOrderingTableApis,
+  RowOrderingTableOptions,
+  RowOrderingTableState,
+} from './components/table/row-ordering-feature';
 export type {
   TableBodyProps,
   TableCellProps,
@@ -703,6 +759,7 @@ export type {
   AriaAttributesWithRef,
   ChildrenRenderProps,
   ClassNameRenderProps,
+  DensityVariant,
   ProviderProps,
   RenderProps,
   RenderPropsChildren,

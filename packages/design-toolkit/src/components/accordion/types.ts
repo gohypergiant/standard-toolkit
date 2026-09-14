@@ -11,21 +11,22 @@
  */
 
 import type { ComponentPropsWithRef, RefAttributes } from 'react';
-import type { Heading } from 'react-aria-components/Heading';
 import type {
   ButtonRenderProps,
   DisclosurePanelProps,
   DisclosureProps,
 } from 'react-aria-components/Disclosure';
-import type { RenderPropsClassName } from '@/lib/types';
 import type { DisclosureGroupProps } from 'react-aria-components/DisclosureGroup';
+import type { Heading } from 'react-aria-components/Heading';
+import type { DensityVariant, RenderPropsClassName } from '@/lib/types';
 
 /**
  * Style variant options for accordion components.
  */
 export type AccordionStyleVariants = {
+  // Provisional subset (no 'crammed') until align-collection-density-scale revisits it.
   /** Visual density variant: 'compact' for dense layouts, 'cozy' for spacious layouts. */
-  variant?: 'compact' | 'cozy';
+  variant?: Exclude<DensityVariant, 'crammed'>;
 };
 
 /**

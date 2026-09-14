@@ -1,0 +1,254 @@
+---
+title: Linter Configuration
+description: Strict linting rules with cognitive complexity limits, naming conventions, and React hooks enforcement
+source: tooling/biome-config/linter.json
+source_sha: a61a1d060dac4cf5e0304f316b3395dd47d8536f
+doc_sha: 7eff13fd3f1719bf365288648a3e754ad6ac9c9e
+deprecated: false
+updated: 2026-07-13
+---
+
+## Usage
+
+Import the linter configuration in your `biome.json`:
+
+```json
+{
+  "$schema": "https://biomejs.dev/schemas/2.3.8/schema.json",
+  "extends": ["@accelint/biome-config/linter"]
+}
+```
+
+## Rules Overview
+
+### Complexity Rules
+
+Enforces limits on code complexity and encourages simplified logic:
+
+- **noExcessiveCognitiveComplexity**: Maximum cognitive complexity of 15 (error)
+- **useSimplifiedLogicExpression**: Simplify boolean expressions (error)
+
+```typescript
+// ❌ Avoid: High cognitive complexity
+function processData(data, options) {
+  if (data) {
+    if (options.validate) {
+      if (options.strict) {
+        if (data.length > 0) {
+          if (data[0].id) {
+            // ... deeply nested logic
+          }
+        }
+      }
+    }
+  }
+}
+
+// ✅ Prefer: Reduced complexity with early returns
+function processData(data, options) {
+  if (!data) return;
+  if (!options.validate) return;
+  if (!options.strict) return;
+  if (data.length === 0) return;
+  if (!data[0].id) return;
+  
+  // ... main logic
+}
+```
+
+### Correctness Rules
+
+Catches common programming errors and enforces React best practices:
+
+- **noUndeclaredVariables**: Prevent use of undeclared variables (error)
+- **useExhaustiveDependencies**: Ensure React hooks have complete dependency arrays (warning)
+- **noUnusedImports**: Remove unused imports (error)
+- **noUnusedVariables**: Remove unused variables, allowing rest siblings (error)
+- **useHookAtTopLevel**: React hooks must be called at the top level (error)
+
+```typescript
+// ❌ Avoid: Missing dependencies
+useEffect(() => {
+  console.log(userName);
+}, []); // Missing userName dependency
+
+// ✅ Prefer: Complete dependencies
+useEffect(() => {
+  console.log(userName);
+}, [userName]);
+
+// ❌ Avoid: Unused imports
+import { useState, useEffect } from 'react';
+
+function Counter() {
+  const [count, setCount] = useState(0);
+  return <div>{count}</div>;
+}
+
+// ✅ Prefer: Only imported what's used
+import { useState } from 'react';
+
+function Counter() {
+  const [count, setCount] = useState(0);
+  return <div>{count}</div>;
+}
+```
+
+### Performance Rules
+
+Optimizes for better runtime performance:
+
+- **noReExportAll**: Prevent re-export all statements (error)
+
+```typescript
+// ❌ Avoid: Re-export all
+export * from './utils';
+
+// ✅ Prefer: Explicit exports
+export { formatDate, parseDate } from './utils';
+```
+
+### Style Rules
+
+Enforces consistent coding style and conventions:
+
+- **noNegationElse**: Avoid negation in else clauses (error)
+- **useCollapsedElseIf**: Use collapsed else-if statements (error)
+- **useBlockStatements**: Prefer block statements (warning)
+- **useConsistentArrayType**: Use shorthand array type syntax (warning)
+- **noParameterAssign**: Prevent parameter reassignment (error)
+- **useNamingConvention**: Enforce camelCase/CONSTANT_CASE with ASCII-only (error)
+
+```typescript
+// ❌ Avoid: Negation in else
+if (!isValid) {
+  return error;
+} else {
+  return success;
+}
+
+// ✅ Prefer: Positive condition
+if (isValid) {
+  return success;
+} else {
+  return error;
+}
+
+// ❌ Avoid: Array<T> syntax
+const items: Array<string> = [];
+
+// ✅ Prefer: Shorthand syntax
+const items: string[] = [];
+
+// ❌ Avoid: Parameter reassignment
+function updateUser(user: User) {
+  user.name = 'Updated'; // Mutates parameter
+  return user;
+}
+
+// ✅ Prefer: Return new object
+function updateUser(user: User) {
+  return { ...user, name: 'Updated' };
+}
+```
+
+### Suspicious Pattern Detection
+
+Detects potentially problematic code patterns:
+
+- **noArrayIndexKey**: Warn against using array index as React key (warning)
+- **noEmptyBlockStatements**: Prevent empty block statements (error)
+- **useAwait**: Async functions must use await (error)
+- **noExplicitAny**: Discourage explicit `any` types (warning)
+- **noDuplicateElseIf**: Prevent duplicate else-if conditions (error)
+
+```typescript
+// ❌ Avoid: Array index as key
+items.map((item, index) => <div key={index}>{item}</div>);
+
+// ✅ Prefer: Stable unique identifier
+items.map((item) => <div key={item.id}>{item}</div>);
+
+// ❌ Avoid: Async function without await
+async function fetchData() {
+  return data; // No await used
+}
+
+// ✅ Prefer: Use await or remove async
+async function fetchData() {
+  return await api.getData();
+}
+```
+
+## Naming Conventions
+
+Enforces strict naming conventions with ASCII-only characters:
+
+- **Object properties**: CONSTANT_CASE or camelCase
+- **Variables**: camelCase or CONSTANT_CASE
+
+```typescript
+// ✅ Valid naming
+const userName = 'John';
+const MAX_RETRIES = 3;
+const config = { apiKey: 'key', maxTimeout: 1000 };
+
+// ❌ Invalid naming
+const user_name = 'John'; // Use camelCase
+const max_retries = 3; // Use CONSTANT_CASE
+const config = { api_key: 'key' }; // Use camelCase
+```
+
+## Customization
+
+Override specific rules in your `biome.json`:
+
+```json
+{
+  "extends": ["@accelint/biome-config/linter"],
+  "linter": {
+    "rules": {
+      "complexity": {
+        "noExcessiveCognitiveComplexity": {
+          "level": "error",
+          "options": {
+            "maxAllowedComplexity": 20
+          }
+        }
+      },
+      "correctness": {
+        "useExhaustiveDependencies": "error"
+      }
+    }
+  }
+}
+```
+
+## Disabling Rules
+
+Disable rules for specific files or directories:
+
+```json
+{
+  "extends": ["@accelint/biome-config/linter"],
+  "overrides": [
+    {
+      "include": ["**/*.test.ts"],
+      "linter": {
+        "rules": {
+          "suspicious": {
+            "noExplicitAny": "off"
+          }
+        }
+      }
+    }
+  ]
+}
+```
+
+## Related
+
+- [Biome Linter Rules](https://biomejs.dev/linter/rules/)
+- [Formatter Configuration](./formatter)
+- [Analyzer Configuration](./analyzer)
+- [TypeScript Configuration](../typescript-config)

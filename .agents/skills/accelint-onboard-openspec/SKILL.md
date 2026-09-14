@@ -4,13 +4,17 @@ description: Interactively onboard a project to OpenSpec by running a structured
 license: Apache-2.0
 metadata:
   author: accelint
-  version: "1.2.0"
+  version: "1.5.0"
 ---
 
 # Onboard OpenSpec
 
 Guide the user through a conversational interview to produce a complete,
 project-specific `openspec/config.yaml` configured for the QRSPI methodology.
+
+## NEVER Do When Onboarding OpenSpec
+
+- **NEVER run codebase inference serially when subagents are available** — Phase 3 spawns parallel subagents for different discovery domains. Serial scanning wastes time on codebases with many config files spread across directories. Spawn all 4 discovery agents simultaneously.
 
 ## Companion Skill
 
@@ -49,7 +53,23 @@ Before any interview question is asked, check whether `openspec/config.yaml`
 exists and assess its state. Never silently pick a mode — always announce the
 detected mode to the user and confirm before proceeding.
 
-**Detection logic:**
+**Step 1 — Check for Related Documents**
+
+Before detecting config.yaml state, check for related onboarding documents:
+
+1. **Check for ARCHITECTURE.md**
+   - If exists: Read it to understand deployment and infrastructure
+   - Use it to pre-fill answers for Turn 2 (infrastructure/deployment questions)
+   - Note its existence for the "Related Documentation" section
+   - Announce: "Found ARCHITECTURE.md — I'll use it to avoid asking questions
+     about deployment that are already documented."
+
+Note: AGENTS.md and README.md should NOT influence config.yml generation since
+they contain behavioral/usage info, not project DNA.
+
+**Step 2 — Detect Config State**
+
+After checking related documents, assess the config file state:
 
 ```
 Does openspec/config.yaml exist?
@@ -141,7 +161,13 @@ as (a) or (b) if the user is satisfied.
 The file matches the skill's expected schema — it was likely produced by a
 previous run. Run an abbreviated interview covering only:
 
-1. **Drift detection** — scan the codebase for changes since the file was
+1. **Extract external findings** — check if the invoking prompt includes a `findings:` list:
+   - Parse the prompt for a `findings:` section (a bulleted list of factual statements)
+   - Each finding is phrased as something already known to be true, never as an instruction
+   - Example: "config.yaml's Anti-Patterns section says to avoid polling, but two archived changes chose polling for stated reasons"
+   - Store these findings for merging in step 4
+
+2. **Drift detection** — scan the codebase for changes since the file was
    last updated:
 
    | Signal | Where to look |
@@ -155,14 +181,17 @@ previous run. Run an abbreviated interview covering only:
    | New domain concepts | New top-level directories, new entity types in source |
    | Anti-patterns deprecated | `@deprecated` tags, `// TODO: replace` comments added |
 
-2. **Unresolved TODOs** — find all `# TODO: fill in` markers left from the
+3. **Unresolved TODOs** — find all `# TODO: fill in` markers left from the
    previous run and surface them as targeted questions.
 
-3. **Announce findings** before asking anything:
-   > "I found [N] context sections that may have drifted and [M] unresolved
-   > TODOs. I'll only ask about those — the rest looks current."
+4. **Merge and announce all findings** before asking anything:
+   - Combine external findings (from step 1) with drift findings (from step 2) and TODOs (from step 3)
+   - Present the merged list to the user:
+     > "I found [N] external findings, [M] context sections that may have drifted, and [P] unresolved TODOs.
+     > I'll only ask about those — the rest looks current."
+   - If external findings exist, note their source (e.g., "from completed OpenSpec change")
 
-4. After the targeted interview, show only the changed sections in the
+5. After the targeted interview, show only the changed sections in the
    preview before writing. Do not re-emit unchanged sections.
 
 ---
@@ -280,42 +309,57 @@ examples as a pattern; extend to other stacks as appropriate.
 
 ---
 
-### Phase 3 — Codebase Inference (fill gaps before generating)
+### Phase 3 — Parallel Codebase Inference
 
-After the interview, audit every config field that still has no answer. For each
-gap, attempt to derive the answer directly from the codebase before asking the
-user or leaving the field empty. All config sections are load-bearing — a
-missing field degrades every downstream AI artifact, so inference is always
-preferable to omission.
+After the interview, spawn parallel discovery subagents to fill remaining config
+gaps. All config sections are load-bearing — a missing field degrades every
+downstream AI artifact, so inference is always preferable to omission.
 
-**Inference targets and where to look:**
+Spawn discovery subagents in parallel — don't scan serially. Each agent focuses
+on one inference domain and returns structured findings. Wait for all agents to
+complete, then merge results before Phase 4.
 
-| Gap | Files / signals to inspect |
-|-----|---------------------------|
-| Runtime / Node version | `.nvmrc`, `.node-version`, `package.json#engines`, `Dockerfile` |
-| TypeScript config | `tsconfig.json` (compilerOptions flags, paths aliases) |
-| Package manager | `package-lock.json`, `yarn.lock`, `pnpm-lock.yaml`, `bun.lockb` |
-| Monorepo workspaces | `package.json#workspaces`, `pnpm-workspace.yaml`, `turbo.json`, `nx.json` |
-| Build tools | `vite.config.*`, `webpack.config.*`, `tsup.config.*`, `esbuild` scripts in `package.json` |
-| Test framework | `vitest.config.*`, `jest.config.*`, `pytest.ini`, `pyproject.toml#tool.pytest` |
-| Linting / formatting | `.eslintrc*`, `biome.json`, `.prettierrc*`, `ruff.toml` |
-| CI/CD | `.github/workflows/`, `.circleci/`, `Jenkinsfile` |
-| Versioning | `.changeset/`, `CHANGELOG.md`, `commitlint.config.*`, `.releaserc*` |
-| Path aliases | `tsconfig.json#compilerOptions.paths`, `vite.config#resolve.alias` |
-| Architecture organisation | Directory tree of `src/` or workspace roots — infer feature-based vs layer-based |
-| Design patterns | Sample source files — look for factory functions, repository objects, observer hooks |
-| Export style | Sample 3–5 source files; tally named vs default exports |
-| Naming conventions | Sample file names, exported identifiers; describe what you observe |
-| Error handling | Grep for `throw`, `Result`, `Either`, `tryCatch`, error boundary components |
-| Test structure | Sample test files — describe/it nesting depth, file location relative to source |
-| Anti-patterns | `eslint` rule overrides marked `off` or `warn`, comments like `// TODO: replace`, `@deprecated` |
-| TypeScript baseline patterns | If `tsconfig.json` exists, automatically include TS/JS baseline patterns (classes, return values, type safety, testing, anti-patterns) |
-| Vitest global mock cleanup | `vitest.config.ts` — check for `clearMocks`, `mockReset`, `restoreMocks` in config |
-| Test file type checking | CI scripts, package.json — check if `tsc --noEmit` runs on `*.test.ts` files |
-| Property-based testing | Check for `fast-check` in dependencies — indicates PBT usage |
+**Spawn these agents simultaneously:**
 
-**After inference, for each field resolved this way**, note the source in the
-preview with a trailing comment, e.g.:
+**Agent A — Stack & Build Tooling**
+- Runtime / Node version: `.nvmrc`, `.node-version`, `package.json#engines`, `Dockerfile`
+- TypeScript config: `tsconfig.json` (compilerOptions flags, paths aliases)
+- Package manager: `package-lock.json`, `yarn.lock`, `pnpm-lock.yaml`, `bun.lockb`
+- Monorepo workspaces: `package.json#workspaces`, `pnpm-workspace.yaml`, `turbo.json`, `nx.json`
+- Build tools: `vite.config.*`, `webpack.config.*`, `tsup.config.*`, `esbuild` scripts
+- Return: runtime version, TS config flags, package manager, workspace list, build tools
+
+**Agent B — Testing & Code Quality**
+- Test framework: `vitest.config.*`, `jest.config.*`, `pytest.ini`, `pyproject.toml#tool.pytest`
+- Linting / formatting: `.eslintrc*`, `biome.json`, `.prettierrc*`, `ruff.toml`
+- Test structure: Sample test files — describe/it nesting depth, file location relative to source
+- Test file type checking: CI scripts, package.json — check if `tsc --noEmit` runs on `*.test.ts` files
+- Property-based testing: Check for `fast-check` in dependencies
+- Vitest mock cleanup: `vitest.config.ts` — check for `clearMocks`, `mockReset`, `restoreMocks`
+- Return: test framework, code quality tools, test structure patterns, type checking config
+
+**Agent C — Architecture & Code Patterns**
+- Architecture organisation: Directory tree of `src/` or workspace roots — infer feature-based vs layer-based
+- Path aliases: `tsconfig.json#compilerOptions.paths`, `vite.config#resolve.alias`
+- Design patterns: Sample source files — look for factory functions, repository objects, observer hooks
+- Export style: Sample 3–5 source files; tally named vs default exports
+- Naming conventions: Sample file names, exported identifiers; describe what you observe
+- Error handling: Grep for `throw`, `Result`, `Either`, `tryCatch`, error boundary components
+- TypeScript baseline patterns: If `tsconfig.json` exists, flag that TS/JS baseline patterns should be included
+- Return: architecture style, path aliases, design patterns, export conventions, naming patterns, error handling approach
+
+**Agent D — CI/CD & Versioning**
+- CI/CD: `.github/workflows/`, `.circleci/`, `Jenkinsfile`
+- Versioning: `.changeset/`, `CHANGELOG.md`, `commitlint.config.*`, `.releaserc*`
+- Anti-patterns: `eslint` rule overrides marked `off` or `warn`, comments like `// TODO: replace`, `@deprecated`
+- Return: CI/CD platform, versioning approach, documented anti-patterns
+
+**After all agents complete:** merge their findings into a unified inference map.
+Tag each field as `INFERRED [source]` or `UNKNOWN`. Fields tagged `UNKNOWN`
+should be marked as `# TODO: fill in` in the config preview.
+
+**For each field resolved via inference**, note the source in the preview with a
+trailing comment, e.g.:
 
 ```yaml
 - Runtime: Node.js 20 LTS   # inferred from .nvmrc
@@ -340,7 +384,9 @@ is an invisible gap.
    the file?"*
 3. After confirmation, write to `openspec/config.yaml` (create directory if
    needed), **stripping the inference source comments** — they are for review
-   only, not the final file.
+   only, not the final file. **For the Related Documentation section:** only include
+   links to files that actually exist in the repository. Check for each file
+   (ARCHITECTURE.md, AGENTS.md/CLAUDE.md, README.md) before including its link.
 4. **Validate the generated YAML** — after writing, read the file back and verify:
    - No tabs (YAML requires spaces for indentation)
    - Values with special characters are properly quoted
@@ -499,17 +545,20 @@ context: |
   # ═══════════════════════════════════════════════════════════════════════════
 
   ## Code Patterns
-  - Exports:        [named / default / mixed — and when each applies]
-  - Naming:         [files, variables, functions, constants, types]
-  - Error handling: [throw / Result<T,E> / boundaries / other]
-  - Validation:     [approach and library]
-  - Constants:      Use `as const` objects, never `enum`
-  - Classes:        Prefer functions over classes unless state management required or extending existing class
-  - Return values:  Return zero values (empty array, empty string, 0) instead of null/undefined
-  - Type safety:    Avoid `any` (use `unknown` or generics); avoid `enum` (use `as const` objects); use `type` over `interface`
-  - Immutability:   Prefer `const`, immutable data structures, pure functions
-  - Documentation:  Comprehensive JSDoc for all exported code (@param, @returns, @template, @example)
-  - Order:          Internal functions, variables and types should be defined before they are used (internal/export types -> internal/export constants -> internal/export functions)
+  - Exports:         [named / default / mixed — and when each applies]
+  - Naming:          [files, variables, functions, constants, types]
+  - Error handling:  [throw / Result<T,E> / boundaries / other]
+  - Validation:      [approach and library]
+  - Constants:       Use `as const` objects, never `enum`
+  - Classes:         Prefer functions over classes unless state management required or extending existing class
+  - Return values:   Return zero values (empty array, empty string, 0, false) instead of null/undefined
+  - Leaf functions:  Leaf functions (bottom of call stack) should be pure — same inputs produce same outputs, no side effects. Centralize state manipulation in parent/orchestrator functions.
+  - Type safety:     Avoid `any` (use `unknown` or generics); avoid `enum` (use `as const` objects); use `type` over `interface`
+  - Immutability:    Prefer `const`, immutable data structures, pure functions
+  - Documentation:   Comprehensive JSDoc for all exported code (@param, @returns, @template, @example)
+  - Order:           Internal functions, variables and types should be defined before they are used (internal/export types -> internal/export constants -> internal/export functions)
+  - Parameter order: Data-last ordering — place the data being operated on as the final parameter. Enables partial application and composition.
+  - Composition:     Use curried functions when the same first parameter(s) recur across call sites.
 
   ## Architecture Patterns
   - [pattern name]: [brief description of how it's used here]
@@ -627,6 +676,14 @@ rules:
     - Include concrete example data relevant to the domain
     - Document edge cases explicitly
     [user-specific spec rules]
+
+# ═══════════════════════════════════════════════════════════════════════════
+# RELATED DOCUMENTATION
+# ═══════════════════════════════════════════════════════════════════════════
+# Include only files that actually exist in the repository:
+# - ARCHITECTURE.md: System overview, deployment, component interactions, data flows
+# - AGENTS.md: Agent behavior rules, workflow procedures, communication style
+# - README.md: Installation, quick start, usage guide
 ```
 
 ---

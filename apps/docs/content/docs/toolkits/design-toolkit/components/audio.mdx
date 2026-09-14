@@ -1,0 +1,222 @@
+---
+title: Audio
+description: A complete audio player component with play/pause, seek, volume control, and playback rate adjustment.
+source: packages/design-toolkit/src/components/audio/index.tsx
+source_sha: ce7522ff211729349e4bb07a8e908b61a2d2f799
+doc_sha: 2631fdfa1f4760d4b085df9ab340ccc53cffc8fc
+deprecated: false
+updated: 2026-07-13
+---
+
+## Usage
+
+```tsx
+import { Audio } from '@accelint/design-toolkit';
+
+export function MyComponent() {
+  return <Audio src="audio.mp3" title="My Audio File" />;
+}
+```
+
+## Reference
+
+```typescript
+interface AudioProps extends Omit<ComponentPropsWithRef<'audio'>, 'children' | 'onEnded' | 'onTimeUpdate' | 'onError' | 'src' | 'className'> {
+  src: string;
+  title?: string;
+  isDisabled?: boolean;
+  children?: React.ReactNode;
+  classNames?: {
+    container?: string;
+    title?: string;
+    mediaControls?: string;
+    timeRow?: string;
+    controlsRow?: string;
+  };
+  onEnded?: () => void;
+  onTimeUpdate?: (currentTime: number) => void;
+  onError?: (error: MediaError) => void;
+  playbackRates?: number[];
+  noHotkeys?: boolean;
+  hotkeys?: Record<string, string>;
+  noVolumePref?: boolean;
+  noMutedPref?: boolean;
+  lang?: string;
+}
+```
+
+### Props
+
+| Prop | Type | Default | Required |
+|------|------|---------|----------|
+| `src` | `string` | - | Yes |
+| `title` | `string` | - | No |
+| `isDisabled` | `boolean` | `false` | No |
+| `children` | `React.ReactNode` | - | No |
+| `classNames` | `object` | - | No |
+| `autoPlay` | `boolean` | `false` | No |
+| `loop` | `boolean` | `false` | No |
+| `muted` | `boolean` | `false` | No |
+| `preload` | `'none' \| 'metadata' \| 'auto'` | `'metadata'` | No |
+| `crossOrigin` | `'anonymous' \| 'use-credentials'` | - | No |
+| `playbackRates` | `number[]` | `[1, 2, 3]` | No |
+| `onEnded` | `() => void` | - | No |
+| `onTimeUpdate` | `(currentTime: number) => void` | - | No |
+| `onError` | `(error: MediaError) => void` | - | No |
+| `noHotkeys` | `boolean` | `false` | No |
+| `noVolumePref` | `boolean` | `false` | No |
+| `noMutedPref` | `boolean` | `false` | No |
+
+#### `src`
+
+Audio source URL. Must be accessible to the browser. If loading from a different origin, ensure the server sends appropriate CORS headers (`Access-Control-Allow-Origin`) or use the `crossOrigin` prop.
+
+#### `crossOrigin`
+
+CORS setting required when loading audio from a different origin that requires credentials or when using canvas to analyze audio. Without proper CORS configuration, the audio may fail to load.
+
+#### `playbackRates`
+
+Array of playback speed multipliers. Only positive finite numbers are accepted; invalid values are filtered out.
+
+#### `classNames`
+
+Custom class names for sub-elements:
+- `container` - The outer MediaController wrapper
+- `title` - The title row element
+- `mediaControls` - The controls container
+- `timeRow` - The time display and seek bar row
+- `controlsRow` - The playback controls row
+
+### Default Controls
+
+When no `children` are provided, the Audio component renders a complete control layout:
+- Time display (current time / duration)
+- Seek bar (TimeRange)
+- Volume controls (mute button + volume slider)
+- Playback controls (seek backward, play/pause, seek forward)
+- Playback rate button
+
+### Custom Controls
+
+Pass children to render custom controls using the MediaControls sub-components:
+- `PlayButton` - Play/pause toggle
+- `MuteButton` - Mute/unmute toggle
+- `SeekButton` - Skip forward/backward
+- `TimeDisplay` - Current time or duration
+- `TimeRange` - Seek bar
+- `VolumeSlider` - Volume control
+- `PlaybackRateButton` - Playback speed selector
+
+## Examples
+
+### Example: Basic audio player
+
+```tsx
+import { Audio } from '@accelint/design-toolkit';
+
+<Audio src="podcast.mp3" title="Episode 42: TypeScript Deep Dive" />
+```
+
+### Example: Autoplay and loop
+
+```tsx
+import { Audio } from '@accelint/design-toolkit';
+
+<Audio
+  src="background-music.mp3"
+  autoPlay
+  loop
+  muted
+/>
+```
+
+### Example: With event callbacks
+
+```tsx
+import { Audio } from '@accelint/design-toolkit';
+
+<Audio
+  src="audio.mp3"
+  title="My Audio File"
+  onPlay={() => console.log('Playing')}
+  onPause={() => console.log('Paused')}
+  onEnded={() => console.log('Ended')}
+  onTimeUpdate={(time) => console.log('Current time:', time)}
+/>
+```
+
+### Example: Custom playback rates
+
+```tsx
+import { Audio } from '@accelint/design-toolkit';
+
+<Audio
+  src="lecture.mp3"
+  playbackRates={[0.5, 0.75, 1, 1.25, 1.5, 2]}
+/>
+```
+
+### Example: Loading from external origin
+
+```tsx
+import { Audio } from '@accelint/design-toolkit';
+
+<Audio
+  src="https://example.com/audio.mp3"
+  crossOrigin="anonymous"
+  onError={(error) => {
+    console.error('Failed to load audio:', error);
+  }}
+/>
+```
+
+> **Good to know:** When loading audio from a different origin, the server must send CORS headers. Without them, the audio will fail to load silently.
+
+### Example: Custom controls layout
+
+```tsx
+import {
+  Audio,
+  PlayButton,
+  TimeRange
+} from '@accelint/design-toolkit';
+
+<Audio src="audio.mp3">
+  <PlayButton />
+  <TimeRange />
+</Audio>
+```
+
+### Example: Minimal controls
+
+```tsx
+import {
+  Audio,
+  PlayButton,
+  TimeDisplay
+} from '@accelint/design-toolkit';
+
+<Audio src="audio.mp3">
+  <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+    <PlayButton />
+    <TimeDisplay mode="current" /> / <TimeDisplay mode="duration" />
+  </div>
+</Audio>
+```
+
+### Example: Disabled state
+
+```tsx
+import { Audio } from '@accelint/design-toolkit';
+
+<Audio
+  src="audio.mp3"
+  isDisabled
+/>
+```
+
+## Related
+
+- [Video](../video/index.md) - Video player component with similar controls
+- [MediaControls](../media-controls/index.md) - Individual media control components

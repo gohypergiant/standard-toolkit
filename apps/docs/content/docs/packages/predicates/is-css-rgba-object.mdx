@@ -1,0 +1,103 @@
+---
+title: isCssRgbaObject
+description: Type guard for validating CSS-style RGBA color objects (React Aria Components format)
+source: packages/predicates/src/is-css-rgba-object/index.ts
+source_sha: 6fcefa9066602e68ac2ed28f0a90ef2e34afb5a0
+doc_sha: 516767a20e19021f9e2bb0555258130b4f5338be
+deprecated: false
+updated: 2026-07-13
+---
+
+Validates CSS-style RGBA color object (React Aria Components format).
+
+## Usage
+
+```typescript
+import { isCssRgbaObject } from '@accelint/predicates/is-css-rgba-object';
+
+isCssRgbaObject({ r: 255, g: 128, b: 64, a: 1 });    // true
+isCssRgbaObject({ r: 255, g: 128, b: 64, a: 0.5 });  // true
+isCssRgbaObject({ r: 255, g: 128, b: 64 });          // false (missing alpha)
+isCssRgbaObject([255, 128, 64, 255]);                // false (array, not object)
+isCssRgbaObject({ r: 256, g: 128, b: 64, a: 1 });    // false (r out of range)
+```
+
+## Reference
+
+```typescript
+type CssRgbaObject = {
+  readonly r: number; // 0-255
+  readonly g: number; // 0-255
+  readonly b: number; // 0-255
+  readonly a: number; // 0-1
+};
+
+function isCssRgbaObject(value: unknown): value is CssRgbaObject
+```
+
+RGB channels: 0-255, Alpha channel: 0-1
+
+## Examples
+
+```typescript
+import { isCssRgbaObject } from '@accelint/predicates/is-css-rgba-object';
+
+// Valid RGBA objects
+isCssRgbaObject({ r: 255, g: 128, b: 64, a: 1 });    // true
+isCssRgbaObject({ r: 255, g: 128, b: 64, a: 0.5 });  // true
+isCssRgbaObject({ r: 0, g: 0, b: 0, a: 0 });         // true
+
+// Missing properties
+isCssRgbaObject({ r: 255, g: 128, b: 64 });          // false (missing alpha)
+isCssRgbaObject({ r: 255, g: 128, a: 1 });           // false (missing blue)
+
+// Wrong types
+isCssRgbaObject([255, 128, 64, 1]);                  // false (array, not object)
+isCssRgbaObject('rgba(255, 128, 64, 1)');            // false (string, not object)
+
+// Out of range values
+isCssRgbaObject({ r: 256, g: 128, b: 64, a: 1 });    // false (r > 255)
+isCssRgbaObject({ r: -1, g: 128, b: 64, a: 1 });     // false (r < 0)
+isCssRgbaObject({ r: 255, g: 128, b: 64, a: 2 });    // false (a > 1)
+isCssRgbaObject({ r: 255, g: 128, b: 64, a: -0.1 }); // false (a < 0)
+
+// Extra properties are allowed
+isCssRgbaObject({ r: 255, g: 128, b: 64, a: 1, format: 'css' }); // true
+```
+
+## Real-World Example: React Aria ColorPicker integration
+
+```typescript
+import { isCssRgbaObject } from '@accelint/predicates/is-css-rgba-object';
+import type { Color } from 'react-aria-components';
+
+function normalizeColorValue(color: unknown): CssRgbaObject {
+  if (isCssRgbaObject(color)) {
+    return color;
+  }
+  
+  throw new Error('Invalid color: expected CssRgbaObject format');
+}
+
+function ColorDisplay({ value }: { value: unknown }) {
+  const color = normalizeColorValue(value);
+  
+  return (
+    <div style={{
+      backgroundColor: `rgba(${color.r}, ${color.g}, ${color.b}, ${color.a})`
+    }}>
+      R: {color.r}, G: {color.g}, B: {color.b}, A: {color.a}
+    </div>
+  );
+}
+```
+
+> **Good to know:** `isCssRgbaObject` uses alpha 0-1 (CSS standard), while `isRgba255Tuple` uses alpha 0-255 (deck.gl format). This matches React Aria Components conventions.
+
+## Related
+
+- [isRgba255Tuple](./is-rgba-255-tuple) - Type guard for RGBA tuples (alpha 0-255)
+- [isHexColor](./is-hex-color) - Type guard for hex color strings
+- [isCssRgbaString](./is-css-rgba-string) - Type guard for CSS rgb/rgba strings
+- [isValid255Channel](./is-valid-255-channel) - Validate individual color channels
+- [isObject](./is-object) - Type guard for objects

@@ -1,0 +1,199 @@
+---
+title: Skeleton
+description: Placeholder content component for loading states with pulsing animation
+source: packages/design-toolkit/src/components/skeleton/index.tsx
+source_sha: f79fc8beaed0ea829bfd89460c86f2c9ab918fe1
+doc_sha: ea49c73f231a4450806d1cbdd80c3b9b0d110e07
+deprecated: false
+updated: 2026-07-13
+---
+
+Placeholder content component for loading states. Displays a pulsing placeholder while content is being fetched, providing visual feedback during asynchronous operations.
+
+## Usage
+
+```tsx
+import { Skeleton } from '@accelint/design-toolkit';
+
+export function LoadingCard() {
+  return (
+    <div>
+      <Skeleton variant="rectangle" style={{ width: 200, height: 20, marginBottom: 8 }} />
+      <Skeleton variant="rectangle" style={{ width: 150, height: 16 }} />
+    </div>
+  );
+}
+```
+
+## Reference
+
+```typescript
+interface SkeletonProps {
+  variant?: 'rectangle' | 'circle';
+  className?: string;
+  style?: React.CSSProperties;
+}
+```
+
+### Props
+
+| Prop | Type | Default | Required |
+|------|------|---------|----------|
+| `variant` | `'rectangle' \| 'circle'` | `'rectangle'` | No |
+| `className` | `string` | - | No |
+| `style` | `React.CSSProperties` | - | No |
+
+#### `variant`
+
+Controls the shape of the skeleton:
+- `rectangle` - Rectangular placeholder (default)
+- `circle` - Circular placeholder, useful for avatars
+
+> **Good to know:** Use inline styles or className to set the size of the skeleton. The component does not have default dimensions.
+
+## Examples
+
+### Example: Basic text placeholder
+
+```tsx
+import { Skeleton } from '@accelint/design-toolkit';
+
+<div>
+  <Skeleton variant="rectangle" style={{ width: 200, height: 20 }} />
+  <Skeleton variant="rectangle" style={{ width: 180, height: 20, marginTop: 8 }} />
+  <Skeleton variant="rectangle" style={{ width: 160, height: 20, marginTop: 8 }} />
+</div>
+```
+
+### Example: Avatar placeholder
+
+```tsx
+import { Skeleton } from '@accelint/design-toolkit';
+
+<Skeleton variant="circle" style={{ width: 48, height: 48 }} />
+```
+
+### Example: Card loading state
+
+```tsx
+import { Skeleton } from '@accelint/design-toolkit';
+
+<div className="card">
+  <Skeleton variant="circle" style={{ width: 40, height: 40, marginBottom: 16 }} />
+  <Skeleton variant="rectangle" style={{ width: '100%', height: 24, marginBottom: 8 }} />
+  <Skeleton variant="rectangle" style={{ width: '80%', height: 16, marginBottom: 8 }} />
+  <Skeleton variant="rectangle" style={{ width: '60%', height: 16 }} />
+</div>
+```
+
+### Example: List loading state
+
+```tsx
+import { Skeleton } from '@accelint/design-toolkit';
+
+<div className="space-y-4">
+  {[1, 2, 3].map((i) => (
+    <div key={i} className="flex items-center gap-4">
+      <Skeleton variant="circle" style={{ width: 40, height: 40 }} />
+      <div className="flex-1">
+        <Skeleton variant="rectangle" style={{ width: '100%', height: 20, marginBottom: 8 }} />
+        <Skeleton variant="rectangle" style={{ width: '70%', height: 16 }} />
+      </div>
+    </div>
+  ))}
+</div>
+```
+
+### Example: Table row placeholder
+
+```tsx
+import { Skeleton } from '@accelint/design-toolkit';
+
+<tr>
+  <td><Skeleton variant="rectangle" style={{ width: 100, height: 16 }} /></td>
+  <td><Skeleton variant="rectangle" style={{ width: 150, height: 16 }} /></td>
+  <td><Skeleton variant="rectangle" style={{ width: 80, height: 16 }} /></td>
+</tr>
+```
+
+### Example: Conditional loading
+
+```tsx
+import { Skeleton } from '@accelint/design-toolkit';
+import { useState, useEffect } from 'react';
+
+export function UserProfile() {
+  const [user, setUser] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    fetchUser().then((data) => {
+      setUser(data);
+      setIsLoading(false);
+    });
+  }, []);
+
+  if (isLoading) {
+    return (
+      <div>
+        <Skeleton variant="circle" style={{ width: 64, height: 64, marginBottom: 16 }} />
+        <Skeleton variant="rectangle" style={{ width: 200, height: 24, marginBottom: 8 }} />
+        <Skeleton variant="rectangle" style={{ width: 150, height: 16 }} />
+      </div>
+    );
+  }
+
+  return (
+    <div>
+      <img src={user.avatar} alt={user.name} />
+      <h2>{user.name}</h2>
+      <p>{user.email}</p>
+    </div>
+  );
+}
+```
+
+### Example: Custom styled skeleton
+
+```tsx
+import { Skeleton } from '@accelint/design-toolkit';
+
+<Skeleton
+  variant="rectangle"
+  className="rounded-lg"
+  style={{ width: 300, height: 200 }}
+/>
+```
+
+### Example: Media content placeholder
+
+```tsx
+import { Skeleton } from '@accelint/design-toolkit';
+
+<div className="media-card">
+  <Skeleton variant="rectangle" style={{ width: '100%', height: 200, marginBottom: 16 }} />
+  <Skeleton variant="rectangle" style={{ width: '100%', height: 24, marginBottom: 8 }} />
+  <Skeleton variant="rectangle" style={{ width: '80%', height: 16, marginBottom: 8 }} />
+  <Skeleton variant="rectangle" style={{ width: '90%', height: 16 }} />
+</div>
+```
+
+### Example: Variable width text
+
+```tsx
+import { Skeleton } from '@accelint/design-toolkit';
+
+<div>
+  <Skeleton variant="rectangle" style={{ width: '100%', height: 20, marginBottom: 8 }} />
+  <Skeleton variant="rectangle" style={{ width: '95%', height: 20, marginBottom: 8 }} />
+  <Skeleton variant="rectangle" style={{ width: '88%', height: 20, marginBottom: 8 }} />
+  <Skeleton variant="rectangle" style={{ width: '75%', height: 20 }} />
+</div>
+```
+
+> **Good to know:** The Skeleton component includes a pulsing animation by default. This animation runs automatically and requires no configuration.
+
+## Related
+
+- [Avatar](../avatar/index.md) - Avatar component that can show skeleton during image load
+- [Table](../table/index.md) - Table component that can use skeletons for loading rows

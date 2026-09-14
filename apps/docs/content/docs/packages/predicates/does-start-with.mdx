@@ -1,0 +1,82 @@
+---
+title: "doesStartWith"
+description: Curried predicate for testing if strings start with a specific prefix
+source: packages/predicates/src/does-start-with/index.ts
+source_sha: d87ca7a1207018b6543932bf06c7edcbb7998726
+doc_sha: 6d4c9f3e8b2a7d1f5c9e4b8a2d7f3e6c1b5a8d2f
+deprecated: false
+updated: 2026-07-13
+---
+
+Creates a predicate function that determines if a string starts with a specific prefix.
+
+## Usage
+
+```typescript
+import { doesStartWith } from '@accelint/predicates';
+
+const isHttpUrl = doesStartWith('http');
+isHttpUrl('https://example.com'); // true
+isHttpUrl('ftp://example.com');   // false
+```
+
+## Reference
+
+```typescript
+function doesStartWith(prefix: string): (input: string) => boolean
+```
+
+### Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `prefix` | `string` | The substring to use as the prefix |
+
+### Returns
+
+Curried function that accepts a string and returns `true` if it starts with the prefix.
+
+## Examples
+
+### Example: URL validation
+
+```typescript
+import { doesStartWith } from '@accelint/predicates';
+
+const isHttps = doesStartWith('https://');
+const isHttp = doesStartWith('http://');
+
+function isSecureUrl(url: string): boolean {
+  return isHttps(url);
+}
+
+isSecureUrl('https://example.com'); // true
+isSecureUrl('http://example.com');  // false
+```
+
+### Example: Filtering file paths
+
+```typescript
+import { doesStartWith } from '@accelint/predicates';
+
+const paths = [
+  '/home/user/documents',
+  '/var/log/system',
+  '/home/user/downloads',
+  '/etc/config'
+];
+
+const userPaths = paths.filter(doesStartWith('/home/user'));
+// ['/home/user/documents', '/home/user/downloads']
+```
+
+> **Good to know:** Comparisons are case-sensitive. Use native String methods like `.toLowerCase()` before applying this predicate if case-insensitive matching is needed.
+
+## Related
+
+- [doesEndWith](./does-end-with) - Check if string ends with suffix
+- [doesNotStartWith](./does-not-start-with) - Negated version of this function
+- [doesNotEndWith](./does-not-end-with) - Check if string does not end with suffix
+- [isLike](../is-like/index.md) - Pattern matching with RegExp
+- [isNotLike](../is-not-like/index.md) - Negated pattern matching
+- [isString](../is-string/index.md) - Type guard for strings

@@ -1,0 +1,227 @@
+---
+title: ColorPicker
+description: A color picker component that renders a grid of color swatches for selection
+source: packages/design-toolkit/src/components/color-picker/index.tsx
+source_sha: 32b4325399e8e5d6cebb0bfcb13c8fc4f378af18
+doc_sha: 880386cb9b6454c532dab095e0fd2ca40c4f75c0
+deprecated: false
+updated: 2026-07-13
+---
+
+## Usage
+
+```tsx
+import { ColorPicker } from '@accelint/design-toolkit';
+
+const colors = ['#ff0000', '#00ff00', '#0000ff'];
+
+export function MyComponent() {
+  return (
+    <ColorPicker
+      items={colors}
+      label="Choose a color"
+      onChange={(color) => console.log('Selected:', color)}
+    />
+  );
+}
+```
+
+## Reference
+
+```typescript
+interface ColorPickerProps {
+  items: (string | Color | Rgba255Tuple)[];
+  label?: string;
+  value?: string | Color | Rgba255Tuple;
+  defaultValue?: string | Color | Rgba255Tuple;
+  onChange?: (color: Color) => void;
+  isRequired?: boolean;
+  isDisabled?: boolean;
+  classNames?: {
+    container?: string;
+    label?: string;
+    picker?: string;
+    item?: string;
+    swatch?: string;
+  };
+}
+```
+
+### Props
+
+| Prop | Type | Default | Required |
+|------|------|---------|----------|
+| `items` | `Array<string \| Color \| Rgba255Tuple>` | - | Yes |
+| `label` | `string` | - | No |
+| `value` | `string \| Color \| Rgba255Tuple` | - | No |
+| `defaultValue` | `string \| Color \| Rgba255Tuple` | - | No |
+| `onChange` | `(color: Color) => void` | - | No |
+| `isRequired` | `boolean` | `false` | No |
+| `isDisabled` | `boolean` | `false` | No |
+| `classNames` | `object` | - | No |
+
+#### `items`
+
+Array of color values to display as selectable swatches. Supports multiple color formats:
+- Hex strings: `'#ff0000'`, `'#f00'`
+- Color objects: React Aria Color instances
+- RGBA 255 tuples: `[255, 0, 0, 255]`
+
+#### `value` / `defaultValue`
+
+The selected color value. Use `value` for controlled components and `defaultValue` for uncontrolled components. Supports the same formats as `items`.
+
+#### `classNames`
+
+Custom class names for sub-elements:
+- `container` - The outer container element
+- `label` - The label element
+- `picker` - The picker container with all swatches
+- `item` - Individual swatch items
+- `swatch` - The color swatch elements
+
+### Inherited Props
+
+ColorPicker inherits all props from React Aria's `ColorSwatchPicker` component, including:
+- `onFocusChange` - Called when focus changes
+- `onHoverChange` - Called when hover state changes
+
+See [React Aria ColorSwatchPicker](https://react-spectrum.adobe.com/react-aria/ColorSwatchPicker.html) for full API reference.
+
+## Examples
+
+### Example: Basic color picker
+
+```tsx
+import { ColorPicker } from '@accelint/design-toolkit';
+
+const colors = ['#ff0000', '#00ff00', '#0000ff'];
+
+<ColorPicker
+  items={colors}
+  label="Choose a color"
+  onChange={(color) => console.log('Selected:', color)}
+/>
+```
+
+### Example: Controlled value
+
+```tsx
+import { ColorPicker } from '@accelint/design-toolkit';
+import { parseColor } from '@react-stately/color';
+import { useState } from 'react';
+
+const colors = ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff', '#00ffff'];
+
+export function ControlledColorPicker() {
+  const [selectedColor, setSelectedColor] = useState(parseColor('#ff0000'));
+
+  return (
+    <div>
+      <ColorPicker
+        items={colors}
+        label="Select color"
+        value={selectedColor}
+        onChange={setSelectedColor}
+      />
+      <p>Selected: {selectedColor.toString('hex')}</p>
+    </div>
+  );
+}
+```
+
+### Example: Using RGBA tuples
+
+```tsx
+import { ColorPicker } from '@accelint/design-toolkit';
+
+const colors = [
+  [255, 0, 0, 255],     // Red
+  [0, 255, 0, 255],     // Green
+  [0, 0, 255, 255],     // Blue
+  [255, 255, 0, 255],   // Yellow
+];
+
+<ColorPicker
+  items={colors}
+  label="Choose a color"
+  defaultValue={[255, 0, 0, 255]}
+/>
+```
+
+### Example: Custom styling
+
+```tsx
+import { ColorPicker } from '@accelint/design-toolkit';
+
+const colors = ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff', '#00ffff'];
+
+<ColorPicker
+  items={colors}
+  label="Pick your favorite"
+  classNames={{
+    container: 'p-4',
+    picker: 'gap-4',
+    item: 'rounded-lg hover:scale-110 transition-transform',
+    swatch: 'w-12 h-12 border-2 border-white shadow-lg',
+  }}
+/>
+```
+
+### Example: Required field
+
+```tsx
+import { ColorPicker } from '@accelint/design-toolkit';
+
+const colors = ['#ff0000', '#00ff00', '#0000ff'];
+
+<ColorPicker
+  items={colors}
+  label="Primary Color"
+  isRequired
+  onChange={(color) => console.log('Required color selected:', color)}
+/>
+```
+
+### Example: Large color palette
+
+```tsx
+import { ColorPicker } from '@accelint/design-toolkit';
+
+const colors = [
+  '#000000', '#333333', '#666666', '#999999', '#cccccc', '#ffffff',
+  '#ff0000', '#ff6600', '#ffcc00', '#ffff00', '#ccff00', '#66ff00',
+  '#00ff00', '#00ff66', '#00ffcc', '#00ffff', '#00ccff', '#0066ff',
+  '#0000ff', '#6600ff', '#cc00ff', '#ff00ff', '#ff00cc', '#ff0066',
+];
+
+<ColorPicker
+  items={colors}
+  label="Extended palette"
+  classNames={{
+    picker: 'grid grid-cols-6 gap-2',
+    swatch: 'w-10 h-10',
+  }}
+/>
+```
+
+### Example: Disabled state
+
+```tsx
+import { ColorPicker } from '@accelint/design-toolkit';
+
+const colors = ['#ff0000', '#00ff00', '#0000ff'];
+
+<ColorPicker
+  items={colors}
+  label="Locked Color"
+  value="#ff0000"
+  isDisabled
+/>
+```
+
+> **Good to know:** The ColorPicker automatically handles color parsing and validation. RGBA 255 tuples are automatically converted to hex format internally for consistency.
+
+## Related
+
+- [Label](../label/index.md) - Label component used internally

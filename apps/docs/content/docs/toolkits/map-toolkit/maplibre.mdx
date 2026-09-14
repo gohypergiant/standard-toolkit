@@ -1,0 +1,178 @@
+---
+title: "MapLibre"
+description: MapLibre GL integration utilities and custom interaction handlers.
+source: packages/map-toolkit/src/maplibre/index.ts
+source_sha: 1a43be169a12a47750b6efc4efe0ab85023b5d82
+doc_sha: 748c17c84fcc3042c1044fbe65ca356297e5566c
+deprecated: false
+updated: 2026-07-14
+---
+
+## Installation
+
+```bash
+pnpm add @accelint/map-toolkit maplibre-gl
+```
+
+## Usage
+
+```typescript
+// Import hook
+import { useMapLibre } from '@accelint/map-toolkit/maplibre';
+
+// Import RBZ handler
+import { RbzHandler, DEFAULT_RBZ_STYLE } from '@accelint/map-toolkit/maplibre';
+
+// Import constants
+import { DEFAULT_VIEW_STATE } from '@accelint/map-toolkit/maplibre';
+```
+
+## Available Exports
+
+### Hooks
+
+| Export | Description |
+|--------|-------------|
+| `useMapLibre` | React hook for creating and managing a MapLibre GL instance |
+
+### Handlers
+
+| Export | Description |
+|--------|-------------|
+| `RbzHandler` | Custom MapLibre handler for rubber band zoom (click-drag rectangular zoom) |
+
+### Constants
+
+| Export | Description |
+|--------|-------------|
+| `DEFAULT_VIEW_STATE` | Default map view state (center, zoom, pitch, bearing) |
+| `DEFAULT_RBZ_STYLE` | Default styling for rubber band zoom rectangle |
+
+### Types
+
+| Export | Description |
+|--------|-------------|
+| `RbzOptions` | Configuration options for RbzHandler |
+| `RbzStyleOptions` | Styling options for rubber band zoom rectangle |
+| `RbzBuffer` | Buffer dimensions for zoom rectangle |
+| `RbzOrigin` | Origin point for rubber band zoom |
+
+## Quick Start
+
+### Basic MapLibre Integration
+
+```tsx
+import { useMapLibre, DEFAULT_VIEW_STATE } from '@accelint/map-toolkit/maplibre';
+import { useEffect, useRef } from 'react';
+import 'maplibre-gl/dist/maplibre-gl.css';
+
+export function SimpleMap() {
+  const containerRef = useRef<HTMLDivElement>(null);
+  
+  const map = useMapLibre({
+    container: containerRef.current,
+    style: 'https://demotiles.maplibre.org/style.json',
+    ...DEFAULT_VIEW_STATE,
+  });
+  
+  useEffect(() => {
+    if (!map) return;
+    
+    // Add custom layer or markers
+    map.on('load', () => {
+      map.addSource('my-data', {
+        type: 'geojson',
+        data: {
+          type: 'FeatureCollection',
+          features: [],
+        },
+      });
+    });
+  }, [map]);
+  
+  return <div ref={containerRef} className="w-full h-full" />;
+}
+```
+
+### Rubber Band Zoom
+
+```tsx
+import { useMapLibre, RbzHandler, DEFAULT_RBZ_STYLE } from '@accelint/map-toolkit/maplibre';
+import { useEffect, useRef } from 'react';
+import 'maplibre-gl/dist/maplibre-gl.css';
+
+export function MapWithRbz() {
+  const containerRef = useRef<HTMLDivElement>(null);
+  
+  const map = useMapLibre({
+    container: containerRef.current,
+    style: 'https://demotiles.maplibre.org/style.json',
+    center: [0, 0],
+    zoom: 2,
+  });
+  
+  useEffect(() => {
+    if (!map) return;
+    
+    // Add rubber band zoom handler
+    const rbzHandler = new RbzHandler({
+      map,
+      style: {
+        ...DEFAULT_RBZ_STYLE,
+        fillColor: 'rgba(0, 123, 255, 0.1)',
+        strokeColor: 'rgba(0, 123, 255, 0.8)',
+      },
+    });
+    
+    map.addHandler('rbz', rbzHandler);
+    
+    return () => {
+      map.removeHandler('rbz');
+    };
+  }, [map]);
+  
+  return (
+    <div className="relative w-full h-full">
+      <div ref={containerRef} className="w-full h-full" />
+      <div className="absolute top-4 left-4 bg-white p-2 rounded shadow">
+        Hold Shift + Click and drag to zoom to a rectangle
+      </div>
+    </div>
+  );
+}
+```
+
+### With BaseMap Integration
+
+While BaseMap uses Deck.gl, MapLibre GL provides the base map tiles and 2D vector features:
+
+```tsx
+import { BaseMap } from '@accelint/map-toolkit/deckgl';
+import { LIGHT_BASE_MAP_STYLE } from '@accelint/map-toolkit/deckgl';
+import { uuid } from '@accelint/core';
+
+const MAP_ID = uuid();
+
+export function HybridMap() {
+  return (
+    <BaseMap
+      id={MAP_ID}
+      className="w-full h-full"
+      mapStyle={LIGHT_BASE_MAP_STYLE}
+    />
+  );
+}
+```
+
+## Architecture Notes
+
+- **BaseMap** internally uses MapLibre GL for base map tiles
+- Deck.gl renders 3D visualizations on top of the MapLibre layer
+- `useMapLibre` hook is for standalone MapLibre usage without Deck.gl
+- `RbzHandler` can be added to either standalone MapLibre or BaseMap instances
+
+## Related
+
+- [deckgl](./deckgl/index.mdx) - Deck.gl integration with MapLibre
+- [deckgl/base-map](./deckgl/base-map.mdx) - Combined Deck.gl + MapLibre component
+- [MapLibre GL JS Documentation](https://maplibre.org/maplibre-gl-js-docs/api/) - Official MapLibre docs

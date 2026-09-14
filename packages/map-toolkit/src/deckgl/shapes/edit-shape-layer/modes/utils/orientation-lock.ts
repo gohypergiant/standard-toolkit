@@ -10,6 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
+import { wrap } from '@accelint/math';
 import { BBOX_ORIENTATION_CONFIG_KEY } from '../oriented-scale-mode';
 import { SessionCache } from './session-cache';
 import type {
@@ -101,11 +102,11 @@ function readRotationAngle(feature: Feature | undefined): number | undefined {
  * cumulative angle at 3600 degrees, which is correct but surprising if
  * the value ever leaks into UI, logs, or serialization.
  *
- * Handles negative inputs via the `((x % 360) + 360) % 360` idiom (JS's
- * `%` returns the dividend's sign, which would leave −90 as −90).
+ * `wrap` handles the negative-input case (a raw `%` returns the dividend's
+ * sign, which would leave −90 as −90).
  */
 function normalizeAngle(angleDeg: number): number {
-  return ((angleDeg % 360) + 360) % 360;
+  return wrap(0, 360, angleDeg);
 }
 
 /**

@@ -1,0 +1,295 @@
+---
+title: structuredTransport
+description: Structured JSON log transport for machine-readable output
+source: packages/logger/src/transports/structured.ts
+source_sha: b987461bdab33a6d2c5563c2936d4b0dba79b026
+doc_sha: cde27408369783ad09d737162d0e8969890c6e04
+deprecated: false
+updated: 2026-07-13
+---
+
+## Usage
+
+```typescript
+import { structuredTransport } from '@accelint/logger/transports/structured';
+
+const transport = structuredTransport({ level: 'info' });
+```
+
+## Reference
+
+```typescript
+function structuredTransport(options: StructuredTransportProps): StructuredTransport
+
+type StructuredTransportProps = {
+  level: LogLevel;
+}
+```
+
+### Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `options` | `StructuredTransportProps` | Transport configuration options |
+| `options.level` | `LogLevel` | Minimum log level to output |
+
+### Returns
+
+Returns a configured LogLayer `StructuredTransport` instance that emits JSON-formatted log entries to `console`. Use when machine-readable log output is needed (e.g., production log aggregation pipelines).
+
+> **Good to know:** This transport is the default when `pretty: false` in `getLogger` or `bootstrap`. It outputs JSON to the console, making logs easy to parse by log aggregation services like CloudWatch, Datadog, or Splunk.
+
+## Examples
+
+### Example: Basic structured transport
+
+```typescript
+import { bootstrap, structuredTransport } from '@accelint/logger';
+
+const logger = bootstrap({
+  enabled: true,
+  transports: [structuredTransport({ level: 'info' })],
+});
+
+logger.info('User logged in', { userId: 'usr_123' });
+// Console output (JSON):
+// {"level":"info","message":"User logged in","userId":"usr_123","server":true,"callSite":"..."}
+```
+
+### Example: Production logger with JSON output
+
+```typescript
+import { bootstrap, structuredTransport, WARN } from '@accelint/logger';
+
+const logger = bootstrap({
+  enabled: true,
+  env: 'production',
+  transports: [structuredTransport({ level: WARN })],
+});
+
+logger.info('Not logged');
+logger.warn('Token expiring soon', { userId: 'usr_123' });
+logger.error('Payment failed', { orderId: 'ord_abc' });
+// JSON output for warn and error only
+```
+
+### Example: CloudWatch-compatible logs
+
+```typescript
+import { bootstrap, structuredTransport } from '@accelint/logger';
+
+const logger = bootstrap({
+  enabled: true,
+  env: 'production',
+  transports: [structuredTransport({ level: 'info' })],
+  prefix: '',
+});
+
+logger.info('Lambda function invoked', {
+  requestId: 'req_123',
+  functionName: 'process-payment',
+  region: 'us-east-1',
+});
+// JSON output ingested by CloudWatch Logs
+```
+
+### Example: Multiple transports for development and production
+
+```typescript
+import { bootstrap, prettyTransport, structuredTransport, DEBUG, INFO } from '@accelint/logger';
+
+const isDevelopment = process.env.NODE_ENV === 'development';
+
+const logger = bootstrap({
+  enabled: true,
+  transports: [
+    isDevelopment
+      ? prettyTransport({ level: DEBUG })
+      : structuredTransport({ level: INFO }),
+  ],
+});
+
+logger.debug('Development debug info');
+logger.info('Production JSON log');
+```
+
+### Example: Dual output for debugging production
+
+```typescript
+import { bootstrap, prettyTransport, structuredTransport, DEBUG, WARN } from '@accelint/logger';
+
+const logger = bootstrap({
+  enabled: true,
+  transports: [
+    prettyTransport({ level: DEBUG }),    // Human-readable console
+    structuredTransport({ level: WARN }), // JSON for log aggregation
+  ],
+});
+
+logger.debug('Debug info - pretty only');
+logger.warn('Warning - both formats');
+logger.error('Error - both formats');
+```
+
+### Example: Error logging with structured output
+
+```typescript
+import { bootstrap, structuredTransport } from '@accelint/logger';
+
+const logger = bootstrap({
+  enabled: true,
+  transports: [structuredTransport({ level: 'error' })],
+});
+
+try {
+  throw new Error('Database connection failed');
+} catch (error) {
+  logger.error('Critical error', { error, timestamp: Date.now() });
+  // JSON output with serialized error
+}
+```
+
+### Example: API request logging
+
+```typescript
+import { bootstrap, structuredTransport } from '@accelint/logger';
+
+const logger = bootstrap({
+  enabled: true,
+  transports: [structuredTransport({ level: 'info' })],
+});
+
+export async function logRequest(req: Request, res: Response) {
+  logger.info('API request', {
+    method: req.method,
+    path: req.path,
+    statusCode: res.statusCode,
+    duration: res.responseTime,
+    userAgent: req.get('user-agent'),
+  });
+  // Structured JSON for analytics
+}
+```
+
+### Example: Custom log aggregation transport
+
+```typescript
+import { bootstrap, structuredTransport } from '@accelint/logger';
+import type { LogLayerTransport } from '@loglayer/shared';
+
+const datadogTransport: LogLayerTransport = {
+  log(level, message, data) {
+    fetch('https://http-intake.logs.datadoghq.com/v1/input', {
+      method: 'POST',
+      headers: {
+        'DD-API-KEY': process.env.DATADOG_API_KEY!,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        level,
+        message,
+        ...data,
+        service: 'my-app',
+        ddsource: 'nodejs',
+      }),
+    });
+  },
+};
+
+const logger = bootstrap({
+  enabled: true,
+  transports: [
+    structuredTransport({ level: 'info' }), // Local console JSON
+    datadogTransport,                        // Datadog ingestion
+  ],
+});
+
+logger.info('Logged to console and Datadog');
+```
+
+### Example: Next.js production logging
+
+```typescript
+import { bootstrap, structuredTransport, WARN } from '@accelint/logger';
+
+const logger = bootstrap({
+  enabled: true,
+  env: 'production',
+  transports: [structuredTransport({ level: WARN })],
+  prefix: '',
+});
+
+export default async function handler(req, res) {
+  logger.warn('API rate limit approaching', {
+    ip: req.socket.remoteAddress,
+    remaining: 10,
+    path: req.url,
+  });
+  // JSON output for Vercel log drains
+}
+```
+
+### Example: Conditional structured output
+
+```typescript
+import { getLogger } from '@accelint/logger';
+
+const logger = getLogger({
+  enabled: true,
+  pretty: false, // Uses structuredTransport automatically
+  level: 'info',
+});
+
+logger.info('Structured JSON output', { event: 'app.started' });
+```
+
+### Example: Container logging
+
+```typescript
+import { bootstrap, structuredTransport } from '@accelint/logger';
+
+const logger = bootstrap({
+  enabled: true,
+  transports: [structuredTransport({ level: 'debug' })],
+});
+
+logger.info('Container started', {
+  containerId: process.env.HOSTNAME,
+  podName: process.env.POD_NAME,
+  namespace: process.env.NAMESPACE,
+});
+// JSON output captured by container runtime (Docker, Kubernetes)
+```
+
+### Example: Testing with structured logs
+
+```typescript
+import { bootstrap, structuredTransport } from '@accelint/logger';
+import { describe, test, expect, vi } from 'vitest';
+
+describe('Payment service', () => {
+  test('should log structured payment data', () => {
+    const consoleSpy = vi.spyOn(console, 'log');
+    
+    const logger = bootstrap({
+      enabled: true,
+      transports: [structuredTransport({ level: 'info' })],
+    });
+
+    logger.info('Payment processed', { orderId: 'ord_123', amount: 100 });
+
+    expect(consoleSpy).toHaveBeenCalledWith(
+      expect.stringContaining('"orderId":"ord_123"')
+    );
+  });
+});
+```
+
+> **Good to know:** Structured logs include all metadata from plugins (callsite, environment, etc.) in the JSON output. This makes them ideal for querying and filtering in log aggregation systems.
+
+## Related
+
+- [prettyTransport](./pretty.md) - Pretty-printed console transport
+- [getLogger](../default/index.md) - Uses structuredTransport when `pretty: false`
+- [bootstrap](../default/bootstrap.md) - Uses structuredTransport when `pretty: false`
+- [LogLayer Transport Configuration](https://loglayer.dev/configuration.html#transport-configuration) - Upstream documentation

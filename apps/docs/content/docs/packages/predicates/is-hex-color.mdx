@@ -1,0 +1,84 @@
+---
+title: isHexColor
+description: Type guard for validating hex color strings with optional alpha channel
+source: packages/predicates/src/is-hex-color/index.ts
+source_sha: 6fcefa9066602e68ac2ed28f0a90ef2e34afb5a0
+doc_sha: 516767a20e19021f9e2bb0555258130b4f5338be
+deprecated: false
+updated: 2026-07-13
+---
+
+Validates hex color strings with optional alpha channel.
+
+## Usage
+
+```typescript
+import { isHexColor } from '@accelint/predicates/is-hex-color';
+
+isHexColor('#FF8040');    // true
+isHexColor('#F84');       // true
+isHexColor('FF8040');     // true (hash optional)
+isHexColor('#FF8040FF');  // true (with alpha)
+isHexColor('rgb(255, 128, 64)'); // false
+```
+
+## Reference
+
+```typescript
+function isHexColor(value: unknown): value is string
+```
+
+Supports formats: `#RGB`, `#RGBA`, `#RRGGBB`, `#RRGGBBAA` (hash optional)
+
+## Examples
+
+```typescript
+import { isHexColor } from '@accelint/predicates/is-hex-color';
+
+// Standard 6-digit hex
+isHexColor('#FF8040');    // true
+isHexColor('FF8040');     // true (hash optional)
+
+// Short 3-digit hex
+isHexColor('#F84');       // true
+isHexColor('F84');        // true
+
+// With alpha channel
+isHexColor('#FF8040FF');  // true (8-digit)
+isHexColor('#F84F');      // true (4-digit)
+
+// Invalid formats
+isHexColor('rgb(255, 128, 64)'); // false
+isHexColor('#GG8040');    // false (invalid hex chars)
+isHexColor('#FF804');     // false (wrong length)
+```
+
+## Real-World Example: Accepting multiple color formats
+
+```typescript
+import { isHexColor } from '@accelint/predicates/is-hex-color';
+import { isCssRgbaString } from '@accelint/predicates/is-css-rgba-string';
+
+function parseColorInput(color: unknown): string {
+  if (isHexColor(color)) {
+    // Normalize to include hash
+    return color.startsWith('#') ? color : `#${color}`;
+  }
+  
+  if (isCssRgbaString(color)) {
+    // Convert CSS rgba to hex
+    // Implementation omitted for brevity
+  }
+  
+  throw new Error('Invalid color format');
+}
+```
+
+> **Good to know:** The hash prefix is optional. Both `#FF8040` and `FF8040` are valid.
+
+## Related
+
+- [isCssRgbaString](./is-css-rgba-string) - Type guard for CSS rgb/rgba strings
+- [isCssRgbaObject](./is-css-rgba-object) - Type guard for CSS RGBA objects
+- [isRgba255Tuple](./is-rgba-255-tuple) - Type guard for RGBA tuples
+- [isString](./is-string) - Type guard for strings

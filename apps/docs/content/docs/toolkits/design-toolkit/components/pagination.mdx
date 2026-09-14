@@ -1,0 +1,242 @@
+---
+title: Pagination
+description: Lightweight page navigation component with prev/next controls and visible page numbers
+source: packages/design-toolkit/src/components/pagination/index.tsx
+source_sha: b2a28de9f92ae6954ebd63f5b7ad7f83f93f6388
+doc_sha: 61aab081ce3c50f5c3cba3844af9deec686b7fea
+deprecated: false
+updated: 2026-07-13
+---
+
+Lightweight page navigation component with prev/next controls. Displays up to 5 page numbers at a time, automatically adjusting the visible range as the user navigates.
+
+## Usage
+
+```tsx
+import { Pagination } from '@accelint/design-toolkit';
+import { useState } from 'react';
+
+export function MyTable() {
+  const [currentPage, setCurrentPage] = useState(1);
+
+  return <Pagination value={currentPage} total={10} onChange={setCurrentPage} />;
+}
+```
+
+## Reference
+
+```typescript
+interface PaginationProps {
+  total: number;
+  value?: number;
+  defaultValue?: number;
+  onChange?: (page: number) => void;
+  isLoading?: boolean;
+  classNames?: {
+    container?: string;
+    prev?: string;
+    pages?: string;
+    next?: string;
+  };
+}
+```
+
+### Props
+
+| Prop | Type | Default | Required |
+|------|------|---------|----------|
+| `total` | `number` | - | Yes |
+| `value` | `number` | - | No |
+| `defaultValue` | `number` | `1` | No |
+| `onChange` | `(page: number) => void` | - | No |
+| `isLoading` | `boolean` | `false` | No |
+| `classNames` | `object` | - | No |
+
+#### `total`
+
+Total number of pages available. Determines the range of page numbers displayed.
+
+#### `value` / `defaultValue`
+
+Current page number (1-indexed). Use `value` with `onChange` for controlled mode, or `defaultValue` for uncontrolled mode.
+
+#### `onChange`
+
+Callback fired when the user navigates to a different page. Receives the new page number (1-indexed).
+
+#### `isLoading`
+
+When `true`, disables all pagination controls to indicate loading state.
+
+#### `classNames`
+
+Custom class names for sub-elements:
+- `container` - The nav container element
+- `prev` - The previous button
+- `pages` - The page number buttons
+- `next` - The next button
+
+## Examples
+
+### Example: Basic pagination
+
+```tsx
+import { Pagination } from '@accelint/design-toolkit';
+import { useState } from 'react';
+
+export function BasicPagination() {
+  const [page, setPage] = useState(1);
+
+  return <Pagination value={page} total={10} onChange={setPage} />;
+}
+```
+
+### Example: Uncontrolled pagination
+
+```tsx
+import { Pagination } from '@accelint/design-toolkit';
+
+<Pagination defaultValue={1} total={5} onChange={(page) => console.log('Page:', page)} />
+```
+
+### Example: With data fetching
+
+```tsx
+import { Pagination } from '@accelint/design-toolkit';
+import { useState, useEffect } from 'react';
+
+export function DataPagination() {
+  const [page, setPage] = useState(1);
+  const [isLoading, setIsLoading] = useState(false);
+  const [data, setData] = useState([]);
+
+  useEffect(() => {
+    setIsLoading(true);
+    fetchData(page)
+      .then(setData)
+      .finally(() => setIsLoading(false));
+  }, [page]);
+
+  return (
+    <>
+      <DataTable data={data} />
+      <Pagination
+        value={page}
+        total={20}
+        onChange={setPage}
+        isLoading={isLoading}
+      />
+    </>
+  );
+}
+```
+
+### Example: Large page count
+
+```tsx
+import { Pagination } from '@accelint/design-toolkit';
+import { useState } from 'react';
+
+export function LargePageCount() {
+  const [page, setPage] = useState(1);
+
+  return <Pagination value={page} total={100} onChange={setPage} />;
+}
+```
+
+> **Good to know:** Pagination automatically shows up to 5 page numbers at a time, with ellipsis (...) indicating hidden pages. The visible range adjusts to keep the current page centered when possible.
+
+### Example: Custom styling
+
+```tsx
+import { Pagination } from '@accelint/design-toolkit';
+import { useState } from 'react';
+
+export function StyledPagination() {
+  const [page, setPage] = useState(1);
+
+  return (
+    <Pagination
+      value={page}
+      total={10}
+      onChange={setPage}
+      classNames={{
+        container: 'bg-gray-100 p-4 rounded-lg',
+        prev: 'text-blue-600',
+        pages: 'font-bold',
+        next: 'text-blue-600',
+      }}
+    />
+  );
+}
+```
+
+### Example: With table
+
+```tsx
+import { Pagination, Table } from '@accelint/design-toolkit';
+import { useState } from 'react';
+
+export function PaginatedTable() {
+  const [page, setPage] = useState(1);
+  const pageSize = 10;
+
+  const columns = [
+    { accessorKey: 'name', header: 'Name' },
+    { accessorKey: 'email', header: 'Email' },
+  ];
+
+  const allData = [...]; // Your full dataset
+  const paginatedData = allData.slice(
+    (page - 1) * pageSize,
+    page * pageSize
+  );
+
+  return (
+    <div>
+      <Table columns={columns} data={paginatedData} />
+      <Pagination
+        value={page}
+        total={Math.ceil(allData.length / pageSize)}
+        onChange={setPage}
+      />
+    </div>
+  );
+}
+```
+
+### Example: Disabled state
+
+```tsx
+import { Pagination } from '@accelint/design-toolkit';
+
+<Pagination value={1} total={10} isLoading />
+```
+
+### Example: Single page (no navigation needed)
+
+```tsx
+import { Pagination } from '@accelint/design-toolkit';
+
+<Pagination value={1} total={1} onChange={() => {}} />
+```
+
+When `total` is 1, the prev/next buttons are automatically disabled.
+
+### Example: Starting at different page
+
+```tsx
+import { Pagination } from '@accelint/design-toolkit';
+import { useState } from 'react';
+
+export function StartMiddlePage() {
+  const [page, setPage] = useState(5);
+
+  return <Pagination value={page} total={10} onChange={setPage} />;
+}
+```
+
+## Related
+
+- [Button](../button/index.md) - Button component used for prev/next/page controls
+- [Table](../table/index.md) - Table component that can use pagination

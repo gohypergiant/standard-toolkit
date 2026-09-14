@@ -1,0 +1,251 @@
+---
+title: Notice
+description: Notification component for temporary messages and alerts with optional action buttons and close functionality
+source: packages/design-toolkit/src/components/notice/index.tsx
+source_sha: a7bed19b268882c26ce92f91b065abfdd87ad3cd
+doc_sha: bcfc0e148b89fe5fcfcb7b5220458c6adead4f73
+deprecated: false
+updated: 2026-07-13
+---
+
+Notification component for temporary messages and alerts with optional action buttons, automatic severity icons, and close functionality.
+
+## Usage
+
+```tsx
+import { Notice } from '@accelint/design-toolkit';
+
+export function Notification() {
+  return (
+    <Notice
+      id="notice-1"
+      message="Operation completed successfully"
+      color="normal"
+    />
+  );
+}
+```
+
+## Reference
+
+```typescript
+interface NoticeProps {
+  id: string;
+  message: string;
+  classNames?: {
+    notice?: string;
+    content?: string;
+    message?: string;
+    actions?: string;
+  };
+  color?: 'normal' | 'advisory' | 'info' | 'serious' | 'critical';
+  primary?: ButtonProps & { children: React.ReactNode };
+  secondary?: ButtonProps & { children: React.ReactNode };
+  hideIcon?: boolean;
+  showClose?: boolean;
+  shouldCloseOnAction?: boolean;
+  size?: 'small' | 'medium';
+  onPrimaryAction?: () => void;
+  onSecondaryAction?: () => void;
+  onClose?: () => void;
+}
+```
+
+### Props
+
+| Prop | Type | Default | Required |
+|------|------|---------|----------|
+| `id` | `string` | - | Yes |
+| `message` | `string` | - | Yes |
+| `classNames` | `object` | - | No |
+| `color` | `'normal' \| 'advisory' \| 'info' \| 'serious' \| 'critical'` | `'info'` | No |
+| `primary` | `ButtonProps & { children: ReactNode }` | - | No |
+| `secondary` | `ButtonProps & { children: ReactNode }` | - | No |
+| `hideIcon` | `boolean` | `false` | No |
+| `showClose` | `boolean` | `false` | No |
+| `shouldCloseOnAction` | `boolean` | `false` | No |
+| `size` | `'small' \| 'medium'` | `'medium'` | No |
+| `onPrimaryAction` | `() => void` | - | No |
+| `onSecondaryAction` | `() => void` | - | No |
+| `onClose` | `() => void` | - | No |
+
+#### `id`
+
+Unique identifier for the notice. Used for view transitions and managing multiple notices.
+
+#### `message`
+
+Text content to display in the notification.
+
+#### `color`
+
+Severity level that determines visual styling and icon:
+- `normal` - Success or positive messages (green)
+- `advisory` - Warnings or cautionary messages (yellow)
+- `info` - Informational messages (blue, default)
+- `serious` - Important cautions (orange)
+- `critical` - Errors or critical issues (red)
+
+Icons are automatically displayed based on the color variant unless `hideIcon` is true.
+
+#### `primary` / `secondary`
+
+Action button configurations. Accepts Button props plus required `children` for button text. Buttons are styled to match the notice color.
+
+#### `shouldCloseOnAction`
+
+When `true`, the notice automatically closes after any action button is pressed. Useful for dismissing notifications after user interaction.
+
+#### `size`
+
+Controls notice dimensions and font size. Icons are only displayed in `medium` size.
+
+## Examples
+
+### Example: Success notification
+
+```tsx
+import { Notice } from '@accelint/design-toolkit';
+
+<Notice
+  id="success-1"
+  message="Your changes have been saved"
+  color="normal"
+  showClose
+/>
+```
+
+### Example: Warning with action
+
+```tsx
+import { Notice } from '@accelint/design-toolkit';
+
+<Notice
+  id="warning-1"
+  message="Your session will expire in 5 minutes"
+  color="advisory"
+  primary={{ children: 'Extend Session' }}
+  onPrimaryAction={() => console.log('Extending session')}
+/>
+```
+
+### Example: Error with retry
+
+```tsx
+import { Notice } from '@accelint/design-toolkit';
+
+<Notice
+  id="error-1"
+  message="Failed to save changes"
+  color="critical"
+  primary={{ children: 'Retry' }}
+  secondary={{ children: 'Cancel' }}
+  shouldCloseOnAction
+  onPrimaryAction={() => console.log('Retrying')}
+  onSecondaryAction={() => console.log('Cancelled')}
+/>
+```
+
+### Example: Info with multiple actions
+
+```tsx
+import { Notice } from '@accelint/design-toolkit';
+
+<Notice
+  id="info-1"
+  message="A new version is available"
+  color="info"
+  primary={{ children: 'Update Now' }}
+  secondary={{ children: 'Later' }}
+  showClose
+  onPrimaryAction={() => console.log('Updating')}
+  onClose={() => console.log('Dismissed')}
+/>
+```
+
+### Example: Serious warning
+
+```tsx
+import { Notice } from '@accelint/design-toolkit';
+
+<Notice
+  id="serious-1"
+  message="This action cannot be undone"
+  color="serious"
+  primary={{ children: 'Proceed' }}
+  secondary={{ children: 'Cancel' }}
+  onPrimaryAction={() => console.log('Proceeding')}
+/>
+```
+
+### Example: Small notice without icon
+
+```tsx
+import { Notice } from '@accelint/design-toolkit';
+
+<Notice
+  id="compact-1"
+  message="Quick update"
+  color="info"
+  size="small"
+  hideIcon
+  showClose
+/>
+```
+
+### Example: Custom styled notice
+
+```tsx
+import { Notice } from '@accelint/design-toolkit';
+
+<Notice
+  id="custom-1"
+  message="Custom styled notification"
+  color="normal"
+  classNames={{
+    notice: 'shadow-lg rounded-lg',
+    message: 'font-semibold'
+  }}
+/>
+```
+
+## Behavior
+
+### Auto-closing
+
+Notices don't auto-close by default. Implement auto-dismiss logic in your notification manager:
+
+```tsx
+import { Notice } from '@accelint/design-toolkit';
+import { useEffect } from 'react';
+
+function AutoDismissNotice({ id, message, duration = 5000 }) {
+  const [show, setShow] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setShow(false), duration);
+    return () => clearTimeout(timer);
+  }, [duration]);
+
+  if (!show) return null;
+
+  return (
+    <Notice
+      id={id}
+      message={message}
+      onClose={() => setShow(false)}
+      showClose
+    />
+  );
+}
+```
+
+### View Transitions
+
+The `id` prop is used for view transition names, enabling smooth animations when notices appear/disappear in supported browsers.
+
+## Related
+
+- [NoticeIcon](./notice-icon.mdx) - Icon component for severity indicators
+- [Button](../button/index.mdx) - Button component used for actions
+- [Toast](../toast/index.mdx) - Underlying toast implementation

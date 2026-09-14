@@ -895,6 +895,22 @@ describe('CoordinateField', () => {
       expect(button.disabled).toBe(false);
     });
 
+    it('renders custom icon in format button', () => {
+      const CustomIcon = () => <svg data-testid='custom-icon' />;
+      render(
+        <CoordinateField
+          label='Location'
+          value={testCoordinate}
+          icon={<CustomIcon />}
+        />,
+      );
+      const button = screen.getByRole('button', {
+        name: /view coordinate in all formats/i,
+      });
+      expect(button).toBeInTheDocument();
+      expect(screen.getByTestId('custom-icon')).toBeInTheDocument();
+    });
+
     it('opens popover on button click', async () => {
       const user = userEvent.setup();
       render(<CoordinateField label='Location' value={testCoordinate} />);

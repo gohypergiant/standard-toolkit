@@ -387,19 +387,18 @@ export const cameraStore = createMapStore<CameraState, CameraActions>({
         }
 
         const state = get();
-        const newState = { ...state };
-        newState.view = payload.view;
-        if (payload.view === '3D') {
-          newState.projection = 'globe';
-          newState.pitch = 0;
-        } else {
-          newState.projection = 'mercator';
-        }
 
-        if (payload.view === '2.5D') {
-          newState.pitch = 60;
-        }
-        replace(newState);
+        // Rebuild through `buildCameraState` so the view's invariants hold on
+        // this path too: 2D and 3D are locked to pitch 0 (leaving 2.5D must
+        // flatten the map), 3D is globe, and 2.5D enters at its default tilt.
+        replace(
+          buildCameraState({
+            ...state,
+            view: payload.view,
+            projection: payload.view === '3D' ? 'globe' : 'mercator',
+            pitch: payload.view === '2.5D' ? 60 : 0,
+          }),
+        );
       },
     );
 

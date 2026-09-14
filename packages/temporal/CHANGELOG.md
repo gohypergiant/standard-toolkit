@@ -1,5 +1,15 @@
 # @accelint/temporal
 
+## 0.1.5
+
+### Patch Changes
+
+- 8f1842a: Fix clock-aligned timer cleanup behavior in `@accelint/temporal`.
+  - prevent `setClockInterval` from scheduling another tick when cleanup is called during the callback
+  - prevent `setClockTimeout` from firing after cleanup when cancelled before the next-second alignment
+  - update `callNextSecond` documentation to reflect its cancel function return value
+  - add regression tests covering early cancellation and idempotent cancellation
+
 ## 0.1.4
 
 ### Patch Changes

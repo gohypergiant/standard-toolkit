@@ -1,0 +1,86 @@
+---
+title: "isLongitude"
+description: Type guard for validating longitude values between -180 and 180 degrees
+source: packages/predicates/src/is-longitude/index.ts
+source_sha: fb3de36f72c19522f2402aa94b2225752de7e253
+doc_sha: 63d913c3689d969e3829f2349778e988d807dc73
+deprecated: false
+updated: 2026-07-13
+---
+
+Validates longitude values between -180 and 180 degrees.
+
+## Usage
+
+```typescript
+import { isLongitude } from '@accelint/predicates';
+
+isLongitude(-122.4194); // true (San Francisco)
+isLongitude(0);         // true (Prime Meridian)
+isLongitude(200);       // false (out of range)
+```
+
+## Reference
+
+```typescript
+function isLongitude(val: unknown): boolean
+```
+
+Valid range: -180 to 180 (inclusive)
+
+## Examples
+
+```typescript
+import { isLongitude } from '@accelint/predicates/is-longitude';
+
+isLongitude(-180); // true (International Date Line, west)
+isLongitude(0);    // true (Prime Meridian)
+isLongitude(180);  // true (International Date Line, east)
+isLongitude(-122.4194); // true (San Francisco)
+isLongitude(-190); // false (out of range)
+isLongitude(NaN);  // false
+```
+
+### Example: Coordinate validation
+
+```typescript
+import { isLongitude } from '@accelint/predicates/is-longitude';
+
+interface Coordinate {
+  lat: number;
+  lon: number;
+}
+
+function validateLongitude(coord: Coordinate): boolean {
+  return isLongitude(coord.lon);
+}
+
+validateLongitude({ lat: 37.7749, lon: -122.4194 }); // true
+validateLongitude({ lat: 37.7749, lon: 200 });       // false
+```
+
+## Real-World Example: Location validation
+
+```typescript
+import { isLatitude } from '@accelint/predicates/is-latitude';
+import { isLongitude } from '@accelint/predicates/is-longitude';
+
+interface Location {
+  latitude: number;
+  longitude: number;
+}
+
+function isValidLocation(loc: Location): boolean {
+  return isLatitude(loc.latitude) && isLongitude(loc.longitude);
+}
+
+const sanFrancisco: Location = { latitude: 37.7749, longitude: -122.4194 };
+isValidLocation(sanFrancisco); // true
+```
+
+## Related
+
+- [isLatitude](./is-latitude) - Validates latitude values
+- [isBbox](./is-bbox) - Validates bounding box arrays
+- [isBetween](../is-between/index.md) - Range validation for numbers
+- [isNumber](../is-number/index.md) - Type guard for numbers

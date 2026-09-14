@@ -129,6 +129,8 @@ None. This is a library monorepo with no databases, caches, or queues. Data hand
 
 **Cloud Provider:** None owned by this repo — deliverables are npm packages; Storybooks on a repo-connected PaaS.
 
+**Key Services Used:** GitHub Actions, public npm registry, PaaS for Storybook hosting
+
 **CI/CD Pipeline:** GitHub Actions (`.github/workflows/`):
 
 - `ci.yml` — build, format, lint, test on PRs
@@ -165,7 +167,7 @@ None. This is a library monorepo with no databases, caches, or queues. Data hand
 
 ## 9. Future Considerations / Roadmap
 
-- <!-- TODO: planned architectural changes or known technical debt -->
+- <!-- TODO: fill in planned architectural changes or known technical debt -->
 
 ## 10. Project Identification
 
@@ -175,7 +177,7 @@ None. This is a library monorepo with no databases, caches, or queues. Data hand
 
 **Primary Contact / Team:** Accelint / Hypergiant
 
-**Date of Last Update:** 2026-07-02
+**Date of Last Update:** 2026-09-09
 
 ## 11. Glossary / Acronyms
 

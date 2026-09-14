@@ -127,6 +127,37 @@ describe('useMapCamera', () => {
     expect(result.current.cameraState.projection).toEqual('mercator'); // Projection should reset to mercator when switching to 2D
   });
 
+  it('should reset pitch when switching from 2.5D to 2D', () => {
+    // 2.5D is the only view that carries pitch; leaving it must flatten the
+    // map or BaseMap renders a tilted "2D" view until the next pan.
+    const { result } = renderHook(() => useMapCamera(testid, { view: '2.5D' }));
+    expect(result.current.cameraState.pitch).toEqual(60);
+
+    act(() => {
+      bus.emit(CameraEventTypes.setView, { id: testid, view: '2D' });
+    });
+
+    expect(result.current.cameraState).toMatchObject({
+      view: '2D',
+      pitch: 0,
+      projection: 'mercator',
+    });
+  });
+
+  it('should enter 2.5D at the default 60° pitch from 2D', () => {
+    const { result } = renderHook(() => useMapCamera(testid, { view: '2D' }));
+
+    act(() => {
+      bus.emit(CameraEventTypes.setView, { id: testid, view: '2.5D' });
+    });
+
+    expect(result.current.cameraState).toMatchObject({
+      view: '2.5D',
+      pitch: 60,
+      projection: 'mercator',
+    });
+  });
+
   it('should fit to bounds', () => {
     const { result } = renderHook(() => useMapCamera(testid));
     act(() => {

@@ -1,0 +1,147 @@
+---
+title: Badge
+description: Small status indicator for labels, counts, and notifications
+source: packages/design-toolkit/src/components/badge/index.tsx
+source_sha: 07929f0b1281248f07e82ac1550c8a27eb98d98b
+doc_sha: 11613c30055b8b11625f45391e8f4bf7b572d553
+deprecated: false
+updated: 2026-07-13
+---
+
+## Usage
+
+```tsx
+import { Badge } from '@accelint/design-toolkit';
+
+export function MyComponent() {
+  return <Badge>New</Badge>;
+}
+```
+
+## Reference
+
+```typescript
+interface BadgeProps extends ComponentPropsWithRef<'span'> {
+  children?: string | number | boolean | null;
+  color?: 'info' | 'advisory' | 'normal' | 'serious' | 'critical';
+  offset?: number | { x?: number; y?: number };
+  placement?: Axis | 'top left' | 'top right' | 'bottom left' | 'bottom right';
+}
+```
+
+### Props
+
+| Prop | Type | Default | Required |
+|------|------|---------|----------|
+| `children` | `string \| number \| boolean \| null` | - | No |
+| `color` | `'info' \| 'advisory' \| 'normal' \| 'serious' \| 'critical'` | `'info'` | No |
+| `placement` | `Axis \| 'top left' \| 'top right' \| 'bottom left' \| 'bottom right'` | - | No |
+| `offset` | `number \| { x?: number; y?: number }` | - | No |
+| `className` | `string` | - | No |
+
+#### `color`
+
+Semantic color variant:
+- `info` - Informational status (default)
+- `advisory` - Advisory or warning status
+- `normal` - Normal/success status
+- `serious` - Serious warnings
+- `critical` - Critical errors or alerts
+
+#### `placement`
+
+Position relative to container. Useful for notification badges on avatars or icons:
+- `'top left'` - Top-left corner
+- `'top right'` - Top-right corner
+- `'bottom left'` - Bottom-left corner
+- `'bottom right'` - Bottom-right corner
+- `'top'` or `'bottom'` - Centered on top/bottom edge
+
+#### `offset`
+
+Fine-tune positioning when using `placement`:
+- Number: Applies same offset to both x and y axes
+- Object: Separate x and y offset values
+
+#### Dot indicator
+
+When `children` is empty or omitted, Badge renders as a small dot indicator without text.
+
+## Examples
+
+### Example: Basic badge
+
+```tsx
+import { Badge } from '@accelint/design-toolkit';
+
+<Badge>New</Badge>
+```
+
+### Example: Color variants
+
+```tsx
+import { Badge } from '@accelint/design-toolkit';
+
+<>
+  <Badge color="info">Info</Badge>
+  <Badge color="advisory">Advisory</Badge>
+  <Badge color="normal">Success</Badge>
+  <Badge color="serious">Warning</Badge>
+  <Badge color="critical">Error</Badge>
+</>
+```
+
+### Example: Numeric badge
+
+```tsx
+import { Badge } from '@accelint/design-toolkit';
+
+<Badge color="critical">5</Badge>
+```
+
+### Example: Dot indicator
+
+```tsx
+import { Badge } from '@accelint/design-toolkit';
+
+<Badge color="normal" />
+```
+
+### Example: Positioned notification badge
+
+```tsx
+import { Badge, Avatar } from '@accelint/design-toolkit';
+
+<div style={{ position: 'relative' }}>
+  <Avatar src="/avatar.jpg" />
+  <Badge 
+    placement="top right" 
+    offset={4}
+    color="critical"
+  >
+    3
+  </Badge>
+</div>
+```
+
+### Example: Badge with custom offset
+
+```tsx
+import { Badge } from '@accelint/design-toolkit';
+
+<Badge 
+  placement="top right"
+  offset={{ x: 8, y: -4 }}
+  color="advisory"
+>
+  12
+</Badge>
+```
+
+> **Good to know:** When using positioned badges, ensure the parent container has `position: relative` for correct positioning.
+
+## Related
+
+- [Avatar](../avatar/index.md) - Avatar component often used with badges
+- [Icon](../icon/index.md) - Icon component for badge-like indicators
+- [Chip](../chip/index.md) - Larger tag/chip component for labels

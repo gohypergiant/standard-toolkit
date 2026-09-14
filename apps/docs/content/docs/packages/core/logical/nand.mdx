@@ -1,0 +1,130 @@
+---
+title: "nand"
+description: Logical NAND (NOT AND) for values and function results
+source: logical/nand/index.ts
+source_sha: 42a82681f2c4c0289ca5d0124d31f4c63c9d9321
+doc_sha: 696a1c4fbb78f3a96751c4bc957fd8b71d666c0b
+deprecated: false
+updated: 2026-07-13
+---
+
+## Usage
+
+```typescript
+import { nand, nandFn } from '@accelint/core';
+
+// Value-based NAND
+nand(true)(false);
+// true
+
+nand(true)(true);
+// false
+
+// Function-based NAND
+const isPositive = (x: number) => x > 0;
+const isLessThan10 = (x: number) => x < 10;
+
+nandFn(isPositive)(isLessThan10)(5);
+// false (both true, so NAND is false)
+
+nandFn(isPositive)(isLessThan10)(15);
+// true (second is false, so NAND is true)
+```
+
+## Reference
+
+### nand
+
+```typescript
+function nand<A>(a: A): <B>(b: B) => boolean
+```
+
+#### Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `a` | `A` | The first value to compare |
+
+#### Returns
+
+Returns a curried function that accepts a second value and returns `true` if not both values are truthy, `false` if both are truthy.
+
+#### Type Parameters
+
+- `A` - The type of the first input value
+- `B` - The type of the second input value
+
+### nandFn
+
+```typescript
+function nandFn<T, A>(
+  a: (x: T) => A
+): <B>(b: (y: T) => B) => (c: T) => boolean
+```
+
+#### Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `a` | `(x: T) => A` | The first function to evaluate |
+
+#### Returns
+
+Returns a curried function that accepts a second function, then accepts a value to pass to both functions, returning `true` if not both function results are truthy, `false` if both are truthy.
+
+#### Type Parameters
+
+- `T` - The type of the input value passed to both functions
+- `A` - The return type of the first function
+- `B` - The return type of the second function
+
+## Examples
+
+### Example: Validation constraints
+
+```typescript
+import { nand } from '@accelint/core';
+
+// User cannot have both admin AND guest roles simultaneously
+const isAdmin = true;
+const isGuest = false;
+
+const rolesValid = nand(isAdmin)(isGuest);
+// true (not both are true)
+```
+
+### Example: Exclusion logic with predicates
+
+```typescript
+import { nandFn } from '@accelint/core';
+
+const isWeekend = (date: Date) => [0, 6].includes(date.getDay());
+const isHoliday = (date: Date) => holidays.includes(date.toDateString());
+
+// Business day logic: not (weekend AND holiday)
+const canSchedule = nandFn(isWeekend)(isHoliday);
+
+canSchedule(new Date('2024-07-04')); // Thursday, holiday
+// true (only one condition is true)
+```
+
+### Example: NAND truth table
+
+```typescript
+import { nand } from '@accelint/core';
+
+// NAND truth table (opposite of AND)
+nand(false)(false); // true
+nand(false)(true);  // true
+nand(true)(false);  // true
+nand(true)(true);   // false
+```
+
+> **Good to know:** NAND is the logical inverse of AND. It's functionally complete—all other logical operations can be constructed from NAND alone. This implementation uses `not(and(a)(b))` internally.
+
+## Related
+
+- [and](../and/index.md) - Logical conjunction (&&)
+- [nor](../nor/index.md) - Logical NOR (!(a || b))
+- [not](../not/index.md) - Logical negation (!)
+- [xor](../xor/index.md) - Logical exclusive OR

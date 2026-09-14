@@ -1,0 +1,291 @@
+---
+title: Popover
+description: A floating content container positioned relative to a trigger element
+source: packages/design-toolkit/src/components/popover/index.tsx
+source_sha: 9d372dfcbf3c94f4816df93a8e41f2199b449867
+doc_sha: 8e0aeb3c0f1d4dd7c3b70e8db29ef71bc4f5e92a
+deprecated: false
+updated: 2026-07-13
+---
+
+## Usage
+
+```tsx
+import { Popover, PopoverTrigger, PopoverTitle, PopoverContent, Button } from '@accelint/design-toolkit';
+
+export function MyComponent() {
+  return (
+    <PopoverTrigger>
+      <Button>Show Info</Button>
+      <Popover>
+        <PopoverTitle>Information</PopoverTitle>
+        <PopoverContent>
+          <p>Additional information appears here</p>
+        </PopoverContent>
+      </Popover>
+    </PopoverTrigger>
+  );
+}
+```
+
+## Reference
+
+```typescript
+interface PopoverProps extends Omit<AriaPopoverProps, 'children' | 'className'> {
+  children?: React.ReactNode | ((opts: { close: () => void }) => React.ReactNode);
+  classNames?: {
+    popover?: string;
+    dialog?: string;
+  };
+  dialogProps?: Omit<DialogProps, 'children' | 'className'>;
+  placement?: 'top' | 'bottom' | 'left' | 'right' | 'top start' | 'top end' | 'bottom start' | 'bottom end';
+  offset?: number;
+}
+```
+
+### Props
+
+| Prop | Type | Default | Required |
+|------|------|---------|----------|
+| `children` | `React.ReactNode \| ((opts: { close: () => void }) => React.ReactNode)` | - | Yes |
+| `placement` | `'top' \| 'bottom' \| 'left' \| 'right' \| ...` | `'bottom'` | No |
+| `offset` | `number` | `8` | No |
+| `classNames` | `{ popover?: string; dialog?: string }` | - | No |
+| `dialogProps` | `Omit<DialogProps, 'children' \| 'className'>` | - | No |
+
+#### `placement`
+
+Controls where the popover appears relative to the trigger element. Supports basic positions (`top`, `bottom`, `left`, `right`) and alignment modifiers (`start`, `end`).
+
+#### `children`
+
+Can be static React elements or a render function that receives a `close` callback for programmatic dismissal.
+
+#### `classNames`
+
+Custom class names for styling sub-elements:
+- `popover` - The floating popover container
+- `dialog` - The dialog content wrapper
+
+#### `offset`
+
+Distance in pixels between the popover and its trigger element.
+
+### Inherited Props
+
+Popover inherits props from React Aria's `Popover`, including:
+- `shouldFlip` - Whether to flip placement when space is limited
+- `containerPadding` - Minimum padding from viewport edges
+
+See [React Aria Popover](https://react-spectrum.adobe.com/react-aria/Popover.html) for full API reference.
+
+## Sub-components
+
+### PopoverTrigger
+
+Root component that manages popover state and positioning. Wraps a trigger element (first child) and the Popover (second child).
+
+```tsx
+<PopoverTrigger>
+  <Button>Open</Button>
+  <Popover>...</Popover>
+</PopoverTrigger>
+```
+
+### PopoverTitle
+
+Semantic heading element for popover titles. Provides proper accessibility attributes.
+
+```tsx
+<PopoverTitle>User Settings</PopoverTitle>
+```
+
+### PopoverContent
+
+Main content area wrapper with appropriate spacing and styling.
+
+```tsx
+<PopoverContent>
+  <p>Your content goes here...</p>
+</PopoverContent>
+```
+
+### PopoverFooter
+
+Footer area for actions or additional content.
+
+```tsx
+<PopoverFooter>
+  <Button>Cancel</Button>
+  <Button>Apply</Button>
+</PopoverFooter>
+```
+
+## Examples
+
+### Example: Information popover
+
+```tsx
+import { Popover, PopoverTrigger, PopoverTitle, PopoverContent, Icon } from '@accelint/design-toolkit';
+import { Information } from '@accelint/icons';
+
+<PopoverTrigger>
+  <Icon className="fg-primary-bold">
+    <Information />
+  </Icon>
+  <Popover>
+    <PopoverTitle>Help</PopoverTitle>
+    <PopoverContent>
+      <p>Click here to access additional information about this feature.</p>
+    </PopoverContent>
+  </Popover>
+</PopoverTrigger>
+```
+
+### Example: Confirmation popover with actions
+
+```tsx
+import { Popover, PopoverTrigger, PopoverTitle, PopoverContent, PopoverFooter, Button, Icon } from '@accelint/design-toolkit';
+import { Delete } from '@accelint/icons';
+
+<PopoverTrigger>
+  <Button variant="icon">
+    <Icon><Delete /></Icon>
+  </Button>
+  <Popover>
+    {({ close }) => (
+      <>
+        <PopoverTitle>Delete Item</PopoverTitle>
+        <PopoverContent>
+          <p>Are you sure you want to delete this item?</p>
+        </PopoverContent>
+        <PopoverFooter>
+          <Button variant="flat" onPress={close}>Cancel</Button>
+          <Button color="critical" onPress={close}>Delete</Button>
+        </PopoverFooter>
+      </>
+    )}
+  </Popover>
+</PopoverTrigger>
+```
+
+### Example: Settings popover with form controls
+
+```tsx
+import { Popover, PopoverTrigger, PopoverTitle, PopoverContent, Checkbox, Button } from '@accelint/design-toolkit';
+
+<PopoverTrigger>
+  <Button>Settings</Button>
+  <Popover classNames={{ popover: 'min-w-sm' }}>
+    <PopoverTitle>Notification Settings</PopoverTitle>
+    <PopoverContent className="space-y-s">
+      <Checkbox>Email Notifications</Checkbox>
+      <Checkbox>Push Notifications</Checkbox>
+      <Checkbox>SMS Notifications</Checkbox>
+    </PopoverContent>
+  </Popover>
+</PopoverTrigger>
+```
+
+### Example: Different placements
+
+```tsx
+import { Popover, PopoverTrigger, PopoverContent, Button } from '@accelint/design-toolkit';
+
+<div className="flex gap-m">
+  <PopoverTrigger>
+    <Button>Top</Button>
+    <Popover placement="top">
+      <PopoverContent>Appears above</PopoverContent>
+    </Popover>
+  </PopoverTrigger>
+
+  <PopoverTrigger>
+    <Button>Bottom</Button>
+    <Popover placement="bottom">
+      <PopoverContent>Appears below</PopoverContent>
+    </Popover>
+  </PopoverTrigger>
+
+  <PopoverTrigger>
+    <Button>Left</Button>
+    <Popover placement="left">
+      <PopoverContent>Appears to the left</PopoverContent>
+    </Popover>
+  </PopoverTrigger>
+
+  <PopoverTrigger>
+    <Button>Right</Button>
+    <Popover placement="right">
+      <PopoverContent>Appears to the right</PopoverContent>
+    </Popover>
+  </PopoverTrigger>
+</div>
+```
+
+### Example: Custom trigger element
+
+```tsx
+import { Popover, PopoverTrigger, PopoverContent } from '@accelint/design-toolkit';
+
+<PopoverTrigger>
+  <span className="fg-primary-bold cursor-pointer">
+    Click for details
+  </span>
+  <Popover>
+    <PopoverContent>
+      <p>This popover can be triggered by any element.</p>
+    </PopoverContent>
+  </Popover>
+</PopoverTrigger>
+```
+
+### Example: Custom offset
+
+```tsx
+import { Popover, PopoverTrigger, PopoverContent, Button } from '@accelint/design-toolkit';
+
+<PopoverTrigger>
+  <Button>Show Popover</Button>
+  <Popover offset={20}>
+    <PopoverContent>
+      <p>This popover has 20px offset from the trigger.</p>
+    </PopoverContent>
+  </Popover>
+</PopoverTrigger>
+```
+
+### Example: Controlled popover state
+
+```tsx
+import { useState } from 'react';
+import { Popover, PopoverTrigger, PopoverContent, Button } from '@accelint/design-toolkit';
+
+function ControlledPopover() {
+  const [isOpen, setIsOpen] = useState(false);
+
+  return (
+    <>
+      <Button onPress={() => setIsOpen(true)}>Open Popover</Button>
+      <PopoverTrigger isOpen={isOpen} onOpenChange={setIsOpen}>
+        <Button isDisabled>Trigger (Disabled)</Button>
+        <Popover>
+          <PopoverContent>
+            <p>Controlled by external state</p>
+            <Button onPress={() => setIsOpen(false)}>Close</Button>
+          </PopoverContent>
+        </Popover>
+      </PopoverTrigger>
+    </>
+  );
+}
+```
+
+> **Good to know:** Unlike Dialog, Popover is non-modal and doesn't block interaction with the rest of the page. Use Dialog for critical actions that require full user attention.
+
+## Related
+
+- [Dialog](../dialog/index.md) - Modal overlay for critical interactions
+- [Tooltip](../tooltip/index.md) - Simple hover-based information overlay
+- [Menu](../menu/index.md) - Popover-based action menu component
+- [Button](../button/index.md) - Common trigger element for popovers

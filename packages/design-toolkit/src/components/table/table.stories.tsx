@@ -10,16 +10,23 @@
  * governing permissions and limitations under the License.
  */
 
-import { createColumnHelper } from '@tanstack/react-table';
-import { useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
+import { Button } from '../button';
 import { Pagination } from '../pagination/index';
 import { TableBody } from './body';
 import { TableCell } from './cell';
+import { createTableColumnHelper } from './features';
 import { TableHeader } from './header';
 import { TableHeaderCell } from './header-cell';
 import { Table } from './index';
 import { TableRow } from './row';
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import type {
+  RowPinningState,
+  RowSelectionState,
+  SortingState,
+} from '@tanstack/react-table';
+import type { TableProps } from './types';
 
 type Person = {
   id: string;
@@ -160,7 +167,7 @@ const allData = generateData(100);
 const PAGE_SIZE = 10;
 const totalPages = Math.ceil(allData.length / PAGE_SIZE);
 
-const columnHelper = createColumnHelper<Person>();
+const columnHelper = createTableColumnHelper<Person>();
 
 const columns = [
   columnHelper.accessor('firstName', {
@@ -209,8 +216,13 @@ const meta = {
     enableColumnReordering: true,
     enableRowActions: true,
     fullWidth: false,
+    variant: 'cozy',
   },
   argTypes: {
+    variant: {
+      control: 'select',
+      options: ['cozy', 'compact', 'crammed'],
+    },
     kebabPosition: {
       control: {
         type: 'radio',
@@ -233,6 +245,13 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
+// TableProps is a union (data mode | children mode); spreading the raw args
+// union alongside prop overrides makes TS try the children-mode arm (where
+// every table prop is `never`) and reject the story. Narrow to the data arm.
+function dataArgs(args: unknown) {
+  return args as Extract<TableProps<Person>, { data: Person[] }>;
+}
+
 export const Default: Story = {
   args: {
     kebabPosition: 'right',
@@ -250,11 +269,132 @@ export const SortableColumns: Story = {
     docs: {
       description: {
         story:
-          'Columns are sortable by clicking the headers. Click a header to sort ascending, descending, or clear sorting.',
+          'Use the column header menu (kebab) to sort ascending, descending, or clear sorting; uncontrolled by default.',
       },
     },
   },
   render: (args) => <Table {...args} key={JSON.stringify(args)} />,
+};
+
+export const CompactDensity: Story = {
+  args: {
+    variant: 'compact',
+    showCheckbox: true,
+    persistNumerals: true,
+    kebabPosition: 'right',
+    persistRowKebabMenu: true,
+  },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'The `compact` variant steps header cell and cell padding down one token on the spacing scale, from 12px (`p-m`) to 8px (`p-s`). Numeral, selection, and kebab cells follow the same step, and the kebab menus open at Menu `compact` density.',
+      },
+    },
+  },
+  render: (args) => <Table {...args} key={JSON.stringify(args)} />,
+};
+
+export const CrammedDensity: Story = {
+  args: {
+    variant: 'crammed',
+    showCheckbox: true,
+    persistNumerals: true,
+    kebabPosition: 'right',
+    persistRowKebabMenu: true,
+  },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'The `crammed` variant is the densest step: header cell and cell padding drop to 2px (`p-xxs`) and cells render single-line (`whitespace-nowrap`) so the 2px padding stays usable. Meta columns stay 32px wide and the checkbox and kebab button keep their normal size; the kebab menus open at Menu `compact` density because Menu has no `crammed` step.',
+      },
+    },
+  },
+  render: (args) => <Table {...args} key={JSON.stringify(args)} />,
+};
+
+export const ControlledSorting: Story = {
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'The `sort` prop is the controlled sort value: pair it with `onSortChange`, which always receives the plain next `SortingState` (`[{ id, desc }]` or `[]`), never an updater function. The current sort state is rendered below the table as JSON.',
+      },
+    },
+  },
+  render: (args) => {
+    const [sort, setSort] = useState<SortingState>([]);
+
+    return (
+      <div>
+        <Table
+          {...dataArgs(args)}
+          sort={sort}
+          onSortChange={setSort}
+          key={JSON.stringify(args)}
+        />
+        <div style={{ marginTop: '1rem' }}>
+          <strong>Sort state:</strong>
+          <p>{JSON.stringify(sort)}</p>
+        </div>
+      </div>
+    );
+  },
+};
+
+export const ServerSideSorting: Story = {
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'Server-side sorting with `manualSorting`: the table never reorders rows itself and renders `data` as given. The story holds the controlled `sort` state and re-sorts the data in a `useMemo` from `sort[0]` (standing in for a server query). The header still shows the sort arrow and `aria-sort` because the sort state feeds the table in both modes.',
+      },
+    },
+  },
+  render: (args) => {
+    const [sort, setSort] = useState<SortingState>([]);
+
+    const sortedData = useMemo(() => {
+      const entry = sort[0];
+
+      if (!entry) {
+        return defaultData;
+      }
+
+      const key = entry.id as keyof Person;
+      const direction = entry.desc ? -1 : 1;
+
+      return [...defaultData].sort((a, b) => {
+        if (a[key] < b[key]) {
+          return -direction;
+        }
+
+        if (a[key] > b[key]) {
+          return direction;
+        }
+
+        return 0;
+      });
+    }, [sort]);
+
+    return (
+      <div>
+        <Table
+          {...dataArgs(args)}
+          data={sortedData}
+          manualSorting
+          sort={sort}
+          onSortChange={setSort}
+          key={JSON.stringify(args)}
+        />
+        <div style={{ marginTop: '1rem' }}>
+          <strong>Sort state:</strong>
+          <p>{JSON.stringify(sort)}</p>
+        </div>
+      </div>
+    );
+  },
 };
 
 const columnsWithSizing = [
@@ -305,7 +445,7 @@ export const ColumnSizing: Story = {
   },
   render: (args) => (
     <Table
-      {...args}
+      {...dataArgs(args)}
       columns={columnsWithSizing}
       data={defaultData}
       key={JSON.stringify(args)}
@@ -318,35 +458,100 @@ export const InitialRowSelection: Story = {
     docs: {
       description: {
         story:
-          "Use the `rowSelection` prop to specify which rows should be selected initially, and `onRowSelectionChange` to track selection changes. The callback receives an updater function or direct value following TanStack Table's API pattern. In this example, the first two rows (tanner and joe) are pre-selected, and selected row IDs are displayed below the table.",
+          'Use the `defaultRowSelection` prop to specify which rows start selected, and `onRowSelectionChange` to track selection changes. The callback always receives the plain next `RowSelectionState`, never an updater function. In this example, tanner and joe start selected, and the last callback payload is rendered below the table as JSON.',
       },
     },
   },
   render: (args) => {
-    const [selectedRows, setSelectedRows] = useState<Record<string, boolean>>({
+    const [lastPayload, setLastPayload] = useState<RowSelectionState | null>(
+      null,
+    );
+
+    return (
+      <div>
+        <Table
+          {...dataArgs(args)}
+          defaultRowSelection={{ tanner: true, joe: true }}
+          onRowSelectionChange={setLastPayload}
+          key={JSON.stringify(args)}
+        />
+        <div style={{ marginTop: '1rem' }}>
+          <strong>Last onRowSelectionChange payload:</strong>
+          <p>{lastPayload ? JSON.stringify(lastPayload) : 'No changes yet'}</p>
+        </div>
+      </div>
+    );
+  },
+};
+
+export const ControlledRowSelection: Story = {
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'The `rowSelection` prop is the controlled selection value: pair it with `onRowSelectionChange` and the table reflects every prop change after mount. The "Clear selection" button drives the checkboxes from outside the table without a remount.',
+      },
+    },
+  },
+  render: (args) => {
+    const [selection, setSelection] = useState<RowSelectionState>({
       tanner: true,
       joe: true,
+    });
+    const selectedIds = Object.keys(selection).filter((id) => selection[id]);
+
+    return (
+      <div>
+        <Table
+          {...dataArgs(args)}
+          rowSelection={selection}
+          onRowSelectionChange={setSelection}
+          key={JSON.stringify(args)}
+        />
+        <div style={{ marginTop: '1rem' }}>
+          <Button onPress={() => setSelection({})}>Clear selection</Button>
+          <p>
+            <strong>Selected Row IDs:</strong>{' '}
+            {selectedIds.length > 0
+              ? selectedIds.join(', ')
+              : 'No rows selected'}
+          </p>
+        </div>
+      </div>
+    );
+  },
+};
+
+export const ControlledRowPinning: Story = {
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'The `rowPinning` prop is the controlled pinning value: pair it with `onRowPinningChange`, which always receives the plain next `RowPinningState` (`{ top, bottom }`), never an updater function. Pin or unpin rows via the row kebab menu; the "Unpin all" button clears the pinning from outside the table without a remount. The current pinning state is rendered below the table as JSON.',
+      },
+    },
+  },
+  render: (args) => {
+    const [pinning, setPinning] = useState<RowPinningState>({
+      top: ['joe'],
+      bottom: [],
     });
 
     return (
       <div>
         <Table
-          {...args}
-          rowSelection={selectedRows}
-          onRowSelectionChange={setSelectedRows}
+          {...dataArgs(args)}
+          rowPinning={pinning}
+          onRowPinningChange={setPinning}
           key={JSON.stringify(args)}
         />
         <div style={{ marginTop: '1rem' }}>
-          <strong>Selected Row IDs:</strong>
-          {Object.values(selectedRows).filter(Boolean).length > 0 ? (
-            <p>
-              {Object.keys(selectedRows)
-                .filter((id) => selectedRows[id])
-                .join(', ')}
-            </p>
-          ) : (
-            <p>No rows selected</p>
-          )}
+          <Button onPress={() => setPinning({ top: [], bottom: [] })}>
+            Unpin all
+          </Button>
+          <p>
+            <strong>Pinning state:</strong> {JSON.stringify(pinning)}
+          </p>
         </div>
       </div>
     );
@@ -367,7 +572,7 @@ export const ClientSidePagination: Story = {
     return (
       <div>
         <Table
-          {...args}
+          {...dataArgs(args)}
           data={allData}
           pageSize={PAGE_SIZE}
           page={page}
@@ -389,7 +594,7 @@ export const PrePaginated: Story = {
     docs: {
       description: {
         story:
-          'Simulates server-side pagination where only the current page of data is passed to the Table. Uses `key={page}` to force remount when the page changes, since `useListData` only reads `initialItems` on mount.',
+          'Simulates server-side pagination where only the current page of data is passed to the Table. The Table reflects `data` prop changes directly, so no remount is needed when the page changes.',
       },
     },
   },
@@ -399,12 +604,50 @@ export const PrePaginated: Story = {
 
     return (
       <div>
-        <Table
-          {...args}
-          data={pageData}
-          key={`${page}-${JSON.stringify(args)}`}
-        />
+        <Table {...dataArgs(args)} data={pageData} key={JSON.stringify(args)} />
         <Pagination value={page} total={totalPages} onChange={setPage} />
+      </div>
+    );
+  },
+};
+
+export const LiveUpdates: Story = {
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "Simulates polling an endpoint: every second the `data` prop is replaced and the Visits/Profile Progress cells of a single row change, cycling through the rows; every few seconds a row is added or removed. The Table reflects each update directly — no `key` remount is needed for data changes. Manual row reordering (kebab menu → Move Up/Down) is preserved; rows that appear after a manual reorder are appended at the end. The wrapper reserves height for the maximum row count so add/remove doesn't shift the layout — in real apps, a fixed-height scroll container or `pageSize` does the same job.",
+      },
+    },
+  },
+  render: (args) => {
+    const [tick, setTick] = useState(0);
+
+    useEffect(() => {
+      const id = setInterval(() => setTick((prev) => prev + 1), 1000);
+      return () => clearInterval(id);
+    }, []);
+
+    const data = useMemo(() => {
+      // 5..9 rows, one added/removed every 7 ticks
+      const count = 5 + (Math.floor(tick / 7) % 5);
+
+      return defaultData.slice(0, count).map((person, index) => {
+        // staggered so exactly one row's cells change per tick
+        const steps = Math.floor((tick + index) / count);
+
+        return {
+          ...person,
+          visits: person.visits + steps,
+          progress: (person.progress + steps * 7) % 100,
+        };
+      });
+    }, [tick]);
+
+    return (
+      // reserve height for the max row count so add/remove doesn't shift layout
+      <div style={{ minHeight: 500 }}>
+        <Table {...dataArgs(args)} data={data} key={JSON.stringify(args)} />
       </div>
     );
   },
@@ -416,7 +659,7 @@ export const Static: Story = {
     docs: {
       description: {
         story:
-          'Manual table composition using sub-components (`TableHeader`, `TableBody`, `TableRow`, `TableHeaderCell`, `TableCell`) for full control over rendering.',
+          'Manual table composition using sub-components (`TableHeader`, `TableBody`, `TableRow`, `TableHeaderCell`, `TableCell`) for full control over rendering. Custom-children mode has no `variant` prop and always renders at `cozy` density; to hand-compose a denser table, wrap the sub-components in a `TableContext.Provider` whose value sets `variant` to `compact` or `crammed`.',
       },
     },
   },

@@ -10,6 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
+import CopyToClipboard from '@accelint/icons/copy-to-clipboard';
 import { useState } from 'react';
 import { Button } from '../button';
 import { Label } from '../label';
@@ -990,6 +991,53 @@ export const AccessibilityDemo: Story = {
       description: {
         story:
           'The CoordinateField is fully keyboard accessible with intuitive navigation between segments. ARIA labels and descriptions ensure screen reader compatibility.',
+      },
+    },
+  },
+};
+
+/**
+ * Custom Icon - Using different icons for the format button
+ *
+ * Demonstrates how to customize the format button icon.
+ * The icon prop accepts any ReactNode, allowing you to use any icon
+ * from @accelint/icons or custom elements.
+ */
+export const CustomIcon: Story = {
+  render: () => {
+    const newYorkCity = { lat: 40.7128, lon: -74.006 };
+
+    return (
+      <div
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '24px',
+          width: '500px',
+        }}
+      >
+        <CoordinateField
+          label='Default Icon (GlobalShare)'
+          description='Uses the default GlobalShare icon'
+          format='dd'
+          defaultValue={newYorkCity}
+        />
+        <CoordinateField
+          label='Custom Icon (CopyToClipboard)'
+          description='Uses the CopyToClipboard icon'
+          format='dd'
+          defaultValue={newYorkCity}
+          icon={<CopyToClipboard />}
+        />
+      </div>
+    );
+  },
+  parameters: {
+    controls: { disable: true },
+    docs: {
+      description: {
+        story:
+          'The icon prop allows customization of the format button icon. Pass any icon from @accelint/icons or custom React elements.',
       },
     },
   },

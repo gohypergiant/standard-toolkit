@@ -1,0 +1,258 @@
+---
+title: Radio & RadioGroup
+description: Single-selection radio buttons with integrated label and group management.
+source: packages/design-toolkit/src/components/radio/index.tsx
+source_sha: d19e409c16b91e80ddc18ce602104b44559b7998
+doc_sha: 317efb1bc1644d97205dd6c4f7ae2dd52ebc8972
+deprecated: false
+updated: 2026-07-13
+---
+
+## Usage
+
+```tsx
+import { RadioGroup, Radio } from '@accelint/design-toolkit';
+
+export function MyForm() {
+  return (
+    <RadioGroup label="Size" onChange={(value) => setSize(value)}>
+      <Radio value="small">Small</Radio>
+      <Radio value="medium">Medium</Radio>
+      <Radio value="large">Large</Radio>
+    </RadioGroup>
+  );
+}
+```
+
+## Reference
+
+### RadioGroup
+
+```typescript
+interface RadioGroupProps extends Omit<AriaRadioGroupProps, 'className'> {
+  label?: string;
+  labelPosition?: 'start' | 'end';
+  classNames?: {
+    group?: AriaRadioGroupProps['className'];
+    label?: LabelProps['className'];
+  };
+}
+```
+
+#### Props
+
+| Prop | Type | Default | Required |
+|------|------|---------|----------|
+| `label` | `string` | - | No |
+| `labelPosition` | `'start' \| 'end'` | `'end'` | No |
+| `classNames` | `RadioGroupClassNames` | - | No |
+| `value` | `string` | - | No |
+| `defaultValue` | `string` | - | No |
+| `onChange` | `(value: string) => void` | - | No |
+| `isDisabled` | `boolean` | `false` | No |
+| `isRequired` | `boolean` | `false` | No |
+
+### Radio
+
+```typescript
+interface RadioProps extends Omit<AriaRadioProps, 'className'> {
+  labelPosition?: 'start' | 'end';
+  classNames?: {
+    radio?: AriaRadioProps['className'];
+    control?: string;
+    label?: string;
+  };
+}
+```
+
+#### Props
+
+| Prop | Type | Default | Required |
+|------|------|---------|----------|
+| `value` | `string` | - | Yes |
+| `children` | `React.ReactNode` | - | Yes |
+| `labelPosition` | `'start' \| 'end'` | `'end'` | No |
+| `classNames` | `RadioClassNames` | - | No |
+| `isDisabled` | `boolean` | `false` | No |
+
+#### `value`
+
+Unique identifier for the radio option. Used to track selection in the RadioGroup.
+
+#### `labelPosition`
+
+Controls the position of the label text relative to the radio control:
+- `end` - Label appears after the radio control (default)
+- `start` - Label appears before the radio control
+
+When set on RadioGroup, applies to all child Radio components. Individual Radio `labelPosition` overrides the group setting.
+
+#### `children`
+
+Label content for the radio button. Can be text or other React elements.
+
+### Inherited Props
+
+RadioGroup inherits all props from React Aria's `RadioGroup` component, including:
+- `value` / `defaultValue` - Controlled/uncontrolled selection
+- `onChange` - Called when selection changes (receives value string)
+- `isDisabled` - Disables all radio buttons in the group
+- `isRequired` - Marks the group as required
+- `name` - Form field name
+
+See [React Aria RadioGroup](https://react-spectrum.adobe.com/react-aria/RadioGroup.html) for full API reference.
+
+## Examples
+
+### Example: Basic radio group
+
+```tsx
+import { RadioGroup, Radio } from '@accelint/design-toolkit';
+
+<RadioGroup label="Shipping method">
+  <Radio value="standard">Standard (5-7 days)</Radio>
+  <Radio value="express">Express (2-3 days)</Radio>
+  <Radio value="overnight">Overnight</Radio>
+</RadioGroup>
+```
+
+### Example: Required selection
+
+```tsx
+import { RadioGroup, Radio } from '@accelint/design-toolkit';
+
+<RadioGroup label="Payment method" isRequired>
+  <Radio value="credit">Credit Card</Radio>
+  <Radio value="debit">Debit Card</Radio>
+  <Radio value="paypal">PayPal</Radio>
+</RadioGroup>
+```
+
+### Example: Disabled options
+
+```tsx
+import { RadioGroup, Radio } from '@accelint/design-toolkit';
+
+<RadioGroup label="Subscription tier">
+  <Radio value="free">Free</Radio>
+  <Radio value="pro">Pro</Radio>
+  <Radio value="enterprise" isDisabled>Enterprise (Contact sales)</Radio>
+</RadioGroup>
+```
+
+### Example: Disabled group
+
+```tsx
+import { RadioGroup, Radio } from '@accelint/design-toolkit';
+
+<RadioGroup label="Read-only selection" isDisabled value="medium">
+  <Radio value="small">Small</Radio>
+  <Radio value="medium">Medium</Radio>
+  <Radio value="large">Large</Radio>
+</RadioGroup>
+```
+
+### Example: Label position - start
+
+```tsx
+import { RadioGroup, Radio } from '@accelint/design-toolkit';
+
+<RadioGroup label="Notification settings" labelPosition="start">
+  <Radio value="all">All notifications</Radio>
+  <Radio value="important">Important only</Radio>
+  <Radio value="none">None</Radio>
+</RadioGroup>
+```
+
+### Example: Controlled selection
+
+```tsx
+import { useState } from 'react';
+import { RadioGroup, Radio } from '@accelint/design-toolkit';
+
+export function ControlledExample() {
+  const [selected, setSelected] = useState('medium');
+
+  return (
+    <>
+      <RadioGroup
+        label="Size"
+        value={selected}
+        onChange={setSelected}
+      >
+        <Radio value="small">Small</Radio>
+        <Radio value="medium">Medium</Radio>
+        <Radio value="large">Large</Radio>
+      </RadioGroup>
+      <p>Selected: {selected}</p>
+    </>
+  );
+}
+```
+
+### Example: Without group label
+
+```tsx
+import { RadioGroup, Radio } from '@accelint/design-toolkit';
+
+<RadioGroup aria-label="Theme">
+  <Radio value="light">Light</Radio>
+  <Radio value="dark">Dark</Radio>
+  <Radio value="auto">Auto</Radio>
+</RadioGroup>
+```
+
+> **Good to know:** When omitting the visible `label`, always provide an `aria-label` for accessibility.
+
+### Example: Custom styling
+
+```tsx
+import { RadioGroup, Radio } from '@accelint/design-toolkit';
+
+<RadioGroup
+  label="Priority"
+  classNames={{
+    group: 'flex gap-4',
+    label: 'font-bold',
+  }}
+>
+  <Radio
+    value="low"
+    classNames={{
+      radio: 'hover:bg-gray-100',
+      control: 'border-2',
+    }}
+  >
+    Low
+  </Radio>
+  <Radio value="medium">Medium</Radio>
+  <Radio value="high">High</Radio>
+</RadioGroup>
+```
+
+### Example: Rich content labels
+
+```tsx
+import { RadioGroup, Radio } from '@accelint/design-toolkit';
+
+<RadioGroup label="Plan">
+  <Radio value="free">
+    <div>
+      <strong>Free</strong>
+      <div className="text-sm text-gray-500">$0/month</div>
+    </div>
+  </Radio>
+  <Radio value="pro">
+    <div>
+      <strong>Pro</strong>
+      <div className="text-sm text-gray-500">$29/month</div>
+    </div>
+  </Radio>
+</RadioGroup>
+```
+
+## Related
+
+- [RadioGroup](./group.md) - Container component for Radio buttons
+- [Checkbox](../checkbox/index.md) - Multi-selection alternative
+- [Switch](../switch/index.md) - Binary on/off toggle

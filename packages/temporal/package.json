@@ -1,7 +1,7 @@
 {
   "name": "@accelint/temporal",
   "description": "A lightweight JavaScript library offering a collection of simple temporal functions for parsing, formatting, manipulating dates and times, and specialty timers.",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "author": "https://hypergiant.com",
   "$schema": "https://json.schemastore.org/package",
   "devDependencies": {
@@ -55,7 +55,8 @@
     "license": "pnpm zx ../../scripts/license.mjs",
     "lint": "pnpm biome lint . --verbose",
     "lint:package": "pnpm publint",
-    "test": "pnpm vitest --dir=src"
+    "test": "pnpm vitest --dir=src",
+    "test:watch": "pnpm vitest --dir=src --watch"
   },
   "sideEffects": false,
   "subPath": "packages/temporal",

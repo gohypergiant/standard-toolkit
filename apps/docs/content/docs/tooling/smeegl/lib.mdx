@@ -1,0 +1,215 @@
+---
+title: "smeegl"
+description: Programmatic API for generating spritesheets and React components from SVG files
+source: tooling/smeegl/src/lib.ts
+source_sha: fa85d7df22f60dce567e6e2a6487564cfdaccf37
+doc_sha: 01081dbd4fe4d6c9eec34e211a63af3f72589b2e
+deprecated: false
+updated: 2026-07-14
+---
+
+## Usage
+
+```typescript
+import { smeegl } from '@accelint/smeegl/lib';
+
+// Generate spritesheet
+await smeegl(
+  process.cwd(),
+  '**/*.svg',
+  './atlas',
+  'spreet',
+  null,
+  './icons',
+  '',
+  'SPRITESHEET'
+);
+
+// Generate React components
+await smeegl(
+  process.cwd(),
+  '',
+  './components',
+  'spreet',
+  null,
+  './icons',
+  '',
+  'REACT'
+);
+```
+
+## Reference
+
+```typescript
+async function smeegl(
+  rootPath: string,
+  glob: string,
+  out: string,
+  spreet?: string,
+  crcMode?: CrcType | null,
+  inOpt?: string,
+  outOpt?: string,
+  target?: TargetType
+): Promise<void>
+```
+
+### Parameters
+
+| Parameter | Type | Description | Default |
+|-----------|------|-------------|---------|
+| `rootPath` | `string` | Root directory path for resolving relative paths | |
+| `glob` | `string` | Glob pattern for finding SVG files. Can be blank if `inOpt` is provided. | |
+| `out` | `string` | Base output path for generated files | |
+| `spreet` | `string` \| `undefined` | Path to spreet binary | `'spreet'` |
+| `crcMode` | `CrcType` \| `null` | Convert sprite names to CRC32 (`'DEC'` or `'HEX'`) | `null` |
+| `inOpt` | `string` | Input directory to scan for SVG files (alternative to glob) | `''` |
+| `outOpt` | `string` | Override output path (takes precedence over `out`) | `''` |
+| `target` | `TargetType` | Output type: `'SPRITESHEET'` or `'REACT'` | `'SPRITESHEET'` |
+
+### Returns
+
+Returns a `Promise<void>` that resolves when generation is complete.
+
+### Type Parameters
+
+**CrcType**: `'DEC' | 'HEX'`
+- Controls whether CRC32 sprite names use decimal or hexadecimal encoding
+
+**TargetType**: `'SPRITESHEET' | 'REACT'`
+- `SPRITESHEET` - Generates PNG atlas + JSON index + TypeScript constants
+- `REACT` - Generates folder of React SVG components
+
+## Examples
+
+### Example: Generate spritesheet with glob pattern
+
+```typescript
+import { smeegl } from '@accelint/smeegl/lib';
+import { fileURLToPath } from 'node:url';
+import { dirname } from 'node:path';
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
+
+await smeegl(
+  __dirname,                    // rootPath
+  'assets/icons/**/*.svg',      // glob pattern
+  './public/sprites',           // output path
+  'spreet',                     // spreet binary
+  null,                         // no CRC encoding
+  '',                           // no input dir (using glob)
+  '',                           // no output override
+  'SPRITESHEET'                 // target type
+);
+
+// Generates:
+// ./public/sprites/atlas.png
+// ./public/sprites/atlas.json
+// ./public/sprites/atlas.ts
+```
+
+### Example: Generate React components from directory
+
+```typescript
+import { smeegl } from '@accelint/smeegl/lib';
+
+await smeegl(
+  process.cwd(),
+  '',                              // no glob (using directory)
+  './src/components/icons',        // output path
+  'spreet',
+  null,
+  './design-system/icons',         // input directory
+  '',
+  'REACT'
+);
+
+// Generates:
+// ./src/components/icons/arrow.tsx
+// ./src/components/icons/arrow-down.tsx
+// ./src/components/icons/index.ts
+```
+
+### Example: CRC-encoded sprite names
+
+```typescript
+import { smeegl } from '@accelint/smeegl/lib';
+
+await smeegl(
+  process.cwd(),
+  'icons/**/*.svg',
+  './sprites',
+  'spreet',
+  'HEX',                          // Use hexadecimal CRC32
+  '',
+  '',
+  'SPRITESHEET'
+);
+
+// Sprite names become CRC32 hashes:
+// arrow.svg → a3f2d4e1
+// arrow-down.svg → b7c8e9f3
+```
+
+### Example: Custom spreet binary path
+
+```typescript
+import { smeegl } from '@accelint/smeegl/lib';
+
+await smeegl(
+  process.cwd(),
+  'icons/**/*.svg',
+  './atlas',
+  '/usr/local/bin/spreet-custom',  // Custom binary
+  null,
+  '',
+  '',
+  'SPRITESHEET'
+);
+```
+
+### Example: Build script integration
+
+```typescript
+// build-sprites.ts
+import { smeegl } from '@accelint/smeegl/lib';
+
+async function buildSprites() {
+  console.log('Building spritesheets...');
+  
+  await smeegl(
+    process.cwd(),
+    'assets/ui/**/*.svg',
+    './public/sprites/ui',
+    'spreet',
+    null,
+    '',
+    '',
+    'SPRITESHEET'
+  );
+  
+  await smeegl(
+    process.cwd(),
+    'assets/markers/**/*.svg',
+    './public/sprites/markers',
+    'spreet',
+    'HEX',
+    '',
+    '',
+    'SPRITESHEET'
+  );
+  
+  console.log('✓ Spritesheets built');
+}
+
+buildSprites().catch(console.error);
+```
+
+> **Good to know:** The function validates input parameters and creates temporary directories automatically. Errors during generation are thrown as exceptions.
+
+> **Good to know:** When `glob` is empty, `inOpt` must be a valid directory path. When `glob` is provided, it takes precedence over `inOpt`.
+
+## Related
+
+- [buildSpritesheet](./build-spritesheet.mdx) - Core spritesheet generation logic
+- [buildReactFiles](./build-react-files.mdx) - Core React component generation logic
+- [validateInput](./validate-input.mdx) - Input validation utilities

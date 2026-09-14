@@ -1,0 +1,317 @@
+---
+title: "Overview"
+description: NTDS-compliant SVG icon components and spritesheet for tactical military displays
+source: packages/ntds/src/index.ts
+source_sha: 10cfbf6da0b32147d0fe03d2f5ce74405d34cb03
+doc_sha: 391b435fba19976557eb1a3e7412247903bc09ca
+deprecated: false
+updated: 2026-07-13
+---
+
+## Overview
+
+The `@accelint/ntds` package provides two rendering approaches for NTDS tactical symbols:
+
+1. **React SVG Components** - Individual components for flexible UI integration
+2. **Spritesheet Constants** - Numeric IDs for efficient canvas/WebGL rendering
+
+All symbols follow NTDS (Naval Tactical Data System) standards for military tactical displays.
+
+## Installation
+
+```bash
+pnpm add @accelint/ntds react react-dom
+```
+
+## Quick Start
+
+### Using SVG Components
+
+```tsx
+import { SvgAirFriend } from '@accelint/ntds/core/air-friend';
+import { NTDS_COLOR_FRIEND } from '@accelint/ntds/constants';
+
+function TacticalIcon() {
+  return (
+    <SvgAirFriend 
+      fill={NTDS_COLOR_FRIEND}
+      width={32}
+      height={32}
+      title="Friendly F-16"
+    />
+  );
+}
+```
+
+### Using Spritesheet Constants
+
+```typescript
+import { AIR_FRIEND, SURFACE_HOSTILE } from '@accelint/ntds/spritesheets/masked';
+
+// Use sprite IDs with your rendering engine
+const friendlyAircraftSprite = spritesheet.getFrame(AIR_FRIEND);
+const hostileShipSprite = spritesheet.getFrame(SURFACE_HOSTILE);
+```
+
+## Package Exports
+
+### Color Constants
+
+Standard NTDS affiliation colors:
+
+```typescript
+import {
+  NTDS_COLOR_FRIEND,      // Blue (#1484F4)
+  NTDS_COLOR_HOSTILE,     // Red (#FF0033)
+  NTDS_COLOR_UNKNOWN,     // Yellow (#EDDA0A)
+  NTDS_COLOR_NEUTRAL,     // Purple (#5B137A)
+  NTDS_COLOR_ASSUMED_FRIEND, // Green (#0E8F37)
+  NTDS_COLOR_SUSPECT,     // Orange (#FFAD38)
+  NTDS_COLOR_PENDING,     // Dark gray (#404040)
+} from '@accelint/ntds/constants';
+```
+
+[View full documentation →](./constants.mdx)
+
+### SVG Components
+
+47 React components for NTDS tactical symbols:
+
+**Air Domain:**
+- `SvgAirFriend`, `SvgAirHostile`, `SvgAirUnknown`
+- `SvgAirBaseFriend`, `SvgAirBaseHostile`, `SvgAirBaseUnknown`
+- `SvgAirGroupFriend`, `SvgAirGroupHostile`, `SvgAirGroupUnknown`
+- `SvgHelicopterFriend`, `SvgHelicopterHostile`, `SvgHelicopterUnknown`
+
+**Surface Domain:**
+- `SvgSurfaceFriend`, `SvgSurfaceHostile`, `SvgSurfaceUnknown`
+- `SvgSurfaceGroupFriend`, `SvgSurfaceGroupHostile`, `SvgSurfaceGroupUnknown`
+- `SvgCarrierFriend`, `SvgCarrierHostile`, `SvgCarrierUnknown`
+
+**Subsurface Domain:**
+- `SvgSubSurfaceFriend`, `SvgSubSurfaceHostile`, `SvgSubSurfaceUnknown`
+- `SvgSubGroupFriend`, `SvgSubGroupHostile`, `SvgSubGroupUnknown`
+
+**Land Domain:**
+- `SvgLandFriend`, `SvgLandHostile`, `SvgLandUnknown`
+- `SvgBaseFriend`, `SvgBaseHostile`, `SvgBaseUnknown`
+
+**Weapons & Infrastructure:**
+- `SvgMissileFriend`, `SvgMissileHostile`, `SvgMissileUnknown`
+- `SvgTorpedoFriend`, `SvgTorpedoHostile`, `SvgTorpedoUnknown`
+- `SvgTarget`, `SvgSam`, `SvgMineField`
+- `SvgPort`, `SvgRunway`, `SvgStructure`, `SvgPol`, `SvgCommunications`
+
+[View full documentation →](./core.mdx)
+
+### Spritesheet Constants
+
+64 numeric string identifiers for sprite-based rendering:
+
+```typescript
+import {
+  AIR_FRIEND,
+  AIR_HOSTILE,
+  SURFACE_FRIEND,
+  SURFACE_HOSTILE,
+  // ... and 60 more constants
+} from '@accelint/ntds/spritesheets/masked';
+```
+
+[View full documentation →](./spritesheets/masked.mdx)
+
+## Usage Patterns
+
+### Pattern: Dynamic Entity Rendering
+
+```tsx
+import { NTDS_COLOR_FRIEND, NTDS_COLOR_HOSTILE } from '@accelint/ntds/constants';
+import { SvgAirFriend } from '@accelint/ntds/core/air-friend';
+import { SvgAirHostile } from '@accelint/ntds/core/air-hostile';
+
+type Entity = {
+  id: string;
+  type: 'air' | 'surface' | 'subsurface';
+  affiliation: 'friend' | 'hostile';
+  position: { x: number; y: number };
+};
+
+function EntityIcon({ entity }: { entity: Entity }) {
+  const Component = entity.affiliation === 'friend' 
+    ? SvgAirFriend 
+    : SvgAirHostile;
+    
+  const color = entity.affiliation === 'friend'
+    ? NTDS_COLOR_FRIEND
+    : NTDS_COLOR_HOSTILE;
+
+  return <Component fill={color} title={entity.id} />;
+}
+```
+
+### Pattern: Tactical Map with Multiple Entities
+
+```tsx
+import { SvgAirFriend, SvgSurfaceHostile } from '@accelint/ntds';
+import { NTDS_COLOR_FRIEND, NTDS_COLOR_HOSTILE } from '@accelint/ntds/constants';
+
+function TacticalMap({ entities }) {
+  return (
+    <svg width={800} height={600} viewBox="0 0 800 600">
+      {entities.map((entity) => (
+        <g 
+          key={entity.id} 
+          transform={`translate(${entity.x}, ${entity.y})`}
+        >
+          {entity.type === 'air' && entity.affiliation === 'friend' && (
+            <SvgAirFriend fill={NTDS_COLOR_FRIEND} />
+          )}
+          {entity.type === 'surface' && entity.affiliation === 'hostile' && (
+            <SvgSurfaceHostile fill={NTDS_COLOR_HOSTILE} />
+          )}
+        </g>
+      ))}
+    </svg>
+  );
+}
+```
+
+### Pattern: Spritesheet Rendering for Performance
+
+```typescript
+import { AIR_FRIEND, SURFACE_HOSTILE } from '@accelint/ntds/spritesheets/masked';
+
+class HighPerformanceCop {
+  private spritesheet: HTMLImageElement;
+  private spriteData: SpritesheetData;
+
+  renderEntities(entities: Entity[], ctx: CanvasRenderingContext2D): void {
+    for (const entity of entities) {
+      const spriteId = this.getSpriteId(entity);
+      const sprite = this.spriteData.frames[spriteId];
+      
+      ctx.drawImage(
+        this.spritesheet,
+        sprite.frame.x,
+        sprite.frame.y,
+        sprite.frame.w,
+        sprite.frame.h,
+        entity.x,
+        entity.y,
+        24,
+        24
+      );
+    }
+  }
+}
+```
+
+## Type Safety
+
+All exports are fully typed:
+
+```typescript
+import type { SVGProps } from 'react';
+
+// Component props type
+type IconProps = SVGProps<SVGSVGElement> & {
+  title?: string;
+  titleId?: string;
+};
+
+// Sprite ID type (from constants)
+type SpriteId = string;
+
+// Color type (from constants)
+type NtdsColor = string; // hex color strings
+```
+
+## Browser Support
+
+- Modern browsers with SVG support
+- React 19+
+- Canvas/WebGL for spritesheet rendering
+
+## Performance Considerations
+
+**Use SVG Components when:**
+- Building React UIs with moderate entity counts (< 100 entities)
+- Need interactive icons with hover states, clicks
+- Styling flexibility is important
+- Accessibility features (titles, ARIA labels) are required
+
+**Use Spritesheet Constants when:**
+- Rendering hundreds or thousands of entities
+- Building canvas/WebGL-based tactical displays
+- Performance is critical
+- COP or real-time tracking applications
+
+## Examples
+
+### Example: Legend Component
+
+```tsx
+import { SvgAirFriend, SvgSurfaceHostile } from '@accelint/ntds';
+import { NTDS_COLOR_FRIEND, NTDS_COLOR_HOSTILE } from '@accelint/ntds/constants';
+
+function TacticalLegend() {
+  return (
+    <div className="legend">
+      <h3>Entity Types</h3>
+      <div className="legend-item">
+        <SvgAirFriend fill={NTDS_COLOR_FRIEND} />
+        <span>Friendly Aircraft</span>
+      </div>
+      <div className="legend-item">
+        <SvgSurfaceHostile fill={NTDS_COLOR_HOSTILE} />
+        <span>Hostile Surface Vessel</span>
+      </div>
+    </div>
+  );
+}
+```
+
+### Example: Interactive Selectable Entity
+
+```tsx
+import { useState } from 'react';
+import { SvgHelicopterFriend } from '@accelint/ntds/core/helicopter-friend';
+import { NTDS_COLOR_FRIEND } from '@accelint/ntds/constants';
+
+function SelectableEntity({ entity, onSelect }) {
+  const [isHovered, setIsHovered] = useState(false);
+
+  return (
+    <SvgHelicopterFriend
+      fill={isHovered ? '#00A0FF' : NTDS_COLOR_FRIEND}
+      width={32}
+      height={32}
+      title={entity.callsign}
+      onClick={() => onSelect(entity)}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+      style={{ 
+        cursor: 'pointer', 
+        transition: 'fill 0.2s',
+      }}
+    />
+  );
+}
+```
+
+## Contributing
+
+This package is generated from NTDS-compliant SVG source files using the `smeegl` tool. To add new symbols:
+
+1. Add SVG files to `packages/ntds/icons/core/` or `packages/ntds/icons/masked/`
+2. Run `pnpm build` to regenerate components and spritesheet
+3. Run `pnpm index` to update package exports
+
+## License
+
+Apache-2.0
+
+## Related Packages
+
+- `@accelint/design-toolkit` - UI component library
+- `@accelint/icons` - General purpose icon library

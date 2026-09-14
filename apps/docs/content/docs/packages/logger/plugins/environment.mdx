@@ -1,0 +1,288 @@
+---
+title: environmentPlugin
+description: Injects environment context (server/browser) into log data
+source: packages/logger/src/plugins/environment.ts
+source_sha: c50b933870c4c7e1eae79048fb135ccf7faf9166
+doc_sha: 43e83e75c8fd5a735674f34e7f323b339cf1acc5
+deprecated: false
+updated: 2026-07-13
+---
+
+## Usage
+
+```typescript
+import { environmentPlugin } from '@accelint/logger/plugins/environment';
+
+const plugin = environmentPlugin({
+  isServer: typeof window === 'undefined',
+  isProductionEnv: false,
+});
+// Log output will include: server: true (or false in browser)
+```
+
+## Reference
+
+```typescript
+function environmentPlugin(options: EnvironmentPluginOptions): LogLayerPlugin
+
+type EnvironmentPluginOptions = LogLayerPluginParams & {
+  isServer: boolean;
+  isProductionEnv: boolean;
+}
+```
+
+### Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `options` | `EnvironmentPluginOptions` | Plugin configuration options |
+| `options.isServer` | `boolean` | True when running in Node.js environment (`typeof window === 'undefined'`) |
+| `options.isProductionEnv` | `boolean` | Reserved for future use; currently has no effect |
+| `options.id` | `string` | Optional plugin ID |
+| `options.disabled` | `boolean` | Optional flag to disable the plugin |
+
+### Returns
+
+Returns a LogLayer plugin instance that adds a `server` boolean property to all log output, indicating whether the log originated from a server or browser context.
+
+> **Good to know:** This plugin is enabled by default in both `getLogger` and `bootstrap`. The `isServer` flag is automatically determined by checking `typeof window === 'undefined'`.
+
+## Examples
+
+### Example: Basic environment detection
+
+```typescript
+import { bootstrap, environmentPlugin } from '@accelint/logger';
+
+const isServer = typeof window === 'undefined';
+
+const logger = bootstrap({
+  enabled: true,
+  plugins: [
+    environmentPlugin({
+      isServer,
+      isProductionEnv: false,
+    }),
+  ],
+});
+
+logger.info('Application started');
+// Server: { server: true, message: "Application started" }
+// Browser: { server: false, message: "Application started" }
+```
+
+### Example: Universal/isomorphic code logging
+
+```typescript
+import { getLogger } from '@accelint/logger';
+
+const logger = getLogger({
+  enabled: true,
+  env: process.env.NODE_ENV as 'production' | 'development',
+});
+
+export function fetchUserData(userId: string) {
+  logger.info('Fetching user data', { userId });
+  // Automatically tagged with server: true/false
+  
+  // ... fetch logic
+}
+
+// Same code runs on server and client
+// Logs clearly indicate execution context
+```
+
+### Example: Filtering server-only logs
+
+```typescript
+import { bootstrap, environmentPlugin } from '@accelint/logger';
+
+const isServer = typeof window === 'undefined';
+
+const logger = bootstrap({
+  enabled: true,
+  plugins: [
+    environmentPlugin({
+      isServer,
+      isProductionEnv: false,
+    }),
+  ],
+});
+
+// In log aggregation, filter by server: true
+if (isServer) {
+  logger.info('Server-side operation', { pid: process.pid });
+}
+```
+
+### Example: Next.js server and client logging
+
+```typescript
+import { getLogger } from '@accelint/logger';
+
+const logger = getLogger({
+  enabled: true,
+  env: process.env.NODE_ENV as 'production' | 'development',
+});
+
+// Server Component
+export async function ServerComponent() {
+  logger.info('Rendering on server');
+  // Output: { server: true, message: "Rendering on server" }
+  
+  // ... component logic
+}
+
+// Client Component
+'use client';
+export function ClientComponent() {
+  logger.info('Rendering in browser');
+  // Output: { server: false, message: "Rendering in browser" }
+  
+  // ... component logic
+}
+```
+
+### Example: Disabling environment plugin
+
+```typescript
+import { bootstrap, environmentPlugin } from '@accelint/logger';
+
+const logger = bootstrap({
+  enabled: true,
+  plugins: [
+    environmentPlugin({
+      isServer: true,
+      isProductionEnv: false,
+      disabled: true, // Disable environment tagging
+    }),
+  ],
+});
+
+logger.info('No server field in output');
+```
+
+### Example: Custom plugin ID
+
+```typescript
+import { bootstrap, environmentPlugin } from '@accelint/logger';
+
+const logger = bootstrap({
+  enabled: true,
+  plugins: [
+    environmentPlugin({
+      id: 'my-env-detector',
+      isServer: typeof window === 'undefined',
+      isProductionEnv: false,
+    }),
+  ],
+});
+```
+
+### Example: Production environment detection
+
+```typescript
+import { bootstrap, environmentPlugin } from '@accelint/logger';
+
+const isProduction = process.env.NODE_ENV === 'production';
+const isServer = typeof window === 'undefined';
+
+const logger = bootstrap({
+  enabled: true,
+  plugins: [
+    environmentPlugin({
+      isServer,
+      isProductionEnv: isProduction,
+    }),
+  ],
+});
+
+// Currently isProductionEnv is reserved for future use
+// The server field is always added to logs
+```
+
+### Example: Structured JSON with environment context
+
+```typescript
+import { bootstrap, environmentPlugin } from '@accelint/logger';
+
+const logger = bootstrap({
+  enabled: true,
+  pretty: false, // JSON output
+  plugins: [
+    environmentPlugin({
+      isServer: true,
+      isProductionEnv: false,
+    }),
+  ],
+});
+
+logger.error('API request failed', { statusCode: 500 });
+// JSON output:
+// {
+//   "level": "error",
+//   "message": "API request failed",
+//   "server": true,
+//   "statusCode": 500,
+//   "callSite": "..."
+// }
+```
+
+### Example: Combining with custom plugins
+
+```typescript
+import { bootstrap, environmentPlugin } from '@accelint/logger';
+import type { LogLayerPlugin } from '@loglayer/shared';
+
+const deploymentPlugin: LogLayerPlugin = {
+  id: 'deployment',
+  onBeforeDataOut({ data }) {
+    return {
+      ...data,
+      region: process.env.AWS_REGION,
+      version: process.env.APP_VERSION,
+    };
+  },
+};
+
+const logger = bootstrap({
+  enabled: true,
+  plugins: [
+    environmentPlugin({
+      isServer: true,
+      isProductionEnv: true,
+    }),
+    deploymentPlugin,
+  ],
+});
+
+logger.info('Deployment context included');
+// Output: { server: true, region: "us-east-1", version: "1.2.3", ... }
+```
+
+### Example: Conditional logging based on environment
+
+```typescript
+import { getLogger } from '@accelint/logger';
+
+const isServer = typeof window === 'undefined';
+const logger = getLogger({ enabled: true });
+
+function logEnvironmentSpecific() {
+  if (isServer) {
+    logger.info('Server-specific operation', { hostname: process.env.HOSTNAME });
+  } else {
+    logger.info('Client-specific operation', { userAgent: navigator.userAgent });
+  }
+  // Both automatically tagged with server: true/false
+}
+```
+
+> **Good to know:** The `server` field is particularly useful in universal applications (Next.js, Remix, etc.) where the same code runs in both Node.js and browser contexts. It helps trace whether logs originated from server-side rendering, API routes, or client-side interactions.
+
+## Related
+
+- [callsitePlugin](./callsite.md) - Adds source location tracking
+- [getLogger](../default/index.md) - Includes environmentPlugin by default
+- [bootstrap](../default/bootstrap.md) - Includes environmentPlugin by default
+- [LogLayer Plugin System](https://loglayer.dev/configuration.html#plugin-system) - Upstream documentation

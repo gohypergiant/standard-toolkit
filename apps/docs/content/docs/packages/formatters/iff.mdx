@@ -1,0 +1,278 @@
+---
+title: "IFF Formatters"
+description: Format IFF (Identification Friend or Foe) transponder mode codes with proper zero-padding and default values
+source: packages/formatters/src/iff/index.ts
+source_sha: b99fc37b50bdbb7feefad5aa41ba6d9bf4dfb429
+doc_sha: e4c349228292141c7c201c77c46c43afef29e20a
+deprecated: false
+updated: 2026-07-13
+---
+
+## Usage
+
+```typescript
+import { formatM1, formatM2, formatM3A, formatM4, formatM5 } from '@accelint/formatters/iff';
+
+// Mode 1: 2-digit mission/type code
+const m1 = formatM1(5);     // '05'
+const m1 = formatM1();      // '--'
+
+// Mode 2: 4-digit unit code
+const m2 = formatM2(123);   // '0123'
+const m2 = formatM2();      // '----'
+
+// Mode 3A: 4-digit squawk code
+const m3a = formatM3A(1200); // '1200'
+const m3a = formatM3A(7700); // '7700' (emergency)
+const m3a = formatM3A();     // '----'
+
+// Mode 4: 4-digit encrypted challenge
+const m4 = formatM4(123);    // '0123'
+
+// Mode 5: 4-digit cryptographic GPS position
+const m5 = formatM5(7654);   // '7654'
+```
+
+## formatM1
+
+Format a 2-digit octal IFF Mode 1 code. Mode 1 identifies the aircraft's mission or type and is only used by military aircraft.
+
+### Reference
+
+```typescript
+function formatM1(value?: string | number): string
+```
+
+#### Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `value` | `string \| number \| undefined` | The IFF Mode 1 code to format. Accepts numbers or strings. |
+
+#### Returns
+
+A 2-digit zero-padded string, or `'--'` if value is null/undefined/empty string.
+
+### Examples
+
+#### Example: Formatting single-digit codes
+
+```typescript
+import { formatM1 } from '@accelint/formatters/iff';
+
+const code = formatM1(5);   // '05'
+const code = formatM1('5'); // '05'
+const code = formatM1(9);   // '09'
+```
+
+#### Example: Formatting two-digit codes
+
+```typescript
+import { formatM1 } from '@accelint/formatters/iff';
+
+const code = formatM1(42); // '42'
+const code = formatM1(10); // '10'
+```
+
+#### Example: Handling missing values
+
+```typescript
+import { formatM1 } from '@accelint/formatters/iff';
+
+const code = formatM1();        // '--'
+const code = formatM1(undefined); // '--'
+const code = formatM1('');       // '--'
+```
+
+> **Good to know:** Mode 1 is a 2-digit octal code (0-77). Values greater than 2 digits are not truncated—they will be returned as-is without validation. Zero values are treated as falsy and return the default value `'--'`.
+
+## formatM2
+
+Format a 4-digit octal IFF Mode 2 code. Mode 2 identifies the aircraft's unit code or tail number and is only used by military aircraft.
+
+### Reference
+
+```typescript
+function formatM2(value?: string | number): string
+```
+
+#### Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `value` | `string \| number \| undefined` | The IFF Mode 2 code to format. Accepts numbers or strings. |
+
+#### Returns
+
+A 4-digit zero-padded string, or `'----'` if value is null/undefined/empty string.
+
+### Examples
+
+#### Example: Formatting unit codes
+
+```typescript
+import { formatM2 } from '@accelint/formatters/iff';
+
+const code = formatM2(123);   // '0123'
+const code = formatM2('123'); // '0123'
+const code = formatM2(7654);  // '7654'
+const code = formatM2(1);     // '0001'
+```
+
+#### Example: Handling missing values
+
+```typescript
+import { formatM2 } from '@accelint/formatters/iff';
+
+const code = formatM2();        // '----'
+const code = formatM2(undefined); // '----'
+const code = formatM2('');       // '----'
+```
+
+> **Good to know:** Mode 2 is a 4-digit octal code (0000-7777). Values greater than 4 digits are not truncated. Zero values are treated as falsy and return the default value `'----'`.
+
+## formatM3A
+
+Format a 4-digit octal IFF Mode 3A code (squawk code). Mode 3A identifies the aircraft and is used by both military and civilian aircraft. Air traffic controllers assign these codes.
+
+### Reference
+
+```typescript
+function formatM3A(value?: string | number): string
+```
+
+#### Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `value` | `string \| number \| undefined` | The IFF Mode 3A squawk code to format. Accepts numbers or strings. |
+
+#### Returns
+
+A 4-digit zero-padded string, or `'----'` if value is null/undefined/empty string.
+
+### Examples
+
+#### Example: Standard squawk codes
+
+```typescript
+import { formatM3A } from '@accelint/formatters/iff';
+
+const code = formatM3A(1200); // '1200' (VFR)
+const code = formatM3A(1201); // '1201'
+const code = formatM3A('1200'); // '1200'
+```
+
+#### Example: Emergency squawk codes
+
+```typescript
+import { formatM3A } from '@accelint/formatters/iff';
+
+const hijack = formatM3A(7500);  // '7500' (hijack/unlawful interference)
+const radio = formatM3A(7600);   // '7600' (radio failure)
+const emergency = formatM3A(7700); // '7700' (general emergency)
+```
+
+#### Example: Handling missing values
+
+```typescript
+import { formatM3A } from '@accelint/formatters/iff';
+
+const code = formatM3A();        // '----'
+const code = formatM3A(undefined); // '----'
+const code = formatM3A('');       // '----'
+```
+
+> **Good to know:** Mode 3A is a 4-digit octal code (0000-7777). Common codes include 1200 (VFR in the US), 7500 (hijack), 7600 (radio failure), and 7700 (emergency). Zero values are treated as falsy and return the default value `'----'`.
+
+## formatM4
+
+Format a 4-digit IFF Mode 4 code. Mode 4 uses an encrypted challenge-response system to determine the delay. This mode is only used by military aircraft.
+
+### Reference
+
+```typescript
+function formatM4(value: string | number): string
+```
+
+#### Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `value` | `string \| number` | The IFF Mode 4 code to format. Accepts numbers or strings. |
+
+#### Returns
+
+A 4-digit zero-padded string, or `'----'` if value is an empty string.
+
+### Examples
+
+#### Example: Formatting Mode 4 codes
+
+```typescript
+import { formatM4 } from '@accelint/formatters/iff';
+
+const code = formatM4(123);   // '0123'
+const code = formatM4('7654'); // '7654'
+const code = formatM4(1);     // '0001'
+```
+
+#### Example: Handling empty strings
+
+```typescript
+import { formatM4 } from '@accelint/formatters/iff';
+
+const code = formatM4(''); // '----'
+```
+
+> **Good to know:** Mode 4 format verification is pending (see source TODO). Unlike other modes, formatM4 requires a value parameter. Zero values are treated as falsy and return the default value `'----'`.
+
+## formatM5
+
+Format a 4-digit IFF Mode 5 code. Mode 5 is a cryptographically secured version of Mode S and ADS-B GPS position. This mode is only used by military aircraft.
+
+### Reference
+
+```typescript
+function formatM5(value: string | number): string
+```
+
+#### Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `value` | `string \| number` | The IFF Mode 5 code to format. Accepts numbers or strings. |
+
+#### Returns
+
+A 4-digit zero-padded string, or `'----'` if value is an empty string.
+
+### Examples
+
+#### Example: Formatting Mode 5 codes
+
+```typescript
+import { formatM5 } from '@accelint/formatters/iff';
+
+const code = formatM5(123);   // '0123'
+const code = formatM5('7654'); // '7654'
+const code = formatM5(1);     // '0001'
+```
+
+#### Example: Handling empty strings
+
+```typescript
+import { formatM5 } from '@accelint/formatters/iff';
+
+const code = formatM5(''); // '----'
+```
+
+> **Good to know:** Mode 5 format verification is pending (see source TODO). Unlike other modes, formatM5 requires a value parameter. Zero values are treated as falsy and return the default value `'----'`.
+
+## Related
+
+- [formatM1](#formatm1) - Format 2-digit Mode 1 mission/type codes
+- [formatM2](#formatm2) - Format 4-digit Mode 2 unit codes
+- [formatM3A](#formatm3a) - Format 4-digit Mode 3A squawk codes
+- [formatM4](#formatm4) - Format 4-digit Mode 4 encrypted codes
+- [formatM5](#formatm5) - Format 4-digit Mode 5 cryptographic codes

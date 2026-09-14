@@ -1,0 +1,326 @@
+---
+title: Accordion
+description: A collapsible content component with expandable sections for organizing content into accessible, space-efficient panels.
+source: packages/design-toolkit/src/components/accordion/index.tsx
+source_sha: 0be8f018724fa924132842ce7e8699365e451f84
+doc_sha: 6e60a7060dad238b955052793a0392d184648db4
+deprecated: false
+updated: 2026-07-13
+---
+
+## Usage
+
+```tsx
+import {
+  Accordion,
+  AccordionHeader,
+  AccordionTrigger,
+  AccordionPanel
+} from '@accelint/design-toolkit';
+
+export function MyComponent() {
+  return (
+    <Accordion>
+      <AccordionHeader>
+        <AccordionTrigger>Section Title</AccordionTrigger>
+      </AccordionHeader>
+      <AccordionPanel>
+        <p>Content goes here</p>
+      </AccordionPanel>
+    </Accordion>
+  );
+}
+```
+
+## Reference
+
+### Accordion
+
+```typescript
+interface AccordionProps extends DisclosureProps {
+  variant?: 'compact' | 'cozy';
+  isDisabled?: boolean;
+  children?: React.ReactNode;
+  className?: string | ((props: RenderProps) => string);
+}
+```
+
+#### Props
+
+| Prop | Type | Default | Required |
+|------|------|---------|----------|
+| `variant` | `'compact' \| 'cozy'` | `'cozy'` | No |
+| `isDisabled` | `boolean` | `false` | No |
+| `children` | `React.ReactNode` | - | Yes |
+| `className` | `string \| (props: RenderProps) => string` | - | No |
+
+#### `variant`
+
+Visual density variant:
+- `cozy` - Spacious layout with larger touch targets (default)
+- `compact` - Dense layout for information-heavy interfaces
+
+### AccordionGroup
+
+Container component for grouping multiple accordions with shared configuration.
+
+```typescript
+interface AccordionGroupProps extends DisclosureGroupProps {
+  variant?: 'compact' | 'cozy';
+  isDisabled?: boolean;
+  children?: React.ReactNode;
+  className?: string | ((props: RenderProps) => string);
+}
+```
+
+#### Props
+
+| Prop | Type | Default | Required |
+|------|------|---------|----------|
+| `variant` | `'compact' \| 'cozy'` | `'cozy'` | No |
+| `isDisabled` | `boolean` | `false` | No |
+| `children` | `React.ReactNode` | - | Yes |
+| `className` | `string \| (props: RenderProps) => string` | - | No |
+
+### AccordionHeader
+
+Header component that provides context and styling for the accordion trigger.
+
+```typescript
+interface AccordionHeaderProps extends ComponentPropsWithRef<'header'> {
+  children?: React.ReactNode;
+  className?: string;
+}
+```
+
+### AccordionTrigger
+
+Clickable button that toggles the accordion panel visibility. Includes an animated chevron icon.
+
+```typescript
+interface AccordionTriggerProps extends Omit<ComponentPropsWithRef<typeof Heading>, 'className'> {
+  children?: React.ReactNode;
+  classNames?: {
+    heading?: string;
+    trigger?: string | ((props: ButtonRenderProps) => string);
+  };
+}
+```
+
+### AccordionPanel
+
+Collapsible content panel that is shown or hidden when the trigger is activated.
+
+```typescript
+interface AccordionPanelProps extends DisclosurePanelProps {
+  children?: React.ReactNode;
+  className?: string | ((props: RenderProps) => string);
+}
+```
+
+### Inherited Props
+
+Accordion inherits all props from React Aria's `Disclosure` component, including:
+- `defaultExpanded` - Whether the accordion is expanded by default
+- `isExpanded` - Controlled expanded state
+- `onExpandedChange` - Called when the expanded state changes
+
+AccordionGroup inherits all props from React Aria's `DisclosureGroup` component, including:
+- `allowsMultipleExpanded` - Allow multiple accordions to be expanded simultaneously
+
+See [React Aria Disclosure](https://react-spectrum.adobe.com/react-aria/Disclosure.html) for full API reference.
+
+## Examples
+
+### Example: Basic accordion
+
+```tsx
+import {
+  Accordion,
+  AccordionHeader,
+  AccordionTrigger,
+  AccordionPanel
+} from '@accelint/design-toolkit';
+
+<Accordion>
+  <AccordionHeader>
+    <AccordionTrigger>Details</AccordionTrigger>
+  </AccordionHeader>
+  <AccordionPanel>
+    <p>This content can be expanded and collapsed.</p>
+  </AccordionPanel>
+</Accordion>
+```
+
+### Example: Compact variant
+
+```tsx
+import {
+  Accordion,
+  AccordionHeader,
+  AccordionTrigger,
+  AccordionPanel
+} from '@accelint/design-toolkit';
+
+<Accordion variant="compact">
+  <AccordionHeader>
+    <AccordionTrigger>Compact Section</AccordionTrigger>
+  </AccordionHeader>
+  <AccordionPanel>
+    <p>Dense layout for information-heavy interfaces.</p>
+  </AccordionPanel>
+</Accordion>
+```
+
+### Example: With icon
+
+```tsx
+import {
+  Accordion,
+  AccordionHeader,
+  AccordionTrigger,
+  AccordionPanel,
+  Icon
+} from '@accelint/design-toolkit';
+import { Document } from '@accelint/icons';
+
+<Accordion>
+  <AccordionHeader>
+    <AccordionTrigger>
+      <Icon><Document /></Icon>
+      Document Settings
+    </AccordionTrigger>
+  </AccordionHeader>
+  <AccordionPanel>
+    <p>Configure document preferences here.</p>
+  </AccordionPanel>
+</Accordion>
+```
+
+### Example: With menu actions
+
+```tsx
+import {
+  Accordion,
+  AccordionHeader,
+  AccordionTrigger,
+  AccordionPanel,
+  Button,
+  Menu,
+  MenuItem,
+  MenuTrigger
+} from '@accelint/design-toolkit';
+
+<Accordion>
+  <AccordionHeader>
+    <AccordionTrigger>Section with Actions</AccordionTrigger>
+    <MenuTrigger>
+      <Button />
+      <Menu>
+        <MenuItem>Edit</MenuItem>
+        <MenuItem>Delete</MenuItem>
+      </Menu>
+    </MenuTrigger>
+  </AccordionHeader>
+  <AccordionPanel>
+    <p>Content with additional menu actions.</p>
+  </AccordionPanel>
+</Accordion>
+```
+
+> **Good to know:** The `Button` in the `AccordionHeader` automatically receives kebab menu icon styling through context.
+
+### Example: Controlled state
+
+```tsx
+import { useState } from 'react';
+import {
+  Accordion,
+  AccordionHeader,
+  AccordionTrigger,
+  AccordionPanel
+} from '@accelint/design-toolkit';
+
+function ControlledAccordion() {
+  const [isExpanded, setIsExpanded] = useState(false);
+
+  return (
+    <Accordion
+      isExpanded={isExpanded}
+      onExpandedChange={setIsExpanded}
+    >
+      <AccordionHeader>
+        <AccordionTrigger>Controlled Section</AccordionTrigger>
+      </AccordionHeader>
+      <AccordionPanel>
+        <p>Expanded state is controlled externally.</p>
+      </AccordionPanel>
+    </Accordion>
+  );
+}
+```
+
+### Example: Grouped accordions
+
+```tsx
+import {
+  AccordionGroup,
+  Accordion,
+  AccordionHeader,
+  AccordionTrigger,
+  AccordionPanel
+} from '@accelint/design-toolkit';
+
+<AccordionGroup variant="compact">
+  <Accordion>
+    <AccordionHeader>
+      <AccordionTrigger>First Section</AccordionTrigger>
+    </AccordionHeader>
+    <AccordionPanel>
+      <p>First section content.</p>
+    </AccordionPanel>
+  </Accordion>
+  <Accordion>
+    <AccordionHeader>
+      <AccordionTrigger>Second Section</AccordionTrigger>
+    </AccordionHeader>
+    <AccordionPanel>
+      <p>Second section content.</p>
+    </AccordionPanel>
+  </Accordion>
+  <Accordion>
+    <AccordionHeader>
+      <AccordionTrigger>Third Section</AccordionTrigger>
+    </AccordionHeader>
+    <AccordionPanel>
+      <p>Third section content.</p>
+    </AccordionPanel>
+  </Accordion>
+</AccordionGroup>
+```
+
+### Example: Disabled state
+
+```tsx
+import {
+  Accordion,
+  AccordionHeader,
+  AccordionTrigger,
+  AccordionPanel
+} from '@accelint/design-toolkit';
+
+<Accordion isDisabled>
+  <AccordionHeader>
+    <AccordionTrigger>Disabled Section</AccordionTrigger>
+  </AccordionHeader>
+  <AccordionPanel>
+    <p>This content cannot be expanded.</p>
+  </AccordionPanel>
+</Accordion>
+```
+
+## Related
+
+- [Dialog](../dialog/index.md) - Modal dialog component for layered content
+- [Tabs](../tabs/index.md) - Tab panel component for organizing content in named sections
+- [Button](../button/index.md) - Button component used in accordion headers

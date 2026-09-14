@@ -1,0 +1,147 @@
+---
+title: "toBoolean"
+description: Convert various values to boolean with smart falsy detection
+source: packages/converters/src/to-boolean/index.ts
+source_sha: 036a730d7f37943d5d0a957c9a40a3eda5404d7b
+doc_sha: b3acb64cf880023696c0170a8738905d460f9db6
+deprecated: false
+updated: 2026-07-14
+---
+
+Returns true for any value not found to be a "false" value. Handles numeric zeros, string literals, and all JavaScript falsy values.
+
+## Usage
+
+```typescript
+import { toBoolean } from '@accelint/converters/to-boolean';
+
+console.log(toBoolean(1));          // true
+console.log(toBoolean(' FaLsE '));  // false
+console.log(toBoolean('  true'));   // true
+console.log(toBoolean('000.000'));  // false
+```
+
+## Reference
+
+```typescript
+function toBoolean(val: unknown): boolean
+```
+
+### Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `val` | `unknown` | The value to convert to a boolean. |
+
+### Returns
+
+Returns `true` if the value is truthy, `false` otherwise.
+
+### False Values
+
+The following are considered "false" values:
+- **Inherently false**: `''` (empty string), `0`, `false`, `undefined`, `null`, `NaN`
+- **Numeric zero**: `'0.000'` - any number of leading or trailing zeros
+- **String literal**: `'false'` - any capitalizations or space-padding
+
+## Examples
+
+### Example: Basic truthy/falsy
+
+```typescript
+import { toBoolean } from '@accelint/converters/to-boolean';
+
+// Inherently falsy values
+console.log(toBoolean(false));      // false
+console.log(toBoolean(0));          // false
+console.log(toBoolean(''));         // false
+console.log(toBoolean(null));       // false
+console.log(toBoolean(undefined));  // false
+console.log(toBoolean(NaN));        // false
+
+// Truthy values
+console.log(toBoolean(true));       // true
+console.log(toBoolean(1));          // true
+console.log(toBoolean('hello'));    // true
+console.log(toBoolean([]));         // true
+console.log(toBoolean({}));         // true
+```
+
+### Example: Numeric zero detection
+
+```typescript
+import { toBoolean } from '@accelint/converters/to-boolean';
+
+// Various representations of zero
+console.log(toBoolean('0'));        // false
+console.log(toBoolean('0.0'));      // false
+console.log(toBoolean('0.000'));    // false
+console.log(toBoolean('000'));      // false
+console.log(toBoolean('00.00'));    // false
+
+// Non-zero numbers
+console.log(toBoolean('1'));        // true
+console.log(toBoolean('0.1'));      // true
+console.log(toBoolean('-1'));       // true
+```
+
+### Example: String literal 'false'
+
+```typescript
+import { toBoolean } from '@accelint/converters/to-boolean';
+
+// Various forms of the string 'false'
+console.log(toBoolean('false'));    // false
+console.log(toBoolean('False'));    // false
+console.log(toBoolean('FALSE'));    // false
+console.log(toBoolean(' false '));  // false
+console.log(toBoolean('  FaLsE ')); // false
+
+// Other strings are truthy
+console.log(toBoolean('true'));     // true
+console.log(toBoolean('True'));     // true
+console.log(toBoolean('yes'));      // true
+console.log(toBoolean('no'));       // true (not special-cased)
+```
+
+### Example: Environment variables
+
+```typescript
+import { toBoolean } from '@accelint/converters/to-boolean';
+
+// Parse environment variable flags
+const enableFeature = toBoolean(process.env.ENABLE_FEATURE);
+const debugMode = toBoolean(process.env.DEBUG);
+
+// Works with various formats:
+// ENABLE_FEATURE=true
+// ENABLE_FEATURE=1
+// ENABLE_FEATURE=yes
+// DEBUG=false
+// DEBUG=0
+```
+
+### Example: Form input validation
+
+```typescript
+import { toBoolean } from '@accelint/converters/to-boolean';
+
+function validateCheckbox(input: string | undefined): boolean {
+  // Handles: "true", "1", "on", or any truthy value
+  // Rejects: "false", "0", "", undefined, null
+  return toBoolean(input);
+}
+
+console.log(validateCheckbox('on'));       // true
+console.log(validateCheckbox('true'));     // true
+console.log(validateCheckbox('1'));        // true
+console.log(validateCheckbox('false'));    // false
+console.log(validateCheckbox('0'));        // false
+console.log(validateCheckbox(undefined));  // false
+```
+
+> **Good to know:** This function is lenient by design. For more restrictive boolean parsing (e.g., only accepting true/false/on/off/yes/no), see the predicates package (`@accelint/predicates`).
+
+## Related
+
+- [booleanToNumber](../boolean-to-number/index.md) - Convert boolean to 1 or 0

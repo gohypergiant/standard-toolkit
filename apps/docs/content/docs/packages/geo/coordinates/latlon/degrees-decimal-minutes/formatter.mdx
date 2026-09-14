@@ -1,0 +1,117 @@
+---
+title: formatDegreesDecimalMinutes
+description: Formats latitude/longitude coordinates in degrees decimal minutes notation.
+source: packages/geo/src/coordinates/latlon/degrees-decimal-minutes/formatter.ts
+source_sha: 79e53f77b98fa6ce30a42f78de54a2e54e7dac72
+doc_sha: 2b67938d9b4aac1d74de39f2ce5da71e556aea8f
+deprecated: false
+updated: 2026-07-13
+---
+
+Formats latitude/longitude coordinates in degrees decimal minutes (DDM) notation with configurable separators and ordinal directions.
+
+## Usage
+
+```typescript
+import { formatDegreesDecimalMinutes } from '@accelint/geo';
+
+// Basic usage with default separator
+formatDegreesDecimalMinutes([37.7749, -122.4194]);
+// "37° 46.4940' N, 122° 25.1640' W"
+```
+
+## Reference
+
+```typescript
+function formatDegreesDecimalMinutes(
+  coordinates: [number, number],
+  config?: FormatConfig
+): string
+
+interface FormatConfig {
+  separator?: string;
+}
+```
+
+### Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `coordinates` | `[number, number]` | Tuple of [latitude, longitude] values in decimal degrees |
+| `config` | `FormatConfig` (optional) | Formatting configuration with optional separator |
+
+### Returns
+
+Returns formatted coordinate string in degrees decimal minutes format with degree symbols, decimal minutes (4 decimal places), minute symbols, and ordinal directions (N/S/E/W).
+
+## Examples
+
+### Example: Basic formatting
+
+```typescript
+import { formatDegreesDecimalMinutes } from '@accelint/geo';
+
+formatDegreesDecimalMinutes([37.7749, -122.4194]);
+// "37° 46.4940' N, 122° 25.1640' W"
+```
+
+### Example: Custom separator
+
+```typescript
+import { formatDegreesDecimalMinutes } from '@accelint/geo';
+
+formatDegreesDecimalMinutes([37.7749, -122.4194], { separator: ' / ' });
+// "37° 46.4940' N / 122° 25.1640' W"
+```
+
+### Example: Northern and Eastern hemispheres
+
+```typescript
+import { formatDegreesDecimalMinutes } from '@accelint/geo';
+
+formatDegreesDecimalMinutes([48.8566, 2.3522]);
+// "48° 51.3960' N, 2° 21.1320' E"
+```
+
+### Example: Southern hemisphere
+
+```typescript
+import { formatDegreesDecimalMinutes } from '@accelint/geo';
+
+formatDegreesDecimalMinutes([-33.8688, 151.2093]);
+// "33° 52.1280' S, 151° 12.5580' E"
+```
+
+### Example: Whole degrees (zero minutes)
+
+```typescript
+import { formatDegreesDecimalMinutes } from '@accelint/geo';
+
+formatDegreesDecimalMinutes([45.0, -90.0]);
+// "45° 0.0000' N, 90° 0.0000' W"
+```
+
+### Example: Boundary values
+
+```typescript
+import { formatDegreesDecimalMinutes } from '@accelint/geo';
+
+// Maximum latitude
+formatDegreesDecimalMinutes([90, 0]);
+// "90° 0.0000' N, 0° 0.0000' E"
+
+// International Date Line
+formatDegreesDecimalMinutes([0, 180]);
+// "0° 0.0000' N, 180° 0.0000' E"
+```
+
+> **Good to know:** The formatter always uses 4 decimal places for minutes, providing precision to approximately 1.85 meters. Negative latitude values are converted to Southern hemisphere (S), and negative longitude values to Western hemisphere (W).
+
+> **Good to know:** DDM format is commonly used in maritime navigation and aviation. It provides a balance between precision and readability compared to Decimal Degrees (DD) and Degrees Minutes Seconds (DMS).
+
+## Related
+
+- [parseDegreesDecimalMinutes](./parser.md) - Parse DDM coordinate strings
+- [formatDecimalDegrees](../decimal-degrees/formatter.md) - Format coordinates in DD notation
+- [formatDegreesMinutesSeconds](../degrees-minutes-seconds/formatter.md) - Format coordinates in DMS notation
+- [createCoordinate](../../coordinate.md) - Create coordinate with automatic format conversion

@@ -1,5 +1,185 @@
 # @accelint/design-toolkit
 
+## 11.0.0
+### Major Changes
+
+- f2631a4: Rename the `ColorPicker` prop `allowNull` to `allowEmptySelection`.
+  
+  Also fix `ColorPicker` selection state when optional empty-selection and custom-color controls are enabled, align the helper control props/docs with runtime behavior, and normalize `ColorPicker` change callbacks to return `Color` objects or `undefined` when cleared.
+- ece7990: Give Table one controlled-state convention: every Table-owned state slice is exposed as `x` / `defaultX` / `onXChange`, uncontrolled by default, controlled when `x` is provided, with change callbacks receiving plain values.
+  
+  BREAKING CHANGES:
+  
+  - `rowSelection` is now the controlled value of the selection slice. It was previously read only on mount as an initial value, so later prop changes never reached the table. For uncontrolled usage pass `defaultRowSelection` as the starting selection and the table manages it from there; keep `rowSelection` (paired with `onRowSelectionChange`) to drive selection from your own state. A static `rowSelection` with no callback now renders a frozen selection.
+  - `onRowSelectionChange` receives the plain next `RowSelectionState` instead of TanStack's updater-or-value. Wiring a `useState` setter keeps working unchanged; remove any `typeof updater === 'function'` branches, which are now dead code.
+  - `onSortChange` receives the plain next `SortingState` in both client-side and `manualSorting` modes, instead of `(columnId, direction)` in `manualSorting` mode only. Read `sort[0]?.id` and `sort[0]?.desc` in place of the old arguments; an empty array means sorting was cleared.
+  
+  New:
+  
+  - `defaultRowSelection`: initial row selection for uncontrolled use.
+  - `rowPinning` / `defaultRowPinning` / `onRowPinningChange`: the row pinning slice (previously internal) is now controllable; the row kebab Pin / Unpin actions are unchanged.
+  - `sort` / `defaultSort`: the sort slice is now controllable. In `manualSorting` mode the sort indicator, the menu items' disabled states, and `aria-sort` now reflect the active sort.
+  
+  The state value types (`RowSelectionState`, `RowPinningState`, `SortingState`) are not re-exported; import them from the `@tanstack/react-table` peer dependency.
+
+### Minor Changes
+
+- a514e00: feat(table): `variant` density prop (`cozy` | `compact` | `crammed`, default
+  `cozy`) applied to header cells, body cells, meta columns, and kebab menus;
+  new shared `DensityVariant` type in `lib/types`, aliased by Tree/List/Menu/
+  Accordion under their existing names; new `DEFAULT_TABLE_VARIANT` constant.
+  Crammed cells clip overflowing content with an ellipsis so long values
+  cannot bleed into neighboring cells under a fixed table layout (`fullWidth`).
+  No breaking changes.
+- 99cc584: Enable coordinate field to take in icon prop
+
+### Patch Changes
+
+- dcaba41: `CoordinateField` now computes its display segments from `@accelint/geo`'s coordinate parts API (`toDdmParts`/`toDmsParts`/`toMgrsParts`/`toUtmParts`) instead of formatting a coordinate to a string and parsing it back apart with regexes. The five private regex parse-back helpers were removed, and `getAllCoordinateFormats` no longer builds a `createCoordinate` object. The public `parseCoordinateStringToSegments`, `convertDDToDisplaySegments`, and `getAllCoordinateFormats` keep their signatures, segment shapes, and ordering.
+  
+  Two outputs change, both fixes:
+  
+  - **DDM/DMS carry.** Values within rounding distance of a minute or second boundary now carry into the next unit (`40.99999999°` renders as `41° 0'` instead of the invalid `40° 60'`).
+  - **DD precision.** Decimal-degrees segments and the DD full-format string share one renderer: fixed notation, 10 decimal places, trailing zeros trimmed. Float artifacts round away as before, and magnitudes below `1e-6` now display as `0.0000001` rather than `1e-7` (and, with the matching `@accelint/geo` fix, parse back — within the DD parser's 10-decimal limit).
+  - **`parseCoordinateStringToSegments` input.** Its patterns are now anchored: the string must be a whole coordinate (surrounding whitespace allowed, surrounding text not). This removes polynomial regex backtracking on pathological input; every coordinate shape it accepted before still parses.
+- c573231: Replace the hand-rolled signed-modulo idioms in the Gantt `roundMsToInterval` date utility with `@accelint/math`'s `wrap` primitive (adds `@accelint/math` as a dependency). Output is unchanged for every input, including negative timestamps; this only consolidates the sub-second, interval, and into-day boundary math onto one tested implementation.
+- Updated dependencies [747ea86]
+- Updated dependencies [dcaba41]
+- Updated dependencies [9345871]
+- Updated dependencies [c573231]
+- Updated dependencies [8f1842a]
+  - @accelint/geo@0.7.0
+  - @accelint/math@0.2.0
+  - @accelint/temporal@0.1.5
+  - @accelint/converters@1.0.2
+  - @accelint/design-foundation@3.2.1
+
+## 10.1.0
+### Minor Changes
+
+- 2a62ec9: Add new Stepper component family for multi-step workflows with the following features:
+  
+  - **Stepper**: Root context provider for state management
+  - **StepperList**: Container for step navigation with horizontal/vertical orientation
+  - **StepperStep**: Individual step button with current/visited/disabled states
+  - **StepperPanel**: Content panel with conditional rendering (unmounts inactive panels)
+  - **StepperBack/StepperNext**: Context-aware navigation buttons with auto-disabled boundaries
+  - **useStepperState**: Custom state hook with controlled/uncontrolled modes
+  
+  Key capabilities:
+  - Controlled and uncontrolled state modes (`currentStep`/`defaultStep`)
+  - Bidirectional completion tracking (forward marks visited, backward removes visited state)
+  - Sequential and direct navigation with disabled step blocking
+  - Synchronous validation callback support (`onBeforeStepChange`)
+  - ARIA wizard pattern with keyboard navigation and live region announcements
+  - Flexible composition with separate list and panel positioning
+  - CSS Modules styling with design-foundation tokens and data attributes
+  - Key type consistency (string | number) matching Tabs pattern
+  
+  Exports: `Stepper`, `StepperList`, `StepperStep`, `StepperPanel`, `StepperBack`, `StepperNext`, `useStepperState`
+
+## 10.0.0
+### Major Changes
+
+- 49a05f1: Reimplement `FloatingCard` without dockview.
+  
+  Dragging, resizing, and stacking order are now handled directly by the
+  component, so `dockview-react` is no longer a peer dependency and no longer
+  needs to be installed.
+  
+  BREAKING CHANGES:
+  
+  - The `dockview-react` peer dependency has been removed. Applications that
+    installed it only for `FloatingCard` can drop it.
+  - `useFloatingCard()` no longer returns `api`. It previously exposed the
+    underlying `DockviewApi` instance, which no longer exists.
+  - `useFloatingCard()` no longer returns `addRef` or `removeRef`. Registering a
+    card is internal wiring between `FloatingCard` and its provider, so it moved
+    off the value applications consume. Nothing else called them.
+  
+  `useFloatingCard()` still returns `cards`, `closeCard`, `togglePinCard`,
+  `isPinned`, and `subscribeToPinState`, all unchanged.
+  
+  Every existing `FloatingCard` and `FloatingCardProvider` prop keeps its
+  behavior, so applications that do not read `api` need no code changes.
+  
+  New:
+  
+  - `FloatingCardProvider` accepts a `bounds` prop of `'provider'` (default) or
+    `'viewport'`, controlling the region cards are confined to while dragging and
+    resizing.
+  - Custom header actions accept a `label`, which becomes the button's accessible
+    name. Action buttons render an icon with no visible text, so without it a
+    screen reader announces only "button".
+  
+  Behavior notes:
+  
+  - Cards can be resized from any edge or corner. Pinning a card continues to
+    freeze dragging and now also freezes resizing.
+- f0aa4e9: Upgrade Table to TanStack Table v9 (`@tanstack/react-table` peer dependency is now `^9.0.0`).
+  
+  BREAKING CHANGES for Table consumers:
+  
+  - The `@tanstack/react-table` peer dependency must be upgraded to `^9.0.0`.
+  - Column definitions are now typed against the Table's feature set. Replace
+    `createColumnHelper<TData>()` with the new `createTableColumnHelper<TData>()`
+    export, or pass the new `TableFeatures` type as the first generic of TanStack
+    types (`ColumnDef<TableFeatures, TData, TValue>`, `CellContext<TableFeatures,
+    TData, TValue>`, etc.). The registered feature set is exported as
+    `tableFeatures`.
+  - The `columns` prop is now `ColumnDef<TableFeatures, T, any>[]` (mirroring
+    TanStack's own columns typing) instead of a per-key mapped type; column
+    helper output assigns to it directly.
+  - `TableBodyProps`, `TableRowProps`, `TableCellProps`, `TableHeaderCellProps`,
+    and `TableHeaderProps` now constrain their generic to TanStack's `RowData`
+    (`Record<string, any> | Array<any>`).
+  - `RowSelectionState` in v9 is `Record<string, true>`; update any
+    `Record<string, boolean>` selection state accordingly.
+  - Behavior note: TanStack Table v9 renders function `cell`/`header` renderers
+    as React components (v8 called them inline). A column definition recreated
+    on each render therefore remounts its cells on each render, resetting any
+    internal cell state (open menus, focus). Define columns at module scope or
+    memoize them with stable dependencies.
+
+### Minor Changes
+
+- f0aa4e9: Table's manual row ordering (Move Up / Move Down) is now implemented as a
+  TanStack Table custom feature. New `rowOrderingFeature` export (with
+  `RowOrderingState`, `RowOrderingTableState`, `RowOrderingTableOptions`,
+  `RowOrderingTableApis`, and `RowOrderingRowApis` types) registers a
+  `rowOrdering` state slice, an identity-stable `table.setRowOrdering` state
+  setter, and `row.moveUp()` / `row.moveDown()` row APIs.
+  
+  Fixes: an open row kebab menu no longer closes when the `data` prop updates
+  mid-interaction (the move callbacks previously lived in component state, and
+  their churn remounted the kebab cells on every data change).
+  
+  Fixes: moves now interact correctly with pinned rows. Pinned rows render in
+  their own region, so moving relative to one had no visible effect; moves now
+  skip pinned neighbors, and the new `row.getCanMoveUp()` / `row.getCanMoveDown()`
+  APIs (which drive the kebab menu's disabled states) report whether an unpinned
+  row exists to move past.
+- f0aa4e9: Table now reflects `data` prop changes without a remount (e.g. polling or
+  refetching). Previously the data array was copied into internal state on first
+  render, so updates were ignored unless consumers forced a remount with a `key`.
+  Manual row reordering (Move Up / Move Down) is preserved across data updates;
+  rows added after a manual reorder append at the end. The `key` remount pattern
+  still works but is no longer necessary.
+
+### Patch Changes
+
+- 4ff8007: Fixes an issue in the Gantt component where ref-based callbacks would prevent subscriptions from firing whenever callback dependencies changed. This addresses observed layout/display bugs when modifying props.
+
+## 9.13.0
+### Minor Changes
+
+- df79f57: Enhance Notice and NoticeList to consume metadata in action callbacks
+
+### Patch Changes
+
+- 884b370: - Add space to loading skeleton of flashcard
+  - Add space to the TimeField when rendering AM/PM
+
 ## 9.12.0
 ### Minor Changes
 

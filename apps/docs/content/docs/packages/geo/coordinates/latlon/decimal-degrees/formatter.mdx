@@ -1,0 +1,106 @@
+---
+title: formatDecimalDegrees
+description: Formats latitude/longitude coordinates in decimal degrees notation with configurable separators.
+source: packages/geo/src/coordinates/latlon/decimal-degrees/formatter.ts
+source_sha: 9b0bda7ded16af929c451e875c4c041313fec896
+doc_sha: 1bf41a2e37ade59c70c1a6ae645af8841eec87f5
+deprecated: false
+updated: 2026-07-13
+---
+
+Formats latitude/longitude coordinates in decimal degrees notation with configurable separators and ordinal directions.
+
+## Usage
+
+```typescript
+import { formatDecimalDegrees } from '@accelint/geo';
+
+// Basic usage with default separator
+formatDecimalDegrees([37.7749, -122.4194]);
+// '37.774900° N, 122.419400° W'
+```
+
+## Reference
+
+```typescript
+function formatDecimalDegrees(
+  coordinates: [number, number],
+  config?: FormatConfig
+): string
+
+interface FormatConfig {
+  separator?: string;
+}
+```
+
+### Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `coordinates` | `[number, number]` | Tuple of [latitude, longitude] values in decimal degrees |
+| `config` | `FormatConfig` (optional) | Formatting configuration with optional separator |
+
+### Returns
+
+Returns formatted coordinate string in decimal degrees format with 6 decimal places, degree symbols, and ordinal directions (N/S/E/W).
+
+## Examples
+
+### Example: Basic formatting
+
+```typescript
+import { formatDecimalDegrees } from '@accelint/geo';
+
+formatDecimalDegrees([37.7749, -122.4194]);
+// '37.774900° N, 122.419400° W'
+```
+
+### Example: Custom separator
+
+```typescript
+import { formatDecimalDegrees } from '@accelint/geo';
+
+formatDecimalDegrees([37.7749, -122.4194], { separator: ' / ' });
+// '37.774900° N / 122.419400° W'
+```
+
+### Example: Northern and Eastern hemispheres
+
+```typescript
+import { formatDecimalDegrees } from '@accelint/geo';
+
+formatDecimalDegrees([48.8566, 2.3522]);
+// '48.856600° N, 2.352200° E'
+```
+
+### Example: Southern hemisphere
+
+```typescript
+import { formatDecimalDegrees } from '@accelint/geo';
+
+formatDecimalDegrees([-33.8688, 151.2093]);
+// '33.868800° S, 151.209300° E'
+```
+
+### Example: Boundary values
+
+```typescript
+import { formatDecimalDegrees } from '@accelint/geo';
+
+// Maximum latitude
+formatDecimalDegrees([90, 0]);
+// '90.000000° N, 0.000000° E'
+
+// International Date Line
+formatDecimalDegrees([0, 180]);
+// '0.000000° N, 180.000000° E'
+```
+
+> **Good to know:** The formatter always uses 6 decimal places for consistency and precision. Negative latitude values are converted to Southern hemisphere (S), and negative longitude values to Western hemisphere (W).
+
+## Related
+
+- [parseDecimalDegrees](./parser.md) - Parse decimal degrees coordinate strings
+- [formatDegreesDecimalMinutes](../degrees-decimal-minutes/formatter.md) - Format coordinates in DDM notation
+- [formatDegreesMinutesSeconds](../degrees-minutes-seconds/formatter.md) - Format coordinates in DMS notation
+- [createCoordinate](../../coordinate.md) - Create coordinate with automatic format conversion

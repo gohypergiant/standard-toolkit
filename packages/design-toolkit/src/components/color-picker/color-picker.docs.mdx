@@ -30,7 +30,9 @@ A grid of interactive color swatches for selecting from a predefined palette. Bu
 
 ### Controlled
 ```tsx
-const [selectedColor, setSelectedColor] = useState('#30D27E');
+import { parseColor } from 'react-aria-components';
+
+const [selectedColor, setSelectedColor] = useState(parseColor('#30D27E'));
 
 <ColorPicker
   items={['#ECECE6', '#898989', '#62a6ff', '#30D27E', '#FCA400', '#D4231D']}
@@ -92,7 +94,9 @@ Extends [`ColorSwatchPicker`](https://react-spectrum.adobe.com/react-aria/ColorS
 | `isRequired` | `boolean` | - | When true, the "(optional)" suffix is hidden from the label |
 | `value` | `Color \| string` | - | Controlled selected color |
 | `defaultValue` | `Color \| string \| Rgba255Tuple` | - | Default selected color |
-| `onChange` | `(color: Color) => void` | - | Called when selection changes |
+| `onChange` | `(color: Color \| undefined) => void` | - | Called when selection changes; `undefined` is only emitted when `allowEmptySelection` is enabled |
+| `allowEmptySelection` | `boolean` | `false` | Shows a leading "No color" control that clears the selection |
+| `showCustomPicker` | `boolean` | `false` | Shows a trailing custom color control with HSB and RGB inputs |
 | `classNames` | `object` | - | Custom classes (see below) |
 
 **classNames:**

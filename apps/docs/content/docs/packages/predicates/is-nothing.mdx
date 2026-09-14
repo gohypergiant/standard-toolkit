@@ -1,0 +1,111 @@
+---
+title: "isNothing"
+description: Type guard that determines if a value is null or undefined
+source: packages/predicates/src/is-nothing/index.ts
+source_sha: 17bac92915e535cfe59a317fe31bef56d10a77ba
+doc_sha: 76dd0be26ac52a57f48b73e3ce36ab5821061ec8
+deprecated: false
+updated: 2026-07-13
+---
+
+## Usage
+
+```typescript
+import { isNothing } from '@accelint/predicates/is-nothing';
+
+isNothing(null);       // true
+isNothing(undefined);  // true
+isNothing(0);          // false
+isNothing('');         // false
+isNothing(false);      // false
+```
+
+## Reference
+
+```typescript
+function isNothing(val: unknown): boolean
+```
+
+### Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `val` | `unknown` | Value to check |
+
+### Returns
+
+Returns `true` if the value is `null` or `undefined`, `false` otherwise.
+
+## Examples
+
+### Example: Early return for missing values
+
+```typescript
+import { isNothing } from '@accelint/predicates/is-nothing';
+
+function processUser(user: User | null | undefined) {
+  if (isNothing(user)) {
+    console.log('No user provided');
+    return;
+  }
+  
+  // Safe to use user here
+  console.log(user.name);
+}
+```
+
+### Example: Filtering out null/undefined from arrays
+
+```typescript
+import { isNothing } from '@accelint/predicates/is-nothing';
+
+const values = [1, null, 2, undefined, 3, 0, false];
+const notNull = values.filter(v => !isNothing(v));
+// [1, 2, 3, 0, false]
+```
+
+### Example: Validating required fields
+
+```typescript
+import { isNothing } from '@accelint/predicates/is-nothing';
+
+interface FormData {
+  name?: string;
+  email?: string;
+  phone?: string;
+}
+
+function validateRequired(data: FormData): boolean {
+  return !isNothing(data.name) && !isNothing(data.email);
+}
+
+validateRequired({ name: 'John', email: 'john@example.com' }); // true
+validateRequired({ name: 'John' }); // false
+validateRequired({ email: 'john@example.com' }); // false
+```
+
+### Example: Default value assignment
+
+```typescript
+import { isNothing } from '@accelint/predicates/is-nothing';
+
+function getConfigValue(value: string | null | undefined): string {
+  if (isNothing(value)) {
+    return 'default-config';
+  }
+  return value;
+}
+
+getConfigValue(null);      // "default-config"
+getConfigValue(undefined); // "default-config"
+getConfigValue('custom');  // "custom"
+getConfigValue('');        // "" (empty string is not nothing)
+```
+
+> **Good to know:** Uses loose equality (`==`) rather than strict equality (`===`), so it matches both `null` and `undefined` with a single comparison. This is one of the rare cases where loose equality is preferred for brevity.
+
+## Related
+
+- [isSomething](../is-something/index.md) - Opposite check: value is not null or undefined
+- [isString](../is-string/index.md) - Check if value is a string
+- [isNumber](../is-number/index.md) - Check if value is a number

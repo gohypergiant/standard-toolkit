@@ -1,0 +1,335 @@
+---
+title: Tabs
+description: Tab navigation for organizing content into multiple sections
+source: packages/design-toolkit/src/components/tabs/index.tsx
+source_sha: 5ae092eae93a3b58d09f3968ad442b48e802177f
+doc_sha: pending
+deprecated: false
+updated: 2026-07-13
+---
+
+Tab navigation component for organizing content into multiple sections with support for horizontal and vertical orientations.
+
+## Usage
+
+```tsx
+import { Tabs, TabList, Tab, TabPanel } from '@accelint/design-toolkit';
+
+export function MyComponent() {
+  return (
+    <Tabs>
+      <TabList>
+        <Tab id="overview">Overview</Tab>
+        <Tab id="settings">Settings</Tab>
+        <Tab id="help">Help</Tab>
+      </TabList>
+      <TabPanel id="overview">
+        <h2>Overview</h2>
+        <p>Overview content goes here</p>
+      </TabPanel>
+      <TabPanel id="settings">
+        <h2>Settings</h2>
+        <p>Settings content goes here</p>
+      </TabPanel>
+      <TabPanel id="help">
+        <h2>Help</h2>
+        <p>Help content goes here</p>
+      </TabPanel>
+    </Tabs>
+  );
+}
+```
+
+## Reference
+
+```typescript
+interface TabsProps extends AriaTabsProps {
+  children?: React.ReactNode;
+  className?: string;
+  orientation?: 'horizontal' | 'vertical';
+  // When orientation is 'horizontal':
+  align?: 'start' | 'center' | 'end';
+  flex?: boolean;
+}
+```
+
+### Props
+
+| Prop | Type | Default | Required |
+|------|------|---------|----------|
+| `children` | `React.ReactNode` | - | Yes |
+| `orientation` | `'horizontal' \| 'vertical'` | `'horizontal'` | No |
+| `align` | `'start' \| 'center' \| 'end'` | `'start'` | No |
+| `flex` | `boolean` | `true` | No |
+| `className` | `string` | - | No |
+| `defaultSelectedKey` | `Key` | - | No |
+| `selectedKey` | `Key` | - | No |
+| `onSelectionChange` | `(key: Key) => void` | - | No |
+| `isDisabled` | `boolean` | `false` | No |
+
+#### `orientation`
+
+Controls layout direction of the tabs:
+- `horizontal` - Tabs appear in a row above content (default)
+- `vertical` - Tabs appear in a column beside content
+
+#### `align`
+
+Content alignment within each tab. Only applicable when `orientation` is `'horizontal'`.
+- `start` - Left-aligned content (default)
+- `center` - Center-aligned content
+- `end` - Right-aligned content
+
+#### `flex`
+
+When `true`, tabs flex to fill available space up to a maximum width. Only applicable when `orientation` is `'horizontal'`.
+
+### Inherited Props
+
+Tabs inherits props from React Aria's `Tabs`, including:
+- `selectedKey` / `defaultSelectedKey` - Control selected tab
+- `onSelectionChange` - Called when selection changes
+- `isDisabled` - Disables all tabs
+
+See [React Aria Tabs](https://react-spectrum.adobe.com/react-aria/Tabs.html) for full API reference.
+
+## Sub-components
+
+### TabList
+
+Container for Tab components. Must be a direct child of Tabs.
+
+```tsx
+<TabList>
+  <Tab id="one">First</Tab>
+  <Tab id="two">Second</Tab>
+</TabList>
+```
+
+### Tab
+
+Individual tab element. The `id` prop must match the corresponding TabPanel.
+
+```tsx
+<Tab id="profile" isDisabled>Profile</Tab>
+```
+
+### TabPanel
+
+Content panel displayed when its corresponding Tab is selected. The `id` prop must match a Tab.
+
+```tsx
+<TabPanel id="profile">
+  <h2>Profile Information</h2>
+  <p>User profile content</p>
+</TabPanel>
+```
+
+## Examples
+
+### Example: Basic tabs
+
+```tsx
+import { Tabs, TabList, Tab, TabPanel } from '@accelint/design-toolkit';
+
+<Tabs>
+  <TabList>
+    <Tab id="home">Home</Tab>
+    <Tab id="profile">Profile</Tab>
+    <Tab id="messages">Messages</Tab>
+  </TabList>
+  <TabPanel id="home">Home content</TabPanel>
+  <TabPanel id="profile">Profile content</TabPanel>
+  <TabPanel id="messages">Messages content</TabPanel>
+</Tabs>
+```
+
+### Example: Tabs with icons
+
+```tsx
+import { Tabs, TabList, Tab, TabPanel, Icon } from '@accelint/design-toolkit';
+import { Add, Check, Group } from '@accelint/icons';
+
+<Tabs>
+  <TabList>
+    <Tab id="create">
+      <Icon><Add /></Icon>
+      Create
+    </Tab>
+    <Tab id="review">
+      <Icon><Check /></Icon>
+      Review
+    </Tab>
+    <Tab id="team">
+      <Icon><Group /></Icon>
+      Team
+    </Tab>
+  </TabList>
+  <TabPanel id="create">Create content</TabPanel>
+  <TabPanel id="review">Review content</TabPanel>
+  <TabPanel id="team">Team content</TabPanel>
+</Tabs>
+```
+
+### Example: Icon-only tabs
+
+```tsx
+import { Tabs, TabList, Tab, TabPanel, Icon } from '@accelint/design-toolkit';
+import { Home, Settings, Bell } from '@accelint/icons';
+
+<Tabs>
+  <TabList>
+    <Tab id="home" aria-label="Home">
+      <Icon><Home /></Icon>
+    </Tab>
+    <Tab id="settings" aria-label="Settings">
+      <Icon><Settings /></Icon>
+    </Tab>
+    <Tab id="notifications" aria-label="Notifications">
+      <Icon><Bell /></Icon>
+    </Tab>
+  </TabList>
+  <TabPanel id="home">Home content</TabPanel>
+  <TabPanel id="settings">Settings content</TabPanel>
+  <TabPanel id="notifications">Notifications content</TabPanel>
+</Tabs>
+```
+
+> **Good to know:** When using icon-only tabs, always provide an `aria-label` on each Tab for accessibility.
+
+### Example: Vertical orientation
+
+```tsx
+import { Tabs, TabList, Tab, TabPanel } from '@accelint/design-toolkit';
+
+<Tabs orientation="vertical">
+  <TabList>
+    <Tab id="general">General</Tab>
+    <Tab id="security">Security</Tab>
+    <Tab id="notifications">Notifications</Tab>
+  </TabList>
+  <TabPanel id="general">General settings</TabPanel>
+  <TabPanel id="security">Security settings</TabPanel>
+  <TabPanel id="notifications">Notification preferences</TabPanel>
+</Tabs>
+```
+
+### Example: Center-aligned tabs
+
+```tsx
+import { Tabs, TabList, Tab, TabPanel } from '@accelint/design-toolkit';
+
+<Tabs align="center">
+  <TabList>
+    <Tab id="one">First</Tab>
+    <Tab id="two">Second</Tab>
+    <Tab id="three">Third</Tab>
+  </TabList>
+  <TabPanel id="one">First panel</TabPanel>
+  <TabPanel id="two">Second panel</TabPanel>
+  <TabPanel id="three">Third panel</TabPanel>
+</Tabs>
+```
+
+### Example: Non-flexing tabs
+
+```tsx
+import { Tabs, TabList, Tab, TabPanel } from '@accelint/design-toolkit';
+
+<Tabs flex={false}>
+  <TabList>
+    <Tab id="short">A</Tab>
+    <Tab id="medium">Medium</Tab>
+    <Tab id="long">Very Long Tab Name</Tab>
+  </TabList>
+  <TabPanel id="short">Short panel</TabPanel>
+  <TabPanel id="medium">Medium panel</TabPanel>
+  <TabPanel id="long">Long panel</TabPanel>
+</Tabs>
+```
+
+### Example: Controlled tabs
+
+```tsx
+import { useState } from 'react';
+import { Tabs, TabList, Tab, TabPanel, Button } from '@accelint/design-toolkit';
+
+function ControlledTabs() {
+  const [selectedTab, setSelectedTab] = useState('overview');
+
+  return (
+    <>
+      <div className="mb-m flex gap-s">
+        <Button onPress={() => setSelectedTab('overview')}>Show Overview</Button>
+        <Button onPress={() => setSelectedTab('details')}>Show Details</Button>
+      </div>
+      <Tabs selectedKey={selectedTab} onSelectionChange={setSelectedTab}>
+        <TabList>
+          <Tab id="overview">Overview</Tab>
+          <Tab id="details">Details</Tab>
+          <Tab id="history">History</Tab>
+        </TabList>
+        <TabPanel id="overview">Overview content</TabPanel>
+        <TabPanel id="details">Details content</TabPanel>
+        <TabPanel id="history">History content</TabPanel>
+      </Tabs>
+    </>
+  );
+}
+```
+
+### Example: Disabled tabs
+
+```tsx
+import { Tabs, TabList, Tab, TabPanel } from '@accelint/design-toolkit';
+
+<Tabs>
+  <TabList>
+    <Tab id="active">Active Tab</Tab>
+    <Tab id="disabled" isDisabled>Disabled Tab</Tab>
+    <Tab id="another">Another Tab</Tab>
+  </TabList>
+  <TabPanel id="active">Active content</TabPanel>
+  <TabPanel id="disabled">Disabled content</TabPanel>
+  <TabPanel id="another">Another content</TabPanel>
+</Tabs>
+```
+
+### Example: Tabs with default selection
+
+```tsx
+import { Tabs, TabList, Tab, TabPanel } from '@accelint/design-toolkit';
+
+<Tabs defaultSelectedKey="settings">
+  <TabList>
+    <Tab id="profile">Profile</Tab>
+    <Tab id="settings">Settings</Tab>
+    <Tab id="billing">Billing</Tab>
+  </TabList>
+  <TabPanel id="profile">Profile content</TabPanel>
+  <TabPanel id="settings">Settings content (default)</TabPanel>
+  <TabPanel id="billing">Billing content</TabPanel>
+</Tabs>
+```
+
+### Example: Responding to selection changes
+
+```tsx
+import { Tabs, TabList, Tab, TabPanel } from '@accelint/design-toolkit';
+
+<Tabs onSelectionChange={(key) => console.log('Selected:', key)}>
+  <TabList>
+    <Tab id="analytics">Analytics</Tab>
+    <Tab id="reports">Reports</Tab>
+    <Tab id="exports">Exports</Tab>
+  </TabList>
+  <TabPanel id="analytics">Analytics content</TabPanel>
+  <TabPanel id="reports">Reports content</TabPanel>
+  <TabPanel id="exports">Exports content</TabPanel>
+</Tabs>
+```
+
+## Related
+
+- [Button](../button/index.md) - Action component sometimes used in tab panels
+- [Icon](../icon/index.md) - Used for icon tabs

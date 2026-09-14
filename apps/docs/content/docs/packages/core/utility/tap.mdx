@@ -1,0 +1,176 @@
+---
+title: "tap"
+description: Execute a function for side effects and return the original value
+source: utility/tap/index.ts
+source_sha: d0934ace7d3dadcbf468c0de03d5ff4da93c8a31
+doc_sha: 894fb4da50e0b19204dee66a0fbc2f8b50b3f4d9
+deprecated: false
+updated: 2026-07-13
+---
+
+## Usage
+
+```typescript
+import { tap } from '@accelint/core';
+
+// Basic logging
+tap(console.log)('hello');
+// Logs: "hello"
+// Returns: "hello"
+
+// In a pipeline
+pipe(
+  getValue,
+  tap(console.log), // Log intermediate value
+  transform,
+  tap(console.log), // Log result
+);
+```
+
+## Reference
+
+```typescript
+function tap<T, R>(fn: (v: T) => R): (val: T) => T
+```
+
+### Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `fn` | `(v: T) => R` | The function to call with the value |
+
+### Returns
+
+Returns a curried function that accepts a value, passes it to the given function, and returns the value unchanged.
+
+### Type Parameters
+
+- `T` - The type of the input value
+- `R` - The return type of the given function (ignored)
+
+## Examples
+
+### Example: Debugging pipelines
+
+```typescript
+import { tap, pipe, map, filter } from '@accelint/core';
+
+const processNumbers = pipe(
+  tap((x) => console.log('Input:', x)),
+  map((x: number) => x * 2),
+  tap((x) => console.log('After map:', x)),
+  filter((x: number) => x > 10),
+  tap((x) => console.log('After filter:', x))
+);
+
+processNumbers([1, 5, 8, 12]);
+// Logs:
+// Input: [1, 5, 8, 12]
+// After map: [2, 10, 16, 24]
+// After filter: [16, 24]
+// Returns: [16, 24]
+```
+
+### Example: Logging in method chains
+
+```typescript
+import { tap } from '@accelint/core';
+
+const result = [1, 2, 3, 4, 5]
+  .map((x) => x * 2)
+  .map(tap(console.log)) // Log each value
+  .filter((x) => x > 5);
+
+// Logs: 2, 4, 6, 8, 10
+// Returns: [6, 8, 10]
+```
+
+### Example: Side effects without breaking flow
+
+```typescript
+import { tap } from '@accelint/core';
+
+const analytics: number[] = [];
+
+const trackValue = tap((value: number) => {
+  analytics.push(value);
+});
+
+const result = [1, 2, 3, 4, 5]
+  .map(trackValue)
+  .reduce((a, b) => a + b, 0);
+
+console.log(analytics); // [1, 2, 3, 4, 5]
+console.log(result);    // 15
+```
+
+### Example: Validation logging
+
+```typescript
+import { tap, pipe } from '@accelint/core';
+
+interface User {
+  id: number;
+  name: string;
+  email: string;
+}
+
+const validateUser = pipe(
+  tap((user: User) => {
+    if (!user.email.includes('@')) {
+      console.warn(`Invalid email for user ${user.id}`);
+    }
+  }),
+  tap((user: User) => {
+    if (user.name.length < 2) {
+      console.warn(`Short name for user ${user.id}`);
+    }
+  })
+);
+
+const user = { id: 1, name: 'A', email: 'invalid' };
+validateUser(user);
+// Logs warnings but returns user unchanged
+```
+
+### Example: Database operation logging
+
+```typescript
+import { tap } from '@accelint/core';
+
+const logQuery = tap((query: string) => {
+  console.log(`[SQL] ${query}`);
+});
+
+const executeQuery = (query: string) =>
+  logQuery(query); // Log and pass through
+
+executeQuery('SELECT * FROM users');
+// Logs: "[SQL] SELECT * FROM users"
+// Returns: "SELECT * FROM users"
+```
+
+### Example: Conditional logging
+
+```typescript
+import { tap } from '@accelint/core';
+
+const debugLog = process.env.DEBUG === 'true'
+  ? tap(console.log)
+  : <T>(x: T) => x; // No-op in production
+
+const result = pipe(
+  getValue,
+  debugLog, // Only logs in debug mode
+  transform
+);
+```
+
+> **Good to know:** `tap` is designed for side effects—the return value of the tapped function is ignored. The original value always passes through unchanged. This makes it perfect for logging, debugging, and analytics without disrupting data flow.
+
+## Related
+
+- [pipe](../../composition/pipe/index.md) - Compose functions left-to-right
+- [compose](../../composition/compose/index.md) - Compose functions right-to-left
+- [identity](../../combinators/identity/index.md) - Returns its input unchanged
+- [noop](../noop/index.md) - No-operation function
