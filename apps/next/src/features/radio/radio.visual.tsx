@@ -24,9 +24,9 @@ createVisualTestScenarios(
   PROP_COMBOS.map(({ name, props }) => ({
     name,
     render: () => (
-      <RadioGroup label="Options" {...props}>
-        <Radio value="a">Option A</Radio>
-        <Radio value="b">Option B</Radio>
+      <RadioGroup label='Options' {...props}>
+        <Radio value='a'>Option A</Radio>
+        <Radio value='b'>Option B</Radio>
       </RadioGroup>
     ),
     screenshotName: `radio-group-${name}.png`,
@@ -44,11 +44,11 @@ createInteractiveVisualTests({
   testId: 'test-radio',
   renderComponent: ({ defaultValue, isDisabled }: RadioInteractiveProps) => (
     <RadioGroup
-      aria-label="Options"
+      aria-label='Options'
       defaultValue={defaultValue}
       isDisabled={isDisabled}
     >
-      <Radio value="a">Option A</Radio>
+      <Radio value='a'>Option A</Radio>
     </RadioGroup>
   ),
   variants: [

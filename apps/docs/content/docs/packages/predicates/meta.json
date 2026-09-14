@@ -1,7 +1,4 @@
 {
   "title": "@accelint/predicates",
-  "pages": [
-    "index",
-    "..."
-  ]
+  "pages": ["index", "..."]
 }

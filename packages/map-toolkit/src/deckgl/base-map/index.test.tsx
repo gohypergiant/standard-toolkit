@@ -325,20 +325,20 @@ describe('BaseMap', () => {
       { view: '2D' as const, maxPitch: 0 },
       { view: '2.5D' as const, maxPitch: 85 },
       { view: '3D' as const, maxPitch: 0 },
-    ])('keeps MapLibre rotate/pitch off and sets maxPitch for the $view view', ({
-      view,
-      maxPitch,
-    }) => {
-      useFakeMap(createFakeMap());
+    ])(
+      'keeps MapLibre rotate/pitch off and sets maxPitch for the $view view',
+      ({ view, maxPitch }) => {
+        useFakeMap(createFakeMap());
 
-      render(<BaseMap id={uuid()} defaultView={view} />);
+        render(<BaseMap id={uuid()} defaultView={view} />);
 
-      expect(capturedMapProps).toMatchObject({
-        dragRotate: false,
-        pitchWithRotate: false,
-        maxPitch,
-      });
-    });
+        expect(capturedMapProps).toMatchObject({
+          dragRotate: false,
+          pitchWithRotate: false,
+          maxPitch,
+        });
+      },
+    );
 
     it('flattens the map when a UI toggle flips 2.5D → 2D', () => {
       // The store's `setView` handler must zero the pitch on the way out of
@@ -404,16 +404,17 @@ describe('stripLockedMapLibreOptions', () => {
     expect(result).toEqual(input);
   });
 
-  it.each(
-    LOCKED_MAP_LIBRE_OPTION_KEYS,
-  )('should strip locked key %s', (lockedKey) => {
-    const unsafe: UnsafeInput = { [lockedKey]: 'arbitrary' };
-    const input = unsafe as unknown as MapLibreOptions;
+  it.each(LOCKED_MAP_LIBRE_OPTION_KEYS)(
+    'should strip locked key %s',
+    (lockedKey) => {
+      const unsafe: UnsafeInput = { [lockedKey]: 'arbitrary' };
+      const input = unsafe as unknown as MapLibreOptions;
 
-    const result = stripLockedMapLibreOptions(input);
+      const result = stripLockedMapLibreOptions(input);
 
-    expect(result).toEqual({});
-  });
+      expect(result).toEqual({});
+    },
+  );
 
   it('should preserve reference equality for passthrough values', () => {
     const transformRequest: NonNullable<MapOptions['transformRequest']> = (

@@ -12,11 +12,11 @@
 // NOTE: !! this must be first import
 import './globals.css';
 import 'server-only';
+import { DrawerLayout } from '@accelint/design-toolkit/components/drawer/layout';
+import { DrawerLayoutMain } from '@accelint/design-toolkit/components/drawer/layout-main';
 import { Nav, NavTrigger } from '~/modules/nav';
 import { RouterProvider } from '~/modules/providers/router';
 import { ThemeProvider } from '~/modules/providers/theme';
-import { DrawerLayout } from '@accelint/design-toolkit/components/drawer/layout';
-import { DrawerLayoutMain } from '@accelint/design-toolkit/components/drawer/layout-main';
 import type { PropsWithChildren } from 'react';
 
 export default function RootLayout({ children }: PropsWithChildren) {
@@ -26,15 +26,15 @@ export default function RootLayout({ children }: PropsWithChildren) {
         <RouterProvider>
           <ThemeProvider>
             <div className='h-screen bg-surface-raised text-default-light'>
-            <DrawerLayout push='left'>
-              <DrawerLayoutMain>
-                <div className='flex items-center bg-surface-default p-m'>
-                  <NavTrigger />
-                </div>
-                {children}
-              </DrawerLayoutMain>
-              <Nav />
-            </DrawerLayout>
+              <DrawerLayout push='left'>
+                <DrawerLayoutMain>
+                  <div className='flex items-center bg-surface-default p-m'>
+                    <NavTrigger />
+                  </div>
+                  {children}
+                </DrawerLayoutMain>
+                <Nav />
+              </DrawerLayout>
             </div>
           </ThemeProvider>
         </RouterProvider>

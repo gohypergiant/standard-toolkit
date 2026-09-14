@@ -27,11 +27,7 @@ export type MapClientProps = {
 
 const mapId = uuid();
 
-export function MapClient({
-  children,
-  className,
-}: MapClientProps) {
-
+export function MapClient({ children, className }: MapClientProps) {
   return (
     <>
       <BaseMap

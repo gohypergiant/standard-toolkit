@@ -119,16 +119,19 @@ describe('getViewportSize', () => {
     ['NM', 'NM'],
     ['mi', 'mi'],
     ['ft', 'ft'],
-  ] as const)('should display correct symbol for unit %s', (unit, expectedSymbol) => {
-    const result = getViewportSize({
-      bounds: [-82, 22, -71, 52],
-      zoom: 5,
-      width: 800,
-      height: 600,
-      unit,
-    });
-    expect(result).toMatch(new RegExp(` ${expectedSymbol}$`));
-  });
+  ] as const)(
+    'should display correct symbol for unit %s',
+    (unit, expectedSymbol) => {
+      const result = getViewportSize({
+        bounds: [-82, 22, -71, 52],
+        zoom: 5,
+        width: 800,
+        height: 600,
+        unit,
+      });
+      expect(result).toMatch(new RegExp(` ${expectedSymbol}$`));
+    },
+  );
 
   it('calculates larger dimensions at lower zoom levels', () => {
     const bounds: [number, number, number, number] = [-82, 22, -71, 52];

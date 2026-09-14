@@ -1,7 +1,4 @@
 {
   "title": "@accelint/worker",
-  "pages": [
-    "index",
-    "..."
-  ]
+  "pages": ["index", "..."]
 }

@@ -326,15 +326,15 @@ describe('Video', () => {
         expectedMessage:
           'An unsupported error occurred. The server or network failed, or your browser does not support this format.',
       },
-    ])('should display $name (code $code) message', ({
-      code,
-      expectedMessage,
-    }) => {
-      setup();
-      const video = screen.getByTestId('video-element');
-      simulateVideoError(video, code);
-      expect(screen.getByText(expectedMessage)).toBeInTheDocument();
-    });
+    ])(
+      'should display $name (code $code) message',
+      ({ code, expectedMessage }) => {
+        setup();
+        const video = screen.getByTestId('video-element');
+        simulateVideoError(video, code);
+        expect(screen.getByText(expectedMessage)).toBeInTheDocument();
+      },
+    );
 
     it('should call onError callback with MediaError when video fails', () => {
       const onError = vi.fn();

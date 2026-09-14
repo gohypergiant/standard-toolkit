@@ -11,85 +11,86 @@
  */
 
 import {
-	Button,
-	Checkbox,
-	Popover,
-	PopoverContent,
-	PopoverFooter,
-	PopoverTitle,
-	PopoverTrigger,
+  Button,
+  Checkbox,
+  Popover,
+  PopoverContent,
+  PopoverFooter,
+  PopoverTitle,
+  PopoverTrigger,
 } from '@accelint/design-toolkit';
 import { createVisualTestScenarios } from '~/visual-regression/vitest';
-import type { PopoverContentVariant } from './variants';
 import { CONTENT_PROP_COMBOS } from './variants';
+import type { JSX } from 'react';
+import type { PopoverContentVariant } from './variants';
 
 function SimpleContent() {
-	return (
-		<PopoverTrigger isOpen>
-			<Button variant='outline'>Open popover</Button>
-			<Popover>
-				<PopoverTitle>Simple Popover</PopoverTitle>
-				<PopoverContent>
-					This is a simple popover with basic text content.
-				</PopoverContent>
-			</Popover>
-		</PopoverTrigger>
-	);
+  return (
+    <PopoverTrigger isOpen>
+      <Button variant='outline'>Open popover</Button>
+      <Popover>
+        <PopoverTitle>Simple Popover</PopoverTitle>
+        <PopoverContent>
+          This is a simple popover with basic text content.
+        </PopoverContent>
+      </Popover>
+    </PopoverTrigger>
+  );
 }
 
 function WithActionsContent() {
-	return (
-		<PopoverTrigger isOpen>
-			<Button variant='outline'>Open popover</Button>
-			<Popover>
-				<PopoverTitle>Popover With Actions</PopoverTitle>
-				<PopoverContent>
-					This popover includes footer actions for user interaction.
-				</PopoverContent>
-				<PopoverFooter>
-					<Button variant='outline'>Cancel</Button>
-					<Button variant='filled'>Confirm</Button>
-				</PopoverFooter>
-			</Popover>
-		</PopoverTrigger>
-	);
+  return (
+    <PopoverTrigger isOpen>
+      <Button variant='outline'>Open popover</Button>
+      <Popover>
+        <PopoverTitle>Popover With Actions</PopoverTitle>
+        <PopoverContent>
+          This popover includes footer actions for user interaction.
+        </PopoverContent>
+        <PopoverFooter>
+          <Button variant='outline'>Cancel</Button>
+          <Button variant='filled'>Confirm</Button>
+        </PopoverFooter>
+      </Popover>
+    </PopoverTrigger>
+  );
 }
 
 function CustomContent() {
-	return (
-		<PopoverTrigger isOpen>
-			<Button variant='outline'>Open popover</Button>
-			<Popover classNames={{ popover: 'min-w-sm' }}>
-				<PopoverTitle>Custom Content</PopoverTitle>
-				<PopoverContent>
-					<Checkbox>Option A</Checkbox>
-					<Checkbox>Option B</Checkbox>
-					<Checkbox>Option C</Checkbox>
-				</PopoverContent>
-			</Popover>
-		</PopoverTrigger>
-	);
+  return (
+    <PopoverTrigger isOpen>
+      <Button variant='outline'>Open popover</Button>
+      <Popover classNames={{ popover: 'min-w-sm' }}>
+        <PopoverTitle>Custom Content</PopoverTitle>
+        <PopoverContent>
+          <Checkbox>Option A</Checkbox>
+          <Checkbox>Option B</Checkbox>
+          <Checkbox>Option C</Checkbox>
+        </PopoverContent>
+      </Popover>
+    </PopoverTrigger>
+  );
 }
 
 const CONTENT_COMPONENTS: Record<
-	PopoverContentVariant['content'],
-	() => JSX.Element
+  PopoverContentVariant['content'],
+  () => JSX.Element
 > = {
-	simple: SimpleContent,
-	'with-actions': WithActionsContent,
-	custom: CustomContent,
+  simple: SimpleContent,
+  'with-actions': WithActionsContent,
+  custom: CustomContent,
 };
 
 createVisualTestScenarios(
-	'Popover',
-	CONTENT_PROP_COMBOS.map((props) => ({
-		name: `${props.content} content`,
-		render: () => {
-			const Component = CONTENT_COMPONENTS[props.content];
-			return <Component />;
-		},
-		screenshotName: `popover-${props.content}.png`,
-		waitMs: 300,
-		selector: '[role="dialog"]',
-	})),
+  'Popover',
+  CONTENT_PROP_COMBOS.map((props) => ({
+    name: `${props.content} content`,
+    render: () => {
+      const Component = CONTENT_COMPONENTS[props.content];
+      return <Component />;
+    },
+    screenshotName: `popover-${props.content}.png`,
+    waitMs: 300,
+    selector: '[role="dialog"]',
+  })),
 );

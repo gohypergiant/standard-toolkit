@@ -517,7 +517,7 @@ export const CombinedDisplayAndDraw: Story = {
           <p className='font-bold text-header-l'>Add Shapes</p>
 
           <p className='text-body-xs text-content-secondary'>
-            {shapes.length} shape{shapes.length !== 1 ? 's' : ''} on map
+            {shapes.length} shape{shapes.length === 1 ? '' : 's'} on map
           </p>
 
           <div className='flex flex-wrap gap-s'>

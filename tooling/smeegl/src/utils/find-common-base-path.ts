@@ -59,7 +59,7 @@ export function findCommonBasePath(array: string[]): string {
   // If all paths are the same length, use all of them to find the common base path.
   // Otherwise, use the shortest length to find the common base path.
   const usablePaths = allPaths.filter((it) =>
-    minLen !== maxLen ? it.length === minLen : true,
+    minLen === maxLen ? true : it.length === minLen,
   );
 
   if (usablePaths.length === 0) {

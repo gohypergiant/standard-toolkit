@@ -1,7 +1,4 @@
 {
   "title": "@accelint/vitest-config",
-  "pages": [
-    "index",
-    "..."
-  ]
+  "pages": ["index", "..."]
 }

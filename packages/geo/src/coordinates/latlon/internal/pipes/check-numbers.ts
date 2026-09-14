@@ -76,7 +76,7 @@ export function checkNumberValues(tokens: Tokens) {
 
   // special case '_--_' when the input is something like 'S -1 -1 W'
   // which is invalid for other reasons and will be caught elsewhere
-  if (!!matches && pattern !== '_--_') {
+  if (matches && pattern !== '_--_') {
     return pipesResult(tokens, 'Negative value for non-degrees value found.');
   }
 

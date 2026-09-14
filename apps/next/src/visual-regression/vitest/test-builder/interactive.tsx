@@ -75,7 +75,7 @@ async function triggerState(
       // Find the actual focusable element within the container
       const focusTarget = findFocusableElement(element);
       if (focusTarget) {
-        // @ts-ignore -- focusVisible is a valid option https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/focus
+        // @ts-expect-error -- focusVisible is a valid option https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/focus
         focusTarget.focus({ focusVisible: true });
       } else {
         logger.warn(
@@ -178,6 +178,8 @@ function defaultScreenshotName(
 /**
  * Run a single state test
  */
+
+// biome-ignore lint/complexity/noExcessiveCognitiveComplexity: <explanation>
 async function runStateTest<TProps>(
   ctx: StateTestContext<TProps>,
 ): Promise<void> {

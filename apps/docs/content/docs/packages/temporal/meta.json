@@ -1,7 +1,4 @@
 {
   "title": "@accelint/temporal",
-  "pages": [
-    "index",
-    "..."
-  ]
+  "pages": ["index", "..."]
 }

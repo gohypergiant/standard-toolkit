@@ -1,7 +1,4 @@
 {
   "title": "@accelint/dataset",
-  "pages": [
-    "index",
-    "..."
-  ]
+  "pages": ["index", "..."]
 }

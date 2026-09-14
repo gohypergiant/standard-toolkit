@@ -99,7 +99,9 @@ export function CoordinateSegment({
   const effectiveIsDisabled = contextState.isDisabled ?? isDisabled;
 
   const allowedCharsRegex = useMemo(() => {
-    if (!allowedChars) return null;
+    if (!allowedChars) {
+      return null;
+    }
     return new RegExp(`^${allowedChars}*$`, 'i');
   }, [allowedChars]);
 
@@ -208,7 +210,7 @@ export function CoordinateSegment({
       style={dynamicWidth ? { width: `${dynamicWidth}ch` } : undefined}
       aria-label={
         ariaLabel ||
-        `Coordinate segment ${segmentIndex !== undefined ? segmentIndex + 1 : ''}`
+        `Coordinate segment ${segmentIndex === undefined ? '' : segmentIndex + 1}`
       }
       aria-disabled={effectiveIsDisabled}
       autoComplete='off'

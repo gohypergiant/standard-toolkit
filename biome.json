@@ -1,12 +1,21 @@
 {
-  "$schema": "https://biomejs.dev/schemas/2.3.8/schema.json",
+  "$schema": "https://biomejs.dev/schemas/2.5.13/schema.json",
   "extends": [
     "@accelint/biome-config/analyzer",
     "@accelint/biome-config/formatter",
     "@accelint/biome-config/linter"
   ],
   "files": {
-    "includes": ["**/*.js", "**/*.mjs", "**/*.ts", "**/*.tsx", "**/*.json"],
+    "includes": [
+      "**/*.js",
+      "**/*.mjs",
+      "**/*.ts",
+      "**/*.tsx",
+      "**/*.json",
+      "!!**/tracing.json",
+      "!!.agents",
+      "!!.github"
+    ],
     "ignoreUnknown": true
   },
   "vcs": {

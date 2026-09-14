@@ -65,7 +65,7 @@ export function BadgeExample() {
           data-testid='badge-container'
           className='flex flex-wrap gap-4 rounded-lg border border-surface-inverse p-6'
         >
-          {PROP_COMBOS.map((props, k) => (
+          {PROP_COMBOS.map((props, _k) => (
             <Badge
               key={getTestId('badge', { color: props.color })}
               data-testid={getTestId('badge', { color: props.color })}

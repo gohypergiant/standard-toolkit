@@ -19,21 +19,17 @@ import { environmentPlugin } from '../plugins/environment';
 import { bootstrap } from './bootstrap';
 
 vi.mock('loglayer', () => ({
-  LogLayer: vi.fn(function () {
-    return {
-      info: vi.fn(),
-      warn: vi.fn(),
-      error: vi.fn(),
-      debug: vi.fn(),
-      trace: vi.fn(),
-      fatal: vi.fn(),
-      withLogLevelManager: vi.fn().mockReturnThis(),
-      disableLogging: vi.fn(),
-    };
-  }),
-  StructuredTransport: vi.fn(function () {
-    return { type: 'structured' as const };
-  }),
+  LogLayer: vi.fn(() => ({
+    info: vi.fn(),
+    warn: vi.fn(),
+    error: vi.fn(),
+    debug: vi.fn(),
+    trace: vi.fn(),
+    fatal: vi.fn(),
+    withLogLevelManager: vi.fn().mockReturnThis(),
+    disableLogging: vi.fn(),
+  })),
+  StructuredTransport: vi.fn(() => ({ type: 'structured' as const })),
   LogLevel: {
     trace: 'trace',
     debug: 'debug',

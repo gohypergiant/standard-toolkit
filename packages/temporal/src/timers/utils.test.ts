@@ -102,17 +102,17 @@ describe('remainder', () => {
         expected: Number.NEGATIVE_INFINITY,
         description: 'negative Infinity',
       },
-    ])('should return $description for $description interval', ({
-      interval,
-      expected,
-    }) => {
-      const now = 1234567890;
-      vi.setSystemTime(now);
+    ])(
+      'should return $description for $description interval',
+      ({ interval, expected }) => {
+        const now = 1234567890;
+        vi.setSystemTime(now);
 
-      const result = remainder(interval);
+        const result = remainder(interval);
 
-      expect(result).toBe(expected);
-    });
+        expect(result).toBe(expected);
+      },
+    );
   });
 });
 
