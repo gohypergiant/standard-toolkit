@@ -45,9 +45,5 @@ function PropCombos() {
 }
 
 export function ActionBarExampleServer() {
-  return (
-    <>
-      <PropCombos />
-    </>
-  );
+  return <PropCombos />;
 }

@@ -27,6 +27,10 @@
   "scripts": {
     "build": "next build",
     "dev": "next dev",
+    "format": "pnpm biome format . --write --verbose",
+    "format:check": "pnpm biome format . --verbose",
+    "lint": "pnpm biome lint . --verbose",
+    "lint:fix": "pnpm biome lint . --fix --verbose",
     "postinstall": "fumadocs-mdx",
     "start": "next start",
     "types:check": "fumadocs-mdx && next typegen && tsc --noEmit"

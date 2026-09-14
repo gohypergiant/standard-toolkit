@@ -1,7 +1,4 @@
 {
   "title": "@accelint/hotkey-manager",
-  "pages": [
-    "index",
-    "..."
-  ]
+  "pages": ["index", "..."]
 }

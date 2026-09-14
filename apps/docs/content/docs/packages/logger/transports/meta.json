@@ -1,7 +1,4 @@
 {
   "title": "Transports",
-  "pages": [
-    "pretty",
-    "structured"
-  ]
+  "pages": ["pretty", "structured"]
 }

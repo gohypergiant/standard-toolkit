@@ -1,7 +1,4 @@
 {
   "title": "@accelint/eslint-config",
-  "pages": [
-    "index",
-    "..."
-  ]
+  "pages": ["index", "..."]
 }

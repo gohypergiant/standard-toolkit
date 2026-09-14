@@ -1,7 +1,4 @@
 {
   "title": "@accelint/icons",
-  "pages": [
-    "index",
-    "..."
-  ]
+  "pages": ["index", "..."]
 }

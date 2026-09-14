@@ -228,7 +228,7 @@ createInteractiveVisualTests({
   states: ['default', 'hover', 'focus', 'pressed', 'disabled'],
   interactionTarget: 'button',
   waitMs: 300,
-  className: 'block'
+  className: 'block',
 });
 
 // ---------------------------------------------------------------------------
@@ -274,5 +274,5 @@ createInteractiveVisualTests({
   states: ['default', 'hover', 'focus', 'pressed', 'disabled'],
   interactionTarget: 'button',
   waitMs: 200,
-  className: 'block'
+  className: 'block',
 });

@@ -11,40 +11,40 @@
  */
 
 import {
-	Button,
-	Popover,
-	PopoverContent,
-	PopoverTitle,
-	PopoverTrigger,
+  Button,
+  Popover,
+  PopoverContent,
+  PopoverTitle,
+  PopoverTrigger,
 } from '@accelint/design-toolkit';
 import { createVisualTestScenarios } from '~/visual-regression/vitest';
 import type { PopoverPositionVariant } from './variants';
 import { POSITION_PROP_COMBOS } from './variants';
 
 function PopoverPositionVariantComponent({
-	props,
+  props,
 }: {
-	props: PopoverPositionVariant;
+  props: PopoverPositionVariant;
 }) {
-	return (
-		<div className='relative flex h-screen w-screen items-center justify-center'>
-			<PopoverTrigger isOpen>
-				<Button variant='outline'>Trigger</Button>
-				<Popover placement={props.placement}>
-					<PopoverTitle>Popover</PopoverTitle>
-					<PopoverContent>Placement: {props.placement}</PopoverContent>
-				</Popover>
-			</PopoverTrigger>
-		</div>
-	);
+  return (
+    <div className='relative flex h-screen w-screen items-center justify-center'>
+      <PopoverTrigger isOpen>
+        <Button variant='outline'>Trigger</Button>
+        <Popover placement={props.placement}>
+          <PopoverTitle>Popover</PopoverTitle>
+          <PopoverContent>Placement: {props.placement}</PopoverContent>
+        </Popover>
+      </PopoverTrigger>
+    </div>
+  );
 }
 
 createVisualTestScenarios(
-	'Popover Positions',
-	POSITION_PROP_COMBOS.map((props) => ({
-		name: `${props.placement} placement`,
-		render: () => <PopoverPositionVariantComponent props={props} />,
-		screenshotName: `popover-position-${props.placement.replace(/ /g, '-')}.png`,
-		waitMs: 300,
-	})),
+  'Popover Positions',
+  POSITION_PROP_COMBOS.map((props) => ({
+    name: `${props.placement} placement`,
+    render: () => <PopoverPositionVariantComponent props={props} />,
+    screenshotName: `popover-position-${props.placement.replace(/ /g, '-')}.png`,
+    waitMs: 300,
+  })),
 );

@@ -41,9 +41,7 @@ const variants = generateVariantMatrix<
 
 createInteractiveVisualTests({
   componentName: 'DateField',
-  renderComponent: (props) => (
-    <DateField {...props} defaultValue={dateValue} />
-  ),
+  renderComponent: (props) => <DateField {...props} defaultValue={dateValue} />,
   testId: 'test-date-field',
   variants,
   states: ['default', 'hover', 'focus', 'disabled'],

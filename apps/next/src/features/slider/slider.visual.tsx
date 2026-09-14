@@ -170,7 +170,7 @@ createVisualTestScenarios(
 // =============================================================================
 
 const renderSlider = (props: SliderProps) => (
-  <div className="w-[400px] p-s">
+  <div className='w-[400px] p-s'>
     <Slider {...props} />
   </div>
 );
@@ -229,19 +229,14 @@ describe('Slider Dragging State', () => {
         test(`${variant.name} dragging state`, async () => {
           render(
             <ThemeProvider defaultMode={mode}>
-              <div
-                data-testid="test-slider-dragging"
-                className="inline-block"
-              >
+              <div data-testid='test-slider-dragging' className='inline-block'>
                 {renderSlider(variant.props)}
               </div>
             </ThemeProvider>,
           );
 
           const wrapper = page.getByTestId('test-slider-dragging');
-          const thumb = wrapper
-            .element()
-            .querySelector('[class*="thumb"]');
+          const thumb = wrapper.element().querySelector('[class*="thumb"]');
 
           if (thumb instanceof HTMLElement) {
             thumb.setAttribute('data-dragging', 'true');
@@ -253,9 +248,7 @@ describe('Slider Dragging State', () => {
 
           await expect
             .element(wrapper)
-            .toMatchScreenshot(
-              `slider-${variant.id}-dragging-${mode}.png`,
-            );
+            .toMatchScreenshot(`slider-${variant.id}-dragging-${mode}.png`);
         });
       }
     });
@@ -278,19 +271,14 @@ describe('Slider Tooltip on Hover', () => {
         test(`${variant.name} tooltip on hover`, async () => {
           render(
             <ThemeProvider defaultMode={mode}>
-              <div
-                data-testid="test-slider-tooltip"
-                className="inline-block"
-              >
+              <div data-testid='test-slider-tooltip' className='inline-block'>
                 {renderSlider(variant.props)}
               </div>
             </ThemeProvider>,
           );
 
           const wrapper = page.getByTestId('test-slider-tooltip');
-          const thumb = wrapper
-            .element()
-            .querySelector('[class*="thumb"]');
+          const thumb = wrapper.element().querySelector('[class*="thumb"]');
 
           if (thumb) {
             await userEvent.hover(thumb);
