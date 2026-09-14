@@ -1,5 +1,10 @@
 # @accelint/design-toolkit
 
+## 11.0.1
+### Patch Changes
+
+- 90e549c: Update table docs per new api
+
 ## 11.0.0
 ### Major Changes
 
