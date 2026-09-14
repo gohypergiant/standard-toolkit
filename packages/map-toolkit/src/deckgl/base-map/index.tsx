@@ -385,14 +385,11 @@ export function BaseMap({
       dragRotate: false,
       pitchWithRotate: false,
       rollEnabled: false,
-      // A constant ceiling, never toggled per view. The camera store already
-      // locks 2D and 3D to pitch 0 and MapLibre's own pitch handlers are off, so
-      // a 0 ceiling in flat views adds nothing — and toggling it is harmful:
-      // from maplibre-gl 5.2x, `map.setMaxPitch` runs the camera through
-      // `transformCameraUpdate` (where react-maplibre re-applies the current
-      // props) and then fires `move` carrying the pre-props camera, which
-      // `onMove` below would write back into the store, undoing the pitch of a
-      // 2D → 2.5D flip in the same tick.
+      // Constant on purpose. The camera store holds 2D and 3D at pitch 0 (and
+      // react-maplibre re-applies it on every camera update), so a 0 ceiling in
+      // flat views is redundant — and toggling it is harmful: on maplibre-gl
+      // 5.17.0+ `setMaxPitch` fires a `move` carrying the pre-props pitch, which
+      // `onMove` below would write back into the store.
       maxPitch: MAX_PITCH,
       canvasContextAttributes: CANVAS_CONTEXT_ATTRIBUTES,
       boxZoom,
