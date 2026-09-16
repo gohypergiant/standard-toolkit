@@ -216,7 +216,7 @@ function TransitionToolbar() {
         {LOCATIONS.map((loc) => (
           <Button
             key={loc.name}
-            variant='outlined'
+            variant='outline'
             color='mono-muted'
             onPress={() =>
               flyToLocation(loc.lat, loc.lng, loc.zoom, 2000, 'linear')
@@ -233,8 +233,8 @@ function TransitionToolbar() {
           Easing Functions (to Chicago)
         </p>
         <Button
-          variant='outlined'
-          color='accent-primary'
+          variant='outline'
+          color='accent'
           onPress={() =>
             flyToLocation(41.8781, -87.6298, TRANSITION_ZOOM, 3000, 'linear')
           }
@@ -242,8 +242,8 @@ function TransitionToolbar() {
           Linear (3s)
         </Button>
         <Button
-          variant='outlined'
-          color='accent-primary'
+          variant='outline'
+          color='accent'
           onPress={() =>
             flyToLocation(41.8781, -87.6298, TRANSITION_ZOOM, 3000, 'ease-in')
           }
@@ -251,8 +251,8 @@ function TransitionToolbar() {
           Ease In (3s)
         </Button>
         <Button
-          variant='outlined'
-          color='accent-primary'
+          variant='outline'
+          color='accent'
           onPress={() =>
             flyToLocation(41.8781, -87.6298, TRANSITION_ZOOM, 3000, 'ease-out')
           }
@@ -260,8 +260,8 @@ function TransitionToolbar() {
           Ease Out (3s)
         </Button>
         <Button
-          variant='outlined'
-          color='accent-primary'
+          variant='outline'
+          color='accent'
           onPress={() =>
             flyToLocation(
               41.8781,
