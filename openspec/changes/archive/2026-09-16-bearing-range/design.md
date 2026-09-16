@@ -1,4 +1,50 @@
- ## Context
+---
+change: bearing-range
+specs_touched: [bearing-range-measurement]
+decisions:
+  - id: D1
+    choice: Three-part architecture - controlled MeasurementLayer (PathLayer+PathStyleExtension, ScatterplotLayer, TextLayer), headless useMeasurement hook, MeasurementTool wrapper
+    rationale: Layer renders, hook owns state, tool composes them; layer usable directly via fiber; LineLayer cannot dash
+    alternatives: [single component for interaction and rendering, LineLayer path, layer captures drag internally]
+  - id: D2
+    choice: BaseMap emits map:dragStart/drag/dragEnd on the bus with unprojected coordinate and modifier-key state; optional requiresModifier; per-mapId store via createMapStore
+    rationale: Matches the click/hover bus pattern; plug-and-play under BaseMap; modifier lets plain drag keep panning
+    alternatives: [prop-spread dragHandlers, mode-based pan blocking only, global Zustand store]
+  - id: D3
+    choice: bearing() and distance() promoted to @accelint/geo on geodesy LatLonSpherical
+    rationale: geo already depends on geodesy, no new third-party dep, replaces hand-rolled haversine in neo
+    alternatives: ["@turf/distance and @turf/bearing", keep in map-toolkit]
+  - id: D4
+    choice: Bearing displayed as 0-360 true-north integer degrees
+    rationale: NTDS/C2 convention; magnetic declination varies by place and time
+    alternatives: [magnetic bearing, cardinal directions]
+  - id: D5
+    choice: units prop DistanceUnit | DistanceUnit[] with default [kilometers, nauticalmiles]
+    rationale: Dual default covers maritime/air and land; single-unit readout via prop
+    alternatives: [fixed dual display, user toggle UI, add statute miles now]
+  - id: D6
+    choice: formatBearing() (3-digit zero-padded, degree sign) and formatDistance() in @accelint/formatters/bearing; azimuth stays a stub
+    rationale: Fills the existing stub; one function per directory
+    alternatives: [combine bearing and azimuth, implement azimuth now]
+  - id: D7
+    choice: measurement event namespace with start/update/complete/clear carrying {mapId, pointA, pointB}
+    rationale: Matches the layer name; full lifecycle lets external UI react
+    alternatives: [bearing-range namespace, start/complete only]
+  - id: D8
+    choice: MeasurementTool props {mapId?, showLabel?, units?, requiresModifier?, getLabel?, lineColor?, endpointColor?}
+    rationale: External readouts, unit selection, modifier UX, and theming without re-implementing the component
+    alternatives: [force getLabel override, no modifier support, hardcode Shift]
+  - id: D9
+    choice: Fiber registration at deckgl/measurement-layer/fiber with a side-effect export
+    rationale: Matches the grid-layers fiber pattern
+    alternatives: [no fiber registration, auto-register on layer import]
+  - id: D10
+    choice: Prefer alt for requiresModifier; shift and ctrl documented as conflicting with BaseMap rubber-band zoom and Ctrl+drag tilt
+    rationale: RBZ arms on Shift keydown and self-disarms per gesture, so Shift+drag zooms on release; verified in Storybook this session
+    alternatives: [drop shift/ctrl from the type, disable RBZ from the hook]
+---
+
+## Context
 
 ### Current State
 **map-toolkit** currently provides deck.gl layer components for displaying and editing shapes but lacks measurement tools. The existing infrastructure includes:
