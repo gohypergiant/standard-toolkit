@@ -386,6 +386,55 @@ describe('useMeasurement', () => {
         expect(result.current.isMeasuring).toBe(true);
       });
     });
+    it('completes the measurement when the modifier is released mid-drag', async () => {
+      const onComplete = vi.fn();
+      const onEnablePan = vi.fn();
+      measurementBus.on(MeasurementEvents.complete, onComplete);
+      bus.on(MapEvents.enablePan, onEnablePan);
+
+      const { result } = renderHook(() => useMeasurement(mapId, 'shift'));
+
+      act(() => {
+        bus.emit(
+          MapEvents.dragStart,
+          makeDragPayload(mapId, [10, 20], { shiftKey: true }),
+        );
+        bus.emit(
+          MapEvents.drag,
+          makeDragPayload(mapId, [11, 21], { shiftKey: true }),
+        );
+      });
+
+      await waitFor(() => expect(result.current.pointB).toEqual([11, 21]));
+
+      act(() => {
+        bus.emit(
+          MapEvents.drag,
+          makeDragPayload(mapId, [12, 22], { shiftKey: false }),
+        );
+      });
+
+      await waitFor(() => {
+        expect(result.current.isMeasuring).toBe(false);
+        expect(result.current.pointB).toEqual([11, 21]);
+        expect(onComplete).toHaveBeenCalledWith(
+          expect.objectContaining({
+            payload: { mapId, pointA: [10, 20], pointB: [11, 21] },
+          }),
+        );
+        expect(onEnablePan).toHaveBeenCalledTimes(1);
+      });
+
+      act(() => {
+        bus.emit(
+          MapEvents.dragEnd,
+          makeDragPayload(mapId, [12, 22], { shiftKey: false }),
+        );
+      });
+
+      expect(onComplete).toHaveBeenCalledTimes(1);
+      expect(onEnablePan).toHaveBeenCalledTimes(1);
+    });
   });
 
   describe('geodesic calculations', () => {

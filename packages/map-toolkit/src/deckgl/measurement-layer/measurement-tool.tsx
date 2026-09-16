@@ -44,8 +44,12 @@ export type MeasurementToolProps = {
   units?: DistanceUnit | DistanceUnit[];
   /**
    * If set, measurement only activates when this modifier key is held during drag.
-   * Allows plain drag to continue panning the map while `Shift+drag` (or `Ctrl`/`Alt`)
-   * triggers measurement.
+   * Allows plain drag to continue panning the map while the modifier + drag triggers
+   * measurement.
+   *
+   * Prefer `'alt'`. `'shift'` collides with BaseMap's rubber-band zoom (enabled by
+   * default), so releasing the mouse or the key can still zoom the map. `'ctrl'`
+   * collides with BaseMap's Ctrl+drag rotate/tilt gesture.
    * @defaultValue undefined (all drag events trigger measurement)
    */
   requiresModifier?: RequiresModifier;

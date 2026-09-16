@@ -47,6 +47,14 @@ const METERS_PER_KM = 1000;
 /**
  * Modifier keys that can be required to activate measurement.
  */
+/**
+ * Modifier key that must be held for a drag to count as a measurement.
+ *
+ * Prefer `'alt'`. `'shift'` collides with BaseMap's rubber-band zoom, which is
+ * enabled by default and arms on Shift keydown, so releasing the mouse or the
+ * key can still zoom the map. `'ctrl'` collides with BaseMap's Ctrl+drag
+ * rotate/tilt gesture.
+ */
 export type RequiresModifier = 'shift' | 'ctrl' | 'alt';
 
 /**
@@ -80,19 +88,23 @@ export type UseMeasurementReturn = {
  * Hook that subscribes to BaseMap drag events and manages bearing-range measurement state.
  *
  * Listens to `map:dragStart`, `map:drag`, and `map:dragEnd` events on the event bus.
- * On drag start, begins a measurement from the drag origin. On drag move, updates the
- * destination coordinate. On drag end, marks the measurement complete and re-enables pan.
+ * On drag start, begins a measurement from the drag origin and suppresses map pan. On
+ * drag move, updates the destination coordinate. On drag end, marks the measurement
+ * complete and re-enables pan.
  *
  * An optional `requiresModifier` parameter restricts measurement activation to drags
- * where the specified modifier key (Shift, Ctrl, or Alt) is held, allowing plain drag
- * to continue panning the map.
+ * where the specified modifier key is held, allowing plain drag to continue panning
+ * the map. Releasing the modifier mid-drag completes the measurement at the last
+ * captured coordinate. Prefer `'alt'`; see {@link RequiresModifier} for why `'shift'`
+ * and `'ctrl'` conflict with BaseMap's own gestures.
  *
  * Uses per-mapId store isolation so multiple map instances can measure independently.
  *
  * @param mapId - Optional map instance ID. Falls back to `MapContext` when omitted.
  *   Required when used outside of a `MapProvider` (i.e., outside BaseMap children).
  * @param requiresModifier - If set, measurement only activates when this modifier key is
- *   held during the drag. When not set, all drag events trigger measurement.
+ *   held during the drag. When not set, all drag events trigger measurement. Prefer
+ *   `'alt'`; `'shift'` and `'ctrl'` conflict with BaseMap gestures.
  * @returns Measurement state and imperative actions
  * @throws Error if no `mapId` is provided and hook is used outside of a `MapProvider`
  *
@@ -180,6 +192,20 @@ export function useMeasurement(
   const emitDisablePan = useEmit<MapDisablePanEvent>(MapEvents.disablePan);
   const emitEnablePan = useEmit<MapEnablePanEvent>(MapEvents.enablePan);
 
+  // Shared by dragEnd and by a modifier release mid-drag, so pan restoration
+  // stays in step with the store's `complete()` transition.
+  const finishMeasurement = (fallbackPointA: [number, number]): void => {
+    complete();
+
+    const currentState = measurementStore.get(actualId);
+    emitMeasurementComplete({
+      mapId: actualId,
+      pointA: currentState.pointA ?? fallbackPointA,
+      pointB: currentState.pointB,
+    });
+    emitEnablePan({ id: actualId });
+  };
+
   useOn<MapDragStartEvent>(MapEvents.dragStart, (event) => {
     const { id, coordinate, shiftKey, ctrlKey, altKey } = event.payload;
 
@@ -204,7 +230,11 @@ export function useMeasurement(
     if (!measurementStore.get(actualId).isMeasuring) {
       return;
     }
+
+    // Releasing the modifier mid-drag ends the measurement at the last point.
     if (!checkModifier(requiresModifier, shiftKey, ctrlKey, altKey)) {
+      finishMeasurement(coordinate);
+
       return;
     }
 
@@ -228,15 +258,7 @@ export function useMeasurement(
       return;
     }
 
-    complete();
-
-    const currentState = measurementStore.get(actualId);
-    emitMeasurementComplete({
-      mapId: actualId,
-      pointA: currentState.pointA ?? event.payload.coordinate,
-      pointB: currentState.pointB,
-    });
-    emitEnablePan({ id: actualId });
+    finishMeasurement(event.payload.coordinate);
   });
 
   // Calculate derived geodesic values during render

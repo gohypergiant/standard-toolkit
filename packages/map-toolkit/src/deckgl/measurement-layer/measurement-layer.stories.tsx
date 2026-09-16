@@ -182,21 +182,27 @@ export const SingleUnitKilometers: Story = {
 // ─── Story 3: Modifier Key Required ────────────────────────────────────────
 
 /**
- * Modifier Key Required (Shift+drag)
+ * Modifier Key Required (Alt+drag)
  *
- * Demonstrates `requiresModifier='shift'`. Plain drag pans the map normally.
- * Hold Shift while dragging to activate measurement. This allows simultaneous
+ * Demonstrates `requiresModifier='alt'`. Plain drag pans the map normally.
+ * Hold Alt while dragging to activate measurement. This allows simultaneous
  * pan + measure without mode switching.
+ *
+ * Alt is used rather than Shift because BaseMap's rubber-band zoom (on by
+ * default) also arms on Shift, and the two gestures conflict. Ctrl+drag is
+ * BaseMap's rotate/tilt gesture.
  *
  * Instructions:
  * 1. Plain drag — pans the map (no measurement)
- * 2. Hold Shift and drag — activates measurement
- * 3. Release mouse to complete; release Shift to stop measuring mid-drag
+ * 2. Hold Alt and drag — activates measurement
+ * 3. Release mouse to complete; release Alt to stop measuring mid-drag
  */
 export const ModifierKeyRequired: Story = {
   render: () => {
-    const { isMeasuring, distanceKm, distanceNM, bearingDeg } =
-      useMeasurement(MODIFIER_MAP_ID);
+    const { isMeasuring, distanceKm, distanceNM, bearingDeg } = useMeasurement(
+      MODIFIER_MAP_ID,
+      'alt',
+    );
 
     return (
       <div className='relative h-dvh w-dvw'>
@@ -205,18 +211,18 @@ export const ModifierKeyRequired: Story = {
           id={MODIFIER_MAP_ID}
           initialViewState={DEFAULT_VIEW_STATE}
         >
-          <MeasurementTool mapId={MODIFIER_MAP_ID} requiresModifier='shift' />
+          <MeasurementTool mapId={MODIFIER_MAP_ID} requiresModifier='alt' />
         </BaseMap>
 
         <div className='absolute top-l left-l z-10 flex w-[300px] flex-col gap-m rounded-lg bg-surface-default p-l shadow-elevation-overlay'>
-          <p className='font-bold text-header-l'>Shift+Drag to Measure</p>
+          <p className='font-bold text-header-l'>Alt+Drag to Measure</p>
 
           <div
             className={`rounded-lg p-s ${isMeasuring ? 'bg-success-muted' : 'bg-info-muted'}`}
           >
             <p className='mb-xs text-body-xs'>Status</p>
             <code className='text-body-m'>
-              {isMeasuring ? 'Measuring (Shift held)' : 'Plain drag pans map'}
+              {isMeasuring ? 'Measuring (Alt held)' : 'Plain drag pans map'}
             </code>
           </div>
 
@@ -244,15 +250,19 @@ export const ModifierKeyRequired: Story = {
             <ul className='list-inside list-disc space-y-xs text-body-xs text-content-secondary'>
               <li>Plain drag: pans the map</li>
               <li>
-                <strong>Shift + drag:</strong> activates measurement
+                <strong>Alt + drag:</strong> activates measurement
               </li>
-              <li>Release Shift mid-drag to stop</li>
+              <li>Release Alt mid-drag to stop</li>
+              <li>
+                Shift is not supported as a modifier: it conflicts with
+                BaseMap's rubber-band zoom
+              </li>
             </ul>
           </div>
 
           <div className='rounded-lg bg-surface-contrast-subtle p-s'>
             <p className='mb-xs font-semibold text-body-xs'>Prop</p>
-            <code className='text-body-xs'>requiresModifier="shift"</code>
+            <code className='text-body-xs'>requiresModifier="alt"</code>
           </div>
         </div>
       </div>
