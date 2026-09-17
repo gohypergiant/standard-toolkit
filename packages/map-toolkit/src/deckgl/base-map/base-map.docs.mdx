@@ -398,6 +398,8 @@ type MapHoverPayload = {
 
 Shared by `MapEvents.dragStart` and `MapEvents.drag`:
 
+Tilt and rotate gestures (right-drag, or Ctrl + left-drag) never emit drag events: BaseMap claims those for the camera, so bus consumers such as the measurement tool only ever see plain left-drags.
+
 ```typescript
 type MapDragPayload = {
   id: UniqueId; // The map instance ID

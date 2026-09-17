@@ -586,14 +586,17 @@ export function BaseMap({
       // send full pickingInfo and event to user-defined onDragStart first
       onDragStart?.(info, event);
 
-      if (isLonLatTuple(info.coordinate)) {
-        emitDragStart(toDragPayload(id, info.coordinate, event.srcEvent));
-      }
-
       // Right-drag (or ctrl + left-drag) rotates + pitches the camera; plain
       // left-drag stays a pan. The camera store is driven directly so it remains
       // the single source of truth — MapLibre's own rotate/pitch handlers are off.
-      if (!isTiltGesture(toTiltGesture(event))) {
+      // Tilt gestures belong to the camera, so only plain drags reach the bus.
+      const isTilt = isTiltGesture(toTiltGesture(event));
+
+      if (!isTilt && isLonLatTuple(info.coordinate)) {
+        emitDragStart(toDragPayload(id, info.coordinate, event.srcEvent));
+      }
+
+      if (!isTilt) {
         return;
       }
 
@@ -623,13 +626,13 @@ export function BaseMap({
       // send full pickingInfo and event to user-defined onDrag first
       onDrag?.(info, event);
 
-      if (isLonLatTuple(info.coordinate)) {
-        emitDrag(toDragPayload(id, info.coordinate, event.srcEvent));
-      }
-
       // No baseline means `handleDragStart` classified this as a pan, not a
-      // tilt; leave the camera untouched.
+      // tilt: forward it to the bus and leave the camera untouched.
       if (!tiltBaselineRef.current) {
+        if (isLonLatTuple(info.coordinate)) {
+          emitDrag(toDragPayload(id, info.coordinate, event.srcEvent));
+        }
+
         return;
       }
 
@@ -660,15 +663,19 @@ export function BaseMap({
       // send full pickingInfo and event to user-defined onDragEnd first
       onDragEnd?.(info, event);
 
-      // dragEnd is the gesture's terminator, so it always fires; consumers that
-      // suppressed pan on dragStart rely on it to restore pan.
-      emitDragEnd(
-        toDragPayload(
-          id,
-          isLonLatTuple(info.coordinate) ? info.coordinate : null,
-          event.srcEvent,
-        ),
-      );
+      // dragEnd is a plain drag's terminator, so it always fires for one (with a
+      // null coordinate if the release position is off the globe); consumers
+      // that suppressed pan on dragStart rely on it to restore pan. A tilt has a
+      // baseline and never reached the bus, so it ends silently.
+      if (!tiltBaselineRef.current) {
+        emitDragEnd(
+          toDragPayload(
+            id,
+            isLonLatTuple(info.coordinate) ? info.coordinate : null,
+            event.srcEvent,
+          ),
+        );
+      }
 
       // Flush the last pending target so the camera lands exactly where the drag
       // ended (a frame may have been scheduled but not yet fired), then cancel

@@ -320,14 +320,21 @@ describe('BaseMap', () => {
   describe('drag event bus emission', () => {
     function dragEvent(
       overrides: Partial<
-        Pick<MapDragPayload, 'shiftKey' | 'ctrlKey' | 'altKey'>
+        Pick<MapDragPayload, 'shiftKey' | 'ctrlKey' | 'altKey'> & {
+          rightButton: boolean;
+        }
       > = {},
     ): MjolnirGestureEvent {
-      const { shiftKey = false, ctrlKey = false, altKey = false } = overrides;
+      const {
+        shiftKey = false,
+        ctrlKey = false,
+        altKey = false,
+        rightButton = false,
+      } = overrides;
 
       return {
-        leftButton: true,
-        rightButton: false,
+        leftButton: !rightButton,
+        rightButton,
         deltaX: 0,
         deltaY: 0,
         srcEvent: { shiftKey, ctrlKey, altKey },
@@ -408,6 +415,44 @@ describe('BaseMap', () => {
           }),
         );
       } finally {
+        bus.off(MapEvents.dragEnd, listener);
+      }
+    });
+
+    it.each([
+      ['right-button', { rightButton: true }],
+      ['ctrl + left-button', { ctrlKey: true }],
+    ])('does not emit drag events for a %s tilt gesture', (_label, overrides) => {
+      const id = uuid();
+      useFakeMap(createFakeMap());
+      const bus = Broadcast.getInstance<MapEventType>();
+      const listener = vi.fn();
+      bus.on(MapEvents.dragStart, listener);
+      bus.on(MapEvents.drag, listener);
+      bus.on(MapEvents.dragEnd, listener);
+
+      try {
+        render(<BaseMap id={id} />);
+
+        act(() => {
+          capturedDragHandlers.onDragStart?.(
+            { coordinate: [10, 20] },
+            dragEvent(overrides),
+          );
+          capturedDragHandlers.onDrag?.(
+            { coordinate: [11, 21] },
+            dragEvent(overrides),
+          );
+          capturedDragHandlers.onDragEnd?.(
+            { coordinate: [11, 21] },
+            dragEvent(overrides),
+          );
+        });
+
+        expect(listener).not.toHaveBeenCalled();
+      } finally {
+        bus.off(MapEvents.dragStart, listener);
+        bus.off(MapEvents.drag, listener);
         bus.off(MapEvents.dragEnd, listener);
       }
     });
