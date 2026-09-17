@@ -70,6 +70,28 @@ function buildDefaultLabel(
 }
 
 /**
+ * Shifts `destination` by ±360° of longitude when it sits more than 180° from
+ * `origin`, so a segment that crosses the antimeridian is drawn the short way
+ * instead of wrapping around the globe.
+ */
+function unwrapDestination(
+  origin: [number, number],
+  destination: [number, number],
+): [number, number] {
+  const longitudeGap = destination[0] - origin[0];
+
+  if (longitudeGap > 180) {
+    return [destination[0] - 360, destination[1]];
+  }
+
+  if (longitudeGap < -180) {
+    return [destination[0] + 360, destination[1]];
+  }
+
+  return destination;
+}
+
+/**
  * A controlled deck.gl composite layer that renders a bearing-range measurement
  * between two geographic points.
  *
@@ -157,12 +179,13 @@ export class MeasurementLayer extends CompositeLayer<MeasurementLayerProps> {
       return [];
     }
 
+    const destination = unwrapDestination(pointA, pointB);
+
     const layers: Layer[] = [
       new PathLayer({
         id: `${this.id}-path`,
-        data: [{ path: [pointA, pointB] }],
+        data: [{ path: [pointA, destination] }],
         getPath: (datum: { path: [number, number][] }) => datum.path,
-        wrapLongitude: true,
         getColor: lineColor,
         getWidth: 2,
         widthUnits: 'pixels',
@@ -173,9 +196,8 @@ export class MeasurementLayer extends CompositeLayer<MeasurementLayerProps> {
       }),
       new ScatterplotLayer({
         id: `${this.id}-endpoints`,
-        data: [pointA, pointB],
+        data: [pointA, destination],
         getPosition: (datum: [number, number]) => datum,
-        wrapLongitude: true,
         getRadius: DEFAULT_EDIT_HANDLE_RADIUS,
         radiusUnits: 'pixels',
         getFillColor: endpointColor,
@@ -202,7 +224,6 @@ export class MeasurementLayer extends CompositeLayer<MeasurementLayerProps> {
           getTextAnchor: 'middle',
           getAlignmentBaseline: 'bottom',
           getPixelOffset: [0, -8],
-          wrapLongitude: true,
           billboard: true,
           pickable: false,
         }),

@@ -252,7 +252,7 @@ The system SHALL compose PathLayer (dashed line), ScatterplotLayer (endpoints), 
 
 #### Scenario: Antimeridian-crossing segment draws the short way
 - **WHEN** `<measurementLayer pointA={[179.0, 0.0]} pointB={[-179.0, 0.0]} />` is rendered
-- **THEN** each sublayer is configured with `wrapLongitude: true`
+- **THEN** the destination is unwrapped by ±360° of longitude relative to the origin so the segment draws the short way
 - **THEN** the line spans the 2° gap across the antimeridian rather than 358° around the map
 
 #### Scenario: Non-finite points render nothing

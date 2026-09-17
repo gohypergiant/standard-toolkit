@@ -72,6 +72,17 @@ describe('distance', () => {
       expect(result).toBeCloseTo(20015087, -2);
     });
 
+    it('returns half the circumference instead of NaN for near-antipodal points', () => {
+      // geodesy's haversine computes sqrt(1 - a) and rounding pushes `a` past 1
+      // for this pair, so the library itself returns NaN.
+      const result = distance(
+        [165.56831887102487, 20.542180502772695],
+        [-14.43168138306451, -20.542180512793223],
+      );
+
+      expect(result).toBeCloseTo(20015087, -2);
+    });
+
     it('handles antimeridian crossing', () => {
       // Points straddling the antimeridian at same latitude
       // Should be about 222,390 m (2 degrees of longitude at equator)
@@ -122,6 +133,27 @@ describe('distance', () => {
 
             expect(forward).toBeGreaterThanOrEqual(0);
             expect(forward).toBe(reverse);
+          },
+        ),
+      );
+    });
+
+    it('is finite for any pair, including near-antipodal ones', () => {
+      fc.assert(
+        fc.property(
+          longitudeArbitrary,
+          latitudeArbitrary,
+          fc.double({ min: -1e-6, max: 1e-6, noNaN: true }),
+          fc.double({ min: -1e-6, max: 1e-6, noNaN: true }),
+          (longitude, latitude, longitudeJitter, latitudeJitter) => {
+            const antipodeLongitude =
+              longitude > 0 ? longitude - 180 : longitude + 180;
+            const result = distance(
+              [longitude, latitude],
+              [antipodeLongitude + longitudeJitter, -latitude + latitudeJitter],
+            );
+
+            return Number.isFinite(result);
           },
         ),
       );

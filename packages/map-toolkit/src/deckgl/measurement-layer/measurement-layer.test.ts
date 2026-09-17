@@ -84,6 +84,28 @@ describe('MeasurementLayer', () => {
       ]);
     });
 
+    it('should unwrap the destination so an antimeridian-crossing segment draws the short way', () => {
+      const layer = makeLayer({ pointA: [179, 0], pointB: [-179, 0] });
+
+      const [pathLayer, endpointLayer] = layer.renderLayers();
+      const pathData = (pathLayer as PathLayer).props.data as {
+        path: [number, number][];
+      }[];
+      const endpointData = (endpointLayer as ScatterplotLayer).props.data as [
+        number,
+        number,
+      ][];
+
+      expect(pathData[0]?.path).toEqual([
+        [179, 0],
+        [181, 0],
+      ]);
+      expect(endpointData).toEqual([
+        [179, 0],
+        [181, 0],
+      ]);
+    });
+
     it('should place the label on the short arc when the segment crosses the antimeridian', () => {
       const layer = makeLayer({ pointA: [179, 0], pointB: [-179, 0] });
 

@@ -19,7 +19,7 @@ The feature has three parts that can be used together or independently:
 - **Drag to measure**: Press, drag, and release to measure between the drag origin and the pointer position
 - **Great-circle distance and true bearing**: Computed with `bearing` and `distance` from `@accelint/geo/geodesy`; the hook returns raw `distanceMeters` and `bearingDeg` (0–360° true north) for you to format with `formatDistance` / `formatBearing` from `@accelint/formatters/bearing`
 - **Dual or single units**: `['kilometers', 'nauticalmiles']` by default, or any single `DistanceUnit`
-- **Antimeridian aware**: The line, endpoints, and label use `wrapLongitude`, so a segment that crosses ±180° longitude draws the short way around instead of across the whole map
+- **Antimeridian aware**: The destination is unwrapped relative to the origin so a segment that crosses the antimeridian draws the short way, and the label sits at the geodesic midpoint.
 - **Safe with bad input**: Non-finite coordinates produce no measurement (zeros from the hook, nothing rendered by the layer) rather than throwing
 - **Optional modifier key**: Require `alt` (recommended), `ctrl`, or `shift` so plain drag keeps panning the map
 - **Pan suppression**: Emits `map:disablePan` while measuring and `map:enablePan` when the drag ends so the map does not pan under the measurement

@@ -330,7 +330,7 @@ midpoint([179, 0], [-179, 0]); // [180, 0] — follows the short way across the 
 - `distance(origin, destination)` returns meters.
 - `midpoint(origin, destination)` returns the `[longitude, latitude]` halfway along the shortest great-circle path, with longitude normalized to `[-180, 180]`.
 - `bearing` and `distance` return `0` when the two points are identical; `midpoint` returns the point itself.
-- All three throw a `RangeError` when any coordinate component is `NaN` or infinite.
+- All three throw a `RangeError` when any coordinate component is `NaN` or infinite. `distance` returns half the Earth's circumference for near-antipodal pairs where the underlying library would return `NaN`.
 - Longitude is not range-checked: map libraries such as deck.gl pass longitudes beyond ±180 when the map wraps, and the spherical math is periodic, so those values still give correct results.
 
 To render results for display, use `formatBearing` and `formatDistance` from `@accelint/formatters`.

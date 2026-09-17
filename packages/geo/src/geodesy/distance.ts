@@ -13,6 +13,9 @@
 import { toSphericalPoints } from './to-spherical-points';
 import type { LonLatTuple } from '../coordinates/latlon/internal/normalize';
 
+/** Mean Earth radius used by the geodesy library's spherical model. */
+const EARTH_RADIUS_METERS = 6371e3;
+
 /**
  * Computes the great-circle distance between two coordinates in meters.
  *
@@ -31,6 +34,8 @@ import type { LonLatTuple } from '../coordinates/latlon/internal/normalize';
  * hand this function longitudes beyond ±180 when the map wraps, and the
  * spherical math is periodic, so out-of-range values still produce the
  * correct distance.
+ * Near-antipodal pairs, where the library's haversine returns NaN from
+ * floating-point rounding, resolve to half the circumference instead.
  *
  * @example
  * ```typescript
@@ -51,5 +56,10 @@ export function distance(
     'distance',
   );
 
-  return originPoint.distanceTo(destinationPoint);
+  const meters = originPoint.distanceTo(destinationPoint);
+
+  // The haversine takes sqrt(1 - a), and rounding can push `a` just past 1 for
+  // near-antipodal pairs, which the library reports as NaN. The true value in
+  // that band is half the circumference.
+  return Number.isNaN(meters) ? Math.PI * EARTH_RADIUS_METERS : meters;
 }
