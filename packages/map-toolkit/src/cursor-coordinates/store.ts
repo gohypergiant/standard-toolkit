@@ -34,24 +34,12 @@
 import { Broadcast } from '@accelint/bus';
 import { MapEvents } from '../deckgl/base-map/events';
 import { createMapStore } from '../shared/create-map-store';
+import { isLonLatTuple } from '@/shared/coordinates';
 import type { UniqueId } from '@accelint/core';
 import type { MapEventType, MapHoverEvent } from '../deckgl/base-map/types';
 import type { CoordinateFormatTypes, CursorCoordinateState } from './types';
 
 const bus = Broadcast.getInstance<MapEventType>();
-
-/**
- * Type guard to validate that a value is a proper coordinate tuple.
- * Checks that the value is an array with exactly two finite numbers.
- *
- * @param value - Value to validate as a coordinate
- * @returns True if value is a valid [longitude, latitude] tuple
- */
-function isValidCoordinate(value?: number[]): value is [number, number] {
-  return (
-    Array.isArray(value) && value.length === 2 && value.every(Number.isFinite)
-  );
-}
 
 /**
  * Actions for cursor coordinate management
@@ -94,8 +82,8 @@ export const cursorCoordinateStore = createMapStore<
       const coords = data.payload.info.coordinate;
 
       // Update coordinate if valid, or clear if invalid
-      if (isValidCoordinate(coords)) {
-        set({ coordinate: coords as [number, number] });
+      if (isLonLatTuple(coords)) {
+        set({ coordinate: coords });
       } else {
         set({ coordinate: null });
       }

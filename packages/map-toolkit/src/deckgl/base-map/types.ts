@@ -323,10 +323,23 @@ export type MapDragStartEvent = Payload<
 export type MapDragEvent = Payload<typeof MapEvents.drag, MapDragPayload>;
 
 /**
- * Type for map dragEnd events in the event bus.
- * Combines the event name with the drag payload.
+ * Payload for `map:dragEnd`. Unlike `map:dragStart` / `map:drag`, the end of a
+ * drag is always emitted (it is the gesture's terminator), so `coordinate` is
+ * `null` when the release position does not unproject to finite coordinates.
  */
-export type MapDragEndEvent = Payload<typeof MapEvents.dragEnd, MapDragPayload>;
+export type MapDragEndPayload = Omit<MapDragPayload, 'coordinate'> & {
+  /** Unprojected [longitude, latitude] at release, or `null` when unavailable */
+  coordinate: [number, number] | null;
+};
+
+/**
+ * Type for map dragEnd events in the event bus.
+ * Combines the event name with the drag-end payload.
+ */
+export type MapDragEndEvent = Payload<
+  typeof MapEvents.dragEnd,
+  MapDragEndPayload
+>;
 
 export type MapEventType =
   | MapClickEvent

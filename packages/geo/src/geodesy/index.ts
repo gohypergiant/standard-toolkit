@@ -12,3 +12,4 @@
 
 export { bearing } from './bearing';
 export { distance } from './distance';
+export { midpoint } from './midpoint';

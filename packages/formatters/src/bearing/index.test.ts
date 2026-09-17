@@ -10,97 +10,150 @@
  * governing permissions and limitations under the License.
  */
 
+import type { DistanceUnit } from '@accelint/constants/units';
+import fc from 'fast-check';
 import { describe, expect, it } from 'vitest';
 import { formatBearing, formatDistance } from './index';
 
+const DISTANCE_UNITS: DistanceUnit[] = [
+  'kilometers',
+  'meters',
+  'nauticalmiles',
+  'miles',
+  'feet',
+];
+
 describe('formatBearing', () => {
-  it('formats a positive bearing with zero-padding', () => {
-    const result = formatBearing(45);
-
-    expect(result).toBe('045°');
+  it.each([
+    [45, '045°'],
+    [0, '000°'],
+    [180, '180°'],
+    [-10, '350°'],
+    [370, '010°'],
+    [360, '000°'],
+    [-360, '000°'],
+  ])('formats %d as "%s"', (degrees, expected) => {
+    expect(formatBearing(degrees)).toBe(expected);
   });
 
-  it('formats zero as "000°"', () => {
-    const result = formatBearing(0);
-
-    expect(result).toBe('000°');
+  it.each([
+    [359.6, '000°'],
+    [44.5, '045°'],
+    [0.4, '000°'],
+    [-0.4, '000°'],
+  ])('rounds fractional bearing %d to "%s"', (degrees, expected) => {
+    expect(formatBearing(degrees)).toBe(expected);
   });
 
-  it('normalizes a negative bearing to its positive equivalent', () => {
-    const result = formatBearing(-10);
-
-    expect(result).toBe('350°');
+  it.each([
+    ['NaN', Number.NaN],
+    ['Infinity', Number.POSITIVE_INFINITY],
+    ['-Infinity', Number.NEGATIVE_INFINITY],
+  ])('throws a RangeError for %s', (_label, degrees) => {
+    expect(() => formatBearing(degrees)).toThrow(
+      new RangeError('degrees must be a finite number.'),
+    );
   });
 
-  it('normalizes a bearing greater than 360', () => {
-    const result = formatBearing(370);
+  it('always produces a 3-digit degree string no greater than 359', () => {
+    fc.assert(
+      fc.property(
+        fc.double({ noNaN: true, noDefaultInfinity: true }),
+        (degrees) => {
+          const result = formatBearing(degrees);
 
-    expect(result).toBe('010°');
+          return /^\d{3}°$/.test(result) && Number.parseInt(result, 10) <= 359;
+        },
+      ),
+    );
   });
 
-  it('normalizes exactly 360 to "000°"', () => {
-    const result = formatBearing(360);
-
-    expect(result).toBe('000°');
-  });
-
-  it('formats a 3-digit bearing without extra padding', () => {
-    const result = formatBearing(180);
-
-    expect(result).toBe('180°');
-  });
-
-  it('normalizes a large negative bearing', () => {
-    const result = formatBearing(-360);
-
-    expect(result).toBe('000°');
+  it('produces the same output for bearings 360 degrees apart', () => {
+    fc.assert(
+      fc.property(fc.integer({ min: -100000, max: 100000 }), (degrees) => {
+        return formatBearing(degrees) === formatBearing(degrees + 360);
+      }),
+    );
   });
 });
 
 describe('formatDistance', () => {
   describe('single unit', () => {
-    it('formats meters in kilometers', () => {
-      const result = formatDistance(42300, 'kilometers');
-
-      expect(result).toBe('42.3 km');
+    it.each([
+      [42300, 'kilometers', '42.3 km'],
+      [42336, 'nauticalmiles', '22.9 NM'],
+      [500, 'meters', '500.0 m'],
+      [1609.344, 'miles', '1.0 mi'],
+      [30.48, 'feet', '100.0 ft'],
+      [0, 'kilometers', '0.0 km'],
+      [0, 'nauticalmiles', '0.0 NM'],
+    ] as const)('formats %d meters in %s as "%s"', (meters, unit, expected) => {
+      expect(formatDistance(meters, unit)).toBe(expected);
     });
 
-    it('formats meters in nautical miles', () => {
-      const result = formatDistance(42336, 'nauticalmiles');
-
-      expect(result).toBe('22.9 NM');
+    it('formats a single-element array the same as a bare unit', () => {
+      expect(formatDistance(42300, ['kilometers'])).toBe(
+        formatDistance(42300, 'kilometers'),
+      );
     });
 
-    it('formats zero distance in kilometers', () => {
-      const result = formatDistance(0, 'kilometers');
-
-      expect(result).toBe('0.0 km');
-    });
-
-    it('formats zero distance in nautical miles', () => {
-      const result = formatDistance(0, 'nauticalmiles');
-
-      expect(result).toBe('0.0 NM');
-    });
-
-    it('formats meters in meters', () => {
-      const result = formatDistance(500, 'meters');
-
-      expect(result).toBe('500.0 m');
+    it('produces a one-decimal number followed by a unit symbol', () => {
+      fc.assert(
+        fc.property(
+          fc.double({
+            min: 0,
+            max: 1e12,
+            noNaN: true,
+            noDefaultInfinity: true,
+          }),
+          fc.constantFrom(...DISTANCE_UNITS),
+          (meters, unit) => {
+            return /^\d+\.\d [a-zA-Z]+$/.test(formatDistance(meters, unit));
+          },
+        ),
+      );
     });
   });
 
   describe('dual units', () => {
-    it('formats meters as kilometers and nautical miles', () => {
-      const result = formatDistance(42300, ['kilometers', 'nauticalmiles']);
+    it.each([
+      [42300, ['kilometers', 'nauticalmiles'], '42.3 km / 22.8 NM'],
+      [0, ['kilometers', 'nauticalmiles'], '0.0 km / 0.0 NM'],
+      [1609.344, ['miles', 'feet'], '1.0 mi / 5280.0 ft'],
+    ] as const)('formats %d meters in %j as "%s"', (meters, units, expected) => {
+      expect(formatDistance(meters, [...units])).toBe(expected);
+    });
+  });
 
-      expect(result).toBe('42.3 km / 22.8 NM');
+  describe('validation', () => {
+    it('throws when more than two units are provided', () => {
+      expect(() =>
+        formatDistance(42300, ['kilometers', 'nauticalmiles', 'miles']),
+      ).toThrow(new Error('formatDistance accepts 1 or 2 units.'));
     });
 
-    it('formats zero distance in dual units', () => {
-      const result = formatDistance(0, ['kilometers', 'nauticalmiles']);
+    it('throws when the unit array is empty', () => {
+      expect(() => formatDistance(42300, [])).toThrow(
+        new Error('formatDistance accepts 1 or 2 units.'),
+      );
+    });
 
-      expect(result).toBe('0.0 km / 0.0 NM');
+    it('throws when the unit is not a supported distance unit', () => {
+      const unit = 'furlongs' as unknown as DistanceUnit;
+
+      expect(() => formatDistance(42300, unit)).toThrow(
+        new Error('Unsupported distance unit: furlongs'),
+      );
+    });
+
+    it.each([
+      ['NaN', Number.NaN],
+      ['Infinity', Number.POSITIVE_INFINITY],
+      ['-Infinity', Number.NEGATIVE_INFINITY],
+    ])('throws a RangeError for %s meters', (_label, meters) => {
+      expect(() => formatDistance(meters, 'kilometers')).toThrow(
+        new RangeError('meters must be a finite number.'),
+      );
     });
   });
 });

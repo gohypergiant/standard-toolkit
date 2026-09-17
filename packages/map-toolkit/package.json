@@ -160,6 +160,7 @@
     "./maplibre/rbz-handler": "./dist/maplibre/rbz-handler.js",
     "./shared/cleanup": "./dist/shared/cleanup.js",
     "./shared/constants": "./dist/shared/constants.js",
+    "./shared/coordinates": "./dist/shared/coordinates.js",
     "./shared/create-map-store": "./dist/shared/create-map-store.js",
     "./shared/units": "./dist/shared/units.js",
     "./viewport": "./dist/viewport/index.js",

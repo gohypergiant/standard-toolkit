@@ -50,18 +50,21 @@ import {
   tiltCommandFor,
 } from './tilt-gesture';
 import { LOCKED_MAP_LIBRE_OPTION_KEYS } from './types';
+import { isLonLatTuple } from '@/shared/coordinates';
 import type {
   IControl,
   MapOptions,
   WebGLContextAttributesWithType,
 } from 'maplibre-gl';
 import type { MjolnirGestureEvent, MjolnirPointerEvent } from 'mjolnir.js';
+import type { UniqueId } from '@accelint/core';
 import type { CameraSetViewEvent } from '../../camera/types';
 import type {
   BaseMapProps,
   MapClickEvent,
   MapDragEndEvent,
   MapDragEvent,
+  MapDragPayload,
   MapDragStartEvent,
   MapHoverEvent,
   MapLibreOptions,
@@ -220,6 +223,26 @@ function AddDeckglControl() {
   useControl(() => deckglInstance as IControl);
 
   return null;
+}
+
+/**
+ * Builds the serializable payload for the `map:drag*` bus events. Bus consumers
+ * such as `useMeasurement` need the modifier-key state to decide whether to
+ * claim the drag (e.g. alt+drag measures, plain drag pans), so it travels with
+ * the coordinate instead of requiring consumers to track key state themselves.
+ */
+function toDragPayload<Coordinate extends [number, number] | null>(
+  id: UniqueId,
+  coordinate: Coordinate,
+  srcEvent: Pick<MouseEvent, 'shiftKey' | 'ctrlKey' | 'altKey'>,
+): Omit<MapDragPayload, 'coordinate'> & { coordinate: Coordinate } {
+  return {
+    id,
+    coordinate,
+    shiftKey: srcEvent.shiftKey,
+    ctrlKey: srcEvent.ctrlKey,
+    altKey: srcEvent.altKey,
+  };
 }
 
 /**
@@ -563,18 +586,8 @@ export function BaseMap({
       // send full pickingInfo and event to user-defined onDragStart first
       onDragStart?.(info, event);
 
-      // Emit drag start event to the bus with coordinate and modifier key state
-      if (info.coordinate) {
-        emitDragStart({
-          id,
-          coordinate: [info.coordinate[0], info.coordinate[1]] as [
-            number,
-            number,
-          ],
-          shiftKey: event.srcEvent.shiftKey,
-          ctrlKey: event.srcEvent.ctrlKey,
-          altKey: event.srcEvent.altKey,
-        });
+      if (isLonLatTuple(info.coordinate)) {
+        emitDragStart(toDragPayload(id, info.coordinate, event.srcEvent));
       }
 
       // Right-drag (or ctrl + left-drag) rotates + pitches the camera; plain
@@ -610,18 +623,8 @@ export function BaseMap({
       // send full pickingInfo and event to user-defined onDrag first
       onDrag?.(info, event);
 
-      // Emit drag event to the bus with coordinate and modifier key state
-      if (info.coordinate) {
-        emitDrag({
-          id,
-          coordinate: [info.coordinate[0], info.coordinate[1]] as [
-            number,
-            number,
-          ],
-          shiftKey: event.srcEvent.shiftKey,
-          ctrlKey: event.srcEvent.ctrlKey,
-          altKey: event.srcEvent.altKey,
-        });
+      if (isLonLatTuple(info.coordinate)) {
+        emitDrag(toDragPayload(id, info.coordinate, event.srcEvent));
       }
 
       // No baseline means `handleDragStart` classified this as a pan, not a
@@ -657,19 +660,15 @@ export function BaseMap({
       // send full pickingInfo and event to user-defined onDragEnd first
       onDragEnd?.(info, event);
 
-      // Emit drag end event to the bus with coordinate and modifier key state
-      if (info.coordinate) {
-        emitDragEnd({
+      // dragEnd is the gesture's terminator, so it always fires; consumers that
+      // suppressed pan on dragStart rely on it to restore pan.
+      emitDragEnd(
+        toDragPayload(
           id,
-          coordinate: [info.coordinate[0], info.coordinate[1]] as [
-            number,
-            number,
-          ],
-          shiftKey: event.srcEvent.shiftKey,
-          ctrlKey: event.srcEvent.ctrlKey,
-          altKey: event.srcEvent.altKey,
-        });
-      }
+          isLonLatTuple(info.coordinate) ? info.coordinate : null,
+          event.srcEvent,
+        ),
+      );
 
       // Flush the last pending target so the camera lands exactly where the drag
       // ended (a frame may have been scheduled but not yet fired), then cancel

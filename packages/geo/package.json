@@ -11,6 +11,7 @@
   "devDependencies": {
     "@accelint/typescript-config": "workspace:*",
     "@accelint/vitest-config": "workspace:*",
+    "fast-check": "^4.1.1",
     "tsdown": "^0.18.0",
     "typescript": "^5.9.3",
     "vitest": "^4.0.15"
@@ -62,6 +63,8 @@
     "./geodesy": "./dist/geodesy/index.js",
     "./geodesy/bearing": "./dist/geodesy/bearing.js",
     "./geodesy/distance": "./dist/geodesy/distance.js",
+    "./geodesy/midpoint": "./dist/geodesy/midpoint.js",
+    "./geodesy/to-spherical-points": "./dist/geodesy/to-spherical-points.js",
     "./patterning": "./dist/patterning.js",
     "./package.json": "./package.json"
   },

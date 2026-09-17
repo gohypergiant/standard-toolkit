@@ -24,6 +24,7 @@ import {
   type PolygonData,
 } from './types';
 import { validateDefinition } from './validate-definition';
+import { isLonLatTuple } from '@/shared/coordinates';
 import type { Layer, PickingInfo, UpdateParameters } from '@deck.gl/core';
 
 /**
@@ -312,14 +313,14 @@ export class BaseGridLayer extends CompositeLayer<BaseGridLayerProps> {
   private handleClick = (info: PickingInfo): void => {
     const cellId = info.object?.cellId;
 
-    if (!(info.object && info.coordinate)) {
+    if (!(info.object && isLonLatTuple(info.coordinate))) {
       return;
     }
     if (cellId) {
       this.eventBus.emit(GridCellEvents.click, {
         cellId,
         gridType: this.props.definition.id,
-        coords: [info.coordinate[0], info.coordinate[1]] as [number, number],
+        coords: info.coordinate,
         mapId: this.props.mapId ?? 'default',
         bounds: info.object?.bounds,
       });

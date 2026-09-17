@@ -318,6 +318,10 @@ useOn(MapEvents.click, (payload) => {
 useOn(MapEvents.hover, (payload) => {
   // Handle hover event
 });
+
+useOn(MapEvents.dragEnd, (payload) => {
+  // Handle the end of a drag gesture
+});
 ```
 
 #### `MapEvents`
@@ -327,6 +331,9 @@ Event names for map interactions:
 - `MapEvents.click`: `'map:click'`
 - `MapEvents.hover`: `'map:hover'`
 - `MapEvents.viewport`: `'map:viewport'`
+- `MapEvents.dragStart`: `'map:dragStart'`
+- `MapEvents.drag`: `'map:drag'`
+- `MapEvents.dragEnd`: `'map:dragEnd'`
 - `MapEvents.enablePan`: `'map:enablePan'`
 - `MapEvents.disablePan`: `'map:disablePan'`
 - `MapEvents.enableZoom`: `'map:enableZoom'`
@@ -385,6 +392,53 @@ type MapHoverPayload = {
   event: NonFuncMjolnirPointerEvent; // Event with functions omitted for serialization
   id: UniqueId; // The map instance ID
 };
+```
+
+### `MapDragPayload`
+
+Shared by `MapEvents.dragStart` and `MapEvents.drag`:
+
+```typescript
+type MapDragPayload = {
+  id: UniqueId; // The map instance ID
+  coordinate: [number, number]; // Unprojected [longitude, latitude] at the drag position
+  shiftKey: boolean; // Whether Shift was held during the drag event
+  ctrlKey: boolean; // Whether Ctrl was held during the drag event
+  altKey: boolean; // Whether Alt was held during the drag event
+};
+```
+
+`map:dragStart` and `map:drag` fire after the corresponding `onDragStart` / `onDrag` prop, and only when the pointer position unprojects to finite map coordinates (drags that start or move off the globe are skipped). The modifier flags let subscribers decide whether to claim a gesture — the [Measurement Layer](?path=/docs/deckgl-measurement-layer--docs)'s `useMeasurement` hook is built on these events.
+
+### `MapDragEndPayload`
+
+Emitted by `MapEvents.dragEnd`:
+
+```typescript
+type MapDragEndPayload = {
+  id: UniqueId; // The map instance ID
+  coordinate: [number, number] | null; // Unprojected [longitude, latitude] at release, or null off the globe
+  shiftKey: boolean; // Whether Shift was held during the drag event
+  ctrlKey: boolean; // Whether Ctrl was held during the drag event
+  altKey: boolean; // Whether Alt was held during the drag event
+};
+```
+
+Unlike the start and move events, `map:dragEnd` is always emitted when a drag gesture finishes, so subscribers that claimed the gesture can always release it. `coordinate` is `null` when the release position does not unproject to finite coordinates (for example, when the pointer is released off the globe in 3D view); check for `null` before using it.
+
+The payload types and their `Payload` wrappers — `MapDragPayload`, `MapDragEndPayload`, `MapDragStartEvent`, `MapDragEvent`, and `MapDragEndEvent` — are exported from `@accelint/map-toolkit/deckgl` alongside the other `Map*` event types:
+
+```typescript
+import { MapEvents, type MapDragEndEvent } from '@accelint/map-toolkit/deckgl';
+import { useOn } from '@accelint/bus/react';
+
+useOn<MapDragEndEvent>(MapEvents.dragEnd, (event) => {
+  if (event.payload.coordinate === null) {
+    return; // released off the globe
+  }
+
+  const [longitude, latitude] = event.payload.coordinate;
+});
 ```
 
 ### `NonFuncPickingInfo`

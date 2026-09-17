@@ -12,37 +12,57 @@
 
 import {
   DISTANCE_UNIT_SYMBOLS,
+  METERS_PER_UNIT,
   type DistanceUnit,
 } from '@accelint/constants/units';
 import { round } from '@accelint/math/round';
+import { wrap } from '@accelint/math/wrap';
 
 /**
  * Formats a bearing in degrees as a zero-padded 3-digit string with a degree symbol.
  *
- * Normalizes any value (negative or greater than 360) to the 0–360 range before
+ * Wraps any value (negative or greater than 360) into the 0–360 range before
  * formatting. Uses true north reference per NTDS/C2 tactical display conventions.
- *
- * @remarks pure function
  *
  * @param degrees - The bearing in degrees. May be negative or greater than 360.
  * @returns A zero-padded 3-digit string with a trailing degree symbol, e.g. `"045°"`.
  *
+ * @throws {RangeError} Throws if `degrees` is `NaN` or infinite.
+ *
+ * @remarks
+ * Pure function.
+ *
+ * Fractional bearings round to the nearest whole degree, and a value that
+ * rounds up to 360 wraps back to `"000°"`.
+ *
  * @example
  * ```typescript
- * formatBearing(45);   // "045°"
- * formatBearing(-10);  // "350°"
- * formatBearing(0);    // "000°"
- * formatBearing(370);  // "010°"
- * formatBearing(360);  // "000°"
+ * formatBearing(45);    // "045°"
+ * formatBearing(-10);   // "350°"
+ * formatBearing(0);     // "000°"
+ * formatBearing(370);   // "010°"
+ * formatBearing(360);   // "000°"
+ * formatBearing(359.6); // "000°"
  * ```
  */
 export function formatBearing(degrees: number): string {
-  const normalized = ((degrees % 360) + 360) % 360;
-  const integer = round(0, normalized);
-  // After rounding, 360 should wrap to 0
-  const clamped = integer % 360;
+  if (!Number.isFinite(degrees)) {
+    throw new RangeError('degrees must be a finite number.');
+  }
 
-  return `${`${clamped}`.padStart(3, '0')}°`;
+  const wrapped = wrap(0, 360, round(0, degrees));
+
+  return `${String(wrapped).padStart(3, '0')}°`;
+}
+
+function formatOne(meters: number, unit: DistanceUnit): string {
+  if (!Object.hasOwn(METERS_PER_UNIT, unit)) {
+    throw new Error(`Unsupported distance unit: ${unit}`);
+  }
+
+  const value = round(1, meters / METERS_PER_UNIT[unit]);
+
+  return `${value.toFixed(1)} ${DISTANCE_UNIT_SYMBOLS[unit]}`;
 }
 
 /**
@@ -53,13 +73,19 @@ export function formatBearing(degrees: number): string {
  *
  * Supports the following units: `kilometers`, `nauticalmiles`, `miles`, `meters`, `feet`.
  *
- * @remarks pure function
- *
  * @param meters - The distance in meters.
- * @param units - A single `DistanceUnit` or a tuple of two `DistanceUnit` values.
+ * @param units - A single `DistanceUnit` or an array of one or two `DistanceUnit` values.
  * @returns A formatted distance string with unit abbreviation(s).
  *
- * @throws {Error} Throws if more than 2 units are provided or an unsupported unit is given.
+ * @throws {RangeError} Throws if `meters` is `NaN` or infinite.
+ * @throws {Error} Throws if `units` is an empty array or has more than 2 entries.
+ * @throws {Error} Throws if a unit is not a key of `METERS_PER_UNIT`.
+ *
+ * @remarks
+ * Pure function.
+ *
+ * Conversion divides `meters` by `METERS_PER_UNIT[unit]` from
+ * `@accelint/constants/units`; symbols come from `DISTANCE_UNIT_SYMBOLS`.
  *
  * @example
  * ```typescript
@@ -67,39 +93,24 @@ export function formatBearing(degrees: number): string {
  * formatDistance(42300, 'nauticalmiles');                     // "22.8 NM"
  * formatDistance(42300, ['kilometers', 'nauticalmiles']);     // "42.3 km / 22.8 NM"
  * formatDistance(0, 'kilometers');                            // "0.0 km"
+ * formatDistance(42300, ['kilometers', 'miles', 'feet']);     // Error
  * ```
  */
 export function formatDistance(
   meters: number,
   units: DistanceUnit | DistanceUnit[],
 ): string {
-  const unitList = Array.isArray(units) ? units : [units];
-
-  if (unitList.length > 2) {
-    throw new Error('formatDistance accepts at most 2 units.');
+  if (!Number.isFinite(meters)) {
+    throw new RangeError('meters must be a finite number.');
   }
 
-  const convert = (unit: DistanceUnit): number => {
-    switch (unit) {
-      case 'kilometers':
-        return meters / 1000;
-      case 'nauticalmiles':
-        return meters / 1852;
-      case 'miles':
-        return meters / 1609.344;
-      case 'meters':
-        return meters;
-      case 'feet':
-        return meters * 3.28084;
-    }
-  };
+  if (!Array.isArray(units)) {
+    return formatOne(meters, units);
+  }
 
-  const parts = unitList.map((unit) => {
-    const value = round(1, convert(unit));
-    const symbol = DISTANCE_UNIT_SYMBOLS[unit];
+  if (units.length === 0 || units.length > 2) {
+    throw new Error('formatDistance accepts 1 or 2 units.');
+  }
 
-    return `${value.toFixed(1)} ${symbol}`;
-  });
-
-  return parts.join(' / ');
+  return units.map((unit) => formatOne(meters, unit)).join(' / ');
 }

@@ -112,11 +112,11 @@ export const LINE_PATTERNS = ['solid', 'dashed', 'dotted'] as const;
 /**
  * Dash array patterns for border/outline rendering
  */
-export const DASH_ARRAYS: Record<LinePattern, [number, number] | null> = {
+export const DASH_ARRAYS = {
   solid: null,
   dashed: [8, 4],
   dotted: [2, 4],
-};
+} satisfies Record<LinePattern, [number, number] | null>;
 
 /**
  * Default edit handle color (white) - used by both draw and edit layers

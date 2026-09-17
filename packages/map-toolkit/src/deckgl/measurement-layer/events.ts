@@ -40,7 +40,7 @@ export const MeasurementEvents = {
   start: `${MeasurementEventsNamespace}:start`,
   /** Emitted on each drag update with the current pointB */
   update: `${MeasurementEventsNamespace}:update`,
-  /** Emitted when the drag ends and the measurement is complete */
+  /** Emitted when the measurement finishes: on drag end, or when the required modifier key is released mid-drag */
   complete: `${MeasurementEventsNamespace}:complete`,
   /** Emitted when the measurement is cleared and state is reset to idle */
   clear: `${MeasurementEventsNamespace}:clear`,
@@ -54,23 +54,40 @@ export type MeasurementPayload = {
   mapId: UniqueId;
   /** The origin coordinate as `[longitude, latitude]` */
   pointA: [number, number];
-  /** The destination coordinate as `[longitude, latitude]`, or `null` before drag begins */
+  /** The destination coordinate as `[longitude, latitude]`, or `null` before the first drag move */
   pointB: [number, number] | null;
 };
 
+/** Bus event type for `measurement:start`; pairs the event name with {@link MeasurementPayload}. */
 export type MeasurementStartEvent = Payload<
   typeof MeasurementEvents.start,
   MeasurementPayload
 >;
 
+/** Bus event type for `measurement:update`; pairs the event name with {@link MeasurementPayload}. */
 export type MeasurementUpdateEvent = Payload<
   typeof MeasurementEvents.update,
   MeasurementPayload
 >;
 
+/**
+ * Payload for `measurement:complete`. Unlike {@link MeasurementPayload}, `pointB`
+ * is always present: a measurement that ends without a destination is cleared
+ * (`measurement:clear`) rather than completed.
+ */
+export type MeasurementCompletePayload = {
+  /** The map instance the measurement belongs to */
+  mapId: UniqueId;
+  /** Origin coordinate `[longitude, latitude]` */
+  pointA: [number, number];
+  /** Destination coordinate `[longitude, latitude]` */
+  pointB: [number, number];
+};
+
+/** Bus event type for `measurement:complete`; pairs the event name with {@link MeasurementPayload}. */
 export type MeasurementCompleteEvent = Payload<
   typeof MeasurementEvents.complete,
-  MeasurementPayload
+  MeasurementCompletePayload
 >;
 
 /**
@@ -81,6 +98,7 @@ export type MeasurementClearPayload = {
   mapId: UniqueId;
 };
 
+/** Bus event type for `measurement:clear`; pairs the event name with {@link MeasurementClearPayload}. */
 export type MeasurementClearEvent = Payload<
   typeof MeasurementEvents.clear,
   MeasurementClearPayload

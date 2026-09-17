@@ -15,13 +15,16 @@ export { MeasurementTool } from './measurement-tool';
 export { measurementStore } from './store';
 export { useMeasurement } from './use-measurement';
 export { MeasurementEvents, MeasurementEventsNamespace } from './events';
-export type { MeasurementLayerProps } from './types';
+export type { MeasurementLayerProps, RequiresModifier } from './types';
 export type { MeasurementState, MeasurementActions } from './store';
-export type { UseMeasurementReturn, RequiresModifier } from './use-measurement';
+export type { UseMeasurementReturn } from './use-measurement';
 export type {
   MeasurementPayload,
   MeasurementStartEvent,
   MeasurementUpdateEvent,
+  MeasurementCompletePayload,
   MeasurementCompleteEvent,
+  MeasurementClearPayload,
+  MeasurementClearEvent,
   MeasurementEventType,
 } from './events';

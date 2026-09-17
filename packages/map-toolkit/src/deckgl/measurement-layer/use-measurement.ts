@@ -13,49 +13,16 @@
 'use client';
 
 import 'client-only';
-import { useEmit, useOn } from '@accelint/bus/react';
 import {
   bearing as geoBearing,
   distance as geoDistance,
 } from '@accelint/geo/geodesy';
-import { useCallback, useContext } from 'react';
+import { useContext, useEffect } from 'react';
 import { MapContext } from '@/deckgl/base-map/provider';
-import { MapEvents } from '@/deckgl/base-map/events';
-import { MeasurementEvents } from './events';
+import { isLonLatTuple } from '@/shared/coordinates';
 import { measurementStore } from './store';
 import type { UniqueId } from '@accelint/core';
-import type {
-  MapDisablePanEvent,
-  MapDragEndEvent,
-  MapDragEvent,
-  MapDragStartEvent,
-  MapEnablePanEvent,
-} from '@/deckgl/base-map/types';
-import type {
-  MeasurementClearEvent,
-  MeasurementCompleteEvent,
-  MeasurementStartEvent,
-  MeasurementUpdateEvent,
-} from './events';
-
-/** Meters per nautical mile (exact, per IUPAC definition) */
-const METERS_PER_NM = 1852;
-
-/** Meters per kilometer */
-const METERS_PER_KM = 1000;
-
-/**
- * Modifier keys that can be required to activate measurement.
- */
-/**
- * Modifier key that must be held for a drag to count as a measurement.
- *
- * Prefer `'alt'`. `'shift'` collides with BaseMap's rubber-band zoom, which is
- * enabled by default and arms on Shift keydown, so releasing the mouse or the
- * key can still zoom the map. `'ctrl'` collides with BaseMap's Ctrl+drag
- * rotate/tilt gesture.
- */
-export type RequiresModifier = 'shift' | 'ctrl' | 'alt';
+import type { RequiresModifier } from './types';
 
 /**
  * Return value of `useMeasurement`.
@@ -65,17 +32,16 @@ export type UseMeasurementReturn = {
   isMeasuring: boolean;
   /** Origin coordinate `[longitude, latitude]`, or `null` when not measuring */
   pointA: [number, number] | null;
-  /** Destination coordinate `[longitude, latitude]`, or `null` before first drag move */
+  /** Destination coordinate `[longitude, latitude]`, or `null` before the first drag move */
   pointB: [number, number] | null;
-  /** Great-circle distance in kilometers, or `0` when points are unavailable */
-  distanceKm: number;
-  /** Great-circle distance in nautical miles, or `0` when points are unavailable */
-  distanceNM: number;
-  /** Initial bearing from pointA to pointB in degrees (0–360), or `0` when points are unavailable */
+  /** Great-circle distance in meters, or `0` until both points are finite. Format with `formatDistance` from `@accelint/formatters/bearing`. */
+  distanceMeters: number;
+  /** Initial bearing from pointA to pointB in degrees (0–360), or `0` until both points are finite */
   bearingDeg: number;
   /**
-   * Imperatively start a measurement from a coordinate.
+   * Imperatively start (or restart) a measurement from a coordinate.
    * Useful for programmatic activation (e.g., context menu "Measure from here").
+   * Behaves like a drag start: emits `measurement:start` and suppresses map pan.
    *
    * @param pointA - The origin coordinate as `[longitude, latitude]`
    */
@@ -84,35 +50,51 @@ export type UseMeasurementReturn = {
   clear: () => void;
 };
 
+/** Derives distance and bearing; zeros until both points are finite tuples. */
+function deriveMeasurement(
+  pointA: [number, number] | null,
+  pointB: [number, number] | null,
+): { distanceMeters: number; bearingDeg: number } {
+  if (!(isLonLatTuple(pointA) && isLonLatTuple(pointB))) {
+    return { distanceMeters: 0, bearingDeg: 0 };
+  }
+
+  return {
+    distanceMeters: geoDistance(pointA, pointB),
+    bearingDeg: geoBearing(pointA, pointB),
+  };
+}
+
 /**
- * Hook that subscribes to BaseMap drag events and manages bearing-range measurement state.
+ * Hook that exposes per-map bearing-range measurement state and actions.
  *
- * Listens to `map:dragStart`, `map:drag`, and `map:dragEnd` events on the event bus.
- * On drag start, begins a measurement from the drag origin and suppresses map pan. On
- * drag move, updates the destination coordinate. On drag end, marks the measurement
- * complete and re-enables pan.
+ * The drag subscription lives in `measurementStore`, once per map: the first
+ * hook to mount starts it and the last to unmount tears it down (finishing an
+ * in-flight measurement so pan is restored). Lifecycle events therefore fire
+ * once per map no matter how many hooks are mounted.
  *
- * An optional `requiresModifier` parameter restricts measurement activation to drags
- * where the specified modifier key is held, allowing plain drag to continue panning
- * the map. Releasing the modifier mid-drag completes the measurement at the last
- * captured coordinate. Prefer `'alt'`; see {@link RequiresModifier} for why `'shift'`
- * and `'ctrl'` conflict with BaseMap's own gestures.
+ * An optional `requiresModifier` restricts measurement to drags holding that
+ * key, so plain drag keeps panning. It is per-map state: the most recently
+ * mounted hook's value wins. Releasing the modifier mid-drag completes the
+ * measurement at the last captured coordinate. Prefer `'alt'`; see
+ * {@link RequiresModifier} for why `'shift'` and `'ctrl'` conflict with
+ * BaseMap's own gestures.
  *
  * Uses per-mapId store isolation so multiple map instances can measure independently.
  *
  * @param mapId - Optional map instance ID. Falls back to `MapContext` when omitted.
  *   Required when used outside of a `MapProvider` (i.e., outside BaseMap children).
  * @param requiresModifier - If set, measurement only activates when this modifier key is
- *   held during the drag. When not set, all drag events trigger measurement. Prefer
- *   `'alt'`; `'shift'` and `'ctrl'` conflict with BaseMap gestures.
- * @returns Measurement state and imperative actions
+ *   held during the drag. Per map; the most recently mounted hook's value wins.
+ * @returns Measurement state (`distanceMeters` / `bearingDeg` are `0` until both points are finite) and imperative actions. `start(pointA)` behaves like a drag
+ *   start: it emits `measurement:start` and suppresses pan until `complete` or `clear`.
  * @throws Error if no `mapId` is provided and hook is used outside of a `MapProvider`
  *
  * @example
  * ```tsx
  * // Inside BaseMap (uses MapContext automatically)
  * function MeasurementOverlay() {
- *   const { isMeasuring, pointA, pointB, distanceKm, distanceNM, bearingDeg } =
+ *   const { isMeasuring, pointA, pointB, distanceMeters, bearingDeg } =
  *     useMeasurement();
  *
  *   return isMeasuring && pointA && pointB
@@ -138,29 +120,13 @@ export type UseMeasurementReturn = {
  *
  * @example
  * ```tsx
- * // Modifier key required — Shift+drag to measure, plain drag to pan
+ * // Modifier key required — Alt+drag to measure, plain drag to pan
  * function MeasurementTool({ mapId }: { mapId: string }) {
- *   const { isMeasuring } = useMeasurement(mapId, 'shift');
+ *   const { isMeasuring } = useMeasurement(mapId, 'alt');
  *   return isMeasuring ? <ActiveIndicator /> : null;
  * }
  * ```
  */
-function checkModifier(
-  requiresModifier: RequiresModifier | undefined,
-  shiftKey: boolean,
-  ctrlKey: boolean,
-  altKey: boolean,
-): boolean {
-  if (!requiresModifier) {
-    return true;
-  }
-  return (
-    (requiresModifier === 'shift' && shiftKey) ||
-    (requiresModifier === 'ctrl' && ctrlKey) ||
-    (requiresModifier === 'alt' && altKey)
-  );
-}
-
 export function useMeasurement(
   mapId?: UniqueId,
   requiresModifier?: RequiresModifier,
@@ -174,120 +140,21 @@ export function useMeasurement(
     );
   }
 
-  const { state, start, updateEnd, complete, clear } =
+  const { state, start, clear, setRequiresModifier } =
     measurementStore.use(actualId);
 
-  const emitMeasurementStart = useEmit<MeasurementStartEvent>(
-    MeasurementEvents.start,
-  );
-  const emitMeasurementUpdate = useEmit<MeasurementUpdateEvent>(
-    MeasurementEvents.update,
-  );
-  const emitMeasurementComplete = useEmit<MeasurementCompleteEvent>(
-    MeasurementEvents.complete,
-  );
-  const emitMeasurementClear = useEmit<MeasurementClearEvent>(
-    MeasurementEvents.clear,
-  );
-  const emitDisablePan = useEmit<MapDisablePanEvent>(MapEvents.disablePan);
-  const emitEnablePan = useEmit<MapEnablePanEvent>(MapEvents.enablePan);
+  useEffect(() => {
+    setRequiresModifier(requiresModifier);
+  }, [requiresModifier, setRequiresModifier]);
 
-  // Shared by dragEnd and by a modifier release mid-drag, so pan restoration
-  // stays in step with the store's `complete()` transition.
-  const finishMeasurement = (fallbackPointA: [number, number]): void => {
-    complete();
-
-    const currentState = measurementStore.get(actualId);
-    emitMeasurementComplete({
-      mapId: actualId,
-      pointA: currentState.pointA ?? fallbackPointA,
-      pointB: currentState.pointB,
-    });
-    emitEnablePan({ id: actualId });
-  };
-
-  useOn<MapDragStartEvent>(MapEvents.dragStart, (event) => {
-    const { id, coordinate, shiftKey, ctrlKey, altKey } = event.payload;
-
-    if (id !== actualId) {
-      return;
-    }
-    if (!checkModifier(requiresModifier, shiftKey, ctrlKey, altKey)) {
-      return;
-    }
-
-    start(coordinate);
-    emitMeasurementStart({ mapId: actualId, pointA: coordinate, pointB: null });
-    emitDisablePan({ id: actualId });
-  });
-
-  useOn<MapDragEvent>(MapEvents.drag, (event) => {
-    const { id, coordinate, shiftKey, ctrlKey, altKey } = event.payload;
-
-    if (id !== actualId) {
-      return;
-    }
-    if (!measurementStore.get(actualId).isMeasuring) {
-      return;
-    }
-
-    // Releasing the modifier mid-drag ends the measurement at the last point.
-    if (!checkModifier(requiresModifier, shiftKey, ctrlKey, altKey)) {
-      finishMeasurement(coordinate);
-
-      return;
-    }
-
-    updateEnd(coordinate);
-
-    const currentState = measurementStore.get(actualId);
-    emitMeasurementUpdate({
-      mapId: actualId,
-      pointA: currentState.pointA ?? coordinate,
-      pointB: coordinate,
-    });
-  });
-
-  useOn<MapDragEndEvent>(MapEvents.dragEnd, (event) => {
-    const { id } = event.payload;
-
-    if (id !== actualId) {
-      return;
-    }
-    if (!measurementStore.get(actualId).isMeasuring) {
-      return;
-    }
-
-    finishMeasurement(event.payload.coordinate);
-  });
-
-  // Calculate derived geodesic values during render
   const { pointA, pointB, isMeasuring } = state;
-
-  let distanceKm = 0;
-  let distanceNM = 0;
-  let bearingDeg = 0;
-
-  if (pointA && pointB) {
-    const meters = geoDistance(pointA, pointB);
-    distanceKm = meters / METERS_PER_KM;
-    distanceNM = meters / METERS_PER_NM;
-    bearingDeg = geoBearing(pointA, pointB);
-  }
-
-  const clearMeasurement = useCallback(() => {
-    emitMeasurementClear({ mapId: actualId });
-    clear();
-  }, [emitMeasurementClear, actualId, clear]);
 
   return {
     isMeasuring,
     pointA,
     pointB,
-    distanceKm,
-    distanceNM,
-    bearingDeg,
+    ...deriveMeasurement(pointA, pointB),
     start,
-    clear: clearMeasurement,
+    clear,
   };
 }

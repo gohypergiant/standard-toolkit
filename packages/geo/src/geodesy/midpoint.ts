@@ -14,14 +14,15 @@ import { toSphericalPoints } from './to-spherical-points';
 import type { LonLatTuple } from '../coordinates/latlon/internal/normalize';
 
 /**
- * Computes the great-circle distance between two coordinates in meters.
+ * Computes the great-circle midpoint between two coordinates.
  *
- * Uses the Haversine formula via the geodesy library. Handles antipodal points
- * and antimeridian crossings correctly.
+ * The midpoint lies on the shortest great-circle path, so a pair that
+ * straddles the antimeridian yields a midpoint near ±180 rather than near 0.
+ * Longitude is normalized to `[-180, 180]` by the underlying geodesy library.
  *
  * @param origin - The starting coordinate as `[longitude, latitude]` in decimal degrees.
  * @param destination - The ending coordinate as `[longitude, latitude]` in decimal degrees.
- * @returns The great-circle distance in meters, or `0` when the points are identical.
+ * @returns The midpoint as `[longitude, latitude]` in decimal degrees, or the point itself when origin and destination are identical.
  * @throws {RangeError} When any coordinate component is not a finite number.
  *
  * @remarks
@@ -30,26 +31,37 @@ import type { LonLatTuple } from '../coordinates/latlon/internal/normalize';
  * Longitude and latitude are not range-checked. Map libraries such as deck.gl
  * hand this function longitudes beyond ±180 when the map wraps, and the
  * spherical math is periodic, so out-of-range values still produce the
- * correct distance.
+ * correct midpoint.
  *
  * @example
  * ```typescript
- * distance([0, 0], [0, 0]);
- * // 0
+ * midpoint([0, 0], [0, 10]);
+ * // [0, 5]
  *
- * distance([-0.1278, 51.5074], [2.3522, 48.8566]);
- * // ~343556 — approximately 343.6 km from London to Paris
+ * midpoint([179, 0], [-179, 0]);
+ * // [180, 0] — crosses the antimeridian rather than the prime meridian
+ *
+ * midpoint([-0.1278, 51.5074], [2.3522, 48.8566]);
+ * // [~1.09, ~50.19] — between London and Paris
  * ```
  */
-export function distance(
+export function midpoint(
   origin: LonLatTuple,
   destination: LonLatTuple,
-): number {
+): [number, number] {
   const [originPoint, destinationPoint] = toSphericalPoints(
     origin,
     destination,
-    'distance',
+    'midpoint',
   );
 
-  return originPoint.distanceTo(destinationPoint);
+  // Coincident points can drift by an ulp through the trigonometry, so return
+  // the (longitude-normalized) origin directly when the library deems them equal.
+  if (originPoint.equals(destinationPoint)) {
+    return [originPoint.lon, originPoint.lat];
+  }
+
+  const result = originPoint.midpointTo(destinationPoint);
+
+  return [result.lon, result.lat];
 }

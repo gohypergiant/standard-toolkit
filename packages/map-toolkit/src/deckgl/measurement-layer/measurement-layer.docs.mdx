@@ -1,0 +1,293 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+import * as MeasurementLayerStories from './measurement-layer.stories';
+
+<Meta of={MeasurementLayerStories} />
+
+# Measurement Layer
+
+Drag on the map to measure the great-circle distance and initial bearing between two points. The readout renders at the geodesic midpoint of the line as `"42.3 km / 22.8 NM | BRG: 321°"`.
+
+The feature has three parts that can be used together or independently:
+
+- **`MeasurementLayer`** — a controlled deck.gl composite layer that renders a dashed line, circular endpoints, and an optional label for a given `pointA` / `pointB`
+- **`useMeasurement`** — a hook that exposes the per-map measurement state (`pointA`, `pointB`, `distanceMeters`, `bearingDeg`) and the `start` / `clear` actions; the underlying `map:dragStart` / `map:drag` / `map:dragEnd` subscription lives in the measurement store, once per map
+- **`MeasurementTool`** — a convenience component that wires the hook and the layer together for plug-and-play usage inside `<BaseMap>`
+
+## Features
+
+- **Drag to measure**: Press, drag, and release to measure between the drag origin and the pointer position
+- **Great-circle distance and true bearing**: Computed with `bearing` and `distance` from `@accelint/geo/geodesy`; the hook returns raw `distanceMeters` and `bearingDeg` (0–360° true north) for you to format with `formatDistance` / `formatBearing` from `@accelint/formatters/bearing`
+- **Dual or single units**: `['kilometers', 'nauticalmiles']` by default, or any single `DistanceUnit`
+- **Antimeridian aware**: The line, endpoints, and label use `wrapLongitude`, so a segment that crosses ±180° longitude draws the short way around instead of across the whole map
+- **Safe with bad input**: Non-finite coordinates produce no measurement (zeros from the hook, nothing rendered by the layer) rather than throwing
+- **Optional modifier key**: Require `alt` (recommended), `ctrl`, or `shift` so plain drag keeps panning the map
+- **Pan suppression**: Emits `map:disablePan` while measuring and `map:enablePan` when the drag ends so the map does not pan under the measurement
+- **Custom labels**: Override the midpoint readout with `getLabel`
+- **Event bus integration**: Emits `measurement:start`, `measurement:update`, `measurement:complete`, and `measurement:clear` via `@accelint/bus`
+- **Multi-map support**: State is stored per `mapId`, so multiple maps measure independently
+- **React Fiber support**: Use as `<measurementLayer />` JSX in React Fiber-based deck.gl apps
+
+## Dependencies
+
+**Required:**
+- [`@accelint/bus`](https://github.com/gohypergiant/standard-toolkit/tree/main/packages/bus) — Event bus for drag and measurement events
+- [`@accelint/constants`](https://github.com/gohypergiant/standard-toolkit/tree/main/packages/constants) — `DistanceUnit` type for the `units` prop
+- [`@accelint/core`](https://github.com/gohypergiant/standard-toolkit/tree/main/packages/core) — `UniqueId` map identifiers
+- [`@accelint/geo`](https://github.com/gohypergiant/standard-toolkit/tree/main/packages/geo) — Great-circle distance, bearing, and the geodesic label midpoint
+- [`@accelint/formatters`](https://github.com/gohypergiant/standard-toolkit/tree/main/packages/formatters) — Distance and bearing label formatting
+- [`@deck.gl/core`](https://deck.gl/) — CompositeLayer base class
+- [`@deck.gl/layers`](https://deck.gl/) — PathLayer, ScatterplotLayer, TextLayer
+- [`@deck.gl/extensions`](https://deck.gl/) — PathStyleExtension for the dashed line
+- `react` — React 19.0.0 or higher (for the hook, the tool, and Fiber usage)
+
+`@accelint/geo` and `@accelint/formatters` are required peer dependencies of `@accelint/map-toolkit`; the package does not install them for you. The tool renders inside `<BaseMap>`, which has its own dependencies — see the [Base Map docs](?path=/docs/deckgl-base-map--docs).
+
+**Installation:**
+
+```bash
+pnpm add @accelint/map-toolkit @accelint/bus @accelint/constants @accelint/core @accelint/geo @accelint/formatters @deck.gl/core @deck.gl/layers @deck.gl/extensions react
+```
+
+The module is not part of the `@accelint/map-toolkit/deckgl` barrel. Import it from its feature path: `@accelint/map-toolkit/deckgl/measurement-layer`.
+
+## Basic Usage
+
+### With MeasurementTool (Recommended)
+
+`MeasurementTool` reads the map ID from `BaseMap`'s context, starts the per-map drag subscription, and renders the layer only while a measurement is active.
+
+```tsx
+import { BaseMap } from '@accelint/map-toolkit/deckgl';
+import { MeasurementTool } from '@accelint/map-toolkit/deckgl/measurement-layer';
+import { uuid } from '@accelint/core';
+
+const MAP_ID = uuid();
+
+function MapWithMeasurement() {
+  return (
+    <BaseMap id={MAP_ID}>
+      <MeasurementTool requiresModifier="alt" />
+    </BaseMap>
+  );
+}
+```
+
+### With the Hook and Fiber Layer
+
+Use `useMeasurement` directly when you need the numbers outside the map (a sidebar readout, for example) or want full control over the layer props. The hook works anywhere in the tree as long as you pass the `mapId`. It returns the raw `distanceMeters` and `bearingDeg`; format them with `formatDistance` and `formatBearing` from `@accelint/formatters/bearing` so the readout matches the on-canvas label.
+
+```tsx
+import { BaseMap } from '@accelint/map-toolkit/deckgl';
+import { useMeasurement } from '@accelint/map-toolkit/deckgl/measurement-layer';
+import '@accelint/map-toolkit/deckgl/measurement-layer/fiber';
+import { uuid } from '@accelint/core';
+import { formatBearing, formatDistance } from '@accelint/formatters/bearing';
+
+const MAP_ID = uuid();
+
+function MeasurementOverlay() {
+  const { isMeasuring, pointA, pointB } = useMeasurement(MAP_ID, 'alt');
+
+  if (!(isMeasuring && pointA && pointB)) {
+    return null;
+  }
+
+  return <measurementLayer id="measurement" pointA={pointA} pointB={pointB} />;
+}
+
+function MeasurementReadout() {
+  const { isMeasuring, distanceMeters, bearingDeg, clear } =
+    useMeasurement(MAP_ID, 'alt');
+
+  if (!isMeasuring) {
+    return null;
+  }
+
+  return (
+    <div className="absolute top-4 left-4">
+      <p>
+        {formatDistance(distanceMeters, ['kilometers', 'nauticalmiles'])} · {formatBearing(bearingDeg)}
+      </p>
+      <button onClick={clear}>Clear</button>
+    </div>
+  );
+}
+
+function MapWithReadout() {
+  return (
+    <div className="relative w-full h-full">
+      <BaseMap id={MAP_ID} className="absolute inset-0">
+        <MeasurementOverlay />
+      </BaseMap>
+      <MeasurementReadout />
+    </div>
+  );
+}
+```
+
+Only deck.gl layers may be children of `BaseMap`, so the readout is rendered as a sibling. Both components share one measurement: the drag subscription is created once per map by the store, not once per hook instance, so mounting several `useMeasurement` hooks on the same map never duplicates events.
+
+### Direct Layer Usage
+
+The layer is a pure function of its props, so it can be constructed directly for non-React deck.gl apps or when driving the coordinates from your own state.
+
+```tsx
+import { Deck } from '@deck.gl/core';
+import { MeasurementLayer } from '@accelint/map-toolkit/deckgl/measurement-layer';
+
+new Deck({
+  initialViewState: { longitude: -97, latitude: 32, zoom: 5 },
+  controller: true,
+  layers: [
+    new MeasurementLayer({
+      id: 'measurement',
+      pointA: [-97.74, 30.27],
+      pointB: [-90.07, 29.95],
+      units: 'nauticalmiles',
+      lineColor: [255, 200, 0, 200],
+      endpointColor: [255, 200, 0, 255],
+    }),
+  ],
+});
+```
+
+## Modifier Keys
+
+Without `requiresModifier`, every drag on the map is a measurement and the map no longer pans by dragging. Pass a modifier so plain drag keeps panning and only modifier + drag measures.
+
+Prefer `'alt'`:
+
+- `'shift'` conflicts with BaseMap's rubber-band zoom, which is enabled by default and arms on Shift keydown — releasing the mouse or the key can still zoom the map
+- `'ctrl'` conflicts with BaseMap's Ctrl+drag rotate/tilt gesture
+
+Releasing the modifier mid-drag completes the measurement at the last captured point and restores map pan, so a user can let go of Alt to "lock in" a reading before releasing the mouse.
+
+```tsx
+<MeasurementTool requiresModifier="alt" />
+```
+
+`requiresModifier` is per-map state written by the hook, not per-hook state. If two `useMeasurement` instances on the same map pass different values, the most recently mounted one wins for that map. Pass the same value to every hook on a map (or only pass it from one).
+
+## Custom Labels
+
+`getLabel` replaces the default `"42.3 km / 22.8 NM | BRG: 321°"` readout. It is called as `getLabel(pointA, pointB, units)` — both coordinates plus the configured `units` — and returns the string to render at the geodesic midpoint.
+
+```tsx
+import { formatBearing, formatDistance } from '@accelint/formatters/bearing';
+import { bearing, distance } from '@accelint/geo/geodesy';
+
+<MeasurementTool
+  getLabel={(pointA, pointB, units) =>
+    `${formatDistance(distance(pointA, pointB), units)} at ${formatBearing(bearing(pointA, pointB))}`
+  }
+/>
+```
+
+Set `showLabel={false}` to hide the on-canvas label entirely, for example when the readout lives in a sidebar.
+
+## Event Bus Integration
+
+The measurement store emits lifecycle events through `@accelint/bus`. Each is emitted once per map regardless of how many `useMeasurement` instances are mounted for that map, so a sidebar readout and the on-map overlay can share one measurement without duplicate events.
+
+| Event | Name | Payload type | Payload |
+|-------|------|--------------|---------|
+| `MeasurementEvents.start` | `'measurement:start'` | `MeasurementPayload` | `{ mapId, pointA, pointB: null }` |
+| `MeasurementEvents.update` | `'measurement:update'` | `MeasurementPayload` | `{ mapId, pointA, pointB }` |
+| `MeasurementEvents.complete` | `'measurement:complete'` | `MeasurementCompletePayload` | `{ mapId, pointA, pointB }` with a non-null `pointB` |
+| `MeasurementEvents.clear` | `'measurement:clear'` | `MeasurementClearPayload` | `{ mapId }` |
+
+Lifecycle details:
+
+- `measurement:start` fires on every drag start and on every `start(pointA)` call. Calling `start` while a measurement is active restarts it: `pointB` resets and a fresh `measurement:start` is emitted.
+- `measurement:update` fires on every drag move, including moves that repeat the previous coordinate.
+- `measurement:complete` fires when the drag ends with a captured `pointB`, so `MeasurementCompletePayload.pointB` is never `null`. Completing without a `pointB` (a press-and-release with no move) behaves like `clear()` and emits `measurement:clear` instead.
+- `measurement:clear` fires from `clear()` and restores map pan if a drag was in progress.
+
+```tsx
+import { useOn } from '@accelint/bus/react';
+import {
+  MeasurementEvents,
+  type MeasurementCompleteEvent,
+} from '@accelint/map-toolkit/deckgl/measurement-layer';
+
+function MeasurementLogger() {
+  useOn<MeasurementCompleteEvent>(MeasurementEvents.complete, (event) => {
+    if (event.payload.mapId !== MAP_ID) return;
+    console.log('Measured from', event.payload.pointA, 'to', event.payload.pointB);
+  });
+
+  return null;
+}
+```
+
+Under the hood, the store listens to `MapEvents.dragStart`, `MapEvents.drag`, and `MapEvents.dragEnd` from BaseMap, subscribing when the first `useMeasurement` for a map mounts and unsubscribing when the last one unmounts. If that last unmount happens mid-drag, the measurement is finished and map pan is restored. `map:dragEnd` is always emitted, even when the release position does not unproject to finite coordinates; its `MapDragEndPayload.coordinate` is `null` in that case and the measurement completes at the last captured point. See the [Base Map docs](?path=/docs/deckgl-base-map--docs) for the `MapDragPayload` and `MapDragEndPayload` shapes.
+
+## API Reference
+
+### MeasurementLayerProps
+
+Extends deck.gl `CompositeLayerProps`.
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `id` | `string` | *required* | Unique layer ID |
+| `pointA` | `[number, number]` | *required* | Origin coordinate as `[longitude, latitude]`. The layer renders nothing when either point is not a finite tuple |
+| `pointB` | `[number, number]` | *required* | Destination coordinate as `[longitude, latitude]` |
+| `showLabel` | `boolean` | `true` | Render the measurement label at the geodesic midpoint of the line |
+| `getLabel` | `(pointA, pointB, units) => string` | `undefined` | Custom label function; overrides the default `"X km / Y NM \| BRG: ZZZ°"` format |
+| `units` | `DistanceUnit \| DistanceUnit[]` | `['kilometers', 'nauticalmiles']` | Distance unit(s) for the readout; a single unit produces `"42.3 km"`, two produce `"42.3 km / 22.8 NM"` |
+| `lineColor` | `Color` | `[255, 255, 255, 200]` | RGBA color of the dashed measurement line |
+| `endpointColor` | `Color` | `[255, 255, 255, 255]` | RGBA color of the circular endpoint markers |
+
+### useMeasurement
+
+```typescript
+function useMeasurement(
+  mapId?: UniqueId,
+  requiresModifier?: RequiresModifier,
+): UseMeasurementReturn;
+```
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `mapId` | `UniqueId` | `MapContext` | Map instance ID. Falls back to the surrounding `MapProvider`; required outside of `BaseMap` children |
+| `requiresModifier` | `RequiresModifier` | `undefined` | Modifier key that must be held for a drag to count as a measurement. When omitted, every drag measures. Stored per map; the most recently mounted hook's value wins |
+
+Throws if no `mapId` is given and the hook is used outside of a `MapProvider`.
+
+Mounting the hook starts the per-map `map:drag*` subscription if it is not already running; unmounting the last hook for a map stops it (and, mid-drag, completes the measurement and restores pan).
+
+#### UseMeasurementReturn
+
+| Property | Type | Description |
+|----------|------|-------------|
+| `isMeasuring` | `boolean` | Whether a measurement drag is in progress |
+| `pointA` | `[number, number] \| null` | Origin coordinate, or `null` when idle |
+| `pointB` | `[number, number] \| null` | Destination coordinate, or `null` before the first drag move |
+| `distanceMeters` | `number` | Great-circle distance in meters, or `0` when either point is missing or not finite. Format with `formatDistance(distanceMeters, units)` from `@accelint/formatters/bearing` |
+| `bearingDeg` | `number` | Initial bearing from `pointA` to `pointB` in degrees (0–360), or `0` when either point is missing or not finite. Format with `formatBearing(bearingDeg)` |
+| `start` | `(pointA: [number, number]) => void` | Imperatively start a measurement from a coordinate (e.g. a context-menu "Measure from here"). Restarts an active measurement: resets `pointB`, emits `measurement:start`, and suppresses pan |
+| `clear` | `() => void` | Clear the measurement, reset to idle, emit `measurement:clear`, and restore pan if a drag was in progress |
+
+### MeasurementToolProps
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `mapId` | `UniqueId` | `MapContext` | Map instance ID. Falls back to the surrounding `MapProvider`; required outside of `BaseMap` children |
+| `showLabel` | `boolean` | `true` | Render the on-canvas label at the line midpoint |
+| `units` | `DistanceUnit \| DistanceUnit[]` | `['kilometers', 'nauticalmiles']` | Distance unit(s) for the readout |
+| `requiresModifier` | `RequiresModifier` | `undefined` | Modifier key required to activate measurement. Prefer `'alt'`; see [Modifier Keys](#modifier-keys) |
+| `getLabel` | `(pointA, pointB, units) => string` | `undefined` | Custom label function; overrides the default format |
+| `lineColor` | `Color` | `[255, 255, 255, 200]` | RGBA color of the measurement line, forwarded to `MeasurementLayer` |
+| `endpointColor` | `Color` | `[255, 255, 255, 255]` | RGBA color of the endpoint circles, forwarded to `MeasurementLayer` |
+
+### RequiresModifier
+
+```typescript
+import type { RequiresModifier } from '@accelint/map-toolkit/deckgl/measurement-layer';
+
+type RequiresModifier = 'shift' | 'ctrl' | 'alt';
+```
+
+Modifier key that must be held for a drag to count as a measurement. Prefer `'alt'`; `'shift'` and `'ctrl'` collide with BaseMap's own gestures as described in [Modifier Keys](#modifier-keys). The value is stored per map, so all hooks on one map share it.

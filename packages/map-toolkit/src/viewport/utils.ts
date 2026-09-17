@@ -13,6 +13,7 @@
 import {
   DISTANCE_UNIT_BY_SYMBOL,
   DISTANCE_UNIT_SYMBOLS,
+  METERS_PER_UNIT,
 } from '@accelint/constants/units';
 import { createLoggerDomain } from '../shared/logger';
 import type { GetViewportSizeArgs } from './types';
@@ -26,17 +27,6 @@ const numberFormatter = Intl.NumberFormat('en-US');
  * This is Earth's circumference (40075016.686m) divided by 256 (tile size).
  */
 const METERS_PER_PIXEL_AT_ZOOM_0 = 156543.03392;
-
-/**
- * Unit conversion factors from meters.
- */
-const METERS_TO_UNIT = {
-  kilometers: 0.001,
-  meters: 1,
-  nauticalmiles: 0.000539957,
-  miles: 0.000621371,
-  feet: 3.28084,
-} as const;
 
 /**
  * Returns a formatted viewport size string i.e. `660 x 1,801 NM`
@@ -114,10 +104,10 @@ export function getViewportSize({
   const heightMeters = pixelHeight * metersPerPixel;
 
   // Convert to requested unit
-  const conversionFactor = METERS_TO_UNIT[unitKey];
+  const metersPerUnit = METERS_PER_UNIT[unitKey];
 
-  const widthDistance = Math.round(widthMeters * conversionFactor);
-  const heightDistance = Math.round(heightMeters * conversionFactor);
+  const widthDistance = Math.round(widthMeters / metersPerUnit);
+  const heightDistance = Math.round(heightMeters / metersPerUnit);
 
   const width = formatter.format(widthDistance);
   const height = formatter.format(heightDistance);

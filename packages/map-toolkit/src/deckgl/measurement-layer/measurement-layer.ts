@@ -16,28 +16,29 @@ import { PathStyleExtension } from '@deck.gl/extensions';
 import {
   bearing as geoBearing,
   distance as geoDistance,
+  midpoint as geoMidpoint,
 } from '@accelint/geo/geodesy';
 import { formatBearing, formatDistance } from '@accelint/formatters/bearing';
-import { DASH_ARRAYS, TOOLTIP_CHARACTER_SET } from '../shapes/shared/constants';
-import { DEFAULT_TEXT_STYLE, SDF_FONT_SETTINGS } from '../text-settings';
-import type { Color, Layer } from '@deck.gl/core';
+import { isLonLatTuple } from '@/shared/coordinates';
+import {
+  DASH_ARRAYS,
+  DEFAULT_EDIT_HANDLE_COLOR,
+  DEFAULT_EDIT_HANDLE_OUTLINE_COLOR,
+  DEFAULT_EDIT_HANDLE_RADIUS,
+  TOOLTIP_SUBLAYER_PROPS,
+} from '../shapes/shared/constants';
+import type { Color, DefaultProps, Layer } from '@deck.gl/core';
 import type { DistanceUnit } from '@accelint/constants/units';
 import type { MeasurementLayerProps } from './types';
 
 /** Default RGBA color for the measurement line (white, 78% opacity) */
 const DEFAULT_LINE_COLOR: Color = [255, 255, 255, 200];
 
-/** Default RGBA color for the endpoint circles (white, fully opaque) */
-const DEFAULT_ENDPOINT_COLOR: Color = [255, 255, 255, 255];
-
 /** Default units: dual km + NM covers both maritime/air and land operations */
 const DEFAULT_UNITS: DistanceUnit[] = ['kilometers', 'nauticalmiles'];
 
 /** Stable PathStyleExtension instance — avoids re-creating per render */
 const PATH_STYLE_EXTENSION = new PathStyleExtension({ dash: true });
-
-/** Stable line color array for scatterplot endpoint borders */
-const ENDPOINT_LINE_COLOR: Color = [0, 0, 0, 200];
 
 /**
  * Builds the default measurement label string.
@@ -57,27 +58,15 @@ function buildDefaultLabel(
   units: DistanceUnit | DistanceUnit[],
 ): string {
   const meters = geoDistance(pointA, pointB);
-  const brg = geoBearing(pointA, pointB);
+  const bearingDegrees = geoBearing(pointA, pointB);
 
-  const distStr = formatDistance(meters, units);
-  const brgStr = formatBearing(brg);
+  const distanceLabel = formatDistance(
+    meters,
+    Array.isArray(units) && units.length === 0 ? DEFAULT_UNITS : units,
+  );
+  const bearingLabel = formatBearing(bearingDegrees);
 
-  return `${distStr} | BRG: ${brgStr}`;
-}
-
-/**
- * Computes the geographic midpoint between two `[longitude, latitude]` coordinates
- * using simple linear interpolation (sufficient for short measurement lines).
- *
- * @param pointA - Origin coordinate `[longitude, latitude]`
- * @param pointB - Destination coordinate `[longitude, latitude]`
- * @returns Midpoint coordinate `[longitude, latitude]`
- */
-function midpoint(
-  pointA: [number, number],
-  pointB: [number, number],
-): [number, number] {
-  return [(pointA[0] + pointB[0]) / 2, (pointA[1] + pointB[1]) / 2];
+  return `${distanceLabel} | BRG: ${bearingLabel}`;
 }
 
 /**
@@ -133,14 +122,26 @@ function midpoint(
  * <MeasurementLayer
  *   pointA={pointA}
  *   pointB={pointB}
- *   getLabel={(a, b) => `${a.join(',')} → ${b.join(',')}`}
+ *   getLabel={(pointA, pointB) => `${a.join(',')} → ${b.join(',')}`}
  * />
  * ```
  */
 export class MeasurementLayer extends CompositeLayer<MeasurementLayerProps> {
   static override layerName = 'MeasurementLayer';
 
+  // Only the color props are declared here: `type: 'color'` makes deck.gl
+  // deep-compare them on prop diff, so inline `[r, g, b, a]` literals from
+  // consumers don't force a sublayer rebuild on every parent render.
+  static override defaultProps: DefaultProps<MeasurementLayerProps> = {
+    lineColor: { type: 'color', value: DEFAULT_LINE_COLOR },
+    endpointColor: { type: 'color', value: DEFAULT_EDIT_HANDLE_COLOR },
+  };
+
+  /** Builds the dashed path, endpoint markers, and (when `showLabel`) the midpoint label. */
   override renderLayers(): Layer[] {
+    // Defaults live in the destructuring, not `defaultProps`: deck.gl copies an
+    // explicit `undefined` prop over a declared default, and JSX forwards
+    // omitted optional props as `undefined`.
     const {
       pointA,
       pointB,
@@ -148,30 +149,37 @@ export class MeasurementLayer extends CompositeLayer<MeasurementLayerProps> {
       getLabel = buildDefaultLabel,
       units = DEFAULT_UNITS,
       lineColor = DEFAULT_LINE_COLOR,
-      endpointColor = DEFAULT_ENDPOINT_COLOR,
+      endpointColor = DEFAULT_EDIT_HANDLE_COLOR,
     } = this.props;
+
+    // Non-finite points mean "no measurement"; geo's functions throw on them.
+    if (!(isLonLatTuple(pointA) && isLonLatTuple(pointB))) {
+      return [];
+    }
 
     const layers: Layer[] = [
       new PathLayer({
         id: `${this.id}-path`,
         data: [{ path: [pointA, pointB] }],
-        getPath: (d: { path: [number, number][] }) => d.path,
+        getPath: (datum: { path: [number, number][] }) => datum.path,
+        wrapLongitude: true,
         getColor: lineColor,
         getWidth: 2,
         widthUnits: 'pixels',
         pickable: false,
-        getDashArray: DASH_ARRAYS.dashed ?? [8, 4],
+        getDashArray: DASH_ARRAYS.dashed,
         dashJustified: true,
         extensions: [PATH_STYLE_EXTENSION],
       }),
       new ScatterplotLayer({
         id: `${this.id}-endpoints`,
         data: [pointA, pointB],
-        getPosition: (d: [number, number]) => d,
-        getRadius: 6,
+        getPosition: (datum: [number, number]) => datum,
+        wrapLongitude: true,
+        getRadius: DEFAULT_EDIT_HANDLE_RADIUS,
         radiusUnits: 'pixels',
         getFillColor: endpointColor,
-        getLineColor: ENDPOINT_LINE_COLOR,
+        getLineColor: DEFAULT_EDIT_HANDLE_OUTLINE_COLOR,
         lineWidthUnits: 'pixels',
         getLineWidth: 1,
         stroked: true,
@@ -186,19 +194,15 @@ export class MeasurementLayer extends CompositeLayer<MeasurementLayerProps> {
           id: `${this.id}-label`,
           data: [
             {
-              position: midpoint(pointA, pointB),
+              position: geoMidpoint(pointA, pointB),
               text: getLabel(pointA, pointB, units),
             },
           ],
-          getText: (d: { text: string }) => d.text,
-          getPosition: (d: { position: [number, number] }) => d.position,
-          ...DEFAULT_TEXT_STYLE,
-          fontSettings: { ...SDF_FONT_SETTINGS },
-          fontFamily: 'Roboto MonoVariable, monospace',
-          characterSet: TOOLTIP_CHARACTER_SET,
+          ...TOOLTIP_SUBLAYER_PROPS.tooltips,
           getTextAnchor: 'middle',
           getAlignmentBaseline: 'bottom',
           getPixelOffset: [0, -8],
+          wrapLongitude: true,
           billboard: true,
           pickable: false,
         }),

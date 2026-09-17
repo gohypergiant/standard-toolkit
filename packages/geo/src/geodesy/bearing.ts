@@ -10,21 +10,28 @@
  * governing permissions and limitations under the License.
  */
 
-import LatLonSpherical from 'geodesy/latlon-spherical';
+import { toSphericalPoints } from './to-spherical-points';
+import type { LonLatTuple } from '../coordinates/latlon/internal/normalize';
 
 /**
- * Computes the initial great-circle bearing from pointA to pointB.
+ * Computes the initial great-circle bearing from origin to destination.
  *
  * Bearing is expressed as degrees clockwise from true north (0–360).
  * Antipodal points and antimeridian crossings are handled correctly by
  * the underlying geodesy library.
  *
- * @param pointA - The origin coordinate as `[longitude, latitude]` in decimal degrees.
- * @param pointB - The destination coordinate as `[longitude, latitude]` in decimal degrees.
- * @returns The initial bearing in degrees (0–360), or `0` when pointA and pointB are identical.
+ * @param origin - The starting coordinate as `[longitude, latitude]` in decimal degrees.
+ * @param destination - The ending coordinate as `[longitude, latitude]` in decimal degrees.
+ * @returns The initial bearing in degrees (0–360), or `0` when origin and destination coincide (within `Number.EPSILON` degrees).
+ * @throws {RangeError} When any coordinate component is not a finite number.
  *
  * @remarks
  * pure function
+ *
+ * Longitude and latitude are not range-checked. Map libraries such as deck.gl
+ * hand this function longitudes beyond ±180 when the map wraps, and the
+ * spherical math is periodic, so out-of-range values still produce the
+ * correct bearing.
  *
  * @example
  * ```typescript
@@ -38,19 +45,18 @@ import LatLonSpherical from 'geodesy/latlon-spherical';
  * // 270 — due west
  * ```
  */
-export function bearing(
-  pointA: [number, number],
-  pointB: [number, number],
-): number {
-  const [lonA, latA] = pointA;
-  const [lonB, latB] = pointB;
+export function bearing(origin: LonLatTuple, destination: LonLatTuple): number {
+  const [originPoint, destinationPoint] = toSphericalPoints(
+    origin,
+    destination,
+    'bearing',
+  );
 
-  if (latA === latB && lonA === lonB) {
+  // The library returns NaN for coincident points (within Number.EPSILON), so
+  // short-circuit with its own equality check to keep the result a usable angle.
+  if (originPoint.equals(destinationPoint)) {
     return 0;
   }
 
-  const a = new LatLonSpherical(latA, lonA);
-  const b = new LatLonSpherical(latB, lonB);
-
-  return a.initialBearingTo(b);
+  return originPoint.initialBearingTo(destinationPoint);
 }

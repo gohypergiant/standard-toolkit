@@ -14,6 +14,7 @@ Geographic coordinate parsing, conversion, and formatting for multiple coordinat
 - **Flexible Format Ordering**: Convert between LATLON and LONLAT formats
 - **Structured Parts API**: Get the numeric pieces of a coordinate (`{ degrees, minutes, seconds, hemisphere }`, or grid components) instead of a formatted string — useful for segmented inputs and custom renderers
 - **Standalone Functions**: Per-system `format*`/`parse*` helpers and validation predicates alongside the `createCoordinate` façade
+- **Geodesy**: `bearing`, `distance`, and `midpoint` between two `[longitude, latitude]` points on a spherical Earth
 - **Input Validation**: Detailed error messages for invalid coordinates
 - **Performance Optimized**: Immutable coordinate objects with intelligent caching
 - **Type Safe**: Full TypeScript support with complete type definitions
@@ -303,6 +304,36 @@ validateNumericCoordinate(45.5, -122.6); // []
 validateNumericCoordinate(91, -122.6);
 // ['[ERROR] Latitude value (91) is outside valid range (-90 to 90).']
 ```
+
+## Geodesy
+
+`bearing`, `distance`, and `midpoint` compute the initial great-circle bearing, the great-circle distance, and the great-circle midpoint between two points, using the spherical Earth model from the `geodesy` library.
+
+All three functions take `[longitude, latitude]` tuples (`LonLatTuple`, GeoJSON order). This is the reverse of the `[latitude, longitude]` order that the rest of this README's numeric input uses, so double-check the order when passing coordinates from `createCoordinate` or the standalone formatters.
+
+```typescript
+import { bearing, distance, midpoint } from '@accelint/geo/geodesy';
+// or: import { bearing, distance, midpoint } from '@accelint/geo';
+
+bearing([0, 0], [0, 1]);  // 0   — due north
+bearing([0, 0], [1, 0]);  // 90  — due east
+bearing([0, 0], [-1, 0]); // 270 — due west
+
+// London to Paris
+distance([-0.1278, 51.5074], [2.3522, 48.8566]); // ~343556 meters (~343.6 km)
+
+midpoint([0, 0], [0, 10]);     // [0, 5]
+midpoint([179, 0], [-179, 0]); // [180, 0] — follows the short way across the antimeridian
+```
+
+- `bearing(origin, destination)` returns degrees clockwise from true north in `[0, 360)`.
+- `distance(origin, destination)` returns meters.
+- `midpoint(origin, destination)` returns the `[longitude, latitude]` halfway along the shortest great-circle path, with longitude normalized to `[-180, 180]`.
+- `bearing` and `distance` return `0` when the two points are identical; `midpoint` returns the point itself.
+- All three throw a `RangeError` when any coordinate component is `NaN` or infinite.
+- Longitude is not range-checked: map libraries such as deck.gl pass longitudes beyond ±180 when the map wraps, and the spherical math is periodic, so those values still give correct results.
+
+To render results for display, use `formatBearing` and `formatDistance` from `@accelint/formatters`.
 
 ## Coordinate System Formats
 

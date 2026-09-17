@@ -13,66 +13,32 @@
 'use client';
 
 import 'client-only';
-import type { Color } from '@deck.gl/core';
-import type { DistanceUnit } from '@accelint/constants/units';
+import type { ReactNode } from 'react';
 import type { UniqueId } from '@accelint/core';
-import type { RequiresModifier } from './use-measurement';
+import type { MeasurementLayerProps, RequiresModifier } from './types';
 import './fiber';
 import { useMeasurement } from './use-measurement';
 
 /**
  * Props for the `MeasurementTool` convenience component.
  */
-export type MeasurementToolProps = {
+export type MeasurementToolProps = Pick<
+  MeasurementLayerProps,
+  'showLabel' | 'units' | 'getLabel' | 'lineColor' | 'endpointColor'
+> & {
   /**
    * Map instance ID. Falls back to `MapContext` when omitted.
    * Required when used outside of a `MapProvider` (i.e., outside BaseMap children).
    */
   mapId?: UniqueId;
   /**
-   * Whether to render the on-canvas measurement label at the line midpoint.
-   * Set to `false` if you render the readout externally (e.g., in a sidebar).
-   * @defaultValue true
-   */
-  showLabel?: boolean;
-  /**
-   * Distance unit(s) for the measurement readout.
-   * Single unit: `'kilometers'` → `"42.3 km"`.
-   * Dual units: `['kilometers', 'nauticalmiles']` → `"42.3 km / 22.8 NM"`.
-   * @defaultValue `['kilometers', 'nauticalmiles']`
-   */
-  units?: DistanceUnit | DistanceUnit[];
-  /**
    * If set, measurement only activates when this modifier key is held during drag.
    * Allows plain drag to continue panning the map while the modifier + drag triggers
-   * measurement.
-   *
-   * Prefer `'alt'`. `'shift'` collides with BaseMap's rubber-band zoom (enabled by
-   * default), so releasing the mouse or the key can still zoom the map. `'ctrl'`
-   * collides with BaseMap's Ctrl+drag rotate/tilt gesture.
+   * measurement. See {@link RequiresModifier} for why `'alt'` is preferred over
+   * `'shift'` and `'ctrl'`.
    * @defaultValue undefined (all drag events trigger measurement)
    */
   requiresModifier?: RequiresModifier;
-  /**
-   * Custom label function. Receives `pointA`, `pointB`, and `units`, and returns the
-   * label string to render at the line midpoint. When provided, overrides the default
-   * `"X km / Y NM | BRG: ZZZ°"` format.
-   */
-  getLabel?: (
-    pointA: [number, number],
-    pointB: [number, number],
-    units: DistanceUnit | DistanceUnit[],
-  ) => string;
-  /**
-   * RGBA color for the measurement line.
-   * Forwarded to `MeasurementLayer`.
-   */
-  lineColor?: Color;
-  /**
-   * RGBA color for the endpoint circles at pointA and pointB.
-   * Forwarded to `MeasurementLayer`.
-   */
-  endpointColor?: Color;
 };
 
 /**
@@ -91,6 +57,7 @@ export type MeasurementToolProps = {
  * separately. For JSX fiber usage, see `MeasurementLayer` and its fiber registration.
  *
  * @param props - See {@link MeasurementToolProps}
+ * @returns The measurement layer while a drag is active, otherwise `null`
  *
  * @example
  * ```tsx
@@ -102,9 +69,9 @@ export type MeasurementToolProps = {
  *
  * @example
  * ```tsx
- * // Require Shift key to activate measurement; plain drag continues to pan
+ * // Require Alt key to activate measurement; plain drag continues to pan
  * <BaseMap id="main">
- *   <MeasurementTool requiresModifier="shift" />
+ *   <MeasurementTool requiresModifier="alt" />
  * </BaseMap>
  * ```
  *
@@ -125,20 +92,16 @@ export type MeasurementToolProps = {
  * // Custom label format
  * <BaseMap id="main">
  *   <MeasurementTool
- *     getLabel={(a, b, units) => `From ${a.join(',')} to ${b.join(',')}`}
+ *     getLabel={(pointA, pointB, units) => `From ${pointA.join(',')} to ${pointB.join(',')}`}
  *   />
  * </BaseMap>
  * ```
  */
 export function MeasurementTool({
   mapId,
-  showLabel,
-  units,
   requiresModifier,
-  getLabel,
-  lineColor,
-  endpointColor,
-}: MeasurementToolProps) {
+  ...layerProps
+}: MeasurementToolProps): ReactNode {
   const { isMeasuring, pointA, pointB } = useMeasurement(
     mapId,
     requiresModifier,
@@ -153,11 +116,7 @@ export function MeasurementTool({
       id='measurement-tool-layer'
       pointA={pointA}
       pointB={pointB}
-      showLabel={showLabel}
-      units={units}
-      getLabel={getLabel}
-      lineColor={lineColor}
-      endpointColor={endpointColor}
+      {...layerProps}
     />
   );
 }

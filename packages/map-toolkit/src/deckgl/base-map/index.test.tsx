@@ -12,7 +12,7 @@
 
 import { Broadcast } from '@accelint/bus/broadcast';
 import { uuid } from '@accelint/core';
-import { act, render, screen, waitFor } from '@testing-library/react';
+import { act, render, screen } from '@testing-library/react';
 import {
   afterEach,
   beforeEach,
@@ -32,10 +32,10 @@ import type { MjolnirGestureEvent } from 'mjolnir.js';
 import type { CameraEvent } from '../../camera/types';
 import type { MapDragPayload, MapEventType, MapLibreOptions } from './types';
 
-interface FakeMap {
+type FakeMap = {
   setProjection: Mock;
   isStyleLoaded: Mock;
-}
+};
 
 function createFakeMap(): FakeMap {
   return {
@@ -318,18 +318,10 @@ describe('BaseMap', () => {
   });
 
   describe('drag event bus emission', () => {
-    // Build a minimal drag info payload with a coordinate
-    function dragInfo(coordinate: [number, number] = [10, 20]) {
-      return { coordinate };
-    }
-
-    // Build a minimal gesture event with modifier key state
     function dragEvent(
-      overrides: Partial<{
-        shiftKey: boolean;
-        ctrlKey: boolean;
-        altKey: boolean;
-      }> = {},
+      overrides: Partial<
+        Pick<MapDragPayload, 'shiftKey' | 'ctrlKey' | 'altKey'>
+      > = {},
     ): MjolnirGestureEvent {
       const { shiftKey = false, ctrlKey = false, altKey = false } = overrides;
 
@@ -342,138 +334,102 @@ describe('BaseMap', () => {
       } as unknown as MjolnirGestureEvent;
     }
 
-    it('emits map:dragStart on the bus with coordinate and modifier keys', async () => {
-      const id = uuid();
-      useFakeMap(createFakeMap());
-
-      const bus = Broadcast.getInstance<MapEventType>();
-      const received: MapDragPayload[] = [];
-      const handler = (event: { payload: MapDragPayload }) => {
-        received.push(event.payload);
-      };
-
-      bus.on(MapEvents.dragStart, handler);
-
-      render(<BaseMap id={id} />);
-
-      act(() => {
-        capturedDragHandlers.onDragStart?.(
-          dragInfo([10, 20]),
-          dragEvent({ shiftKey: true }),
-        );
-      });
-
-      await waitFor(() => {
-        expect(received).toHaveLength(1);
-      });
-
-      expect(received[0]).toEqual({
-        id,
+    it.each([
+      {
+        handler: 'onDragStart',
+        event: MapEvents.dragStart,
         coordinate: [10, 20],
-        shiftKey: true,
-        ctrlKey: false,
-        altKey: false,
-      });
-
-      bus.off(MapEvents.dragStart, handler);
-    });
-
-    it('emits map:drag on the bus with coordinate and modifier keys', async () => {
-      const id = uuid();
-      useFakeMap(createFakeMap());
-
-      const bus = Broadcast.getInstance<MapEventType>();
-      const received: MapDragPayload[] = [];
-      const handler = (event: { payload: MapDragPayload }) => {
-        received.push(event.payload);
-      };
-
-      bus.on(MapEvents.drag, handler);
-
-      render(<BaseMap id={id} />);
-
-      act(() => {
-        capturedDragHandlers.onDrag?.(
-          dragInfo([-74.006, 40.7128]),
-          dragEvent({ ctrlKey: true }),
-        );
-      });
-
-      await waitFor(() => {
-        expect(received).toHaveLength(1);
-      });
-
-      expect(received[0]).toEqual({
-        id,
+        modifiers: { shiftKey: true, ctrlKey: false, altKey: false },
+      },
+      {
+        handler: 'onDrag',
+        event: MapEvents.drag,
         coordinate: [-74.006, 40.7128],
-        shiftKey: false,
-        ctrlKey: true,
-        altKey: false,
-      });
-
-      bus.off(MapEvents.drag, handler);
-    });
-
-    it('emits map:dragEnd on the bus with coordinate and modifier keys', async () => {
-      const id = uuid();
-      useFakeMap(createFakeMap());
-
-      const bus = Broadcast.getInstance<MapEventType>();
-      const received: MapDragPayload[] = [];
-      const handler = (event: { payload: MapDragPayload }) => {
-        received.push(event.payload);
-      };
-
-      bus.on(MapEvents.dragEnd, handler);
-
-      render(<BaseMap id={id} />);
-
-      act(() => {
-        capturedDragHandlers.onDragEnd?.(
-          dragInfo([5.5, 52.3]),
-          dragEvent({ altKey: true }),
-        );
-      });
-
-      await waitFor(() => {
-        expect(received).toHaveLength(1);
-      });
-
-      expect(received[0]).toEqual({
-        id,
+        modifiers: { shiftKey: false, ctrlKey: true, altKey: false },
+      },
+      {
+        handler: 'onDragEnd',
+        event: MapEvents.dragEnd,
         coordinate: [5.5, 52.3],
-        shiftKey: false,
-        ctrlKey: false,
-        altKey: true,
-      });
-
-      bus.off(MapEvents.dragEnd, handler);
-    });
-
-    it('does not emit when coordinate is missing from info', async () => {
+        modifiers: { shiftKey: false, ctrlKey: false, altKey: true },
+      },
+    ] as const)('emits $event on the bus with coordinate and modifier keys', ({
+      handler,
+      event,
+      coordinate,
+      modifiers,
+    }) => {
       const id = uuid();
       useFakeMap(createFakeMap());
-
       const bus = Broadcast.getInstance<MapEventType>();
-      const received: MapDragPayload[] = [];
-      const handler = (event: { payload: MapDragPayload }) => {
-        received.push(event.payload);
-      };
+      const listener = vi.fn();
+      bus.on(event, listener);
 
-      bus.on(MapEvents.dragStart, handler);
+      try {
+        render(<BaseMap id={id} />);
 
-      render(<BaseMap id={id} />);
+        act(() => {
+          capturedDragHandlers[handler]?.({ coordinate }, dragEvent(modifiers));
+        });
 
-      act(() => {
-        // Pass info without coordinate
-        capturedDragHandlers.onDragStart?.({}, dragEvent());
-      });
+        expect(listener).toHaveBeenCalledExactlyOnceWith(
+          expect.objectContaining({
+            payload: { id, coordinate, ...modifiers },
+          }),
+        );
+      } finally {
+        bus.off(event, listener);
+      }
+    });
 
-      // Short wait to confirm nothing was emitted
-      await new Promise((r) => setTimeout(r, 10));
-      expect(received).toHaveLength(0);
+    it('emits dragEnd with a null coordinate when info has none', () => {
+      const id = uuid();
+      useFakeMap(createFakeMap());
+      const bus = Broadcast.getInstance<MapEventType>();
+      const listener = vi.fn();
+      bus.on(MapEvents.dragEnd, listener);
 
-      bus.off(MapEvents.dragStart, handler);
+      try {
+        render(<BaseMap id={id} />);
+
+        act(() => {
+          capturedDragHandlers.onDragEnd?.({}, dragEvent());
+        });
+
+        expect(listener).toHaveBeenCalledExactlyOnceWith(
+          expect.objectContaining({
+            payload: {
+              id,
+              coordinate: null,
+              shiftKey: false,
+              ctrlKey: false,
+              altKey: false,
+            },
+          }),
+        );
+      } finally {
+        bus.off(MapEvents.dragEnd, listener);
+      }
+    });
+
+    it('does not emit dragStart when coordinate is missing from info', () => {
+      const id = uuid();
+      useFakeMap(createFakeMap());
+      const bus = Broadcast.getInstance<MapEventType>();
+      const listener = vi.fn();
+      bus.on(MapEvents.dragStart, listener);
+
+      try {
+        render(<BaseMap id={id} />);
+
+        act(() => {
+          capturedDragHandlers.onDragStart?.({}, dragEvent());
+        });
+
+        expect(listener).not.toHaveBeenCalled();
+      } finally {
+        bus.off(MapEvents.dragStart, listener);
+      }
     });
   });
 

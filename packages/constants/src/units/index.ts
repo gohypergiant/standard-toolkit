@@ -46,6 +46,27 @@ export const DISTANCE_UNIT_SYMBOLS = {
 export type DistanceUnit = keyof typeof DISTANCE_UNIT_SYMBOLS;
 
 /**
+ * Meters in one of each supported distance unit.
+ *
+ * The single conversion table for distance formatting across packages. Divide
+ * a distance in meters by the factor to convert to the unit, or multiply to
+ * convert back to meters.
+ *
+ * @example
+ * ```typescript
+ * const nauticalMiles = 3704 / METERS_PER_UNIT.nauticalmiles; // 2
+ * const meters = 2 * METERS_PER_UNIT.nauticalmiles; // 3704
+ * ```
+ */
+export const METERS_PER_UNIT = {
+  kilometers: 1000,
+  meters: 1,
+  nauticalmiles: 1852,
+  miles: 1609.344,
+  feet: 0.3048,
+} as const satisfies Record<DistanceUnit, number>;
+
+/**
  * Display symbol for a distance unit (e.g., 'km', 'NM', 'mi').
  */
 export type DistanceUnitSymbol = (typeof DISTANCE_UNIT_SYMBOLS)[DistanceUnit];

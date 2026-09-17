@@ -10,21 +10,25 @@
  * governing permissions and limitations under the License.
  */
 
-/**
- * THIS IS A GENERATED FILE. DO NOT ALTER DIRECTLY.
- */
+import type { UniqueId } from '@accelint/core';
+import type { MapDragPayload } from '@/deckgl/base-map/types';
 
-// biome-ignore-all assist/source/organizeImports: This comment is used to prevent the biome tool from altering the import statements in this file.
+/** Modifier-key flags for a drag payload; unset flags default to `false`. */
+export type Modifiers = Partial<
+  Pick<MapDragPayload, 'shiftKey' | 'ctrlKey' | 'altKey'>
+>;
 
-export {
-  CSS_RGBA_LEGACY_REGEX,
-  CSS_RGBA_MODERN_REGEX,
-  HEX_REGEX,
-} from './color';
-export { DEFAULT_COORDINATE } from './coordinates';
-export {
-  DISTANCE_UNIT_BY_SYMBOL,
-  DISTANCE_UNIT_SYMBOLS,
-  METERS_PER_UNIT,
-} from './units';
-export type { DistanceUnit, DistanceUnitSymbol } from './units';
+/** Build a drag payload for the given map and coordinate. */
+export function makeDragPayload(
+  mapId: UniqueId,
+  coordinate: [number, number],
+  modifiers?: Modifiers,
+): MapDragPayload {
+  return {
+    id: mapId,
+    coordinate,
+    shiftKey: modifiers?.shiftKey ?? false,
+    ctrlKey: modifiers?.ctrlKey ?? false,
+    altKey: modifiers?.altKey ?? false,
+  };
+}

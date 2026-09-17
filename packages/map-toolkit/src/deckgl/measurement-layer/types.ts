@@ -14,6 +14,16 @@ import type { Color, CompositeLayerProps } from '@deck.gl/core';
 import type { DistanceUnit } from '@accelint/constants/units';
 
 /**
+ * Modifier key that must be held for a drag to count as a measurement.
+ *
+ * Prefer `'alt'`. `'shift'` collides with BaseMap's rubber-band zoom, which is
+ * enabled by default and arms on Shift keydown, so releasing the mouse or the
+ * key can still zoom the map. `'ctrl'` collides with BaseMap's Ctrl+drag
+ * rotate/tilt gesture.
+ */
+export type RequiresModifier = 'shift' | 'ctrl' | 'alt';
+
+/**
  * Props for the `MeasurementLayer` composite layer.
  *
  * The layer is controlled (pure function of props). Pass `pointA` and `pointB`

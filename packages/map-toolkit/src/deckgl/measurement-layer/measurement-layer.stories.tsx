@@ -14,13 +14,16 @@
 
 import 'client-only';
 import { uuid } from '@accelint/core';
+import { formatBearing, formatDistance } from '@accelint/formatters/bearing';
 import { useState } from 'react';
 import { BaseMap } from '@/deckgl/base-map';
 import { DEFAULT_VIEW_STATE } from '@/shared/constants';
 import './fiber';
 import { MeasurementTool } from './measurement-tool';
 import { useMeasurement } from './use-measurement';
+import type { DistanceUnit } from '@accelint/constants/units';
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import type { ReactNode } from 'react';
 
 const meta: Meta = {
   title: 'DeckGL/Measurement Layer',
@@ -40,6 +43,45 @@ const MODIFIER_MAP_ID = uuid();
 const CUSTOM_LABEL_MAP_ID = uuid();
 const DIRECT_LAYER_MAP_ID = uuid();
 
+/** Default dual-unit readout, matching `MeasurementLayer`'s `units` default. */
+const DUAL_UNITS: DistanceUnit[] = ['kilometers', 'nauticalmiles'];
+
+// ─── Shared readout UI ──────────────────────────────────────────────────────
+
+/** Labeled value box shown inside a `ReadoutPanel`. */
+function Readout({ label, children }: { label: string; children: ReactNode }) {
+  return (
+    <div className='rounded-lg border border-border-default bg-surface-subtle p-s'>
+      <p className='mb-xs text-body-xs text-content-secondary'>{label}</p>
+      {children}
+    </div>
+  );
+}
+
+/** Floating card with a title, a status line, and story-specific content. */
+function ReadoutPanel({
+  title,
+  status,
+  children,
+}: {
+  title: string;
+  status: string;
+  children: ReactNode;
+}) {
+  return (
+    <div className='absolute top-l left-l z-10 flex w-[300px] flex-col gap-m rounded-lg bg-surface-default p-l shadow-elevation-overlay'>
+      <p className='font-bold text-header-l'>{title}</p>
+
+      <div className='rounded-lg bg-info-muted p-s'>
+        <p className='mb-xs text-body-xs'>Status</p>
+        <code className='text-body-m'>{status}</code>
+      </div>
+
+      {children}
+    </div>
+  );
+}
+
 // ─── Story 1: Default Measurement ──────────────────────────────────────────
 
 /**
@@ -56,7 +98,7 @@ const DIRECT_LAYER_MAP_ID = uuid();
  */
 export const DefaultMeasurement: Story = {
   render: () => {
-    const { isMeasuring, distanceKm, distanceNM, bearingDeg } =
+    const { isMeasuring, distanceMeters, bearingDeg } =
       useMeasurement(DEFAULT_MAP_ID);
 
     return (
@@ -69,32 +111,20 @@ export const DefaultMeasurement: Story = {
           <MeasurementTool mapId={DEFAULT_MAP_ID} />
         </BaseMap>
 
-        <div className='absolute top-l left-l z-10 flex w-[280px] flex-col gap-m rounded-lg bg-surface-default p-l shadow-elevation-overlay'>
-          <p className='font-bold text-header-l'>Measurement Tool</p>
-
-          <div className='rounded-lg bg-info-muted p-s'>
-            <p className='mb-xs text-body-xs'>Status</p>
-            <code className='text-body-m'>
-              {isMeasuring ? 'Measuring...' : 'Drag to measure'}
-            </code>
-          </div>
-
+        <ReadoutPanel
+          title='Measurement Tool'
+          status={isMeasuring ? 'Measuring...' : 'Drag to measure'}
+        >
           {isMeasuring && (
             <div className='flex flex-col gap-xs'>
-              <div className='rounded-lg border border-border-default bg-surface-subtle p-s'>
-                <p className='mb-xs text-body-xs text-content-secondary'>
-                  Distance
-                </p>
+              <Readout label='Distance'>
                 <p className='text-body-m'>
-                  {distanceKm.toFixed(1)} km / {distanceNM.toFixed(1)} NM
+                  {formatDistance(distanceMeters, DUAL_UNITS)}
                 </p>
-              </div>
-              <div className='rounded-lg border border-border-default bg-surface-subtle p-s'>
-                <p className='mb-xs text-body-xs text-content-secondary'>
-                  Bearing
-                </p>
-                <p className='text-body-m'>{Math.round(bearingDeg)}°</p>
-              </div>
+              </Readout>
+              <Readout label='Bearing'>
+                <p className='text-body-m'>{formatBearing(bearingDeg)}</p>
+              </Readout>
             </div>
           )}
 
@@ -106,7 +136,7 @@ export const DefaultMeasurement: Story = {
               <li>Drag again to remeasure</li>
             </ul>
           </div>
-        </div>
+        </ReadoutPanel>
       </div>
     );
   },
@@ -127,7 +157,7 @@ export const DefaultMeasurement: Story = {
  */
 export const SingleUnitKilometers: Story = {
   render: () => {
-    const { isMeasuring, distanceKm, bearingDeg } =
+    const { isMeasuring, distanceMeters, bearingDeg } =
       useMeasurement(SINGLE_UNIT_MAP_ID);
 
     return (
@@ -140,30 +170,20 @@ export const SingleUnitKilometers: Story = {
           <MeasurementTool mapId={SINGLE_UNIT_MAP_ID} units='kilometers' />
         </BaseMap>
 
-        <div className='absolute top-l left-l z-10 flex w-[280px] flex-col gap-m rounded-lg bg-surface-default p-l shadow-elevation-overlay'>
-          <p className='font-bold text-header-l'>Single Unit: km</p>
-
-          <div className='rounded-lg bg-info-muted p-s'>
-            <p className='mb-xs text-body-xs'>Status</p>
-            <code className='text-body-m'>
-              {isMeasuring ? 'Measuring...' : 'Drag to measure'}
-            </code>
-          </div>
-
+        <ReadoutPanel
+          title='Single Unit: km'
+          status={isMeasuring ? 'Measuring...' : 'Drag to measure'}
+        >
           {isMeasuring && (
             <div className='flex flex-col gap-xs'>
-              <div className='rounded-lg border border-border-default bg-surface-subtle p-s'>
-                <p className='mb-xs text-body-xs text-content-secondary'>
-                  Distance
+              <Readout label='Distance'>
+                <p className='text-body-m'>
+                  {formatDistance(distanceMeters, 'kilometers')}
                 </p>
-                <p className='text-body-m'>{distanceKm.toFixed(1)} km</p>
-              </div>
-              <div className='rounded-lg border border-border-default bg-surface-subtle p-s'>
-                <p className='mb-xs text-body-xs text-content-secondary'>
-                  Bearing
-                </p>
-                <p className='text-body-m'>{Math.round(bearingDeg)}°</p>
-              </div>
+              </Readout>
+              <Readout label='Bearing'>
+                <p className='text-body-m'>{formatBearing(bearingDeg)}</p>
+              </Readout>
             </div>
           )}
 
@@ -173,7 +193,7 @@ export const SingleUnitKilometers: Story = {
               {'<MeasurementTool units="kilometers" />'}
             </code>
           </div>
-        </div>
+        </ReadoutPanel>
       </div>
     );
   },
@@ -199,7 +219,7 @@ export const SingleUnitKilometers: Story = {
  */
 export const ModifierKeyRequired: Story = {
   render: () => {
-    const { isMeasuring, distanceKm, distanceNM, bearingDeg } = useMeasurement(
+    const { isMeasuring, distanceMeters, bearingDeg } = useMeasurement(
       MODIFIER_MAP_ID,
       'alt',
     );
@@ -214,34 +234,20 @@ export const ModifierKeyRequired: Story = {
           <MeasurementTool mapId={MODIFIER_MAP_ID} requiresModifier='alt' />
         </BaseMap>
 
-        <div className='absolute top-l left-l z-10 flex w-[300px] flex-col gap-m rounded-lg bg-surface-default p-l shadow-elevation-overlay'>
-          <p className='font-bold text-header-l'>Alt+Drag to Measure</p>
-
-          <div
-            className={`rounded-lg p-s ${isMeasuring ? 'bg-success-muted' : 'bg-info-muted'}`}
-          >
-            <p className='mb-xs text-body-xs'>Status</p>
-            <code className='text-body-m'>
-              {isMeasuring ? 'Measuring (Alt held)' : 'Plain drag pans map'}
-            </code>
-          </div>
-
+        <ReadoutPanel
+          title='Alt+Drag to Measure'
+          status={isMeasuring ? 'Measuring (Alt held)' : 'Plain drag pans map'}
+        >
           {isMeasuring && (
             <div className='flex flex-col gap-xs'>
-              <div className='rounded-lg border border-border-default bg-surface-subtle p-s'>
-                <p className='mb-xs text-body-xs text-content-secondary'>
-                  Distance
-                </p>
+              <Readout label='Distance'>
                 <p className='text-body-m'>
-                  {distanceKm.toFixed(1)} km / {distanceNM.toFixed(1)} NM
+                  {formatDistance(distanceMeters, DUAL_UNITS)}
                 </p>
-              </div>
-              <div className='rounded-lg border border-border-default bg-surface-subtle p-s'>
-                <p className='mb-xs text-body-xs text-content-secondary'>
-                  Bearing
-                </p>
-                <p className='text-body-m'>{Math.round(bearingDeg)}°</p>
-              </div>
+              </Readout>
+              <Readout label='Bearing'>
+                <p className='text-body-m'>{formatBearing(bearingDeg)}</p>
+              </Readout>
             </div>
           )}
 
@@ -264,7 +270,7 @@ export const ModifierKeyRequired: Story = {
             <p className='mb-xs font-semibold text-body-xs'>Prop</p>
             <code className='text-body-xs'>requiresModifier="alt"</code>
           </div>
-        </div>
+        </ReadoutPanel>
       </div>
     );
   },
@@ -285,13 +291,16 @@ export const ModifierKeyRequired: Story = {
  */
 export const CustomLabel: Story = {
   render: () => {
-    const { isMeasuring, pointA, pointB, distanceKm, bearingDeg } =
+    const { isMeasuring, pointA, pointB, distanceMeters, bearingDeg } =
       useMeasurement(CUSTOM_LABEL_MAP_ID);
 
     const [lastLabel, setLastLabel] = useState<string>('(none yet)');
 
-    const getLabel = (a: [number, number], b: [number, number]): string => {
-      const label = `${a[0].toFixed(3)},${a[1].toFixed(3)} → ${b[0].toFixed(3)},${b[1].toFixed(3)}`;
+    const getLabel = (
+      pointA: [number, number],
+      pointB: [number, number],
+    ): string => {
+      const label = `${pointA[0].toFixed(3)},${pointA[1].toFixed(3)} → ${pointB[0].toFixed(3)},${pointB[1].toFixed(3)}`;
       setLastLabel(label);
 
       return label;
@@ -307,32 +316,21 @@ export const CustomLabel: Story = {
           <MeasurementTool mapId={CUSTOM_LABEL_MAP_ID} getLabel={getLabel} />
         </BaseMap>
 
-        <div className='absolute top-l left-l z-10 flex w-[320px] flex-col gap-m rounded-lg bg-surface-default p-l shadow-elevation-overlay'>
-          <p className='font-bold text-header-l'>Custom Label Format</p>
-
-          <div className='rounded-lg bg-info-muted p-s'>
-            <p className='mb-xs text-body-xs'>Status</p>
-            <code className='text-body-m'>
-              {isMeasuring ? 'Measuring...' : 'Drag to measure'}
-            </code>
-          </div>
-
+        <ReadoutPanel
+          title='Custom Label Format'
+          status={isMeasuring ? 'Measuring...' : 'Drag to measure'}
+        >
           {isMeasuring && pointA && pointB && (
             <div className='flex flex-col gap-xs'>
-              <div className='rounded-lg border border-border-default bg-surface-subtle p-s'>
-                <p className='mb-xs text-body-xs text-content-secondary'>
-                  Label (on-canvas)
-                </p>
+              <Readout label='Label (on-canvas)'>
                 <code className='break-all text-body-xs'>{lastLabel}</code>
-              </div>
-              <div className='rounded-lg border border-border-default bg-surface-subtle p-s'>
-                <p className='mb-xs text-body-xs text-content-secondary'>
-                  Computed distance / bearing
-                </p>
+              </Readout>
+              <Readout label='Computed distance / bearing'>
                 <p className='text-body-xs'>
-                  {distanceKm.toFixed(1)} km | {Math.round(bearingDeg)}°
+                  {formatDistance(distanceMeters, DUAL_UNITS)} |{' '}
+                  {formatBearing(bearingDeg)}
                 </p>
-              </div>
+              </Readout>
             </div>
           )}
 
@@ -341,10 +339,11 @@ export const CustomLabel: Story = {
               getLabel override
             </p>
             <code className='break-all text-body-xs'>
-              getLabel=(a, b) =&gt; `a[0].toFixed(3), a[1].toFixed(3) ...`
+              getLabel=(pointA, pointB) =&gt; `pointA[0].toFixed(3),
+              pointA[1].toFixed(3) ...`
             </code>
           </div>
-        </div>
+        </ReadoutPanel>
       </div>
     );
   },
