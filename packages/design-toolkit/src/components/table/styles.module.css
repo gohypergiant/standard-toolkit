@@ -71,33 +71,19 @@
   }
 
   .row {
-    @variant group-not-selected/tbody {
-      @apply border-1 border-transparent;
+    @apply border border-transparent;
+    @apply border-b-(--outline-static);
 
-      @variant first-of-type {
-        border-top-color: var(--outline-static);
-      }
+    @variant hover {
+      @apply bg-interactive-muted-hover;
     }
 
-    @variant has-[+[data-selected]] {
-      @variant not-selected {
-        border-bottom-color: var(--outline-accent-primary-bold);
-      }
+    @variant first-of-type {
+      @apply border-t-(--outline-static);
     }
 
     @variant selected {
-      @apply bg-accent-primary-muted;
-
-      border-left-color: var(--outline-accent-primary-bold);
-      border-right-color: var(--outline-accent-primary-bold);
-
-      @variant not-has-[+[data-selected]] {
-        border-bottom-color: var(--outline-accent-primary-bold);
-      }
-
-      @variant first-of-type {
-        border-top-color: var(--outline-accent-primary-bold);
-      }
+      @apply bg-accent-primary-muted border-l-2 border-l-(--outline-accent-primary-bold);
     }
   }
 
@@ -122,5 +108,9 @@
     @variant group-selected/header-cell {
       @apply visible;
     }
+  }
+
+  .hidden {
+    @apply hidden;
   }
 }

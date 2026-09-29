@@ -169,7 +169,8 @@ export function TableHeaderCell<T extends RowData>({
   header,
   ...rest
 }: TableHeaderCellProps<T>) {
-  const { columnSelection, variant } = useContext(TableContext);
+  const { columnSelection, variant, displayNumerals } =
+    useContext(TableContext);
   const renderProps = header?.getContext();
   const sortLabel =
     header?.column.getIsSorted() === SortDirection.ASC
@@ -177,6 +178,8 @@ export function TableHeaderCell<T extends RowData>({
       : header?.column.getIsSorted() === SortDirection.DESC
         ? 'descending'
         : undefined;
+  const isNumeral = header?.column.id === HeaderColumnAction.NUMERAL;
+  const notDisplayNums = isNumeral && !displayNumerals;
 
   return (
     <th
@@ -184,6 +187,7 @@ export function TableHeaderCell<T extends RowData>({
       aria-sort={sortLabel}
       ref={ref}
       style={{ width: header?.getSize() }}
+      className={clsx(notDisplayNums && styles.hidden)}
     >
       <div
         className={clsx(

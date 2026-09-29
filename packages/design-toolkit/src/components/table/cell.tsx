@@ -45,11 +45,12 @@ export function TableCell<T extends RowData>({
   cell,
   ...rest
 }: TableCellProps<T>) {
-  const { columnSelection, persistNumerals, variant } =
+  const { columnSelection, persistNumerals, displayNumerals, variant } =
     useContext(TableContext);
   const isNumeral = cell?.column.id === HeaderColumnAction.NUMERAL;
   const isSelected = cell?.column.id === columnSelection;
   const notPersistNums = isNumeral && !persistNumerals;
+  const notDisplayNums = isNumeral && !displayNumerals;
 
   return (
     <td
@@ -59,6 +60,7 @@ export function TableCell<T extends RowData>({
         styles.cell,
         styles[variant],
         notPersistNums && styles.hideInRow,
+        notDisplayNums && styles.hidden,
         className,
       )}
       data-selected={isSelected || null}

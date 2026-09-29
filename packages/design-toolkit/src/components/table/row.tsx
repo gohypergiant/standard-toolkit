@@ -12,6 +12,7 @@
  */
 
 import { clsx } from '@accelint/design-foundation/lib/utils';
+import { type MouseEvent } from 'react';
 import { TableCell } from './cell';
 import styles from './styles.module.css';
 import type { RowData } from '@tanstack/react-table';
@@ -45,9 +46,20 @@ export function TableRow<T extends RowData>({
   children,
   className,
   row,
+  onClick,
   ...rest
 }: TableRowProps<T>) {
   const cells = row?.getAllCells();
+
+  const handleRowClick = (event: MouseEvent<HTMLTableRowElement>) => {
+    onClick?.(event);
+
+    if (event.defaultPrevented || !row?.id) {
+      return;
+    }
+
+    row.toggleSelected();
+  };
 
   return (
     <tr
@@ -56,6 +68,7 @@ export function TableRow<T extends RowData>({
       className={clsx('group/row', styles.row, className)}
       data-pinned={row?.getIsPinned() || null}
       data-selected={row?.getIsSelected() || null}
+      onClick={handleRowClick}
     >
       {children ||
         cells?.map((cell) => <TableCell key={cell.id} cell={cell} />)}
