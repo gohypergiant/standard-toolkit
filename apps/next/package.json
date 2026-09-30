@@ -77,6 +77,7 @@
     "analyze": "pnpm next experimental-analyze",
     "analyze:webpack": "WEBPACK_ANALYZE=true pnpm next build --webpack",
     "build": "NODE_ENV=production next build",
+    "check": "pnpm biome check --write .",
     "dev": "NODE_ENV=development next dev",
     "format": "pnpm biome format . --write --verbose",
     "format:check": "pnpm biome format . --verbose",

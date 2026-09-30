@@ -63,6 +63,7 @@
     "url": "https://github.com/gohypergiant/standard-toolkit"
   },
   "scripts": {
+    "check": "pnpm biome check --write .",
     "constellation-tracker": "node ./dist/main.mjs",
     "format": "pnpm biome format . --write --verbose",
     "format:check": "pnpm biome format . --verbose",
