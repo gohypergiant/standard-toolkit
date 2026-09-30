@@ -14,9 +14,9 @@
 
 import 'client-only';
 import { clsx } from '@accelint/design-foundation/lib/utils';
+import { composeRenderProps } from 'react-aria-components/composeRenderProps';
 import { Menu as AriaMenu } from 'react-aria-components/Menu';
 import { Popover } from 'react-aria-components/Popover';
-import { composeRenderProps } from 'react-aria-components/composeRenderProps';
 import { useContextProps } from 'react-aria-components/slots';
 import { MenuContext } from './context';
 import styles from './styles.module.css';

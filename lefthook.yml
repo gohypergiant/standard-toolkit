@@ -2,7 +2,7 @@ pre-commit:
   commands:
     format:
       # NOTE: this also will license and index
-      run: pnpm run format && pnpm run format:deps
+      run: pnpm run check && pnpm run format:deps
       stage_fixed: true
 
 pre-push:

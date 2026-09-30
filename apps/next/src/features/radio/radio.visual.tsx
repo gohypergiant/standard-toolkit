@@ -12,12 +12,12 @@
 
 import { Radio } from '@accelint/design-toolkit/components/radio';
 import { RadioGroup } from '@accelint/design-toolkit/components/radio/group';
-import type { RadioGroupProps } from '@accelint/design-toolkit/components/radio/types';
 import {
   createInteractiveVisualTests,
   createVisualTestScenarios,
 } from '~/visual-regression/vitest';
 import { PROP_COMBOS } from './variants';
+import type { RadioGroupProps } from '@accelint/design-toolkit/components/radio/types';
 
 createVisualTestScenarios(
   'RadioGroup',

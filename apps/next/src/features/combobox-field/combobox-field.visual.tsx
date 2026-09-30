@@ -10,7 +10,6 @@
  * governing permissions and limitations under the License.
  */
 
-import Placeholder from '@accelint/icons/placeholder';
 import {
   ComboBoxField,
   Icon,
@@ -21,6 +20,7 @@ import {
   OptionsSection,
   ThemeProvider,
 } from '@accelint/design-toolkit';
+import Placeholder from '@accelint/icons/placeholder';
 import { dash } from 'radashi';
 import { describe, expect, test } from 'vitest';
 import { page } from 'vitest/browser';

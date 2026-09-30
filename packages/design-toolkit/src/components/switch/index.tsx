@@ -14,8 +14,8 @@
 import 'client-only';
 import { clsx } from '@accelint/design-foundation/lib/utils';
 import { composeRenderProps } from 'react-aria-components/composeRenderProps';
-import { useContextProps } from 'react-aria-components/slots';
 import { Switch as AriaSwitch } from 'react-aria-components/Switch';
+import { useContextProps } from 'react-aria-components/slots';
 import { usePreventScrollFocus } from '../../hooks/use-prevent-scroll-focus';
 import { SwitchContext } from './context';
 import styles from './styles.module.css';

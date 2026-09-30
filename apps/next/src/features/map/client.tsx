@@ -14,11 +14,11 @@
 
 import 'client-only';
 import { uuid } from '@accelint/core';
+import { clsx } from '@accelint/design-foundation/lib/utils';
 import { BaseMap } from '@accelint/map-toolkit/deckgl';
 import { DEFAULT_VIEW_STATE } from '@accelint/map-toolkit/shared/constants';
 import { MapTestBridge } from './test-bridge';
 import type { ReactNode } from 'react';
-import { clsx } from '@accelint/design-foundation/lib/utils';
 
 export type MapClientProps = {
   children?: ReactNode;

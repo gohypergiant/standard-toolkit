@@ -10,14 +10,14 @@
  * governing permissions and limitations under the License.
  */
 
-import { UNSAFE_PortalProvider } from 'react-aria/PortalProvider';
-import { useIsSSR } from 'react-aria/SSRProvider';
 import {
   type PropsWithChildren,
   type RefObject,
   useEffect,
   useState,
 } from 'react';
+import { UNSAFE_PortalProvider } from 'react-aria/PortalProvider';
+import { useIsSSR } from 'react-aria/SSRProvider';
 
 /**
  * Provides a portal container for rendering overlays and modals

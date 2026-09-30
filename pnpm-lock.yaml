@@ -71,8 +71,8 @@ importers:
         specifier: ^4.21.0
         version: 4.21.0
       turbo:
-        specifier: ^2.6.3
-        version: 2.7.0
+        specifier: ^2.11.5
+        version: 2.11.5
       zx:
         specifier: ^8.8.5
         version: 8.8.5
@@ -184,7 +184,7 @@ importers:
         version: 9.2.10
       '@deckgl-fiber-renderer/dom':
         specifier: ^1.4.0
-        version: 1.4.0(33730d2c1e0221955caf5c1b28046743)
+        version: 1.4.0(ee29996881be5487e63b5f5c4ab30ce4)
       '@dnd-kit/core':
         specifier: ^6.3.1
         version: 6.3.1(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
@@ -4435,6 +4435,36 @@ packages:
 
   '@ts-jison/parser@0.4.1-alpha.1':
     resolution: {integrity: sha512-xNj+qOez/7dju44LlYiTlCjxMzW5oek9EckUAElfln/GBK9vgMSk0swWcnacMr0TYbGjUQuXvL2wEgmDf5WajQ==}
+
+  '@turbo/darwin-64@2.11.5':
+    resolution: {integrity: sha512-KdY4y7BBjIisl+jAkb3FFaRjClGqHyaeHCcVcCT8LBzFFwUu6thgfxyRZAx0uL4KoxLmH+iOan8UhVf/aDDcaA==}
+    cpu: [x64]
+    os: [darwin]
+
+  '@turbo/darwin-arm64@2.11.5':
+    resolution: {integrity: sha512-ToZDGi2u410+TfRtC/O1/LpujGgvNJoRBZnwVXob7oO0+3OSlwIO3zofXKUvwQvlba7a8ZXPyCZwufjAXd7f0w==}
+    cpu: [arm64]
+    os: [darwin]
+
+  '@turbo/linux-64@2.11.5':
+    resolution: {integrity: sha512-Ub2d/nAbdWLaSytcEaPp1wm/YuIvHEIqNrCRMI/UgOGyFdOhgxm8VyWPAJilQWRYxYVrqEUoy2K5S5K8SG50rA==}
+    cpu: [x64]
+    os: [android, linux]
+
+  '@turbo/linux-arm64@2.11.5':
+    resolution: {integrity: sha512-JQjmGxp724Wuft9FAxPMtmBur1CEdUyxJ+FVoIvKkgj63rXHl9PYCWrsU2tMjVi609XTQ3M8vZD9Yc9qVAVYrw==}
+    cpu: [arm64]
+    os: [android, linux]
+
+  '@turbo/windows-64@2.11.5':
+    resolution: {integrity: sha512-AFkbPmXNd8XgCi/66YEHR2bVl3gtusXyDihTIVEPAuSB+7ulLmJePvz1unWPVKLHdbCTTIdKq2mpJ1B1e3lJXw==}
+    cpu: [x64]
+    os: [win32]
+
+  '@turbo/windows-arm64@2.11.5':
+    resolution: {integrity: sha512-52ziXYP3snGOxjv19xA3WL1WDKv9Q6uDAa/7EKIR5j4hocMlYURkrOHbJ2ZZI+VfPU5MwKpcGeRfHxHJu7Y/Pw==}
+    cpu: [arm64]
+    os: [win32]
 
   '@turf/along@7.3.1':
     resolution: {integrity: sha512-z84b9PKsUB69BhkeHA6oPqRO7VaJHwTid1SpuIbwWzDqHTpq8buJBKlrKgHIIthuVr5P/AZiEXmf3R4ifRhDmw==}
@@ -8933,6 +8963,10 @@ packages:
     cpu: [arm64]
     os: [win32]
 
+  turbo@2.11.5:
+    resolution: {integrity: sha512-qLXheqz3TUvJpHIV6MUBwkNkvwKxMVG/QsimyiKT9DfNWPHJ294G/i5nDaH+fbHJt3UH7orubNNxAqYkbUNGAQ==}
+    hasBin: true
+
   turbo@2.7.0:
     resolution: {integrity: sha512-1dUGwi6cSSVZts1BwJa/Gh7w5dPNNGsNWZEAuRKxXWME44hTKWpQZrgiPnqMc5jJJOovzPK5N6tL+PHYRYL5Wg==}
     hasBin: true
@@ -9991,26 +10025,6 @@ snapshots:
       preact: 10.28.2
     optional: true
 
-  '@deckgl-fiber-renderer/dom@1.4.0(33730d2c1e0221955caf5c1b28046743)':
-    dependencies:
-      '@deckgl-fiber-renderer/reconciler': 1.4.0(33730d2c1e0221955caf5c1b28046743)
-      '@deckgl-fiber-renderer/shared': 1.4.0(@deck.gl/core@9.2.10)(@deck.gl/mapbox@9.1.14(@deck.gl/core@9.2.10)(@luma.gl/core@9.2.6))(@types/react@19.2.7)(react@19.2.3)
-      '@deckgl-fiber-renderer/types': 1.4.0(0198b39424cc7edf8d6af0b38477a582)
-      client-only: 0.0.1
-      its-fine: 2.0.0(@types/react@19.2.7)(react@19.2.3)
-      react: 19.2.3
-      react-dom: 19.2.3(react@19.2.3)
-    transitivePeerDependencies:
-      - '@deck.gl/core'
-      - '@deck.gl/geo-layers'
-      - '@deck.gl/layers'
-      - '@deck.gl/mapbox'
-      - '@deck.gl/mesh-layers'
-      - '@types/react'
-      - '@types/react-dom'
-      - immer
-      - use-sync-external-store
-
   '@deckgl-fiber-renderer/dom@1.4.0(ee29996881be5487e63b5f5c4ab30ce4)':
     dependencies:
       '@deckgl-fiber-renderer/reconciler': 1.4.0(ee29996881be5487e63b5f5c4ab30ce4)
@@ -10026,25 +10040,6 @@ snapshots:
       - '@deck.gl/layers'
       - '@deck.gl/mapbox'
       - '@deck.gl/mesh-layers'
-      - '@types/react'
-      - '@types/react-dom'
-      - immer
-      - use-sync-external-store
-    optional: true
-
-  '@deckgl-fiber-renderer/reconciler@1.4.0(33730d2c1e0221955caf5c1b28046743)':
-    dependencies:
-      '@deck.gl/core': 9.2.10
-      '@deck.gl/geo-layers': 9.1.14(@deck.gl/core@9.2.10)(@deck.gl/extensions@9.2.9(@deck.gl/core@9.2.10)(@luma.gl/core@9.2.6)(@luma.gl/engine@9.2.6(@luma.gl/core@9.2.6)(@luma.gl/shadertools@9.2.6(@luma.gl/core@9.2.6))))(@deck.gl/layers@9.2.9(@deck.gl/core@9.2.10)(@loaders.gl/core@4.3.4)(@luma.gl/core@9.2.6)(@luma.gl/engine@9.2.6(@luma.gl/core@9.2.6)(@luma.gl/shadertools@9.2.6(@luma.gl/core@9.2.6))))(@deck.gl/mesh-layers@9.1.14(@deck.gl/core@9.2.10)(@loaders.gl/core@4.3.4)(@luma.gl/core@9.2.6)(@luma.gl/engine@9.2.6(@luma.gl/core@9.2.6)(@luma.gl/shadertools@9.2.6(@luma.gl/core@9.2.6))))(@loaders.gl/core@4.3.4)(@luma.gl/core@9.2.6)(@luma.gl/engine@9.2.6(@luma.gl/core@9.2.6)(@luma.gl/shadertools@9.2.6(@luma.gl/core@9.2.6)))
-      '@deck.gl/layers': 9.2.9(@deck.gl/core@9.2.10)(@loaders.gl/core@4.3.4)(@luma.gl/core@9.2.6)(@luma.gl/engine@9.2.6(@luma.gl/core@9.2.6)(@luma.gl/shadertools@9.2.6(@luma.gl/core@9.2.6)))
-      '@deck.gl/mapbox': 9.1.14(@deck.gl/core@9.2.10)(@luma.gl/core@9.2.6)
-      '@deck.gl/mesh-layers': 9.1.14(@deck.gl/core@9.2.10)(@loaders.gl/core@4.3.4)(@luma.gl/core@9.2.6)(@luma.gl/engine@9.2.6(@luma.gl/core@9.2.6)(@luma.gl/shadertools@9.2.6(@luma.gl/core@9.2.6)))
-      '@deckgl-fiber-renderer/shared': 1.4.0(@deck.gl/core@9.2.10)(@deck.gl/mapbox@9.1.14(@deck.gl/core@9.2.10)(@luma.gl/core@9.2.6))(@types/react@19.2.7)(react@19.2.3)
-      '@deckgl-fiber-renderer/types': 1.4.0(0198b39424cc7edf8d6af0b38477a582)
-      react: 19.2.3
-      react-dom: 19.2.3(react@19.2.3)
-      react-reconciler: 0.31.0(react@19.2.3)
-    transitivePeerDependencies:
       - '@types/react'
       - '@types/react-dom'
       - immer
@@ -10067,7 +10062,6 @@ snapshots:
       - '@types/react-dom'
       - immer
       - use-sync-external-store
-    optional: true
 
   '@deckgl-fiber-renderer/shared@1.4.0(@deck.gl/core@9.2.10)(@deck.gl/mapbox@9.1.14(@deck.gl/core@9.2.10)(@luma.gl/core@9.2.6))(@types/react@19.2.7)(immer@11.0.1)(react@19.2.3)(use-sync-external-store@1.6.0(react@19.2.3))':
     dependencies:
@@ -10075,19 +10069,6 @@ snapshots:
       '@deck.gl/mapbox': 9.1.14(@deck.gl/core@9.2.10)(@luma.gl/core@9.2.6)
       loglayer: 6.10.0
       zustand: 5.0.9(@types/react@19.2.7)(immer@11.0.1)(react@19.2.3)(use-sync-external-store@1.6.0(react@19.2.3))
-    transitivePeerDependencies:
-      - '@types/react'
-      - immer
-      - react
-      - use-sync-external-store
-    optional: true
-
-  '@deckgl-fiber-renderer/shared@1.4.0(@deck.gl/core@9.2.10)(@deck.gl/mapbox@9.1.14(@deck.gl/core@9.2.10)(@luma.gl/core@9.2.6))(@types/react@19.2.7)(react@19.2.3)':
-    dependencies:
-      '@deck.gl/core': 9.2.10
-      '@deck.gl/mapbox': 9.1.14(@deck.gl/core@9.2.10)(@luma.gl/core@9.2.6)
-      loglayer: 6.10.0
-      zustand: 5.0.9(@types/react@19.2.7)(immer@10.2.0)(react@19.2.3)(use-sync-external-store@1.6.0(react@19.2.3))
     transitivePeerDependencies:
       - '@types/react'
       - immer
@@ -12370,6 +12351,24 @@ snapshots:
     dependencies:
       '@ts-jison/common': 0.4.1-alpha.1
       '@ts-jison/lexer': 0.4.1-alpha.1
+
+  '@turbo/darwin-64@2.11.5':
+    optional: true
+
+  '@turbo/darwin-arm64@2.11.5':
+    optional: true
+
+  '@turbo/linux-64@2.11.5':
+    optional: true
+
+  '@turbo/linux-arm64@2.11.5':
+    optional: true
+
+  '@turbo/windows-64@2.11.5':
+    optional: true
+
+  '@turbo/windows-arm64@2.11.5':
+    optional: true
 
   '@turf/along@7.3.1':
     dependencies:
@@ -18400,6 +18399,15 @@ snapshots:
 
   turbo-windows-arm64@2.7.0:
     optional: true
+
+  turbo@2.11.5:
+    optionalDependencies:
+      '@turbo/darwin-64': 2.11.5
+      '@turbo/darwin-arm64': 2.11.5
+      '@turbo/linux-64': 2.11.5
+      '@turbo/linux-arm64': 2.11.5
+      '@turbo/windows-64': 2.11.5
+      '@turbo/windows-arm64': 2.11.5
 
   turbo@2.7.0:
     optionalDependencies:

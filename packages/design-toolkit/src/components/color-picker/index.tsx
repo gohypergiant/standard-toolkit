@@ -19,14 +19,14 @@ import {
   isRgba255Tuple,
   type Rgba255Tuple,
 } from '@accelint/predicates/is-rgba-255-tuple';
-import { useEffect, useMemo, useState, type ReactElement } from 'react';
+import { type ReactElement, useEffect, useMemo, useState } from 'react';
 import {
   type Color,
   ColorSwatch,
   ColorSwatchPicker,
   ColorSwatchPickerItem,
-  parseColor,
   type ColorSwatchPickerProps,
+  parseColor,
 } from 'react-aria-components/ColorSwatchPicker';
 import { composeRenderProps } from 'react-aria-components/composeRenderProps';
 import { Label } from '../label';

@@ -20,10 +20,10 @@ import {
   useRef,
   useState,
 } from 'react';
+import { ToggleButton } from '../button/toggle';
 import { CarouselContext } from './context';
 import styles from './style.module.css';
 import type { CarouselGalleryProps } from './types';
-import { ToggleButton } from '../button/toggle';
 
 /**
  * Number of visible thumbnail items to keep before the selected item

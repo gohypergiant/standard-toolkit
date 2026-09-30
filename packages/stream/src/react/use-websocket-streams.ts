@@ -14,8 +14,8 @@
 
 'use client';
 import { useStreams } from './use-streams';
-import type { UseWebSocketStreamOptions } from './use-websocket-stream';
 import type { UseStreamsOptions, UseStreamsResult } from './use-streams';
+import type { UseWebSocketStreamOptions } from './use-websocket-stream';
 
 /** Per-stream entry — the singular WS hook's options minus the shared client. */
 export type UseWebSocketStreamsConfig<T = unknown, TData = T> = Omit<

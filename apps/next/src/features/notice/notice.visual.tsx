@@ -11,9 +11,9 @@
  */
 
 import { Notice } from '@accelint/design-toolkit/components/notice';
-import type { NoticeColor } from '@accelint/design-toolkit/components/notice/types';
 import { createVisualTestScenarios } from '~/visual-regression/vitest';
 import { COLORS, VARIANTS_BY_COLOR } from './variants';
+import type { NoticeColor } from '@accelint/design-toolkit/components/notice/types';
 
 function NoticeColorVariants({ color }: { color: NoticeColor }) {
   const variants = VARIANTS_BY_COLOR[color];

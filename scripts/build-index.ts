@@ -25,9 +25,6 @@ const CLIENT_DIRECTIVE = `'use client';\n`;
 
 const HEADER_MSG = `${getFormattedHeader('.ts')}\n\n/**\n * THIS IS A GENERATED FILE. DO NOT ALTER DIRECTLY.\n */\n`;
 
-const BIOME_IGNORE =
-  '\n// biome-ignore-all assist/source/organizeImports: This comment is used to prevent the biome tool from altering the import statements in this file.\n\n';
-
 const IGNORE_LIST = [
   '**/node_modules',
   '**/dist',
@@ -419,7 +416,7 @@ function writeAllIndexes(
       echo(chalk.green(`Writing ${content.length} exports in ${newFile}...`));
 
       const body = (isClient ? [CLIENT_DIRECTIVE] : [])
-        .concat([HEADER_MSG, BIOME_IGNORE, ...content])
+        .concat([HEADER_MSG, ...content])
         .join('\n');
 
       fs.writeFile(newFile, body, 'utf-8');

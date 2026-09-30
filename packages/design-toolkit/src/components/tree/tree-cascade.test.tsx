@@ -10,17 +10,16 @@
  * governing permissions and limitations under the License.
  */
 
-import { describe, it, expect, vi } from 'vitest';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-
 import { useState } from 'react';
+import { describe, expect, it, vi } from 'vitest';
 import { useTreeState } from '@/hooks/use-tree/state';
 import { Tree } from './index';
 import { TreeItem } from './item';
 import { TreeItemContent } from './item-content';
-import type { TreeNode } from '@/hooks/use-tree/types';
 import type { Selection } from '@react-types/shared';
+import type { TreeNode } from '@/hooks/use-tree/types';
 
 describe('Tree component with cascade selection', () => {
   const testTree: TreeNode<unknown>[] = [

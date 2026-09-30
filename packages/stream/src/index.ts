@@ -14,19 +14,20 @@
  * THIS IS A GENERATED FILE. DO NOT ALTER DIRECTLY.
  */
 
-// biome-ignore-all assist/source/organizeImports: This comment is used to prevent the biome tool from altering the import statements in this file.
-
 export { STREAM_STATUS } from './constants';
-export type { StreamStatus } from './constants';
+export { defaultDecodeFn, Stream } from './stream';
 export { StreamCache } from './stream-cache';
 export { StreamClient } from './stream-client';
-export type { StreamClientConfig } from './stream-client';
 export { StreamObserver } from './stream-observer';
-export type {
-  StreamObserverOptions,
-  StreamObserverResult,
-} from './stream-observer';
-export { Stream, defaultDecodeFn } from './stream';
+export { StreamsObserver } from './streams-observer';
+export {
+  createTransport,
+  EventSourceTransport,
+  toWebSocketUri,
+  WebSocketTransport,
+} from './transport';
+export { matchStream } from './utils';
+export type { StreamStatus } from './constants';
 export type {
   DecodeFn,
   StreamCacheLike,
@@ -37,22 +38,19 @@ export type {
   StreamState,
   StreamUpdateAction,
 } from './stream';
-export { StreamsObserver } from './streams-observer';
+export type { StreamClientConfig } from './stream-client';
+export type {
+  StreamObserverOptions,
+  StreamObserverResult,
+} from './stream-observer';
 export type {
   StreamsCombineFn,
   StreamsObserverOptions,
   StreamsObserverResults,
 } from './streams-observer';
-export {
-  EventSourceTransport,
-  WebSocketTransport,
-  createTransport,
-  toWebSocketUri,
-} from './transport';
 export type {
   StreamTransport,
   TransportHandlers,
   TransportKind,
 } from './transport';
 export type { StreamFilters, StreamKey, UseStreamStateOptions } from './types';
-export { matchStream } from './utils';
