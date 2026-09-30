@@ -109,11 +109,11 @@ This package has no server, database, or hosted runtime. It is a published utili
 
 ## 5. External Integrations / APIs
 
-| Service | Purpose | Integration Method |
-|---------|---------|-------------------|
-| `@accelint/constants` | Optional shared constants for some converter families | Optional workspace dependency |
+| Service                | Purpose                                                 | Integration Method            |
+| ---------------------- | ------------------------------------------------------- | ----------------------------- |
+| `@accelint/constants`  | Optional shared constants for some converter families   | Optional workspace dependency |
 | `@accelint/predicates` | Optional validation helpers for some converter families | Optional workspace dependency |
-| `@accelint/math` | Optional numeric helpers for GLSL/color conversions | Optional workspace dependency |
+| `@accelint/math`       | Optional numeric helpers for GLSL/color conversions     | Optional workspace dependency |
 
 ## 6. Deployment & Infrastructure
 
@@ -139,7 +139,7 @@ This package has no server, database, or hosted runtime. It is a published utili
 
 > Testing patterns and standards are defined in [../../openspec/config.yaml](../../openspec/config.yaml); this section covers local setup and commands.
 
-**Local Setup:** Use Node.js 22+ and pnpm 10+. Install from the repo root. Some converter families document optional companion dependencies such as `@accelint/constants`, `@accelint/predicates`, and `@accelint/math`.
+**Local Setup:** Use Node.js 24+ and pnpm 10+. Install from the repo root. Some converter families document optional companion dependencies such as `@accelint/constants`, `@accelint/predicates`, and `@accelint/math`.
 
 **Testing Frameworks:** Vitest with the shared no-DOM base config. Tests use parameterized tables to cover conversion matrices and edge cases.
 
@@ -162,9 +162,9 @@ This package has no server, database, or hosted runtime. It is a published utili
 
 ## 11. Glossary / Acronyms
 
-| Term | Definition |
-|------|-----------|
-| CSS RGBA | CSS color representation such as `rgba(255, 0, 0, 1)` |
-| GLSL color | Color data normalized for shader-oriented usage |
-| Z/X/Y tile | Slippy-map tile coordinate triplet used to derive a bounding box |
-| Cardinal azimuth label | Human-readable direction derived from an azimuth value |
+| Term                   | Definition                                                       |
+| ---------------------- | ---------------------------------------------------------------- |
+| CSS RGBA               | CSS color representation such as `rgba(255, 0, 0, 1)`            |
+| GLSL color             | Color data normalized for shader-oriented usage                  |
+| Z/X/Y tile             | Slippy-map tile coordinate triplet used to derive a bounding box |
+| Cardinal azimuth label | Human-readable direction derived from an azimuth value           |

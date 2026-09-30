@@ -14,7 +14,7 @@ jobs:
       contents: read
       pull-requests: write # to create/update PR comments
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 2
 
@@ -42,18 +42,18 @@ jobs:
           echo "- **Feature:** \`$FEATURE_NAME\`" >> $GITHUB_STEP_SUMMARY
           echo "- **npm tag:** \`@$FEATURE_NAME\`" >> $GITHUB_STEP_SUMMARY
 
-      - uses: actions/cache@v4
+      - uses: actions/cache@v6
         with:
           path: .turbo
           key: ${{ runner.os }}-turbo-${{ github.sha }}
           restore-keys: |
             ${{ runner.os }}-turbo-
 
-      - uses: pnpm/action-setup@v4
+      - uses: pnpm/action-setup@v6
         with:
           run_install: false
 
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@v7
         with:
           registry-url: 'https://registry.npmjs.org'
           node-version-file: 'package.json'
@@ -95,7 +95,7 @@ jobs:
       # Find associated PR
       - name: Find PR for this branch
         id: pr
-        uses: actions/github-script@v7
+        uses: actions/github-script@v9
         with:
           script: |
             const branch = context.ref.replace('refs/heads/', '');
@@ -113,7 +113,7 @@ jobs:
       # Create or update PR comment
       - name: Create or update PR comment
         if: steps.pr.outputs.result != 'null'
-        uses: actions/github-script@v7
+        uses: actions/github-script@v9
         with:
           script: |
             const prNumber = ${{ steps.pr.outputs.result }};

@@ -107,11 +107,11 @@ This package has no server, database, or hosted runtime of its own. It is a publ
 
 ## 5. External Integrations / APIs
 
-| Service | Purpose | Integration Method |
-|---------|---------|-------------------|
-| `@accelint/stream` | Source of stream cache and lifecycle data | Peer dependency |
+| Service                    | Purpose                                            | Integration Method       |
+| -------------------------- | -------------------------------------------------- | ------------------------ |
+| `@accelint/stream`         | Source of stream cache and lifecycle data          | Peer dependency          |
 | TanStack Devtools packages | Host shell, UI plumbing, and integration utilities | Peer/runtime integration |
-| React | Optional host adapter surface | Peer dependency |
+| React                      | Optional host adapter surface                      | Peer dependency          |
 
 ## 6. Deployment & Infrastructure
 
@@ -137,7 +137,7 @@ This package has no server, database, or hosted runtime of its own. It is a publ
 
 > Testing patterns and standards are defined in [../../openspec/config.yaml](../../openspec/config.yaml); this section covers local setup and commands.
 
-**Local Setup:** Use Node.js 22+ and pnpm 10+. Install from the repo root, then run repo-wide verification or package-local scripts from `packages/stream-devtools`.
+**Local Setup:** Use Node.js 24+ and pnpm 10+. Install from the repo root, then run repo-wide verification or package-local scripts from `packages/stream-devtools`.
 
 **Testing Frameworks:** Vitest with a mixed configuration: core tests use the shared no-DOM base plus Solid tooling, while some React-facing tests opt into jsdom where needed.
 
@@ -160,9 +160,9 @@ This package has no server, database, or hosted runtime of its own. It is a publ
 
 ## 11. Glossary / Acronyms
 
-| Term | Definition |
-|------|-----------|
-| Devtools snapshot | Captured view of stream state rendered in the diagnostics panel |
-| Production noop entry | Entry point that avoids enabling the devtools runtime in production-oriented use |
-| Timeline log | Ordered sequence of stream lifecycle events surfaced for debugging |
+| Term                  | Definition                                                                                                      |
+| --------------------- | --------------------------------------------------------------------------------------------------------------- |
+| Devtools snapshot     | Captured view of stream state rendered in the diagnostics panel                                                 |
+| Production noop entry | Entry point that avoids enabling the devtools runtime in production-oriented use                                |
+| Timeline log          | Ordered sequence of stream lifecycle events surfaced for debugging                                              |
 | In-process inspection | Diagnostics approach that reads the local runtime directly rather than coordinating through cross-tab messaging |

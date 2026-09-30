@@ -109,8 +109,8 @@ This package has no server, database, or hosted runtime. It is a published geosp
 
 ## 5. External Integrations / APIs
 
-| Service | Purpose | Integration Method |
-|---------|---------|-------------------|
+| Service   | Purpose                                         | Integration Method |
+| --------- | ----------------------------------------------- | ------------------ |
 | `geodesy` | Coordinate math and geodesic conversion support | Runtime dependency |
 
 ## 6. Deployment & Infrastructure
@@ -137,7 +137,7 @@ This package has no server, database, or hosted runtime. It is a published geosp
 
 > Testing patterns and standards are defined in [../../openspec/config.yaml](../../openspec/config.yaml); this section covers local setup and commands.
 
-**Local Setup:** Use Node.js 22+ and pnpm 10+. Install from the repo root, then run repo-wide verification or package-local scripts from `packages/geo`.
+**Local Setup:** Use Node.js 24+ and pnpm 10+. Install from the repo root, then run repo-wide verification or package-local scripts from `packages/geo`.
 
 **Testing Frameworks:** Vitest with the shared no-DOM base config. Tests use large coordinate matrices and parameterized cases to verify parser and formatter behavior across supported systems.
 
@@ -160,10 +160,10 @@ This package has no server, database, or hosted runtime. It is a published geosp
 
 ## 11. Glossary / Acronyms
 
-| Term | Definition |
-|------|-----------|
-| DD | Decimal Degrees coordinate format |
-| DDM | Degrees Decimal Minutes coordinate format |
-| DMS | Degrees Minutes Seconds coordinate format |
-| MGRS | Military Grid Reference System |
-| UTM | Universal Transverse Mercator coordinate system |
+| Term | Definition                                      |
+| ---- | ----------------------------------------------- |
+| DD   | Decimal Degrees coordinate format               |
+| DDM  | Degrees Decimal Minutes coordinate format       |
+| DMS  | Degrees Minutes Seconds coordinate format       |
+| MGRS | Military Grid Reference System                  |
+| UTM  | Universal Transverse Mercator coordinate system |

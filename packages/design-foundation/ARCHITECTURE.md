@@ -109,12 +109,12 @@ This package has no server, database, or hosted runtime. It is a published styli
 
 ## 5. External Integrations / APIs
 
-| Service | Purpose | Integration Method |
-|---------|---------|-------------------|
-| Tailwind CSS | Theme and utility generation | Peer dependency |
-| `@accelint/constants` | Shared constants used in foundation helpers and token generation | Runtime dependency |
-| `@accelint/converters` | Supporting conversion helpers for token/style tooling | Runtime dependency |
-| `@accelint/predicates` | Supporting validation helpers for styling/tooling flows | Runtime dependency |
+| Service                | Purpose                                                          | Integration Method |
+| ---------------------- | ---------------------------------------------------------------- | ------------------ |
+| Tailwind CSS           | Theme and utility generation                                     | Peer dependency    |
+| `@accelint/constants`  | Shared constants used in foundation helpers and token generation | Runtime dependency |
+| `@accelint/converters` | Supporting conversion helpers for token/style tooling            | Runtime dependency |
+| `@accelint/predicates` | Supporting validation helpers for styling/tooling flows          | Runtime dependency |
 
 ## 6. Deployment & Infrastructure
 
@@ -140,7 +140,7 @@ This package has no server, database, or hosted runtime. It is a published styli
 
 > Testing patterns and standards are defined in [../../openspec/config.yaml](../../openspec/config.yaml); this section covers local setup and commands.
 
-**Local Setup:** Use Node.js 22+ and pnpm 10+. Install from the repo root. The package includes generation scripts for tokens and variants, and README guidance points to Design Toolkit preview flows plus editor configuration for Tailwind/Biome support.
+**Local Setup:** Use Node.js 24+ and pnpm 10+. Install from the repo root. The package includes generation scripts for tokens and variants, and README guidance points to Design Toolkit preview flows plus editor configuration for Tailwind/Biome support.
 
 **Testing Frameworks:** Vitest with the shared no-DOM base config. Tests are focused on CSS/token helper behavior rather than component rendering.
 
@@ -163,9 +163,9 @@ This package has no server, database, or hosted runtime. It is a published styli
 
 ## 11. Glossary / Acronyms
 
-| Term | Definition |
-|------|-----------|
-| Design token | Canonical design value such as a color, spacing size, or typography setting |
-| Theme CSS variable | Generated CSS variable that represents a token value in a given theme |
-| Variant | Reusable styling condition compiled into CSS/Tailwind-oriented outputs |
-| Tailwind helper | Utility that adapts design-foundation values into consuming build pipelines |
+| Term               | Definition                                                                  |
+| ------------------ | --------------------------------------------------------------------------- |
+| Design token       | Canonical design value such as a color, spacing size, or typography setting |
+| Theme CSS variable | Generated CSS variable that represents a token value in a given theme       |
+| Variant            | Reusable styling condition compiled into CSS/Tailwind-oriented outputs      |
+| Tailwind helper    | Utility that adapts design-foundation values into consuming build pipelines |
