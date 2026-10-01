@@ -76,14 +76,14 @@ jobs:
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
-      - uses: changesets/action@v1
+      - uses: changesets/action@v2
         id: changesets
         with:
           # Call changeset command directly (skips constellation-tracker for beta)
-          version: pnpm changeset version
-          publish: changeset:release-beta
-          commit: 'build: version beta packages'
-          title: 'Changeset Action: Version Beta Packages + Publish'
+          version-script: pnpm changeset version
+          publish-script: changeset:release-beta
+          commit-message: 'build: version beta packages'
+          pr-title: 'Changeset Action: Version Beta Packages + Publish'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
