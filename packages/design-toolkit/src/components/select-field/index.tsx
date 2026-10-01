@@ -14,6 +14,7 @@
 import 'client-only';
 import { clsx } from '@accelint/design-foundation/lib/utils';
 import ChevronDown from '@accelint/icons/chevron-down';
+import { composeRenderProps } from 'react-aria-components/composeRenderProps';
 import {
   Button as AriaButton,
   Select as AriaSelect,
@@ -22,7 +23,6 @@ import {
   SelectValue,
   Text,
 } from 'react-aria-components/Select';
-import { composeRenderProps } from 'react-aria-components/composeRenderProps';
 import { useContextProps } from 'react-aria-components/slots';
 import { ListLayout, Virtualizer } from 'react-aria-components/Virtualizer';
 import { Button } from '../button';

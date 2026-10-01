@@ -219,6 +219,7 @@
     "build": "pnpm tsdown",
     "build-storybook": "pnpm storybook build",
     "build:icons": "smeegl --in '.storybook/icons' --out 'src/deckgl/shapes/__fixtures__/atlas'",
+    "check": "pnpm biome check --write .",
     "constellation-tracker": "pnpm exec constellation-tracker",
     "dev": "pnpm tsc --watch",
     "format": "pnpm biome format . --write --verbose",

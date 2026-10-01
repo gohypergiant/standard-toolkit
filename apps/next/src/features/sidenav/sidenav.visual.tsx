@@ -34,9 +34,9 @@ import {
   createVisualTestScenarios,
   generateVariantMatrix,
 } from '~/visual-regression/vitest';
+import { PROP_COMBOS, type SidenavScenario } from './variants';
 import type { UniqueId } from '@accelint/core';
 import type { SidenavOpenEvent } from '@accelint/design-toolkit/components/sidenav/types';
-import { type SidenavScenario, PROP_COMBOS } from './variants';
 
 // ---------------------------------------------------------------------------
 // Helper: emit Sidenav:open on mount to programmatically expand the sidenav

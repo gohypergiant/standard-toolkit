@@ -11,8 +11,7 @@
     "@accelint/turbo-filter": "workspace:*",
     "@babel/parser": "^7.28.5",
     "@biomejs/biome": "^2.5.13",
-    "@changesets/changelog-git": "^0.2.1",
-    "@changesets/cli": "^2.29.8",
+    "@changesets/cli": "^3.0.2",
     "@fission-ai/openspec": "^1.3.1",
     "@ls-lint/ls-lint": "^2.3.1",
     "@swc/core": "^1.15.3",
@@ -23,7 +22,7 @@
     "syncpack": "^14.0.0-alpha.32",
     "taze": "^19.9.2",
     "tsx": "^4.21.0",
-    "turbo": "^2.6.3",
+    "turbo": "^2.11.5",
     "zx": "^8.8.5"
   },
   "engines": {
@@ -68,6 +67,7 @@
     "changeset:release": "pnpm run build && pnpm changeset publish",
     "changeset:release-beta": "pnpm changeset publish --tag beta",
     "changeset:version": "pnpm changeset version && pnpm run constellation-tracker",
+    "check": "pnpm turbo run check",
     "clean": "pnpm run clean:dist && pnpm run clean:buildinfo && pnpm run clean:turbo && pnpm run clean:cov && pnpm run clean:deps",
     "clean:buildinfo": "pnpm exec find . -name 'tsconfig.tsbuildinfo' -delete",
     "clean:cov": "pnpm -r exec rimraf coverage && pnpm rimraf coverage",

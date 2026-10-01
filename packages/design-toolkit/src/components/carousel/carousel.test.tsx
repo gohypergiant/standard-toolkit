@@ -13,15 +13,14 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
-
 import { Carousel } from '.';
 import { CAROUSEL_ITEMS } from './__fixtures__';
-import type { CarouselData } from './types';
 import { CarouselGallery } from './gallery';
 import { CarouselNext, CarouselPrevious } from './navigation';
 import { CarouselPosition } from './position';
 import { CarouselSelect } from './select';
 import { CarouselViewer } from './viewer';
+import type { CarouselData } from './types';
 
 function setup({
   items = CAROUSEL_ITEMS,

@@ -10,8 +10,8 @@
  * governing permissions and limitations under the License.
  */
 
-import type { ComponentProps, ComponentPropsWithRef, ReactNode } from 'react';
 import type { MediaController } from 'media-chrome/react';
+import type { ComponentProps, ComponentPropsWithRef, ReactNode } from 'react';
 
 export type VideoProps = Omit<
   ComponentPropsWithRef<'video'>,

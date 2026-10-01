@@ -14,9 +14,9 @@ import { useEmit } from '@accelint/bus/react';
 import { uuid } from '@accelint/core';
 import { NoticeList } from '@accelint/design-toolkit';
 import { NoticeEventTypes } from '@accelint/design-toolkit/components/notice/events';
-import type { NoticeQueueEvent } from '@accelint/design-toolkit/components/notice/types';
 import { useEffect, useMemo } from 'react';
 import { createVisualTestScenarios } from '~/visual-regression/vitest';
+import type { NoticeQueueEvent } from '@accelint/design-toolkit/components/notice/types';
 
 const PLACEMENTS = [
   'top left',

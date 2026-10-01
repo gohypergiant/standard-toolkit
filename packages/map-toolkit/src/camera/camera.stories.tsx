@@ -28,8 +28,8 @@ import type {
   CameraSetRotationEvent,
   CameraSetViewEvent,
   CameraSetZoomEvent,
-  TransitionEasing,
   ProjectionType,
+  TransitionEasing,
   ViewType,
 } from './types';
 

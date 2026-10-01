@@ -10,9 +10,9 @@
  * governing permissions and limitations under the License.
  */
 
-import { describe, it, expect, vi } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import { GarsLayer } from './';
-import { garsDefinition, GARS_GRID_TYPES } from './definition';
+import { GARS_GRID_TYPES, garsDefinition } from './definition';
 import type { Color } from '@deck.gl/core';
 
 vi.mock('../core/base-grid-layer', () => ({

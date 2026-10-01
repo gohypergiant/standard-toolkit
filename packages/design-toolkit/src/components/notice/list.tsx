@@ -19,7 +19,7 @@ import { useToastQueue } from 'react-stately/useToastState';
 import 'client-only';
 import { clsx } from '@accelint/design-foundation/lib/utils';
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { flushSync } from 'react-dom';
+import { composeRenderProps } from 'react-aria-components/composeRenderProps';
 import {
   type QueuedToast,
   UNSTABLE_ToastList as ToastList,
@@ -27,6 +27,7 @@ import {
   UNSTABLE_ToastRegion as ToastRegion,
   UNSTABLE_ToastStateContext as ToastStateContext,
 } from 'react-aria-components/Toast';
+import { flushSync } from 'react-dom';
 import { Button } from '../button';
 import { Notice } from './';
 import { NoticeEventTypes } from './events';
@@ -39,7 +40,6 @@ import type {
   NoticeListProps,
   NoticeQueueEvent,
 } from './types';
-import { composeRenderProps } from 'react-aria-components/composeRenderProps';
 
 /**
  * NoticeList - Queue manager for displaying multiple notices

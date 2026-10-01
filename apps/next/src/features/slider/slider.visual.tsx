@@ -12,7 +12,6 @@
 
 import { ThemeProvider } from '@accelint/design-toolkit';
 import { Slider } from '@accelint/design-toolkit/components/slider';
-import type { SliderProps } from '@accelint/design-toolkit/components/slider/types';
 import { describe, expect, test } from 'vitest';
 import { page, userEvent } from 'vitest/browser';
 import { render } from 'vitest-browser-react';
@@ -21,6 +20,7 @@ import {
   createInteractiveVisualTests,
   createVisualTestScenarios,
 } from '~/visual-regression/vitest';
+import type { SliderProps } from '@accelint/design-toolkit/components/slider/types';
 
 // =============================================================================
 // Static Scenarios

@@ -10,8 +10,8 @@
  * governing permissions and limitations under the License.
  */
 
-import { describe, it, expect } from 'vitest';
 import { renderHook } from '@testing-library/react';
+import { describe, expect, it } from 'vitest';
 import { useTreeActions } from './index';
 import type { TreeNode } from '../types';
 

@@ -14,8 +14,8 @@
 import { TIMESCALE_MAPPING } from '../constants';
 import type {
   GanttDerivedThresholdValue,
-  GanttRegion,
   GanttMetThresholdData,
+  GanttRegion,
   GanttThreshold,
   GanttTimeBounds,
   GanttTimescale,

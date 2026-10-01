@@ -1,17 +1,23 @@
 {
-  "$schema": "https://turbo.build/schema.json",
+  "$schema": "https://v2-11-5.turborepo.dev/schema.json",
   "ui": "tui",
   "tasks": {
     "index": {
-      "cache": false,
       "outputs": ["src/index.ts"]
     },
     "pre-build": {
       "outputs": ["dist/**", "build/**"]
     },
     "build": {
-      "dependsOn": ["^index", "^build"],
+      "dependsOn": ["license", "^index", "^build"],
       "outputs": ["dist/**", "build/**", ".next/**", "!.next/cache/**"]
+    },
+    "check": {
+      "description": "Run Biome code quality checks (lint + format + organize imports)",
+      "dependsOn": ["license", "^build"],
+      "outputs": [],
+      "inputs": ["$TURBO_DEFAULT$", ".biomerc*", "biome.json"],
+      "cache": true
     },
     "dev": {
       "dependsOn": ["^build"],

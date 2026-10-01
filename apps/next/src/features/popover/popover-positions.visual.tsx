@@ -18,8 +18,8 @@ import {
   PopoverTrigger,
 } from '@accelint/design-toolkit';
 import { createVisualTestScenarios } from '~/visual-regression/vitest';
-import type { PopoverPositionVariant } from './variants';
 import { POSITION_PROP_COMBOS } from './variants';
+import type { PopoverPositionVariant } from './variants';
 
 function PopoverPositionVariantComponent({
   props,

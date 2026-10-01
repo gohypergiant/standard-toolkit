@@ -15,6 +15,7 @@ import 'client-only';
 import { clsx } from '@accelint/design-foundation/lib/utils';
 import ChevronDown from '@accelint/icons/chevron-down';
 import { useContext } from 'react';
+import { composeRenderProps } from 'react-aria-components/composeRenderProps';
 import { Heading } from 'react-aria-components/Heading';
 import { isSlottedContextValue } from '../../lib/utils';
 import { Button } from '../button';
@@ -23,7 +24,6 @@ import { IconContext } from '../icon/context';
 import { AccordionContext } from './context';
 import styles from './styles.module.css';
 import type { AccordionTriggerProps } from './types';
-import { composeRenderProps } from 'react-aria-components/composeRenderProps';
 
 /**
  * Trigger button component for expanding/collapsing accordion sections.

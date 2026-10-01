@@ -19,8 +19,8 @@ import { createReactPlugin } from '@tanstack/devtools-utils/react';
 import { useContext, useMemo } from 'react';
 import { createStreamDevtoolsStore } from '../store';
 import { StreamDevtoolsPanel } from './panel';
-import type { DevtoolsPanelProps } from '@tanstack/devtools-utils/react';
 import type { StreamClient } from '@accelint/stream';
+import type { DevtoolsPanelProps } from '@tanstack/devtools-utils/react';
 import type { StreamDevtoolsStore } from '../types';
 
 // one store per client, for the client's lifetime — panel remounts and

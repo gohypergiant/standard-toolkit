@@ -29,9 +29,9 @@ import type { ShapeHoveredEvent } from '../shared/events';
 import type { Shape } from '../shared/types';
 import '../display-shape-layer/fiber';
 import { DrawShapeLayer } from './index';
-import type { DrawableShapeType } from './types';
 import { useDrawShape } from './use-draw-shape';
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import type { DrawableShapeType } from './types';
 
 const meta: Meta = {
   title: 'DeckGL/Shapes/Draw Shape Layer',

@@ -10,20 +10,20 @@
  * governing permissions and limitations under the License.
  */
 
-import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { Broadcast } from '@accelint/bus';
-import type {
-  GridDefinition,
-  GridRenderer,
-  RenderContext,
-  GridCellEvent,
-  GridStyleConfig,
-  RenderResult,
-} from './types';
-import { GridCellEvents } from './types';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { BaseGridLayer } from './base-grid-layer';
+import { GridCellEvents } from './types';
 import type { PickingInfo, UpdateParameters, Viewport } from '@deck.gl/core';
 import type { PathLayer } from '@deck.gl/layers';
+import type {
+  GridCellEvent,
+  GridDefinition,
+  GridRenderer,
+  GridStyleConfig,
+  RenderContext,
+  RenderResult,
+} from './types';
 
 /**
  * Type-safe helper to set layer context and initialize state for testing

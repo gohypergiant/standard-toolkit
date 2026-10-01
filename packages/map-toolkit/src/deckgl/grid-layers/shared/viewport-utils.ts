@@ -10,8 +10,8 @@
  * governing permissions and limitations under the License.
  */
 
-import type { Viewport } from '@deck.gl/core';
 import { Bounds, Unit } from '@ngageoint/grid-js';
+import type { Viewport } from '@deck.gl/core';
 
 /**
  * Calculates geographic bounds for a given deck.gl viewport.

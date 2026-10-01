@@ -11,12 +11,12 @@
  * governing permissions and limitations under the License.
  */
 
-import type { PropsWithChildren } from 'react';
 import { GANTT_HEADER_HEIGHT_PX } from '@/components/gantt/constants';
 import { useGanttStore } from '@/components/gantt/context/store';
 import { useRootElementHeight } from '@/components/gantt/hooks/use-root-element-height';
 import { selectors } from '@/components/gantt/store';
 import styles from '../styles.module.css';
+import type { PropsWithChildren } from 'react';
 
 export function VirtualizedContentHeightContainer({
   children,

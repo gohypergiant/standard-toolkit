@@ -10,9 +10,9 @@
  * governing permissions and limitations under the License.
  */
 
-import type { GridDefinition, GridZoomRange } from '../core/types';
-import { createGARSRenderer } from './renderer';
 import { DEFAULT_STYLES } from '../shared/constants';
+import { createGARSRenderer } from './renderer';
+import type { GridDefinition, GridZoomRange } from '../core/types';
 
 /** Grid type identifiers for the three GARS precision levels */
 export const GARS_GRID_TYPES = {
