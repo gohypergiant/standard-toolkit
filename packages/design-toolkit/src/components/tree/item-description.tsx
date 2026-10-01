@@ -35,12 +35,12 @@ import styles from './styles.module.css';
 export function TreeItemDescription({ children, className }: TextProps) {
   const { variant } = useContext(TreeContext);
 
-  return variant !== 'crammed' ? (
+  return variant === 'crammed' ? null : (
     <Text
       data-slot='description'
       className={clsx(styles.description, className)}
     >
       {children}
     </Text>
-  ) : null;
+  );
 }

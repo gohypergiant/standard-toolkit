@@ -10,9 +10,9 @@
  * governing permissions and limitations under the License.
  */
 
-import { describe, it, expect, vi } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import { MgrsLayer } from './';
-import { mgrsDefinition, MGRS_GRID_TYPES } from './definition';
+import { MGRS_GRID_TYPES, mgrsDefinition } from './definition';
 
 vi.mock('../core/base-grid-layer', () => ({
   BaseGridLayer: class MockBaseGridLayer {

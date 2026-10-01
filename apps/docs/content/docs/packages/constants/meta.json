@@ -1,7 +1,4 @@
 {
   "title": "@accelint/constants",
-  "pages": [
-    "index",
-    "..."
-  ]
+  "pages": ["index", "..."]
 }

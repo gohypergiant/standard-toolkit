@@ -14,8 +14,6 @@
  * THIS IS A GENERATED FILE. DO NOT ALTER DIRECTLY.
  */
 
-// biome-ignore-all assist/source/organizeImports: This comment is used to prevent the biome tool from altering the import statements in this file.
-
 export {
   CSS_RGBA_LEGACY_REGEX,
   CSS_RGBA_MODERN_REGEX,

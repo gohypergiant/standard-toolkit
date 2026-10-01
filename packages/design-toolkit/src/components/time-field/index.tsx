@@ -17,10 +17,10 @@ import Time from '@accelint/icons/time';
 import { composeRenderProps } from 'react-aria-components/composeRenderProps';
 import {
   DateInput as AriaDateInput,
-  DateSegment,
-  FieldError,
   Text as AriaText,
   TimeField as AriaTimeField,
+  DateSegment,
+  FieldError,
   type TimeValue,
 } from 'react-aria-components/TimeField';
 import { Icon } from '../icon';

@@ -1,7 +1,4 @@
 {
   "title": "@accelint/design-toolkit",
-  "pages": [
-    "index",
-    "..."
-  ]
+  "pages": ["index", "..."]
 }

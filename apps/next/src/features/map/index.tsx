@@ -10,9 +10,9 @@
  * governing permissions and limitations under the License.
  */
 
+import { MapClient } from './client';
 import { ErrorComponent } from './error';
 import { LoadingComponent } from './loading';
-import { MapClient } from './client';
 import type { ReactNode } from 'react';
 
 export type MapExampleProps = {

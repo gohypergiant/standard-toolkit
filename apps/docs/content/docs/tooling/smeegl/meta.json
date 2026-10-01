@@ -1,7 +1,4 @@
 {
   "title": "@accelint/smeegle",
-  "pages": [
-    "index",
-    "..."
-  ]
+  "pages": ["index", "..."]
 }

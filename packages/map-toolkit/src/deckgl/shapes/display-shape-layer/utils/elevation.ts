@@ -696,9 +696,9 @@ export function buildIndicatorLineData(
 ): LineSegment[] {
   const lineData: LineSegment[] = [];
   const hoveredFeatureShapeId =
-    hoverIndex !== undefined
-      ? features[hoverIndex]?.properties?.shapeId
-      : undefined;
+    hoverIndex === undefined
+      ? undefined
+      : features[hoverIndex]?.properties?.shapeId;
 
   for (const feature of elevatedNonPolygons) {
     const { geometry } = feature;

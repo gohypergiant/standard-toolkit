@@ -62,5 +62,6 @@
   "editor.codeActionsOnSave": {
     "source.organizeImports.biome": "explicit"
   },
-  "yaml.format.singleQuote": true
+  "yaml.format.singleQuote": true,
+  "js/ts.tsdk.path": "apps/next/node_modules/typescript/lib"
 }

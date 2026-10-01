@@ -12,8 +12,8 @@
 
 import { Broadcast } from '@accelint/bus';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { MgrsLayer } from './';
 import { type GridCellEvent, GridCellEvents } from '../core/types';
+import { MgrsLayer } from './';
 import type { Layer } from '@deck.gl/core';
 import type { PathLayer } from '@deck.gl/layers';
 

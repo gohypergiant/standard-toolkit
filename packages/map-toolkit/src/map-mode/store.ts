@@ -168,13 +168,13 @@ function approveRequestAndRejectOthers(
 
   // Build immutable updates: clear pending requests, update owners
   const newModeOwners =
-    approvedRequest.desiredMode !== DEFAULT_MODE
-      ? mapSet(
+    approvedRequest.desiredMode === DEFAULT_MODE
+      ? state.modeOwners
+      : mapSet(
           state.modeOwners,
           approvedRequest.desiredMode,
           approvedRequest.requestOwner,
-        )
-      : state.modeOwners;
+        );
 
   // Immutable update: clear pending requests, update owners, change mode
   set({

@@ -23,14 +23,14 @@ declare const process: { env: { NODE_ENV?: string } };
 
 // dev-only (TanStack convention) — ./react/production opts out
 export const StreamDevtoolsPanel =
-  process.env.NODE_ENV !== 'development'
-    ? devtools.StreamDevtoolsPanelNoOp
-    : devtools.StreamDevtoolsPanel;
+  process.env.NODE_ENV === 'development'
+    ? devtools.StreamDevtoolsPanel
+    : devtools.StreamDevtoolsPanelNoOp;
 
 export const streamDevtoolsPlugin =
-  process.env.NODE_ENV !== 'development'
-    ? plugin.streamDevtoolsNoOpPlugin
-    : plugin.streamDevtoolsPlugin;
+  process.env.NODE_ENV === 'development'
+    ? plugin.streamDevtoolsPlugin
+    : plugin.streamDevtoolsNoOpPlugin;
 
 export type {
   StreamDevtoolsActions,

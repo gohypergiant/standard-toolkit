@@ -22,8 +22,14 @@ export const PROP_COMBOS: { name: string; props: CheckboxGroupVariant }[] = [
   { name: 'label-start', props: { labelPosition: 'start' } },
   { name: 'selected', props: { defaultValue: ['a'] } },
   { name: 'required', props: { isRequired: true } },
-  { name: 'required-selected', props: { isRequired: true, defaultValue: ['a'] } },
+  {
+    name: 'required-selected',
+    props: { isRequired: true, defaultValue: ['a'] },
+  },
   { name: 'disabled', props: { isDisabled: true } },
-  { name: 'disabled-selected', props: { isDisabled: true, defaultValue: ['a'] } },
+  {
+    name: 'disabled-selected',
+    props: { isDisabled: true, defaultValue: ['a'] },
+  },
   { name: 'horizontal', props: { orientation: 'horizontal' } },
 ];

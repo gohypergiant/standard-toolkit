@@ -29,9 +29,9 @@ import type { ShapeHoveredEvent } from '../shared/events';
 import type { Shape } from '../shared/types';
 import '../display-shape-layer/fiber';
 import { DrawShapeLayer } from './index';
-import type { DrawableShapeType } from './types';
 import { useDrawShape } from './use-draw-shape';
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import type { DrawableShapeType } from './types';
 
 const meta: Meta = {
   title: 'DeckGL/Shapes/Draw Shape Layer',
@@ -517,7 +517,7 @@ export const CombinedDisplayAndDraw: Story = {
           <p className='font-bold text-header-l'>Add Shapes</p>
 
           <p className='text-body-xs text-content-secondary'>
-            {shapes.length} shape{shapes.length !== 1 ? 's' : ''} on map
+            {shapes.length} shape{shapes.length === 1 ? '' : 's'} on map
           </p>
 
           <div className='flex flex-wrap gap-s'>

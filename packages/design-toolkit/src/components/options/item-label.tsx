@@ -10,8 +10,8 @@
  * governing permissions and limitations under the License.
  */
 
-import { useContext } from 'react';
 import { clsx } from '@accelint/design-foundation/lib/utils';
+import { useContext } from 'react';
 import { ComboBoxStateContext } from 'react-aria-components/ComboBox';
 import { Text } from 'react-aria-components/Text';
 import styles from './styles.module.css';

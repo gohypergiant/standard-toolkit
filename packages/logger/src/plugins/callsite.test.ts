@@ -10,7 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
-import { describe, expect, test, vi, beforeEach } from 'vitest';
+import { beforeEach, describe, expect, test, vi } from 'vitest';
 import { callsitePlugin } from './callsite';
 import type { CallSite } from 'callsites';
 
@@ -100,37 +100,38 @@ describe('callsitePlugin', () => {
       { level: 'debug', description: 'debug level' },
       { level: 'trace', description: 'trace level' },
       { level: 'fatal', description: 'fatal level' },
-    ])('should detect callsite after $description method in stack', ({
-      level,
-    }) => {
-      const levelCallsite = {
-        getFunctionName: () => level,
-        getFileName: () => '/node_modules/loglayer/index.js',
-        getLineNumber: () => 10,
-        getColumnNumber: () => 1,
-        isEval: () => false,
-        getEvalOrigin: () => undefined,
-      } as CallSite;
+    ])(
+      'should detect callsite after $description method in stack',
+      ({ level }) => {
+        const levelCallsite = {
+          getFunctionName: () => level,
+          getFileName: () => '/node_modules/loglayer/index.js',
+          getLineNumber: () => 10,
+          getColumnNumber: () => 1,
+          isEval: () => false,
+          getEvalOrigin: () => undefined,
+        } as CallSite;
 
-      const userCallsite = {
-        getFunctionName: () => 'userCode',
-        getFileName: () => '/src/main.ts',
-        getLineNumber: () => 50,
-        getColumnNumber: () => 15,
-        isEval: () => false,
-        getEvalOrigin: () => undefined,
-      } as CallSite;
+        const userCallsite = {
+          getFunctionName: () => 'userCode',
+          getFileName: () => '/src/main.ts',
+          getLineNumber: () => 50,
+          getColumnNumber: () => 15,
+          isEval: () => false,
+          getEvalOrigin: () => undefined,
+        } as CallSite;
 
-      callsitesMock.mockReturnValue([levelCallsite, userCallsite]);
+        callsitesMock.mockReturnValue([levelCallsite, userCallsite]);
 
-      const plugin = callsitePlugin({ isProductionEnv: false });
+        const plugin = callsitePlugin({ isProductionEnv: false });
 
-      const result = plugin.onBeforeDataOut({ data: {} });
+        const result = plugin.onBeforeDataOut({ data: {} });
 
-      expect(result).toEqual({
-        callSite: '/src/main.ts:50:15',
-      });
-    });
+        expect(result).toEqual({
+          callSite: '/src/main.ts:50:15',
+        });
+      },
+    );
 
     test('should preserve existing data properties when adding callSite', () => {
       const mockCallsite = {

@@ -1,7 +1,4 @@
 {
   "title": "@accelint/formatters",
-  "pages": [
-    "index",
-    "..."
-  ]
+  "pages": ["index", "..."]
 }

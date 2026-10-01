@@ -22,9 +22,12 @@ describe('isValid255Channel', () => {
     [254, true],
     [0.5, true], // Decimals are valid
     [127.5, true],
-  ] as const)('should return %s for valid channel value %d', (value, expected) => {
-    expect(isValid255Channel(value)).toBe(expected);
-  });
+  ] as const)(
+    'should return %s for valid channel value %d',
+    (value, expected) => {
+      expect(isValid255Channel(value)).toBe(expected);
+    },
+  );
 
   it.each([
     -1, // Below minimum

@@ -12,7 +12,6 @@
 
 import { Broadcast } from '@accelint/bus/broadcast';
 import { uuid } from '@accelint/core';
-import type { UniqueId } from '@accelint/core';
 import { act, render, screen } from '@testing-library/react';
 import { useLayoutEffect, useRef } from 'react';
 import {
@@ -28,6 +27,7 @@ import { CameraEventTypes } from '../../camera/events';
 import { cameraStore, clearCameraState, MAX_PITCH } from '../../camera/store';
 import { BaseMap, stripLockedMapLibreOptions } from './index';
 import { LOCKED_MAP_LIBRE_OPTION_KEYS } from './types';
+import type { UniqueId } from '@accelint/core';
 import type { MapOptions } from 'maplibre-gl';
 import type { MjolnirGestureEvent } from 'mjolnir.js';
 import type { CameraEvent, ViewType } from '../../camera/types';
@@ -356,21 +356,20 @@ describe('BaseMap', () => {
       });
     }
 
-    it.each([
-      '2D',
-      '2.5D',
-      '3D',
-    ] as const)('keeps MapLibre rotate/pitch off and a constant maxPitch in the %s view', (view) => {
-      useFakeMap(createFakeMap());
+    it.each(['2D', '2.5D', '3D'] as const)(
+      'keeps MapLibre rotate/pitch off and a constant maxPitch in the %s view',
+      (view) => {
+        useFakeMap(createFakeMap());
 
-      render(<BaseMap id={uuid()} defaultView={view} />);
+        render(<BaseMap id={uuid()} defaultView={view} />);
 
-      expect(capturedMapProps).toMatchObject({
-        dragRotate: false,
-        pitchWithRotate: false,
-        maxPitch: MAX_PITCH,
-      });
-    });
+        expect(capturedMapProps).toMatchObject({
+          dragRotate: false,
+          pitchWithRotate: false,
+          maxPitch: MAX_PITCH,
+        });
+      },
+    );
 
     it('keeps a 2D view flat when MapLibre reports a tilted camera through onMove', () => {
       // With a constant ceiling, MapLibre no longer clamps a touch or keyboard
@@ -490,16 +489,17 @@ describe('stripLockedMapLibreOptions', () => {
     expect(result).toEqual(input);
   });
 
-  it.each(
-    LOCKED_MAP_LIBRE_OPTION_KEYS,
-  )('should strip locked key %s', (lockedKey) => {
-    const unsafe: UnsafeInput = { [lockedKey]: 'arbitrary' };
-    const input = unsafe as unknown as MapLibreOptions;
+  it.each(LOCKED_MAP_LIBRE_OPTION_KEYS)(
+    'should strip locked key %s',
+    (lockedKey) => {
+      const unsafe: UnsafeInput = { [lockedKey]: 'arbitrary' };
+      const input = unsafe as unknown as MapLibreOptions;
 
-    const result = stripLockedMapLibreOptions(input);
+      const result = stripLockedMapLibreOptions(input);
 
-    expect(result).toEqual({});
-  });
+      expect(result).toEqual({});
+    },
+  );
 
   it('should preserve reference equality for passthrough values', () => {
     const transformRequest: NonNullable<MapOptions['transformRequest']> = (

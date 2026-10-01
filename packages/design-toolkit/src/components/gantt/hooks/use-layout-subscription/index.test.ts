@@ -14,8 +14,8 @@ import { act, renderHook } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import { createGanttStoreProvider } from '../../__fixtures__/store-provider';
 import { useGanttStoreApi } from '../../context/store';
-import type { GanttState } from '../../store';
 import { useLayoutSubscription } from '.';
+import type { GanttState } from '../../store';
 
 describe('useLayoutSubscription', () => {
   const createRafSpy = () => {

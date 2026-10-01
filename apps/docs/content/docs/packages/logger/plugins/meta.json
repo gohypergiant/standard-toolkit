@@ -1,7 +1,4 @@
 {
   "title": "Plugins",
-  "pages": [
-    "callsite",
-    "environment"
-  ]
+  "pages": ["callsite", "environment"]
 }

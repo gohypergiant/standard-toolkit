@@ -192,47 +192,48 @@ describe('recomputeRectangleCorners', () => {
     },
   ];
 
-  it.each(
-    dragBackCases,
-  )('dragging a corner back to itself returns the original rectangle: $label', ({
-    centerLon,
-    centerLat,
-    widthDeg,
-    heightDeg,
-    rotationDeg,
-    draggedIdx,
-    lockAspect,
-  }) => {
-    const corners = buildRotatedRectangle(
+  it.each(dragBackCases)(
+    'dragging a corner back to itself returns the original rectangle: $label',
+    ({
       centerLon,
       centerLat,
       widthDeg,
       heightDeg,
       rotationDeg,
-    );
-    const dragged = corners[draggedIdx] as Position;
-
-    const result = recomputeRectangleCorners(
-      corners,
       draggedIdx,
-      dragged,
       lockAspect,
-    );
+    }) => {
+      const corners = buildRotatedRectangle(
+        centerLon,
+        centerLat,
+        widthDeg,
+        heightDeg,
+        rotationDeg,
+      );
+      const dragged = corners[draggedIdx] as Position;
 
-    expect(result).not.toBeNull();
+      const result = recomputeRectangleCorners(
+        corners,
+        draggedIdx,
+        dragged,
+        lockAspect,
+      );
 
-    if (!result) {
-      return;
-    }
+      expect(result).not.toBeNull();
 
-    for (let i = 0; i < 4; i++) {
-      const original = corners[i] as Position;
-      const recomputed = result[i] as Position;
+      if (!result) {
+        return;
+      }
 
-      expect(recomputed[0]).toBeCloseTo(original[0] as number, 6);
-      expect(recomputed[1]).toBeCloseTo(original[1] as number, 6);
-    }
-  });
+      for (let i = 0; i < 4; i++) {
+        const original = corners[i] as Position;
+        const recomputed = result[i] as Position;
+
+        expect(recomputed[0]).toBeCloseTo(original[0] as number, 6);
+        expect(recomputed[1]).toBeCloseTo(original[1] as number, 6);
+      }
+    },
+  );
 
   it('returns null when fewer than 4 corners are provided', () => {
     expect(

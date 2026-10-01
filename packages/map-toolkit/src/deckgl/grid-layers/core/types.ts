@@ -10,9 +10,9 @@
  * governing permissions and limitations under the License.
  */
 
+import type { Payload } from '@accelint/bus';
 import type { Color, CompositeLayerProps } from '@deck.gl/core';
 import type { Bounds } from '@ngageoint/grid-js';
-import type { Payload } from '@accelint/bus';
 
 /**
  * Grid type identifier for different precision levels

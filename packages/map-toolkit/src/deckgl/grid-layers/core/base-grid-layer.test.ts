@@ -10,20 +10,20 @@
  * governing permissions and limitations under the License.
  */
 
-import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { Broadcast } from '@accelint/bus';
-import type {
-  GridDefinition,
-  GridRenderer,
-  RenderContext,
-  GridCellEvent,
-  GridStyleConfig,
-  RenderResult,
-} from './types';
-import { GridCellEvents } from './types';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { BaseGridLayer } from './base-grid-layer';
+import { GridCellEvents } from './types';
 import type { PickingInfo, UpdateParameters, Viewport } from '@deck.gl/core';
 import type { PathLayer } from '@deck.gl/layers';
+import type {
+  GridCellEvent,
+  GridDefinition,
+  GridRenderer,
+  GridStyleConfig,
+  RenderContext,
+  RenderResult,
+} from './types';
 
 /**
  * Type-safe helper to set layer context and initialize state for testing
@@ -431,25 +431,24 @@ describe('BaseGridLayer', () => {
         shouldShowFine: true,
         reason: 'zoom <= maxZoom (10 <= 10)',
       },
-    ])('boundary test at zoom $zoom: $reason', ({
-      zoom,
-      shouldShowCoarse,
-      shouldShowFine,
-    }) => {
-      const layer = new BaseGridLayer({
-        id: 'test-layer',
-        definition: mockDefinition,
-      });
+    ])(
+      'boundary test at zoom $zoom: $reason',
+      ({ zoom, shouldShowCoarse, shouldShowFine }) => {
+        const layer = new BaseGridLayer({
+          id: 'test-layer',
+          definition: mockDefinition,
+        });
 
-      setLayerContext(layer, { ...mockViewport, zoom });
+        setLayerContext(layer, { ...mockViewport, zoom });
 
-      const renderedLayers = layer.renderLayers();
-      const hasCoarse = renderedLayers.some((l) => l.id.includes('coarse'));
-      const hasFine = renderedLayers.some((l) => l.id.includes('fine'));
+        const renderedLayers = layer.renderLayers();
+        const hasCoarse = renderedLayers.some((l) => l.id.includes('coarse'));
+        const hasFine = renderedLayers.some((l) => l.id.includes('fine'));
 
-      expect(hasCoarse).toBe(shouldShowCoarse);
-      expect(hasFine).toBe(shouldShowFine);
-    });
+        expect(hasCoarse).toBe(shouldShowCoarse);
+        expect(hasFine).toBe(shouldShowFine);
+      },
+    );
   });
 
   describe('Update Logic', () => {

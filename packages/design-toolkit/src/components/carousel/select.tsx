@@ -12,14 +12,14 @@
 
 'use client';
 import 'client-only';
+import { clsx } from '@accelint/design-foundation/lib/utils';
 import { useContext } from 'react';
 import { OptionsItem } from '../options/item';
 import { SelectField } from '../select-field';
 import { CarouselContext } from './context';
+import styles from './style.module.css';
 import type { Key } from 'react-aria-components/Select';
 import type { CarouselSelectProps } from './types';
-import styles from './style.module.css';
-import { clsx } from '@accelint/design-foundation/lib/utils';
 
 /**
  * Renders a dropdown select for navigating the carousel by item title.

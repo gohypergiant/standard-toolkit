@@ -11,14 +11,14 @@
  */
 
 import { DateField } from '@accelint/design-toolkit';
-import type { DateFieldProps } from '@accelint/design-toolkit/components/date-field/types';
 import { parseDateTime } from '@internationalized/date';
-import type { DateValue } from 'react-aria-components';
 import {
   createInteractiveVisualTests,
   createVisualTestScenarios,
   generateVariantMatrix,
 } from '~/visual-regression/vitest';
+import type { DateFieldProps } from '@accelint/design-toolkit/components/date-field/types';
+import type { DateValue } from 'react-aria-components';
 
 const dateValue = parseDateTime('2020-01-23T00:00:00');
 const dateTimeValue = parseDateTime('2021-04-07T18:45:22');
@@ -41,9 +41,7 @@ const variants = generateVariantMatrix<
 
 createInteractiveVisualTests({
   componentName: 'DateField',
-  renderComponent: (props) => (
-    <DateField {...props} defaultValue={dateValue} />
-  ),
+  renderComponent: (props) => <DateField {...props} defaultValue={dateValue} />,
   testId: 'test-date-field',
   variants,
   states: ['default', 'hover', 'focus', 'disabled'],

@@ -1,7 +1,4 @@
 {
   "title": "@accelint/websocket",
-  "pages": [
-    "index",
-    "..."
-  ]
+  "pages": ["index", "..."]
 }

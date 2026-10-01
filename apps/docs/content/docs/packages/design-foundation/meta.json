@@ -1,7 +1,4 @@
 {
   "title": "@accelint/design-foundation",
-  "pages": [
-    "index",
-    "..."
-  ]
+  "pages": ["index", "..."]
 }

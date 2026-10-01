@@ -42,9 +42,9 @@ export function buildReactFiles(
 
   for (const sprite of sprites) {
     const svgParent =
-      sprite.parentPath !== inputPath
-        ? sprite.parentPath.split(path.sep).pop()
-        : '';
+      sprite.parentPath === inputPath
+        ? ''
+        : sprite.parentPath.split(path.sep).pop();
 
     const svgContent = fs.readFileSync(sprite.filePath, 'utf8');
 

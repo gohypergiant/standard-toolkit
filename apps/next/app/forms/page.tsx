@@ -10,8 +10,8 @@
  * governing permissions and limitations under the License.
  */
 
-import {FormsExample} from '~/features/forms';
+import { FormsExample } from '~/features/forms';
 
 export default function Page() {
-  return (<FormsExample />)
+  return <FormsExample />;
 }

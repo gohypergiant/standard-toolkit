@@ -15,26 +15,26 @@ import type { PopoverProps } from '@accelint/design-toolkit/components/popover/t
 export type PopoverPositionVariant = Pick<PopoverProps, 'placement'>;
 
 export const POSITION_PROP_COMBOS = [
-	{ placement: 'top' },
-	{ placement: 'top left' },
-	{ placement: 'top right' },
-	{ placement: 'bottom' },
-	{ placement: 'bottom left' },
-	{ placement: 'bottom right' },
-	{ placement: 'left' },
-	{ placement: 'left top' },
-	{ placement: 'left bottom' },
-	{ placement: 'right' },
-	{ placement: 'right top' },
-	{ placement: 'right bottom' },
+  { placement: 'top' },
+  { placement: 'top left' },
+  { placement: 'top right' },
+  { placement: 'bottom' },
+  { placement: 'bottom left' },
+  { placement: 'bottom right' },
+  { placement: 'left' },
+  { placement: 'left top' },
+  { placement: 'left bottom' },
+  { placement: 'right' },
+  { placement: 'right top' },
+  { placement: 'right bottom' },
 ] as const satisfies readonly PopoverPositionVariant[];
 
 export type PopoverContentVariant = {
-	content: 'simple' | 'with-actions' | 'custom';
+  content: 'simple' | 'with-actions' | 'custom';
 };
 
 export const CONTENT_PROP_COMBOS: PopoverContentVariant[] = [
-	{ content: 'simple' },
-	{ content: 'with-actions' },
-	{ content: 'custom' },
+  { content: 'simple' },
+  { content: 'with-actions' },
+  { content: 'custom' },
 ];

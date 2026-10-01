@@ -146,7 +146,7 @@ export function useCoordinateFieldState({
     undefined,
   );
 
-  const currentValue = value !== undefined ? value : internalValue;
+  const currentValue = value === undefined ? internalValue : value;
 
   const clearValidationTimeout = () => {
     if (validationTimeoutRef.current) {
@@ -171,7 +171,7 @@ export function useCoordinateFieldState({
   );
 
   const [segmentValues, setSegmentValues] = useState<string[]>(() => {
-    const initialValue = value !== undefined ? value : defaultValue;
+    const initialValue = value === undefined ? defaultValue : value;
     if (!initialValue) {
       return new Array(editableSegmentConfigs.length).fill('');
     }
@@ -206,7 +206,7 @@ export function useCoordinateFieldState({
   useEffect(() => {
     if (prevFormatRef.current !== format) {
       prevFormatRef.current = format;
-      const valueToConvert = value !== undefined ? value : internalValue;
+      const valueToConvert = value === undefined ? internalValue : value;
       convertValueToSegmentsOrClear(valueToConvert);
     }
   }, [format, value, internalValue, convertValueToSegmentsOrClear]);

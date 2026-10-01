@@ -1,7 +1,4 @@
 {
   "title": "@accelint/core",
-  "pages": [
-    "index",
-    "..."
-  ]
+  "pages": ["index", "..."]
 }

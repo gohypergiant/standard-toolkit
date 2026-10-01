@@ -32,9 +32,12 @@ describe('isCssRgbaString', () => {
       ['rgb(100%, 50%, 25%)', true],
       ['rgba(100%, 50%, 25%, 0.5)', true],
       ['rgba(100%, 50%, 25%, 50%)', true], // Percentage alpha
-    ] as const)('should return %s for valid legacy syntax %s', (value, expected) => {
-      expect(isCssRgbaString(value)).toBe(expected);
-    });
+    ] as const)(
+      'should return %s for valid legacy syntax %s',
+      (value, expected) => {
+        expect(isCssRgbaString(value)).toBe(expected);
+      },
+    );
   });
 
   describe('modern space-separated syntax', () => {
@@ -51,9 +54,12 @@ describe('isCssRgbaString', () => {
       // Percentage values
       ['rgb(100% 50% 25%)', true],
       ['rgb(100% 50% 25% / 50%)', true],
-    ] as const)('should return %s for valid modern syntax %s', (value, expected) => {
-      expect(isCssRgbaString(value)).toBe(expected);
-    });
+    ] as const)(
+      'should return %s for valid modern syntax %s',
+      (value, expected) => {
+        expect(isCssRgbaString(value)).toBe(expected);
+      },
+    );
   });
 
   it.each([

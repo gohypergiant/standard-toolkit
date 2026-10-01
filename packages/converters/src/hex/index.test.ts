@@ -64,9 +64,12 @@ describe('hex', () => {
       [[0, 0, 0, 0] as const, true, '#00000000'],
       [[255, 255, 255, 255] as const, false, '#FFFFFF'],
       [[255, 255, 255, 255] as const, true, '#FFFFFFFF'],
-    ] as const)('should convert %o to %s (includeAlpha=%s)', (color, includeAlpha, expected) => {
-      expect(rgba255TupleToHex(color, includeAlpha)).toBe(expected);
-    });
+    ] as const)(
+      'should convert %o to %s (includeAlpha=%s)',
+      (color, includeAlpha, expected) => {
+        expect(rgba255TupleToHex(color, includeAlpha)).toBe(expected);
+      },
+    );
 
     it('should default to 6-char hex without alpha', () => {
       expect(rgba255TupleToHex([255, 128, 64, 128])).toBe('#FF8040');

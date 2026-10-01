@@ -23,7 +23,7 @@ import { type DialogVariant, PROP_COMBOS } from './variants';
 function DialogVariantComponent({ props }: { props: DialogVariant }) {
   return (
     <DialogTrigger isOpen>
-      <Button variant="outline">Open {props.size} dialog</Button>
+      <Button variant='outline'>Open {props.size} dialog</Button>
       <Dialog {...props} isDismissable>
         <DialogTitle>Dialog: {props.size}</DialogTitle>
         <p>
@@ -31,8 +31,8 @@ function DialogVariantComponent({ props }: { props: DialogVariant }) {
           visual appearance.
         </p>
         <DialogFooter>
-          <Button variant="outline">Cancel</Button>
-          <Button variant="filled">Confirm</Button>
+          <Button variant='outline'>Cancel</Button>
+          <Button variant='filled'>Confirm</Button>
         </DialogFooter>
       </Dialog>
     </DialogTrigger>

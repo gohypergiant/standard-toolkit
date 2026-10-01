@@ -411,7 +411,7 @@ export function createMapStore<TState, TActions>(
    * @param mapId - Unique identifier for the map instance
    * @returns Object containing state and all actions
    */
-  function use(mapId: UniqueId): { state: TState } & TActions {
+  function useMap(mapId: UniqueId): { state: TState } & TActions {
     const state = useSyncExternalStore(
       subscribe(mapId),
       snapshot(mapId),
@@ -462,7 +462,7 @@ export function createMapStore<TState, TActions>(
   }
 
   return {
-    use,
+    use: useMap,
     useSelector,
     actions: getActions,
     get: (mapId) => getInstance(mapId).state,

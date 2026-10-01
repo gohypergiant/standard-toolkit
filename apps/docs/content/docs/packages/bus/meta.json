@@ -1,7 +1,4 @@
 {
   "title": "@accelint/bus",
-  "pages": [
-    "index",
-    "..."
-  ]
+  "pages": ["index", "..."]
 }

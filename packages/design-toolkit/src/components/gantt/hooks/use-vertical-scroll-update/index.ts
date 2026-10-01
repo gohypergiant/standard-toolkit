@@ -11,7 +11,7 @@
  * governing permissions and limitations under the License.
  */
 
-import { useCallback, type UIEvent } from 'react';
+import { type UIEvent, useCallback } from 'react';
 import { useGanttContext } from '../../context';
 import { useGanttStore } from '../../context/store';
 import { selectors } from '../../store';

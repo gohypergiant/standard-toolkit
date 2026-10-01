@@ -258,7 +258,18 @@ export const AuthorizationFlow: Story = {
           (auth) => auth.requestingOwner === requestingOwner,
         );
 
-        if (existingIndex !== -1) {
+        if (existingIndex === -1) {
+          // Add new request
+          setPendingAuths((prev) => [
+            ...prev,
+            {
+              authId,
+              desiredMode,
+              requestingOwner,
+              id,
+            },
+          ]);
+        } else {
           // Replace the existing request from this requester
           addLog(
             `Previous request from ${requestingOwner} auto-rejected (replaced by new request)`,
@@ -273,17 +284,6 @@ export const AuthorizationFlow: Story = {
             };
             return updated;
           });
-        } else {
-          // Add new request
-          setPendingAuths((prev) => [
-            ...prev,
-            {
-              authId,
-              desiredMode,
-              requestingOwner,
-              id,
-            },
-          ]);
         }
       };
 

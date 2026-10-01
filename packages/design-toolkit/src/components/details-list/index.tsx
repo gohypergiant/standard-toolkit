@@ -13,8 +13,8 @@
 
 import 'client-only';
 import { clsx } from '@accelint/design-foundation/lib/utils';
-import { TextContext } from 'react-aria-components/Text';
 import { DEFAULT_SLOT, useContextProps } from 'react-aria-components/slots';
+import { TextContext } from 'react-aria-components/Text';
 import { DetailsListContext } from './context';
 import styles from './styles.module.css';
 import type { DetailsListProps } from './types';

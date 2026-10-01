@@ -14,12 +14,12 @@
 import 'client-only';
 import { clsx } from '@accelint/design-foundation/lib/utils';
 import { createContext } from 'react';
+import { composeRenderProps } from 'react-aria-components/composeRenderProps';
+import { useContextProps } from 'react-aria-components/slots';
 import {
   TagGroup as AriaTagGroup,
   TagList as AriaTagList,
 } from 'react-aria-components/TagGroup';
-import { composeRenderProps } from 'react-aria-components/composeRenderProps';
-import { useContextProps } from 'react-aria-components/slots';
 import { ChipContext, ChipProvider } from './context';
 import styles from './styles.module.css';
 import type { ChipListProps } from './types';

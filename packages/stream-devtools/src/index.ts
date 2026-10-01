@@ -23,9 +23,9 @@ declare const process: { env: { NODE_ENV?: string } };
 // dev-only (TanStack convention) — ./production opts out; React hosts
 // want ./react, other hosts mount this with a createStreamDevtoolsStore
 export const StreamDevtoolsCore =
-  process.env.NODE_ENV !== 'development'
-    ? core.StreamDevtoolsCoreNoOp
-    : core.StreamDevtoolsCore;
+  process.env.NODE_ENV === 'development'
+    ? core.StreamDevtoolsCore
+    : core.StreamDevtoolsCoreNoOp;
 
 export { createStreamDevtoolsStore } from './store';
 export type {

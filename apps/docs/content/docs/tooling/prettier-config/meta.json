@@ -1,7 +1,4 @@
 {
   "title": "@accelint/prettier-config",
-  "pages": [
-    "index",
-    "..."
-  ]
+  "pages": ["index", "..."]
 }
