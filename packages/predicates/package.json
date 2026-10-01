@@ -88,7 +88,7 @@
     "dev": "pnpm tsc --watch",
     "format": "pnpm biome format . --write --verbose",
     "format:check": "pnpm biome format . --verbose",
-    "index": "pnpm zx ../../scripts/indexer.mjs packages/predicates",
+    "index": "tsx ../../scripts/build-index.ts packages/predicates",
     "license": "pnpm zx ../../scripts/license.mjs",
     "lint": "pnpm biome lint . --verbose",
     "lint:package": "pnpm publint",
