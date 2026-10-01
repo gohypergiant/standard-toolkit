@@ -118,12 +118,12 @@ None. This is a library monorepo with no databases, caches, or queues. Data hand
 
 ## 5. External Integrations / APIs
 
-| Service | Purpose | Integration Method |
-|---------|---------|-------------------|
-| npm registry (public) | Package publishing under `@accelint` | Changesets release via GitHub Actions |
-| Vercel/Netlify-style PaaS | Storybook hosting (design-/map-toolkit.accelint.io) | Repo-connected auto-deploy |
-| Constellation (catalog) | Service catalog registration | `catalog-info.yaml` maintained by `constellation-tracker` on version |
-| TruffleHog | Secret scanning | `security.yml` GitHub Actions workflow |
+| Service                   | Purpose                                             | Integration Method                                                   |
+| ------------------------- | --------------------------------------------------- | -------------------------------------------------------------------- |
+| npm registry (public)     | Package publishing under `@accelint`                | Changesets release via GitHub Actions                                |
+| Vercel/Netlify-style PaaS | Storybook hosting (design-/map-toolkit.accelint.io) | Repo-connected auto-deploy                                           |
+| Constellation (catalog)   | Service catalog registration                        | `catalog-info.yaml` maintained by `constellation-tracker` on version |
+| TruffleHog                | Secret scanning                                     | `security.yml` GitHub Actions workflow                               |
 
 ## 6. Deployment & Infrastructure
 
@@ -155,7 +155,7 @@ None. This is a library monorepo with no databases, caches, or queues. Data hand
 
 > Testing patterns and standards are defined in [openspec/config.yaml](./openspec/config.yaml); this section covers local setup and commands.
 
-**Local Setup:** Node ≥22 + pnpm 10.25 (see `packageManager`); `pnpm install`, then `pnpm build`. See [CONTRIBUTING.md](./CONTRIBUTING.md) and [documentation/getting-started.md](./documentation/getting-started.md).
+**Local Setup:** Node ≥24 + pnpm 10.25 (see `packageManager`); `pnpm install`, then `pnpm build`. See [CONTRIBUTING.md](./CONTRIBUTING.md) and [documentation/getting-started.md](./documentation/getting-started.md).
 
 **Verification Gate (run after every change):** `pnpm run build` → `pnpm run test` → `pnpm run lint` → `pnpm run format`.
 
@@ -181,15 +181,15 @@ None. This is a library monorepo with no databases, caches, or queues. Data hand
 
 ## 11. Glossary / Acronyms
 
-| Term | Definition |
-|------|-----------|
-| DevTK | Development Toolkit — this repository's product name |
-| NTDS | Naval Tactical Data System — the tactical symbology standard implemented by `@accelint/ntds` |
-| COP | Common Operating Picture — the shared tactical map display NTDS spritesheets target |
-| C2 | Command and Control — the class of defense applications these packages serve |
-| RAC | react-aria-components — the accessibility-first primitive library design-toolkit wraps |
+| Term                        | Definition                                                                                                                      |
+| --------------------------- | ------------------------------------------------------------------------------------------------------------------------------- |
+| DevTK                       | Development Toolkit — this repository's product name                                                                            |
+| NTDS                        | Naval Tactical Data System — the tactical symbology standard implemented by `@accelint/ntds`                                    |
+| COP                         | Common Operating Picture — the shared tactical map display NTDS spritesheets target                                             |
+| C2                          | Command and Control — the class of defense applications these packages serve                                                    |
+| RAC                         | react-aria-components — the accessibility-first primitive library design-toolkit wraps                                          |
 | Bearing (in `packages/geo`) | The hemisphere letter (N/S/E/W) of a coordinate — **not** azimuth; elsewhere "bearing/range" means compass direction + distance |
-| DD / DDM / DMS / MGRS | Coordinate formats: Decimal Degrees, Degrees-Decimal-Minutes, Degrees-Minutes-Seconds, Military Grid Reference System |
-| Constellation | Accelint's service catalog (Backstage-style), fed by `catalog-info.yaml` |
-| Bus | `@accelint/bus` — typed BroadcastChannel event bus with `namespace:action` events |
-| Barrel index | Generated `src/index.ts` export files (`pnpm index`) — never hand-edited |
+| DD / DDM / DMS / MGRS       | Coordinate formats: Decimal Degrees, Degrees-Decimal-Minutes, Degrees-Minutes-Seconds, Military Grid Reference System           |
+| Constellation               | Accelint's service catalog (Backstage-style), fed by `catalog-info.yaml`                                                        |
+| Bus                         | `@accelint/bus` — typed BroadcastChannel event bus with `namespace:action` events                                               |
+| Barrel index                | Generated `src/index.ts` export files (`pnpm index`) — never hand-edited                                                        |

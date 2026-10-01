@@ -107,10 +107,10 @@ This package has no server, database, or hosted runtime. It is a published libra
 
 ## 5. External Integrations / APIs
 
-| Service | Purpose | Integration Method |
-|---------|---------|-------------------|
-| `zod` | Runtime validation of dataset configuration objects | Peer dependency |
-| `@accelint/core` | Lens helpers and shared functional primitives | Peer dependency |
+| Service          | Purpose                                             | Integration Method |
+| ---------------- | --------------------------------------------------- | ------------------ |
+| `zod`            | Runtime validation of dataset configuration objects | Peer dependency    |
+| `@accelint/core` | Lens helpers and shared functional primitives       | Peer dependency    |
 
 ## 6. Deployment & Infrastructure
 
@@ -136,7 +136,7 @@ This package has no server, database, or hosted runtime. It is a published libra
 
 > Testing patterns and standards are defined in [../../openspec/config.yaml](../../openspec/config.yaml); this section covers local setup and commands.
 
-**Local Setup:** Use Node.js 22+ and pnpm 10+. Install from the repo root, then run repo-wide verification or package-local scripts from `packages/dataset`.
+**Local Setup:** Use Node.js 24+ and pnpm 10+. Install from the repo root, then run repo-wide verification or package-local scripts from `packages/dataset`.
 
 **Testing Frameworks:** Vitest with the shared no-DOM base config. Tests focus on schema behavior, validation failures, and dataset accessor behavior.
 
@@ -159,9 +159,9 @@ This package has no server, database, or hosted runtime. It is a published libra
 
 ## 11. Glossary / Acronyms
 
-| Term | Definition |
-|------|-----------|
+| Term           | Definition                                                                                      |
+| -------------- | ----------------------------------------------------------------------------------------------- |
 | Dataset config | Structured object describing how a geospatial dataset should be located, typed, and interpreted |
-| Lens | Functional accessor/update pattern used to read nested configuration values immutably |
-| Service type | Dataset source family such as WMS, WFS, VTS, or FS |
-| Data type | Payload shape such as GeoJSON or Arrow |
+| Lens           | Functional accessor/update pattern used to read nested configuration values immutably           |
+| Service type   | Dataset source family such as WMS, WFS, VTS, or FS                                              |
+| Data type      | Payload shape such as GeoJSON or Arrow                                                          |

@@ -104,10 +104,10 @@ This package has no server, database, or hosted runtime. It is a published React
 
 ## 5. External Integrations / APIs
 
-| Service | Purpose | Integration Method |
-|---------|---------|-------------------|
-| React | Runtime rendering of generated icon components | Peer dependency |
-| SVGR | Build-time conversion of SVG assets into React components | Build dependency |
+| Service | Purpose                                                   | Integration Method |
+| ------- | --------------------------------------------------------- | ------------------ |
+| React   | Runtime rendering of generated icon components            | Peer dependency    |
+| SVGR    | Build-time conversion of SVG assets into React components | Build dependency   |
 
 ## 6. Deployment & Infrastructure
 
@@ -133,7 +133,7 @@ This package has no server, database, or hosted runtime. It is a published React
 
 > Testing patterns and standards are defined in [../../openspec/config.yaml](../../openspec/config.yaml); this section covers local setup and commands.
 
-**Local Setup:** Use Node.js 22+ and pnpm 10+. Install from the repo root, then run package or repo build/format flows to regenerate and package icons as needed.
+**Local Setup:** Use Node.js 24+ and pnpm 10+. Install from the repo root, then run package or repo build/format flows to regenerate and package icons as needed.
 
 **Testing Frameworks:** This package does not expose a notable package-local runtime test suite. Validation is primarily through generation, build, lint, and published component consumption.
 
@@ -156,9 +156,9 @@ This package has no server, database, or hosted runtime. It is a published React
 
 ## 11. Glossary / Acronyms
 
-| Term | Definition |
-|------|-----------|
-| SVG | Scalable Vector Graphics format used as the source for icon assets |
-| SVGR | Toolchain that converts SVG files into React component modules |
-| Per-icon subpath | Narrow export such as an individual icon module rather than the whole package |
-| currentColor | SVG styling approach that lets icons inherit text color from their parent context |
+| Term             | Definition                                                                        |
+| ---------------- | --------------------------------------------------------------------------------- |
+| SVG              | Scalable Vector Graphics format used as the source for icon assets                |
+| SVGR             | Toolchain that converts SVG files into React component modules                    |
+| Per-icon subpath | Narrow export such as an individual icon module rather than the whole package     |
+| currentColor     | SVG styling approach that lets icons inherit text color from their parent context |

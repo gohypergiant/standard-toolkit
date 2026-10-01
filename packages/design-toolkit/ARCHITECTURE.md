@@ -113,13 +113,13 @@ This package has no server, database, or hosted runtime of its own. It is a publ
 
 ## 5. External Integrations / APIs
 
-| Service | Purpose | Integration Method |
-|---------|---------|-------------------|
-| `@accelint/design-foundation` | Shared tokens, styles, and theme primitives | Peer dependency |
-| `@accelint/icons` | Icon surface used by components | Peer dependency |
-| `@accelint/bus` | Cross-component event-driven coordination in some component families | Peer dependency |
-| React Aria ecosystem | Accessibility-focused component primitives and state handling | Peer dependencies |
-| `@tanstack/react-table` / `react-querybuilder` / `zod` / `zustand` | Feature-specific table, query-builder, validation, and store support | Peer dependencies |
+| Service                                                            | Purpose                                                              | Integration Method |
+| ------------------------------------------------------------------ | -------------------------------------------------------------------- | ------------------ |
+| `@accelint/design-foundation`                                      | Shared tokens, styles, and theme primitives                          | Peer dependency    |
+| `@accelint/icons`                                                  | Icon surface used by components                                      | Peer dependency    |
+| `@accelint/bus`                                                    | Cross-component event-driven coordination in some component families | Peer dependency    |
+| React Aria ecosystem                                               | Accessibility-focused component primitives and state handling        | Peer dependencies  |
+| `@tanstack/react-table` / `react-querybuilder` / `zod` / `zustand` | Feature-specific table, query-builder, validation, and store support | Peer dependencies  |
 
 ## 6. Deployment & Infrastructure
 
@@ -145,7 +145,7 @@ This package has no server, database, or hosted runtime of its own. It is a publ
 
 > Testing patterns and standards are defined in [../../openspec/config.yaml](../../openspec/config.yaml); this section covers local setup and commands.
 
-**Local Setup:** Use Node.js 22+ and pnpm 10+. Install from the repo root. Local development includes Storybook preview flows, package-local build/test/typecheck scripts, and editor guidance for Tailwind and Biome support.
+**Local Setup:** Use Node.js 24+ and pnpm 10+. Install from the repo root. Local development includes Storybook preview flows, package-local build/test/typecheck scripts, and editor guidance for Tailwind and Biome support.
 
 **Testing Frameworks:** Vitest with jsdom, React Testing Library, `@testing-library/user-event`, and `@testing-library/jest-dom`. Storybook is used for interactive review, and UI ecosystem workflows include visual regression and MemLab checks.
 
@@ -168,9 +168,9 @@ This package has no server, database, or hosted runtime of its own. It is a publ
 
 ## 11. Glossary / Acronyms
 
-| Term | Definition |
-|------|-----------|
-| React Aria | Accessibility-focused React primitives and state patterns used throughout the package |
-| Provider | React context wrapper that distributes shared runtime behavior such as theme state |
-| Storybook | Interactive documentation and preview environment for component development |
-| Gantt / Kanban / Query Builder | Higher-level widget families included in the package’s advanced component surface |
+| Term                           | Definition                                                                            |
+| ------------------------------ | ------------------------------------------------------------------------------------- |
+| React Aria                     | Accessibility-focused React primitives and state patterns used throughout the package |
+| Provider                       | React context wrapper that distributes shared runtime behavior such as theme state    |
+| Storybook                      | Interactive documentation and preview environment for component development           |
+| Gantt / Kanban / Query Builder | Higher-level widget families included in the package’s advanced component surface     |

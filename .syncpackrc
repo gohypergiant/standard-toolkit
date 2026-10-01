@@ -87,7 +87,7 @@
     {
       "dependencies": ["@types/node"],
       "label": "Ensure node types match engine version",
-      "pinVersion": "^22"
+      "pinVersion": "^24"
     }
   ]
 }

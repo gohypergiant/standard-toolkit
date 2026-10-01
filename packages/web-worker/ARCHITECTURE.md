@@ -105,10 +105,10 @@ This package has no server, database, or hosted runtime. It is a published brows
 
 ## 5. External Integrations / APIs
 
-| Service | Purpose | Integration Method |
-|---------|---------|-------------------|
-| Worker / SharedWorker APIs | Underlying worker execution and messaging | Native platform API |
-| `mitt` | Lightweight in-memory event coordination for request/response tracking | Runtime dependency |
+| Service                    | Purpose                                                                | Integration Method  |
+| -------------------------- | ---------------------------------------------------------------------- | ------------------- |
+| Worker / SharedWorker APIs | Underlying worker execution and messaging                              | Native platform API |
+| `mitt`                     | Lightweight in-memory event coordination for request/response tracking | Runtime dependency  |
 
 ## 6. Deployment & Infrastructure
 
@@ -134,7 +134,7 @@ This package has no server, database, or hosted runtime. It is a published brows
 
 > Testing patterns and standards are defined in [../../openspec/config.yaml](../../openspec/config.yaml); this section covers local setup and commands.
 
-**Local Setup:** Use Node.js 22+ and pnpm 10+. Install from the repo root, then run repo-wide verification or package-local scripts from `packages/web-worker`.
+**Local Setup:** Use Node.js 24+ and pnpm 10+. Install from the repo root, then run repo-wide verification or package-local scripts from `packages/web-worker`.
 
 **Testing Frameworks:** Vitest configuration is present through the shared DOM base config. The package currently relies more on build/package validation than a large visible runtime test surface.
 
@@ -157,9 +157,9 @@ This package has no server, database, or hosted runtime. It is a published brows
 
 ## 11. Glossary / Acronyms
 
-| Term | Definition |
-|------|-----------|
-| Worker | Browser background execution context used for off-main-thread computation |
-| SharedWorker | Worker variant shared across multiple browsing contexts |
-| Transferable | Value transferred rather than cloned across worker boundaries |
-| expose() | Helper that publishes typed worker actions over the message channel |
+| Term         | Definition                                                                |
+| ------------ | ------------------------------------------------------------------------- |
+| Worker       | Browser background execution context used for off-main-thread computation |
+| SharedWorker | Worker variant shared across multiple browsing contexts                   |
+| Transferable | Value transferred rather than cloned across worker boundaries             |
+| expose()     | Helper that publishes typed worker actions over the message channel       |
