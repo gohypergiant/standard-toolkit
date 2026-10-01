@@ -63,10 +63,6 @@ const EMPTY_ROW_SELECTION: RowSelectionState = {};
 // render.
 const EMPTY_ROW_PINNING: RowPinningState = { top: [], bottom: [] };
 
-// Stable default so an uncontrolled row highlighting slice does not re-seed on every
-// render.
-const EMPTY_ROW_HIGHLIGHTING: string[] = [];
-
 // Stable default so an uncontrolled sort slice does not re-seed on every
 // render.
 const EMPTY_SORT: SortingState = [];
@@ -279,7 +275,7 @@ export function Table<T extends { id: Key }>({
 
   const pagination = useMemo(
     () =>
-      pageSize != null ? { pageIndex: currentPage - 1, pageSize } : undefined,
+      pageSize == null ? undefined : { pageIndex: currentPage - 1, pageSize },
     [currentPage, pageSize],
   );
 

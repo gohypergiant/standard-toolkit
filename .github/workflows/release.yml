@@ -45,12 +45,12 @@ jobs:
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
-      - uses: changesets/action@v1
+      - uses: changesets/action@v2
         with:
-          publish: pnpm run changeset:release
-          version: pnpm run changeset:version
-          commit: 'build: version packages'
-          title: 'Changeset Action: Version Packages + Publish'
+          publish-script: pnpm run changeset:release
+          version-script: pnpm run changeset:version
+          commit-message: 'build: version packages'
+          pr-title: 'Changeset Action: Version Packages + Publish'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
