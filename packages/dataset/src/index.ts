@@ -14,8 +14,6 @@
  * THIS IS A GENERATED FILE. DO NOT ALTER DIRECTLY.
  */
 
-// biome-ignore-all assist/source/organizeImports: This comment is used to prevent the biome tool from altering the import statements in this file.
-
 export {
   datasetBackend,
   datasetBatchSize,
@@ -61,6 +59,11 @@ export {
   metaDataTable,
   metaDataVendorParams,
 } from './lenses';
+export {
+  anyDatasetSchema,
+  validateDatasetConfig,
+  validateSchema,
+} from './validation';
 export type {
   AnyArrowDataset,
   AnyDataset,
@@ -100,8 +103,3 @@ export type {
   UnknownWFSDataset,
   UnknownWMSDataset,
 } from './types/datasets';
-export {
-  anyDatasetSchema,
-  validateDatasetConfig,
-  validateSchema,
-} from './validation';
