@@ -35,18 +35,25 @@ function makeFakes(rbzListening = true) {
   const mapRef = {
     current: { getMap: () => map },
   } as unknown as RefObject<MapRef | null>;
+  let listening = rbzListening;
   const rbz = {
-    disable: vi.fn(),
-    startListening: vi.fn(),
-    stopListening: vi.fn(),
-    isListening: vi.fn(() => rbzListening),
+    startListening: vi.fn(() => {
+      listening = true;
+    }),
+    stopListening: vi.fn(() => {
+      listening = false;
+    }),
+    isListening: vi.fn(() => listening),
   };
   const rbzRef = { current: rbz } as unknown as RefObject<RbzHandler | null>;
 
   return { scrollZoom, boxZoom, doubleClickZoom, dragPan, mapRef, rbz, rbzRef };
 }
 
-function emitZoom(type: 'enableZoom' | 'disableZoom', id: UniqueId): void {
+function emitControl(
+  type: 'enableZoom' | 'disableZoom' | 'enablePan' | 'disablePan',
+  id: UniqueId,
+): void {
   act(() => {
     Broadcast.getInstance<MapEventType>().emit(MapEvents[type], { id });
   });
@@ -65,7 +72,7 @@ describe('MapControls zoom suppression', () => {
       />,
     );
 
-    emitZoom('disableZoom', id);
+    emitControl('disableZoom', id);
 
     expect(fakes.scrollZoom.disable).toHaveBeenCalledTimes(1);
     expect(fakes.boxZoom.disable).toHaveBeenCalledTimes(1);
@@ -85,8 +92,8 @@ describe('MapControls zoom suppression', () => {
       />,
     );
 
-    emitZoom('disableZoom', id);
-    emitZoom('enableZoom', id);
+    emitControl('disableZoom', id);
+    emitControl('enableZoom', id);
 
     expect(fakes.scrollZoom.enable).toHaveBeenCalledTimes(1);
     expect(fakes.rbz.startListening).toHaveBeenCalledTimes(1);
@@ -106,8 +113,8 @@ describe('MapControls zoom suppression', () => {
       />,
     );
 
-    emitZoom('disableZoom', id);
-    emitZoom('enableZoom', id);
+    emitControl('disableZoom', id);
+    emitControl('enableZoom', id);
 
     expect(fakes.boxZoom.enable).toHaveBeenCalledTimes(1);
   });
@@ -124,8 +131,8 @@ describe('MapControls zoom suppression', () => {
       />,
     );
 
-    emitZoom('disableZoom', id);
-    emitZoom('enableZoom', id);
+    emitControl('disableZoom', id);
+    emitControl('enableZoom', id);
 
     expect(fakes.rbz.stopListening).not.toHaveBeenCalled();
     expect(fakes.rbz.startListening).not.toHaveBeenCalled();
@@ -143,9 +150,56 @@ describe('MapControls zoom suppression', () => {
       />,
     );
 
-    emitZoom('disableZoom', uuid());
+    emitControl('disableZoom', uuid());
 
     expect(fakes.scrollZoom.disable).not.toHaveBeenCalled();
     expect(fakes.rbz.stopListening).not.toHaveBeenCalled();
+  });
+
+  it('toggles RBZ listening once across overlapping disable/enable pairs', () => {
+    const id = uuid();
+    const fakes = makeFakes();
+    render(
+      <MapControls
+        id={id}
+        mapRef={fakes.mapRef}
+        rbzRef={fakes.rbzRef}
+        boxZoom={false}
+      />,
+    );
+
+    // Two tools suppress zoom, then both release it. Last-wins, not
+    // refcounted, matching the non-refcounted pan/zoom toggles.
+    emitControl('disableZoom', id);
+    emitControl('disableZoom', id);
+    emitControl('enableZoom', id);
+    emitControl('enableZoom', id);
+
+    expect(fakes.rbz.stopListening).toHaveBeenCalledTimes(1);
+    expect(fakes.rbz.startListening).toHaveBeenCalledTimes(1);
+    expect(fakes.rbz.isListening()).toBe(true);
+  });
+});
+
+describe('MapControls pan toggling', () => {
+  it.each([
+    { type: 'disablePan', method: 'disable' },
+    { type: 'enablePan', method: 'enable' },
+  ] as const)('calls dragPan.$method on $type', ({ type, method }) => {
+    const id = uuid();
+    const fakes = makeFakes();
+    render(
+      <MapControls
+        id={id}
+        mapRef={fakes.mapRef}
+        rbzRef={fakes.rbzRef}
+        boxZoom={false}
+      />,
+    );
+
+    emitControl(type, id);
+
+    expect(fakes.dragPan[method]).toHaveBeenCalledTimes(1);
+    expect(fakes.scrollZoom[method]).not.toHaveBeenCalled();
   });
 });

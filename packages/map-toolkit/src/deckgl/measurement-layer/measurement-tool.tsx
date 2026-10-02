@@ -44,20 +44,21 @@ export type MeasurementToolProps = Pick<
 /**
  * Convenience component that wires `useMeasurement` and `MeasurementLayer` together.
  *
+ * @param props - See {@link MeasurementToolProps}
+ * @returns The measurement layer while a drag is active, otherwise `null`
+ *
+ * @remarks
  * Drop `<MeasurementTool />` inside a `<BaseMap>` and drag to measure bearing and
- * distance between two points. The component subscribes to `map:dragStart`,
- * `map:drag`, and `map:dragEnd` events from the bus, renders a dashed line with
- * circular endpoints and an optional readout label, and suppresses map pan during
- * the measurement drag.
+ * distance between two points. The component mounts `useMeasurement`, whose
+ * store owns the once-per-map `map:dragStart` / `map:drag` / `map:dragEnd`
+ * subscription, renders a dashed line with circular endpoints and an optional
+ * readout label, and suppresses map pan during the measurement drag.
  *
  * The measurement layer is only rendered when a drag is active and both `pointA`
  * and `pointB` are set, so there is no visual overhead when the tool is idle.
  *
  * For direct control over layer props, use `useMeasurement` + `MeasurementLayer`
  * separately. For JSX fiber usage, see `MeasurementLayer` and its fiber registration.
- *
- * @param props - See {@link MeasurementToolProps}
- * @returns The measurement layer while a drag is active, otherwise `null`
  *
  * @example
  * ```tsx

@@ -57,12 +57,11 @@ describe('distance', () => {
   });
 
   describe('edge cases', () => {
-    it('returns 0 for identical coordinates', () => {
-      expect(distance([10, 20], [10, 20])).toBe(0);
-    });
-
-    it('returns 0 for origin coordinates', () => {
-      expect(distance([0, 0], [0, 0])).toBe(0);
+    it.each([
+      ['identical coordinates', [10, 20]],
+      ['origin coordinates', [0, 0]],
+    ] as const)('returns 0 for %s', (_description, point) => {
+      expect(distance(point, point)).toBe(0);
     });
 
     it('handles antipodal points', () => {
@@ -138,7 +137,7 @@ describe('distance', () => {
       );
     });
 
-    it('is finite for any pair, including near-antipodal ones', () => {
+    it('is half the circumference for near-antipodal pairs', () => {
       fc.assert(
         fc.property(
           longitudeArbitrary,
@@ -153,7 +152,7 @@ describe('distance', () => {
               [antipodeLongitude + longitudeJitter, -latitude + latitudeJitter],
             );
 
-            return Number.isFinite(result);
+            expect(result).toBeCloseTo(Math.PI * 6371e3, 0);
           },
         ),
       );

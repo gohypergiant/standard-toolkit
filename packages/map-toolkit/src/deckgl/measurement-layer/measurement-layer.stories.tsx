@@ -225,7 +225,7 @@ export const ModifierKeyRequired: Story = {
       control: 'select',
       options: ['shift', 'alt'],
       description:
-        "Key that must be held for a drag to measure. 'ctrl' is omitted: Ctrl+drag is BaseMap's tilt gesture and emits no drag events.",
+        "Key that must be held for a drag to measure. With 'shift', BaseMap's Shift+drag zoom is suppressed while Shift is held.",
     },
     enableRbz: {
       control: 'boolean',

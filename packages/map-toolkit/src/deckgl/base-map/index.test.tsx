@@ -48,7 +48,24 @@ function createFakeMap(): FakeMap {
 
 type DragHandler = (info: unknown, event: MjolnirGestureEvent) => void;
 
+type FakeViewport = {
+  id: string;
+  latitude: number;
+  longitude: number;
+  zoom: number;
+  width: number;
+  height: number;
+  getBounds: () => [number, number, number, number];
+};
+
+type FakeDeck = {
+  isInitialized: boolean;
+  getViewports: () => FakeViewport[];
+  _getViewState: () => Record<string, unknown>;
+};
+
 let activeMap: FakeMap | null = null;
+let fakeDeck: FakeDeck | undefined;
 let capturedOnLoad: (() => void) | undefined;
 let capturedMapProps: Record<string, unknown> | undefined;
 let capturedDeckOnLoad: unknown;
@@ -137,11 +154,13 @@ vi.mock('@deckgl-fiber-renderer/dom', () => ({
 
     return <div data-testid='deckgl-mock'>{children}</div>;
   },
-  useDeckgl: () => ({}),
+  // biome-ignore lint/style/useNamingConvention: deck.gl fiber exposes the Deck instance as _deck
+  useDeckgl: () => ({ _deck: fakeDeck }),
 }));
 
 beforeEach(() => {
   activeMap = null;
+  fakeDeck = undefined;
   capturedOnLoad = undefined;
   capturedMapProps = undefined;
   capturedDeckOnLoad = undefined;
@@ -377,9 +396,59 @@ describe('BaseMap', () => {
 
       expect(onLoad).toHaveBeenCalledTimes(1);
     });
+
+    it.each([
+      { isInitialized: false, expectedCalls: 0 },
+      { isInitialized: true, expectedCalls: 1 },
+    ])('syncs viewport state $expectedCalls time(s) on map load when deck isInitialized is $isInitialized', ({
+      isInitialized,
+      expectedCalls,
+    }) => {
+      const viewport: FakeViewport = {
+        id: 'main',
+        latitude: 1,
+        longitude: 2,
+        zoom: 3,
+        width: 10,
+        height: 10,
+        getBounds: () => [0, 0, 1, 1],
+      };
+      fakeDeck = {
+        isInitialized,
+        getViewports: () => [viewport],
+        // biome-ignore lint/style/useNamingConvention: deck.gl private API name
+        _getViewState: () => ({}),
+      };
+      const onViewStateChange = vi.fn();
+      useFakeMap(createFakeMap());
+      render(<BaseMap id={uuid()} onViewStateChange={onViewStateChange} />);
+
+      act(() => {
+        fireMapLoad();
+      });
+
+      expect(onViewStateChange).toHaveBeenCalledTimes(expectedCalls);
+    });
   });
 
   describe('drag event bus emission', () => {
+    const unsubscribers: Array<() => void> = [];
+
+    function listenTo(event: MapEventType['type']): Mock {
+      const listener = vi.fn();
+      unsubscribers.push(
+        Broadcast.getInstance<MapEventType>().on(event, listener),
+      );
+
+      return listener;
+    }
+
+    afterEach(() => {
+      for (const unsubscribe of unsubscribers.splice(0)) {
+        unsubscribe();
+      }
+    });
+
     function dragEvent(
       overrides: Partial<
         Pick<MapDragPayload, 'shiftKey' | 'ctrlKey' | 'altKey'> & {
@@ -430,55 +499,41 @@ describe('BaseMap', () => {
     }) => {
       const id = uuid();
       useFakeMap(createFakeMap());
-      const bus = Broadcast.getInstance<MapEventType>();
-      const listener = vi.fn();
-      bus.on(event, listener);
+      const listener = listenTo(event);
+      render(<BaseMap id={id} />);
 
-      try {
-        render(<BaseMap id={id} />);
+      act(() => {
+        capturedDragHandlers[handler]?.({ coordinate }, dragEvent(modifiers));
+      });
 
-        act(() => {
-          capturedDragHandlers[handler]?.({ coordinate }, dragEvent(modifiers));
-        });
-
-        expect(listener).toHaveBeenCalledExactlyOnceWith(
-          expect.objectContaining({
-            payload: { id, coordinate, ...modifiers },
-          }),
-        );
-      } finally {
-        bus.off(event, listener);
-      }
+      expect(listener).toHaveBeenCalledExactlyOnceWith(
+        expect.objectContaining({
+          payload: { id, coordinate, ...modifiers },
+        }),
+      );
     });
 
     it('emits dragEnd with a null coordinate when info has none', () => {
       const id = uuid();
       useFakeMap(createFakeMap());
-      const bus = Broadcast.getInstance<MapEventType>();
-      const listener = vi.fn();
-      bus.on(MapEvents.dragEnd, listener);
+      const listener = listenTo(MapEvents.dragEnd);
+      render(<BaseMap id={id} />);
 
-      try {
-        render(<BaseMap id={id} />);
+      act(() => {
+        capturedDragHandlers.onDragEnd?.({}, dragEvent());
+      });
 
-        act(() => {
-          capturedDragHandlers.onDragEnd?.({}, dragEvent());
-        });
-
-        expect(listener).toHaveBeenCalledExactlyOnceWith(
-          expect.objectContaining({
-            payload: {
-              id,
-              coordinate: null,
-              shiftKey: false,
-              ctrlKey: false,
-              altKey: false,
-            },
-          }),
-        );
-      } finally {
-        bus.off(MapEvents.dragEnd, listener);
-      }
+      expect(listener).toHaveBeenCalledExactlyOnceWith(
+        expect.objectContaining({
+          payload: {
+            id,
+            coordinate: null,
+            shiftKey: false,
+            ctrlKey: false,
+            altKey: false,
+          },
+        }),
+      );
     });
 
     it.each([
@@ -487,56 +542,50 @@ describe('BaseMap', () => {
     ])('does not emit drag events for a %s tilt gesture', (_label, overrides) => {
       const id = uuid();
       useFakeMap(createFakeMap());
-      const bus = Broadcast.getInstance<MapEventType>();
-      const listener = vi.fn();
-      bus.on(MapEvents.dragStart, listener);
-      bus.on(MapEvents.drag, listener);
-      bus.on(MapEvents.dragEnd, listener);
+      const listeners = [
+        listenTo(MapEvents.dragStart),
+        listenTo(MapEvents.drag),
+        listenTo(MapEvents.dragEnd),
+      ];
+      render(<BaseMap id={id} />);
 
-      try {
-        render(<BaseMap id={id} />);
+      act(() => {
+        capturedDragHandlers.onDragStart?.(
+          { coordinate: [10, 20] },
+          dragEvent(overrides),
+        );
+        capturedDragHandlers.onDrag?.(
+          { coordinate: [11, 21] },
+          dragEvent(overrides),
+        );
+        capturedDragHandlers.onDragEnd?.(
+          { coordinate: [11, 21] },
+          dragEvent(overrides),
+        );
+      });
 
-        act(() => {
-          capturedDragHandlers.onDragStart?.(
-            { coordinate: [10, 20] },
-            dragEvent(overrides),
-          );
-          capturedDragHandlers.onDrag?.(
-            { coordinate: [11, 21] },
-            dragEvent(overrides),
-          );
-          capturedDragHandlers.onDragEnd?.(
-            { coordinate: [11, 21] },
-            dragEvent(overrides),
-          );
-        });
-
+      for (const listener of listeners) {
         expect(listener).not.toHaveBeenCalled();
-      } finally {
-        bus.off(MapEvents.dragStart, listener);
-        bus.off(MapEvents.drag, listener);
-        bus.off(MapEvents.dragEnd, listener);
       }
     });
 
-    it('does not emit dragStart when coordinate is missing from info', () => {
+    it.each([
+      { handler: 'onDragStart', event: MapEvents.dragStart },
+      { handler: 'onDrag', event: MapEvents.drag },
+    ] as const)('does not emit $event when coordinate is missing from info', ({
+      handler,
+      event,
+    }) => {
       const id = uuid();
       useFakeMap(createFakeMap());
-      const bus = Broadcast.getInstance<MapEventType>();
-      const listener = vi.fn();
-      bus.on(MapEvents.dragStart, listener);
+      const listener = listenTo(event);
+      render(<BaseMap id={id} />);
 
-      try {
-        render(<BaseMap id={id} />);
+      act(() => {
+        capturedDragHandlers[handler]?.({}, dragEvent());
+      });
 
-        act(() => {
-          capturedDragHandlers.onDragStart?.({}, dragEvent());
-        });
-
-        expect(listener).not.toHaveBeenCalled();
-      } finally {
-        bus.off(MapEvents.dragStart, listener);
-      }
+      expect(listener).not.toHaveBeenCalled();
     });
   });
 

@@ -22,6 +22,14 @@ The package is organized by technology (e.g., `deckgl/`, `maplibre/`) with featu
 pnpm add @accelint/map-toolkit
 ```
 
+### Peer Dependencies
+
+Map Toolkit does not install its `@accelint/*` peers for you. Install all of them alongside the package (`react` 19 is also a peer):
+
+```sh
+pnpm add @accelint/bus @accelint/constants @accelint/core @accelint/formatters @accelint/geo @accelint/hotkey-manager @accelint/logger @accelint/math
+```
+
 ### Optional Dependencies
 
 To minimize bundle size, Map Toolkit uses optional dependencies. Install only the technologies you need:

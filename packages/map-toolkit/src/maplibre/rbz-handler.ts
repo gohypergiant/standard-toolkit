@@ -256,11 +256,6 @@ export class RbzHandler implements Handler {
   }
 
   /**
-   * Removes the keyboard listeners installed by {@link startListening} and
-   * disables the handler if armed. Idempotent — safe to call when not
-   * listening. Invoked automatically by {@link destroy}.
-   */
-  /**
    * Whether the window keyboard listeners from {@link startListening} are
    * currently installed.
    *
@@ -270,6 +265,11 @@ export class RbzHandler implements Handler {
     return this._isListening;
   }
 
+  /**
+   * Removes the keyboard listeners installed by {@link startListening} and
+   * disables the handler if armed. Idempotent — safe to call when not
+   * listening. Invoked automatically by {@link destroy}.
+   */
   stopListening(): void {
     if (!this._isListening) {
       return;

@@ -16,15 +16,15 @@ import type { DistanceUnit } from '@accelint/constants/units';
 /**
  * Modifier key that must be held for a drag to count as a measurement.
  *
- * `'shift'` and `'alt'` both work. Shift+drag is also BaseMap's zoom gesture
- * (MapLibre box zoom, or rubber-band zoom when `enableRbz` is set), so while
- * `'shift'` is the required modifier `useMeasurement` suppresses that zoom for
- * as long as Shift is held; Shift+drag zoom is then unavailable on that map.
+ * Both keys work. With `'shift'`, `useMeasurement` suppresses BaseMap's
+ * Shift+drag zoom (MapLibre box zoom, or rubber-band zoom when `enableRbz` is
+ * set) while Shift is held, so that zoom is unavailable on a map measuring
+ * with Shift.
  *
- * `'ctrl'` never activates: Ctrl+drag is BaseMap's rotate/tilt gesture, and
- * tilt gestures do not emit drag events.
+ * Ctrl is deliberately not an option: Ctrl+drag is BaseMap's rotate/tilt
+ * gesture, and tilt gestures emit no drag events.
  */
-export type RequiresModifier = 'shift' | 'ctrl' | 'alt';
+export type RequiresModifier = 'shift' | 'alt';
 
 /**
  * Props for the `MeasurementLayer` composite layer.
@@ -64,6 +64,7 @@ export type MeasurementLayerProps = CompositeLayerProps & {
   /**
    * Distance unit(s) for the measurement readout.
    * Single unit produces `"42.3 km"`; dual units produce `"42.3 km / 22.8 NM"`.
+   * Arrays outside 1–2 entries fall back to the default pair.
    * @defaultValue `['kilometers', 'nauticalmiles']`
    */
   units?: DistanceUnit | DistanceUnit[];

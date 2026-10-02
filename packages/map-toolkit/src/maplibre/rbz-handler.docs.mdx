@@ -67,7 +67,8 @@ When `enableRbz` is `true`, `boxZoom` is automatically set to `false` to avoid c
 2. The handler's `startListening()` method installs global `keydown` / `keyup` listeners for the **Shift** key. Pressing Shift arms the handler and disables `dragPan`; releasing Shift disarms it.
 3. For multi-map layouts, BaseMap passes a `shouldActivate` callback that returns `true` only for the most-recently-hovered map, so Shift affects one map at a time.
 4. While Shift is held, drag anywhere on the map to draw the selection rectangle. On mouse release the viewport fits to the selected bounds, and the handler disables itself.
-5. When the map is removed, the handler's `destroy()` method is called automatically via MapLibre's `remove` event.
+5. A `map:disableZoom` bus event calls `stopListening()` so Shift no longer arms the handler (a tool that measures with Shift+drag relies on this); the matching `map:enableZoom` calls `startListening()` again only if `map:disableZoom` was the one that stopped it. See [Controlling Pan and Zoom](?path=/docs/deckgl-base-map--docs#controlling-pan-and-zoom).
+6. When the map is removed, the handler's `destroy()` method is called automatically via MapLibre's `remove` event.
 
 > **Read once on map load.** The `enableRbz` and `rbzOptions` props are captured during map initialization. Changing them after mount has no effect — to update dynamically, change the map's `key` prop to force a remount.
 
@@ -181,9 +182,15 @@ Installs global `keydown` / `keyup` listeners on `window` that arm the handler o
 
 When a `shouldActivate` callback was provided in options, it's checked on each Shift press and the handler only arms when the callback returns `true`.
 
+Key-repeat `keydown` events (`event.repeat === true`) are ignored, so holding Shift arms the handler once on the initial press rather than re-arming on every repeat.
+
 ##### `stopListening(): void`
 
 Removes the keyboard listeners installed by `startListening()` and disables the handler if currently armed. Idempotent — safe to call when not listening. Invoked automatically by `destroy()`.
+
+##### `isListening(): boolean`
+
+Returns `true` while the keyboard listeners installed by `startListening()` are attached, i.e. between `startListening()` and `stopListening()` / `destroy()`.
 
 ##### `isEnabled(): boolean`
 

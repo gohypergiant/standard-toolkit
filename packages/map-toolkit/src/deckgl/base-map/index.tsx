@@ -588,13 +588,11 @@ export function BaseMap({
       // left-drag stays a pan. The camera store is driven directly so it remains
       // the single source of truth — MapLibre's own rotate/pitch handlers are off.
       // Tilt gestures belong to the camera, so only plain drags reach the bus.
-      const isTilt = isTiltGesture(toTiltGesture(event));
+      if (!isTiltGesture(toTiltGesture(event))) {
+        if (isLonLatTuple(info.coordinate)) {
+          emitDragStart(toDragPayload(id, info.coordinate, event.srcEvent));
+        }
 
-      if (!isTilt && isLonLatTuple(info.coordinate)) {
-        emitDragStart(toDragPayload(id, info.coordinate, event.srcEvent));
-      }
-
-      if (!isTilt) {
         return;
       }
 

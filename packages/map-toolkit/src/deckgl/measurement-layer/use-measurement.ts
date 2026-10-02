@@ -69,6 +69,15 @@ function deriveMeasurement(
 /**
  * Hook that exposes per-map bearing-range measurement state and actions.
  *
+ * @param mapId - Optional map instance ID. Falls back to `MapContext` when omitted.
+ *   Required when used outside of a `MapProvider` (i.e., outside BaseMap children).
+ * @param requiresModifier - If set, measurement only activates when this modifier key is
+ *   held during the drag. Per map; the most recently mounted hook's value wins.
+ * @returns Measurement state (`distanceMeters` / `bearingDeg` are `0` until both points are finite) and imperative actions. `start(pointA)` behaves like a drag
+ *   start: it emits `measurement:start` and suppresses pan until `complete` or `clear`.
+ * @throws Error if no `mapId` is provided and hook is used outside of a `MapProvider`
+ *
+ * @remarks
  * The drag subscription lives in `measurementStore`, once per map: the first
  * hook to mount starts it and the last to unmount tears it down (finishing an
  * in-flight measurement so pan is restored). Lifecycle events therefore fire
@@ -82,14 +91,6 @@ function deriveMeasurement(
  * {@link RequiresModifier} for how each key interacts with BaseMap's gestures.
  *
  * Uses per-mapId store isolation so multiple map instances can measure independently.
- *
- * @param mapId - Optional map instance ID. Falls back to `MapContext` when omitted.
- *   Required when used outside of a `MapProvider` (i.e., outside BaseMap children).
- * @param requiresModifier - If set, measurement only activates when this modifier key is
- *   held during the drag. Per map; the most recently mounted hook's value wins.
- * @returns Measurement state (`distanceMeters` / `bearingDeg` are `0` until both points are finite) and imperative actions. `start(pointA)` behaves like a drag
- *   start: it emits `measurement:start` and suppresses pan until `complete` or `clear`.
- * @throws Error if no `mapId` is provided and hook is used outside of a `MapProvider`
  *
  * @example
  * ```tsx
@@ -107,12 +108,16 @@ function deriveMeasurement(
  * @example
  * ```tsx
  * // Outside BaseMap — pass mapId explicitly
+ * import { formatBearing, formatDistance } from '@accelint/formatters/bearing';
+ *
  * function MeasurementPanel({ mapId }: { mapId: string }) {
- *   const { distanceKm, bearingDeg, clear } = useMeasurement(mapId);
+ *   const { distanceMeters, bearingDeg, clear } = useMeasurement(mapId);
  *
  *   return (
  *     <div>
- *       <p>{distanceKm.toFixed(1)} km / {bearingDeg}°</p>
+ *       <p>
+ *         {formatDistance(distanceMeters, 'kilometers')} / {formatBearing(bearingDeg)}
+ *       </p>
  *       <button onClick={clear}>Clear</button>
  *     </div>
  *   );

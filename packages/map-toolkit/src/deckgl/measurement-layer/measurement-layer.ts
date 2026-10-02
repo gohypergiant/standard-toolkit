@@ -41,6 +41,25 @@ const DEFAULT_UNITS: DistanceUnit[] = ['kilometers', 'nauticalmiles'];
 const PATH_STYLE_EXTENSION = new PathStyleExtension({ dash: true });
 
 /**
+ * Resolves the `units` prop to something `formatDistance` accepts: a single
+ * unit, or an array of one or two units. Arrays outside that range fall back
+ * to `DEFAULT_UNITS` so a bad prop never throws inside `renderLayers`.
+ */
+function resolveUnits(
+  units: DistanceUnit | DistanceUnit[],
+): DistanceUnit | DistanceUnit[] {
+  if (!Array.isArray(units)) {
+    return units;
+  }
+
+  if (units.length < 1 || units.length > 2) {
+    return DEFAULT_UNITS;
+  }
+
+  return units;
+}
+
+/**
  * Builds the default measurement label string.
  *
  * Formats as `"42.3 km / 22.8 NM | BRG: 321°"` (dual units) or
@@ -49,7 +68,7 @@ const PATH_STYLE_EXTENSION = new PathStyleExtension({ dash: true });
  *
  * @param pointA - Origin coordinate `[longitude, latitude]`
  * @param pointB - Destination coordinate `[longitude, latitude]`
- * @param units - Single or dual distance unit(s)
+ * @param units - Single or dual distance unit(s); arrays outside 1–2 entries use the default pair
  * @returns Formatted measurement label string
  */
 function buildDefaultLabel(
@@ -60,10 +79,7 @@ function buildDefaultLabel(
   const meters = geoDistance(pointA, pointB);
   const bearingDegrees = geoBearing(pointA, pointB);
 
-  const distanceLabel = formatDistance(
-    meters,
-    Array.isArray(units) && units.length === 0 ? DEFAULT_UNITS : units,
-  );
+  const distanceLabel = formatDistance(meters, resolveUnits(units));
   const bearingLabel = formatBearing(bearingDegrees);
 
   return `${distanceLabel} | BRG: ${bearingLabel}`;
@@ -144,7 +160,7 @@ function unwrapDestination(
  * <MeasurementLayer
  *   pointA={pointA}
  *   pointB={pointB}
- *   getLabel={(pointA, pointB) => `${a.join(',')} → ${b.join(',')}`}
+ *   getLabel={(pointA, pointB) => `${pointA.join(',')} → ${pointB.join(',')}`}
  * />
  * ```
  */
@@ -216,7 +232,7 @@ export class MeasurementLayer extends CompositeLayer<MeasurementLayerProps> {
           id: `${this.id}-label`,
           data: [
             {
-              position: geoMidpoint(pointA, pointB),
+              position: unwrapDestination(pointA, geoMidpoint(pointA, pointB)),
               text: getLabel(pointA, pointB, units),
             },
           ],

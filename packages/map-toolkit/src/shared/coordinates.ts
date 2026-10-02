@@ -21,15 +21,22 @@
  *
  * @example
  * ```typescript
- * if (isLonLatTuple(info.coordinate)) {
- *   emitDrag({ id, coordinate: info.coordinate });
+ * // `info.coordinate` is `number[] | undefined`; narrow before storing it.
+ * function onHover(info: PickingInfo) {
+ *   if (isLonLatTuple(info.coordinate)) {
+ *     setCoordinate(info.coordinate);
+ *   }
  * }
  * ```
  */
 export function isLonLatTuple(
   value?: number[] | null,
 ): value is [number, number] {
+  // Runs on every hover and drag: two direct checks, no callback allocation.
   return (
-    Array.isArray(value) && value.length === 2 && value.every(Number.isFinite)
+    Array.isArray(value) &&
+    value.length === 2 &&
+    Number.isFinite(value[0]) &&
+    Number.isFinite(value[1])
   );
 }

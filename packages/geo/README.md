@@ -332,6 +332,7 @@ midpoint([179, 0], [-179, 0]); // [180, 0] — follows the short way across the 
 - `bearing` and `distance` return `0` when the two points are identical; `midpoint` returns the point itself.
 - All three throw a `RangeError` when any coordinate component is `NaN` or infinite. `distance` returns half the Earth's circumference for near-antipodal pairs where the underlying library would return `NaN`.
 - Longitude is not range-checked: map libraries such as deck.gl pass longitudes beyond ±180 when the map wraps, and the spherical math is periodic, so those values still give correct results.
+- `toSphericalPoints(origin, destination, caller)` is the shared validation step behind all three: it checks that both tuples are finite (throwing the same `RangeError`, with `caller` named in the message) and returns the pair as `LatLonSpherical` points from the `geodesy` library, so you can call other `LatLonSpherical` methods on validated input. Import it from `@accelint/geo` or `@accelint/geo/geodesy/to-spherical-points`; it is not part of the `@accelint/geo/geodesy` barrel.
 
 To render results for display, use `formatBearing` and `formatDistance` from `@accelint/formatters`.
 

@@ -19,9 +19,9 @@ The feature has three parts that can be used together or independently:
 - **Drag to measure**: Press, drag, and release to measure between the drag origin and the pointer position
 - **Great-circle distance and true bearing**: Computed with `bearing` and `distance` from `@accelint/geo/geodesy`; the hook returns raw `distanceMeters` and `bearingDeg` (0–360° true north) for you to format with `formatDistance` / `formatBearing` from `@accelint/formatters/bearing`
 - **Dual or single units**: `['kilometers', 'nauticalmiles']` by default, or any single `DistanceUnit`
-- **Antimeridian aware**: The destination is unwrapped relative to the origin so a segment that crosses the antimeridian draws the short way, and the label sits at the geodesic midpoint.
+- **Antimeridian aware**: The destination is unwrapped relative to the origin so a segment that crosses the antimeridian draws the short way. The label is placed on that unwrapped path (geodesic midpoint, then unwrapped relative to the origin), so asymmetric crossings keep the label on the line
 - **Safe with bad input**: Non-finite coordinates produce no measurement (zeros from the hook, nothing rendered by the layer) rather than throwing
-- **Optional modifier key**: Require `alt` (recommended), `ctrl`, or `shift` so plain drag keeps panning the map
+- **Optional modifier key**: Require `shift` or `alt` so plain drag keeps panning the map. `ctrl` is not an option: Ctrl+drag is BaseMap's rotate/tilt gesture and could never activate a measurement; see [Modifier Keys](#modifier-keys)
 - **Pan suppression**: Emits `map:disablePan` while measuring and `map:enablePan` when the drag ends so the map does not pan under the measurement
 - **Custom labels**: Override the midpoint readout with `getLabel`
 - **Event bus integration**: Emits `measurement:start`, `measurement:update`, `measurement:complete`, and `measurement:clear` via `@accelint/bus`
@@ -50,6 +50,37 @@ pnpm add @accelint/map-toolkit @accelint/bus @accelint/constants @accelint/core 
 ```
 
 The module is not part of the `@accelint/map-toolkit/deckgl` barrel. Import it from its feature path: `@accelint/map-toolkit/deckgl/measurement-layer`.
+
+## Imports
+
+Everything below is exported from `@accelint/map-toolkit/deckgl/measurement-layer`. Fiber registration is a separate side-effect import, `@accelint/map-toolkit/deckgl/measurement-layer/fiber`.
+
+```tsx
+import {
+  MeasurementLayer,
+  MeasurementTool,
+  measurementStore,
+  useMeasurement,
+  MeasurementEvents,
+  MeasurementEventsNamespace,
+  type MeasurementLayerProps,
+  type MeasurementToolProps,
+  type RequiresModifier,
+  type MeasurementState,
+  type MeasurementActions,
+  type UseMeasurementReturn,
+  type MeasurementPayload,
+  type MeasurementStartEvent,
+  type MeasurementUpdateEvent,
+  type MeasurementCompletePayload,
+  type MeasurementCompleteEvent,
+  type MeasurementClearPayload,
+  type MeasurementClearEvent,
+  type MeasurementEventType,
+} from '@accelint/map-toolkit/deckgl/measurement-layer';
+```
+
+`measurementStore` is the per-map store behind `useMeasurement` (built with the shared `createMapStore`); use `measurementStore.get(mapId)` / `measurementStore.actions(mapId)` for non-React access and reach for the hook in components.
 
 ## Basic Usage
 
@@ -156,11 +187,11 @@ new Deck({
 
 Without `requiresModifier`, every drag on the map is a measurement and the map no longer pans by dragging. Pass a modifier so plain drag keeps panning and only modifier + drag measures.
 
-How each key interacts with BaseMap's own gestures:
+`RequiresModifier` is `'shift' | 'alt'`. How each key interacts with BaseMap's own gestures:
 
-- `'alt'` has no competing gesture.
-- `'shift'` works. Shift+drag is also BaseMap's zoom gesture (MapLibre box zoom, or rubber-band zoom when `enableRbz` is set), so the hook suppresses that zoom while Shift is held and restores it on release. Shift+drag zoom is unavailable on a map that measures with Shift.
-- `'ctrl'` never activates. Ctrl+drag is BaseMap's rotate/tilt gesture, and tilt gestures do not emit drag events.
+- `'alt'` (Option on Mac) has no competing gesture.
+- `'shift'` shares the key with BaseMap's Shift+drag zoom gesture (MapLibre box zoom, or rubber-band zoom when `enableRbz` is set). `useMeasurement` emits `map:disableZoom` while Shift is held and `map:enableZoom` on release, so Shift+drag zoom is unavailable on a map that measures with Shift.
+- `'ctrl'` is deliberately not an option. Ctrl+drag is BaseMap's rotate/tilt gesture, and tilt gestures emit no drag events, so a Ctrl-gated measurement could never activate.
 
 Releasing the modifier mid-drag completes the measurement at the last captured point and restores map pan, so a user can let go of the key to "lock in" a reading before releasing the mouse.
 
@@ -237,7 +268,7 @@ Extends deck.gl `CompositeLayerProps`.
 | `pointB` | `[number, number]` | *required* | Destination coordinate as `[longitude, latitude]` |
 | `showLabel` | `boolean` | `true` | Render the measurement label at the geodesic midpoint of the line |
 | `getLabel` | `(pointA, pointB, units) => string` | `undefined` | Custom label function; overrides the default `"X km / Y NM \| BRG: ZZZ°"` format |
-| `units` | `DistanceUnit \| DistanceUnit[]` | `['kilometers', 'nauticalmiles']` | Distance unit(s) for the readout; a single unit produces `"42.3 km"`, two produce `"42.3 km / 22.8 NM"` |
+| `units` | `DistanceUnit \| DistanceUnit[]` | `['kilometers', 'nauticalmiles']` | Distance unit(s) for the readout; a single unit produces `"42.3 km"`, two produce `"42.3 km / 22.8 NM"`. An array with zero or more than two entries falls back to the default pair; the layer never throws inside `renderLayers` |
 | `lineColor` | `Color` | `[255, 255, 255, 200]` | RGBA color of the dashed measurement line |
 | `endpointColor` | `Color` | `[255, 255, 255, 255]` | RGBA color of the circular endpoint markers |
 
@@ -288,7 +319,7 @@ Mounting the hook starts the per-map `map:drag*` subscription if it is not alrea
 ```typescript
 import type { RequiresModifier } from '@accelint/map-toolkit/deckgl/measurement-layer';
 
-type RequiresModifier = 'shift' | 'ctrl' | 'alt';
+type RequiresModifier = 'shift' | 'alt';
 ```
 
-Modifier key that must be held for a drag to count as a measurement. `'shift'` and `'alt'` work; `'ctrl'` never activates because Ctrl+drag is BaseMap's tilt gesture, as described in [Modifier Keys](#modifier-keys). The value is stored per map, so all hooks on one map share it.
+Modifier key that must be held for a drag to count as a measurement. `'shift'` also suppresses BaseMap's Shift+drag zoom while held; `'ctrl'` is not offered because Ctrl+drag is BaseMap's tilt gesture and emits no drag events, as described in [Modifier Keys](#modifier-keys). The value is stored per map, so all hooks on one map share it.

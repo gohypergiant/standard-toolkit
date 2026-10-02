@@ -84,7 +84,7 @@ export type MeasurementCompletePayload = {
   pointB: [number, number];
 };
 
-/** Bus event type for `measurement:complete`; pairs the event name with {@link MeasurementPayload}. */
+/** Bus event type for `measurement:complete`; pairs the event name with {@link MeasurementCompletePayload}. */
 export type MeasurementCompleteEvent = Payload<
   typeof MeasurementEvents.complete,
   MeasurementCompletePayload

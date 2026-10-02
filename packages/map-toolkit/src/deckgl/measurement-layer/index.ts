@@ -16,6 +16,7 @@ export { measurementStore } from './store';
 export { useMeasurement } from './use-measurement';
 export { MeasurementEvents, MeasurementEventsNamespace } from './events';
 export type { MeasurementLayerProps, RequiresModifier } from './types';
+export type { MeasurementToolProps } from './measurement-tool';
 export type { MeasurementState, MeasurementActions } from './store';
 export type { UseMeasurementReturn } from './use-measurement';
 export type {

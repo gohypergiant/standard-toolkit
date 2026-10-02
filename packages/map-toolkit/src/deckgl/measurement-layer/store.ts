@@ -28,6 +28,9 @@ import type { RequiresModifier } from './types';
 const measurementBus = Broadcast.getInstance<MeasurementEventType>();
 const mapBus = Broadcast.getInstance<MapEventType>();
 
+/**
+ * Per-map measurement state held by {@link measurementStore}.
+ */
 export type MeasurementState = {
   /** Origin coordinate `[longitude, latitude]`, or `null` when not measuring */
   pointA: [number, number] | null;
@@ -43,6 +46,10 @@ export type MeasurementState = {
   requiresModifier: RequiresModifier | undefined;
 };
 
+/**
+ * Per-map actions returned by {@link measurementStore}; each emits the matching
+ * measurement lifecycle event and toggles map pan as needed.
+ */
 export type MeasurementActions = {
   /**
    * Begin (or restart) a measurement from the given coordinate. Resets
@@ -91,7 +98,7 @@ const DEFAULT_STATE: MeasurementState = {
 /** Whether the drag's modifier flags satisfy `requiresModifier` (always true when unset). */
 function hasRequiredModifier(
   requiresModifier: RequiresModifier | undefined,
-  keys: Pick<MapDragPayload, 'shiftKey' | 'ctrlKey' | 'altKey'>,
+  keys: Pick<MapDragPayload, 'shiftKey' | 'altKey'>,
 ): boolean {
   return !requiresModifier || keys[`${requiresModifier}Key`];
 }

@@ -24,8 +24,17 @@ import {
   type PolygonData,
 } from './types';
 import { validateDefinition } from './validate-definition';
-import { isLonLatTuple } from '@/shared/coordinates';
 import type { Layer, PickingInfo, UpdateParameters } from '@deck.gl/core';
+
+/**
+ * Narrows a picked coordinate component to a finite number.
+ *
+ * @param value - Coordinate component from `PickingInfo.coordinate`
+ * @returns True when `value` is a finite number
+ */
+function isFiniteNumber(value: number | undefined): value is number {
+  return Number.isFinite(value);
+}
 
 /**
  * Base class for all grid layers.
@@ -312,15 +321,21 @@ export class BaseGridLayer extends CompositeLayer<BaseGridLayerProps> {
    */
   private handleClick = (info: PickingInfo): void => {
     const cellId = info.object?.cellId;
+    // deck.gl yields [lon, lat, z] when any layer is pickable: '3d', so only
+    // the first two entries are validated rather than the tuple length.
+    const [longitude, latitude] = info.coordinate ?? [];
 
-    if (!(info.object && isLonLatTuple(info.coordinate))) {
+    if (
+      !(info.object && isFiniteNumber(longitude) && isFiniteNumber(latitude))
+    ) {
       return;
     }
+
     if (cellId) {
       this.eventBus.emit(GridCellEvents.click, {
         cellId,
         gridType: this.props.definition.id,
-        coords: info.coordinate,
+        coords: [longitude, latitude],
         mapId: this.props.mapId ?? 'default',
         bounds: info.object?.bounds,
       });

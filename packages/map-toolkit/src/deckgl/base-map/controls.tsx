@@ -55,9 +55,15 @@ type MapControlsProps = {
  * @param props.id - Unique identifier for the map instance.
  * @param props.mapRef - Reference to the MapLibre map instance.
  * @param props.rbzRef - Optional reference to the RBZ handler instance.
+ * @param props.boxZoom - Whether MapLibre's native box zoom is configured on; `enableZoom` only restores it when true.
  * @returns null (headless component).
  */
-export function MapControls({ id, mapRef, rbzRef, boxZoom }: MapControlsProps) {
+export function MapControls({
+  id,
+  mapRef,
+  rbzRef,
+  boxZoom,
+}: MapControlsProps): null {
   // RBZ re-arms itself on every Shift keydown while listening, so a tool that
   // needs Shift+drag has to stop the listening entirely, not just disarm once.
   const rbzWasListeningRef = useRef(false);

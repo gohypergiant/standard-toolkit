@@ -97,12 +97,17 @@ The system SHALL emit `map:dragStart`, `map:drag`, and `map:dragEnd` events from
 - **THEN** system still emits `map:dragEnd` with `coordinate: null`
 - **THEN** `map:dragStart` and `map:drag` are never emitted for non-finite positions; their `MapDragPayload.coordinate` is always a finite `[longitude, latitude]`
 
+#### Scenario: Tilt gestures emit no drag events
+- **WHEN** user performs a tilt/rotate gesture (right-drag, or Ctrl + left-drag)
+- **THEN** system emits none of `map:dragStart`, `map:drag`, or `map:dragEnd` for that gesture
+- **THEN** `map:dragEnd` is still always emitted for a plain (non-tilt) drag
+
 #### Scenario: Drag types exported from the deckgl barrel
 - **WHEN** a consumer imports from `@accelint/map-toolkit/deckgl`
 - **THEN** `MapDragPayload`, `MapDragEndPayload`, `MapDragStartEvent`, `MapDragEvent`, and `MapDragEndEvent` are available alongside the other `Map*` event types
 
 ### Requirement: Measurement SHALL support optional modifier key requirement
-The system SHALL allow configuration of a required modifier key (shift, ctrl, alt) to activate measurement, enabling drag-to-pan when modifier is not pressed.
+The system SHALL allow configuration of a required modifier key (`shift` or `alt`) to activate measurement, enabling drag-to-pan when the modifier is not pressed. `ctrl` is excluded because Ctrl+drag is BaseMap's tilt gesture and tilt gestures emit no drag events, so a Ctrl-gated measurement could never activate.
 
 #### Scenario: Modifier key required and pressed
 - **WHEN** `requiresModifier='alt'` is configured
@@ -126,9 +131,15 @@ The system SHALL allow configuration of a required modifier key (shift, ctrl, al
 - **WHEN** user drags (with or without any modifier keys)
 - **THEN** system measures distance and bearing
 
+#### Scenario: Shift modifier suppresses BaseMap's zoom gesture
+- **WHEN** `requiresModifier='shift'` is configured
+- **WHEN** user presses Shift
+- **THEN** system emits `map:disableZoom` so BaseMap's Shift+drag zoom (native box zoom, or rubber band zoom when `enableRbz` is set) does not compete with the measurement
+- **THEN** system emits `map:enableZoom` when Shift is released
+
 #### Scenario: Modifier is per-map state
-- **WHEN** `useMeasurement('main', 'alt')` is mounted and then `useMeasurement('main', 'ctrl')` is mounted
-- **THEN** map 'main' requires `ctrl` (the most recently mounted hook's value wins)
+- **WHEN** `useMeasurement('main', 'alt')` is mounted and then `useMeasurement('main', 'shift')` is mounted
+- **THEN** map 'main' requires `shift` (the most recently mounted hook's value wins)
 - **THEN** map 'beta' is unaffected
 
 ### Requirement: Measurement SHALL support configurable distance units
@@ -209,7 +220,7 @@ The system SHALL provide `bearing(pointA, pointB)` and `distance(pointA, pointB)
 - **THEN** `geo.distance(pointA, pointB)` returns great-circle distance in meters
 
 #### Scenario: Antipodal points
-- **WHEN** pointA is `[0.0, 0.0]` and pointB is `[0.0, 180.0]` (antipodal)
+- **WHEN** pointA is `[0.0, 0.0]` and pointB is `[180.0, 0.0]` (antipodal)
 - **THEN** `geo.distance(pointA, pointB)` returns half Earth's circumference (~20,000 km)
 - **THEN** `geo.bearing(pointA, pointB)` returns a valid bearing (90° or 270°)
 

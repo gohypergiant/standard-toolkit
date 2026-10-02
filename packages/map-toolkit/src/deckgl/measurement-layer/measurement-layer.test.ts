@@ -84,8 +84,11 @@ describe('MeasurementLayer', () => {
       ]);
     });
 
-    it('should unwrap the destination so an antimeridian-crossing segment draws the short way', () => {
-      const layer = makeLayer({ pointA: [179, 0], pointB: [-179, 0] });
+    it.each([
+      ['eastward', [179, 0], [-179, 0], [181, 0]],
+      ['westward', [-179, 0], [179, 0], [-181, 0]],
+    ] as const)('should unwrap the destination so an %s antimeridian-crossing segment draws the short way', (_direction, pointA, pointB, unwrapped) => {
+      const layer = makeLayer({ pointA: [...pointA], pointB: [...pointB] });
 
       const [pathLayer, endpointLayer] = layer.renderLayers();
       const pathData = (pathLayer as PathLayer).props.data as {
@@ -96,18 +99,12 @@ describe('MeasurementLayer', () => {
         number,
       ][];
 
-      expect(pathData[0]?.path).toEqual([
-        [179, 0],
-        [181, 0],
-      ]);
-      expect(endpointData).toEqual([
-        [179, 0],
-        [181, 0],
-      ]);
+      expect(pathData[0]?.path).toEqual([pointA, unwrapped]);
+      expect(endpointData).toEqual([pointA, unwrapped]);
     });
 
-    it('should place the label on the short arc when the segment crosses the antimeridian', () => {
-      const layer = makeLayer({ pointA: [179, 0], pointB: [-179, 0] });
+    it('should unwrap the label position so it sits on the short arc across the antimeridian', () => {
+      const layer = makeLayer({ pointA: [170, 0], pointB: [-168, 0] });
 
       const labelLayer = layer.renderLayers()[2] as TextLayer<{
         position: [number, number];
@@ -115,9 +112,8 @@ describe('MeasurementLayer', () => {
       const labelData = labelLayer.props.data as {
         position: [number, number];
       }[];
-      const [longitude] = labelData[0]?.position ?? [Number.NaN];
 
-      expect(Math.abs(longitude)).toBe(180);
+      expect(labelData[0]?.position[0]).toBeCloseTo(181, 5);
     });
 
     it('should render no sublayers when a point is not a finite tuple', () => {
@@ -137,6 +133,20 @@ describe('MeasurementLayer', () => {
       expect(labelLayer.props.data).toEqual([
         { position: expect.any(Array), text: 'CUSTOM: A→B' },
       ]);
+    });
+
+    it.each([
+      ['an empty array', []],
+      ['a three-entry array', ['kilometers', 'nauticalmiles', 'miles']],
+    ] as const)('should fall back to the default dual label when units is %s', (_case, units) => {
+      const layer = makeLayer({ units: [...units] });
+
+      const labelLayer = layer.renderLayers()[2] as TextLayer<{
+        text: string;
+      }>;
+      const labelData = labelLayer.props.data as { text: string }[];
+
+      expect(labelData[0]?.text).toMatch(DEFAULT_LABEL_PATTERN);
     });
 
     it('should default units to kilometers and nautical miles', () => {
@@ -169,6 +179,15 @@ describe('MeasurementLayer', () => {
       const endpointsLayer = layer.renderLayers()[1] as ScatterplotLayer;
 
       expect(endpointsLayer.props.getFillColor).toEqual(endpointColor);
+    });
+  });
+
+  describe('defaultProps', () => {
+    it('should declare the default line and endpoint colors', () => {
+      expect(MeasurementLayer.defaultProps).toEqual({
+        lineColor: { type: 'color', value: [255, 255, 255, 200] },
+        endpointColor: { type: 'color', value: [255, 255, 255, 255] },
+      });
     });
   });
 });

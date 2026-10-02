@@ -18,6 +18,9 @@ import { midpoint } from './midpoint';
 const longitudeArbitrary = fc.double({ min: -180, max: 180, noNaN: true });
 const latitudeArbitrary = fc.double({ min: -90, max: 90, noNaN: true });
 
+/** Half the circumference of the geodesy library's spherical Earth (radius 6371 km). */
+const HALF_CIRCUMFERENCE_METERS = Math.PI * 6371e3;
+
 describe('midpoint', () => {
   describe('known midpoints', () => {
     it('returns the halfway point along a meridian', () => {
@@ -109,9 +112,16 @@ describe('midpoint', () => {
               destinationLatitude,
             ];
 
+            // A midpoint is undefined for antipodal points (every great circle
+            // through them is a candidate), and the trigonometry becomes
+            // ill-conditioned as pairs approach that limit, so stay 1 km clear.
+            fc.pre(
+              distance(origin, destination) < HALF_CIRCUMFERENCE_METERS - 1000,
+            );
+
             const result = midpoint(origin, destination);
 
-            // Sub-millimeter tolerance; endpoint distances are equal up to
+            // Millimeter tolerance; endpoint distances are equal up to
             // floating-point error in the spherical trigonometry.
             expect(distance(origin, result)).toBeCloseTo(
               distance(result, destination),

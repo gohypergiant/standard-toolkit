@@ -14,6 +14,7 @@ import { Broadcast } from '@accelint/bus';
 import { uuid } from '@accelint/core';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { MapEvents } from '@/deckgl/base-map/events';
+import { makeDragPayload } from './__fixtures__/drag-payload';
 import { MeasurementEvents } from './events';
 import { measurementStore } from './store';
 import type { UniqueId } from '@accelint/core';
@@ -21,6 +22,10 @@ import type { MapEventType } from '@/deckgl/base-map/types';
 import type { MeasurementEventType } from './events';
 
 describe('measurementStore', () => {
+  const mapBus = Broadcast.getInstance<MapEventType>();
+  const measurementBus = Broadcast.getInstance<MeasurementEventType>();
+  /** Unsubscribe functions from `bus.on`, released after each test so listeners don't accumulate on the singleton. */
+  const offListeners: (() => void)[] = [];
   let mapId: UniqueId;
 
   beforeEach(() => {
@@ -29,6 +34,10 @@ describe('measurementStore', () => {
 
   afterEach(() => {
     measurementStore.clear(mapId);
+
+    for (const off of offListeners.splice(0)) {
+      off();
+    }
   });
 
   describe('default state', () => {
@@ -127,14 +136,11 @@ describe('measurementStore', () => {
   });
 
   describe('bus emissions and idempotency', () => {
-    const mapBus = Broadcast.getInstance<MapEventType>();
-    const measurementBus = Broadcast.getInstance<MeasurementEventType>();
-
     it('emits start and disablePan for every start call', () => {
       const onStart = vi.fn();
       const onDisablePan = vi.fn();
-      measurementBus.on(MeasurementEvents.start, onStart);
-      mapBus.on(MapEvents.disablePan, onDisablePan);
+      offListeners.push(measurementBus.on(MeasurementEvents.start, onStart));
+      offListeners.push(mapBus.on(MapEvents.disablePan, onDisablePan));
       const actions = measurementStore.actions(mapId);
 
       actions.start([10, 20]);
@@ -152,7 +158,7 @@ describe('measurementStore', () => {
 
     it('updateEnd emits nothing when not measuring', () => {
       const onUpdate = vi.fn();
-      measurementBus.on(MeasurementEvents.update, onUpdate);
+      offListeners.push(measurementBus.on(MeasurementEvents.update, onUpdate));
 
       measurementStore.actions(mapId).updateEnd([11, 21]);
 
@@ -161,7 +167,7 @@ describe('measurementStore', () => {
 
     it('emits update on every drag move, even when pointB is unchanged', () => {
       const onUpdate = vi.fn();
-      measurementBus.on(MeasurementEvents.update, onUpdate);
+      offListeners.push(measurementBus.on(MeasurementEvents.update, onUpdate));
       const actions = measurementStore.actions(mapId);
 
       actions.start([10, 20]);
@@ -175,9 +181,11 @@ describe('measurementStore', () => {
       const onComplete = vi.fn();
       const onClear = vi.fn();
       const onEnablePan = vi.fn();
-      measurementBus.on(MeasurementEvents.complete, onComplete);
-      measurementBus.on(MeasurementEvents.clear, onClear);
-      mapBus.on(MapEvents.enablePan, onEnablePan);
+      offListeners.push(
+        measurementBus.on(MeasurementEvents.complete, onComplete),
+      );
+      offListeners.push(measurementBus.on(MeasurementEvents.clear, onClear));
+      offListeners.push(mapBus.on(MapEvents.enablePan, onEnablePan));
       const actions = measurementStore.actions(mapId);
 
       actions.start([10, 20]);
@@ -197,7 +205,7 @@ describe('measurementStore', () => {
 
     it('emits update with pointA and the new pointB', () => {
       const onUpdate = vi.fn();
-      measurementBus.on(MeasurementEvents.update, onUpdate);
+      offListeners.push(measurementBus.on(MeasurementEvents.update, onUpdate));
       const actions = measurementStore.actions(mapId);
       actions.start([10, 20]);
 
@@ -213,8 +221,10 @@ describe('measurementStore', () => {
     it('emits complete and enablePan once, and nothing when already idle', () => {
       const onComplete = vi.fn();
       const onEnablePan = vi.fn();
-      measurementBus.on(MeasurementEvents.complete, onComplete);
-      mapBus.on(MapEvents.enablePan, onEnablePan);
+      offListeners.push(
+        measurementBus.on(MeasurementEvents.complete, onComplete),
+      );
+      offListeners.push(mapBus.on(MapEvents.enablePan, onEnablePan));
       const actions = measurementStore.actions(mapId);
       actions.start([10, 20]);
       actions.updateEnd([11, 21]);
@@ -235,8 +245,8 @@ describe('measurementStore', () => {
     it('clear emits clear and restores pan when a drag is active', () => {
       const onClear = vi.fn();
       const onEnablePan = vi.fn();
-      measurementBus.on(MeasurementEvents.clear, onClear);
-      mapBus.on(MapEvents.enablePan, onEnablePan);
+      offListeners.push(measurementBus.on(MeasurementEvents.clear, onClear));
+      offListeners.push(mapBus.on(MapEvents.enablePan, onEnablePan));
       const actions = measurementStore.actions(mapId);
       actions.start([10, 20]);
 
@@ -253,8 +263,8 @@ describe('measurementStore', () => {
     it('clear emits clear but not enablePan when idle', () => {
       const onClear = vi.fn();
       const onEnablePan = vi.fn();
-      measurementBus.on(MeasurementEvents.clear, onClear);
-      mapBus.on(MapEvents.enablePan, onEnablePan);
+      offListeners.push(measurementBus.on(MeasurementEvents.clear, onClear));
+      offListeners.push(mapBus.on(MapEvents.enablePan, onEnablePan));
       const actions = measurementStore.actions(mapId);
 
       actions.clear();
@@ -265,31 +275,11 @@ describe('measurementStore', () => {
   });
 
   describe('drag subscription', () => {
-    const mapBus = Broadcast.getInstance<MapEventType>();
-
-    function dragPayload(
-      coordinate: [number, number],
-      modifiers: Partial<{
-        shiftKey: boolean;
-        ctrlKey: boolean;
-        altKey: boolean;
-      }> = {},
-    ) {
-      return {
-        id: mapId,
-        coordinate,
-        shiftKey: false,
-        ctrlKey: false,
-        altKey: false,
-        ...modifiers,
-      };
-    }
-
     it('drives the measurement from map drag events while a subscriber is attached', () => {
       const unsubscribe = measurementStore.subscribe(mapId)(() => undefined);
 
-      mapBus.emit(MapEvents.dragStart, dragPayload([10, 20]));
-      mapBus.emit(MapEvents.drag, dragPayload([11, 21]));
+      mapBus.emit(MapEvents.dragStart, makeDragPayload(mapId, [10, 20]));
+      mapBus.emit(MapEvents.drag, makeDragPayload(mapId, [11, 21]));
 
       expect(measurementStore.get(mapId)).toMatchObject({
         pointA: [10, 20],
@@ -297,7 +287,7 @@ describe('measurementStore', () => {
         isMeasuring: true,
       });
 
-      mapBus.emit(MapEvents.dragEnd, dragPayload([11, 21]));
+      mapBus.emit(MapEvents.dragEnd, makeDragPayload(mapId, [11, 21]));
 
       expect(measurementStore.get(mapId).isMeasuring).toBe(false);
       unsubscribe();
@@ -307,28 +297,58 @@ describe('measurementStore', () => {
       const unsubscribe = measurementStore.subscribe(mapId)(() => undefined);
       measurementStore.actions(mapId).setRequiresModifier('alt');
 
-      mapBus.emit(MapEvents.dragStart, dragPayload([10, 20]));
+      mapBus.emit(MapEvents.dragStart, makeDragPayload(mapId, [10, 20]));
 
       expect(measurementStore.get(mapId).isMeasuring).toBe(false);
 
-      mapBus.emit(MapEvents.dragStart, dragPayload([10, 20], { altKey: true }));
+      mapBus.emit(
+        MapEvents.dragStart,
+        makeDragPayload(mapId, [10, 20], { altKey: true }),
+      );
 
       expect(measurementStore.get(mapId).isMeasuring).toBe(true);
       unsubscribe();
     });
 
     it('finishes an in-flight measurement and restores pan when the last subscriber leaves', () => {
+      const onComplete = vi.fn();
       const onEnablePan = vi.fn();
-      mapBus.on(MapEvents.enablePan, onEnablePan);
+      offListeners.push(
+        measurementBus.on(MeasurementEvents.complete, onComplete),
+      );
+      offListeners.push(mapBus.on(MapEvents.enablePan, onEnablePan));
       const unsubscribe = measurementStore.subscribe(mapId)(() => undefined);
 
-      mapBus.emit(MapEvents.dragStart, dragPayload([10, 20]));
-      mapBus.emit(MapEvents.drag, dragPayload([11, 21]));
+      mapBus.emit(MapEvents.dragStart, makeDragPayload(mapId, [10, 20]));
+      mapBus.emit(MapEvents.drag, makeDragPayload(mapId, [11, 21]));
       unsubscribe();
 
+      expect(onComplete).toHaveBeenCalledExactlyOnceWith(
+        expect.objectContaining({
+          payload: { mapId, pointA: [10, 20], pointB: [11, 21] },
+        }),
+      );
       expect(onEnablePan).toHaveBeenCalledExactlyOnceWith(
         expect.objectContaining({ payload: { id: mapId } }),
       );
+    });
+
+    it('emits nothing when the last subscriber leaves while idle', () => {
+      const onClear = vi.fn();
+      const onComplete = vi.fn();
+      const onEnablePan = vi.fn();
+      offListeners.push(measurementBus.on(MeasurementEvents.clear, onClear));
+      offListeners.push(
+        measurementBus.on(MeasurementEvents.complete, onComplete),
+      );
+      offListeners.push(mapBus.on(MapEvents.enablePan, onEnablePan));
+      const unsubscribe = measurementStore.subscribe(mapId)(() => undefined);
+
+      unsubscribe();
+
+      expect(onClear).not.toHaveBeenCalled();
+      expect(onComplete).not.toHaveBeenCalled();
+      expect(onEnablePan).not.toHaveBeenCalled();
     });
   });
 
