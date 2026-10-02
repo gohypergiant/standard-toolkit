@@ -11,6 +11,7 @@ Map Toolkit is a comprehensive library that provides:
 - **React Support**: React-friendly components with hooks and utilities via `@deckgl-fiber-renderer`
 - **Shapes System**: Draw, display, and edit geometric shapes (circles, ellipses, polygons, rectangles, lines, points) on the map with built-in styling, selection, and duplication
 - **Layer Extensions**: GPU-based visual effects like coffin corner selection/hover indicators, drawn via SDF shaders with no sprite sheet dependencies
+- **Measurement Tools**: Drag-to-measure bearing and great-circle distance between two points (`MeasurementTool`, `useMeasurement`, `MeasurementLayer`), driven by the `map:dragStart` / `map:drag` / `map:dragEnd` bus events
 - **Geospatial Utilities**: Helper functions and decorators for common mapping tasks
 
 The package is organized by technology (e.g., `deckgl/`, `maplibre/`) with feature-specific exports, allowing you to import only what you need.
@@ -58,6 +59,9 @@ import { /* components */ } from '@accelint/map-toolkit/deckgl/fiber';
 
 // React util function
 import { createSavedViewport } from '@accelint/map-toolkit/deckgl/saved-viewports';
+
+// Measurement tools (not part of the deckgl barrel; import from the feature path)
+import { MeasurementTool, useMeasurement } from '@accelint/map-toolkit/deckgl/measurement-layer';
 ```
 
 For detailed examples and interactive demos, see the [Storybook documentation](https://map-toolkit.accelint.io/?path=/docs/deckgl-symbol-layer--docs).
@@ -106,6 +110,7 @@ packages/map-toolkit/
   src/
     deckgl/           # Deck.gl layers and components
       extensions/     # Layer extensions (coffin corners, etc.)
+      measurement-layer/  # Drag-to-measure bearing and distance (layer, hook, tool)
       shapes/         # Shape drawing, display, editing, and utilities
     maplibre/         # MapLibre utilities and components
     decorators/       # Shared decorators and utilities

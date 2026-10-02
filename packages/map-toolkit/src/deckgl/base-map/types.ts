@@ -290,10 +290,64 @@ export type MapDisableZoomEvent = Payload<
   MapControlPayload
 >;
 
+/**
+ * Payload for map drag events emitted through the event bus.
+ * Contains the unprojected coordinate at the drag position and modifier key state.
+ */
+export type MapDragPayload = {
+  /** The map instance the event occurred within */
+  id: UniqueId;
+  /** Unprojected [longitude, latitude] coordinate at the drag position */
+  coordinate: [number, number];
+  /** Whether the Shift key was held during the drag event */
+  shiftKey: boolean;
+  /** Whether the Ctrl key was held during the drag event */
+  ctrlKey: boolean;
+  /** Whether the Alt key was held during the drag event */
+  altKey: boolean;
+};
+
+/**
+ * Type for map dragStart events in the event bus.
+ * Combines the event name with the drag payload.
+ */
+export type MapDragStartEvent = Payload<
+  typeof MapEvents.dragStart,
+  MapDragPayload
+>;
+
+/**
+ * Type for map drag events in the event bus.
+ * Combines the event name with the drag payload.
+ */
+export type MapDragEvent = Payload<typeof MapEvents.drag, MapDragPayload>;
+
+/**
+ * Payload for `map:dragEnd`. Unlike `map:dragStart` / `map:drag`, the end of a
+ * drag is always emitted (it is the gesture's terminator), so `coordinate` is
+ * `null` when the release position does not unproject to finite coordinates.
+ */
+export type MapDragEndPayload = Omit<MapDragPayload, 'coordinate'> & {
+  /** Unprojected [longitude, latitude] at release, or `null` when unavailable */
+  coordinate: [number, number] | null;
+};
+
+/**
+ * Type for map dragEnd events in the event bus.
+ * Combines the event name with the drag-end payload.
+ */
+export type MapDragEndEvent = Payload<
+  typeof MapEvents.dragEnd,
+  MapDragEndPayload
+>;
+
 export type MapEventType =
   | MapClickEvent
   | MapHoverEvent
   | MapViewportEvent
+  | MapDragStartEvent
+  | MapDragEvent
+  | MapDragEndEvent
   | MapEnablePanEvent
   | MapDisablePanEvent
   | MapEnableZoomEvent

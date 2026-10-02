@@ -14,6 +14,7 @@
 
 import 'client-only';
 import { useOn } from '@accelint/bus/react';
+import { useRef } from 'react';
 import { MapEvents } from './events';
 import type { UniqueId } from '@accelint/core';
 import type { RefObject } from 'react';
@@ -36,6 +37,12 @@ type MapControlsProps = {
   mapRef: RefObject<MapRef | null>;
   /** Reference to the RBZ handler instance */
   rbzRef?: RefObject<RbzHandler | null>;
+  /**
+   * Whether MapLibre's native box zoom is configured on for this map. `enableZoom`
+   * only restores box zoom when it was on to begin with; BaseMap keeps it off
+   * while RBZ is enabled.
+   */
+  boxZoom: boolean;
 };
 
 /**
@@ -50,7 +57,11 @@ type MapControlsProps = {
  * @param props.rbzRef - Optional reference to the RBZ handler instance.
  * @returns null (headless component).
  */
-export function MapControls({ id, mapRef, rbzRef }: MapControlsProps) {
+export function MapControls({ id, mapRef, rbzRef, boxZoom }: MapControlsProps) {
+  // RBZ re-arms itself on every Shift keydown while listening, so a tool that
+  // needs Shift+drag has to stop the listening entirely, not just disarm once.
+  const rbzWasListeningRef = useRef(false);
+
   useOn<MapEnablePanEvent>(MapEvents.enablePan, (event) => {
     if (event.payload.id === id) {
       mapRef.current?.getMap().dragPan.enable();
@@ -64,19 +75,33 @@ export function MapControls({ id, mapRef, rbzRef }: MapControlsProps) {
   });
 
   useOn<MapEnableZoomEvent>(MapEvents.enableZoom, (event) => {
-    if (event.payload.id === id) {
-      mapRef.current?.getMap().scrollZoom.enable();
-      mapRef.current?.getMap().doubleClickZoom.enable();
+    if (event.payload.id !== id) {
+      return;
+    }
+
+    mapRef.current?.getMap().scrollZoom.enable();
+
+    if (boxZoom) {
       mapRef.current?.getMap().boxZoom.enable();
+    }
+
+    if (rbzWasListeningRef.current) {
+      rbzWasListeningRef.current = false;
+      rbzRef?.current?.startListening();
     }
   });
 
   useOn<MapDisableZoomEvent>(MapEvents.disableZoom, (event) => {
-    if (event.payload.id === id) {
-      mapRef.current?.getMap().scrollZoom.disable();
-      mapRef.current?.getMap().doubleClickZoom.disable();
-      mapRef.current?.getMap().boxZoom.disable();
-      rbzRef?.current?.disable();
+    if (event.payload.id !== id) {
+      return;
+    }
+
+    mapRef.current?.getMap().scrollZoom.disable();
+    mapRef.current?.getMap().boxZoom.disable();
+
+    if (rbzRef?.current?.isListening()) {
+      rbzWasListeningRef.current = true;
+      rbzRef.current.stopListening();
     }
   });
 

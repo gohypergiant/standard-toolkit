@@ -50,16 +50,22 @@ import {
   tiltCommandFor,
 } from './tilt-gesture';
 import { LOCKED_MAP_LIBRE_OPTION_KEYS } from './types';
+import { isLonLatTuple } from '@/shared/coordinates';
 import type {
   IControl,
   MapOptions,
   WebGLContextAttributesWithType,
 } from 'maplibre-gl';
 import type { MjolnirGestureEvent, MjolnirPointerEvent } from 'mjolnir.js';
+import type { UniqueId } from '@accelint/core';
 import type { CameraSetViewEvent } from '../../camera/types';
 import type {
   BaseMapProps,
   MapClickEvent,
+  MapDragEndEvent,
+  MapDragEvent,
+  MapDragPayload,
+  MapDragStartEvent,
   MapHoverEvent,
   MapLibreOptions,
   MapViewportEvent,
@@ -220,6 +226,26 @@ function AddDeckglControl() {
 }
 
 /**
+ * Builds the serializable payload for the `map:drag*` bus events. Bus consumers
+ * such as `useMeasurement` need the modifier-key state to decide whether to
+ * claim the drag (e.g. alt+drag measures, plain drag pans), so it travels with
+ * the coordinate instead of requiring consumers to track key state themselves.
+ */
+function toDragPayload<Coordinate extends [number, number] | null>(
+  id: UniqueId,
+  coordinate: Coordinate,
+  srcEvent: Pick<MouseEvent, 'shiftKey' | 'ctrlKey' | 'altKey'>,
+): Omit<MapDragPayload, 'coordinate'> & { coordinate: Coordinate } {
+  return {
+    id,
+    coordinate,
+    shiftKey: srcEvent.shiftKey,
+    ctrlKey: srcEvent.ctrlKey,
+    altKey: srcEvent.altKey,
+  };
+}
+
+/**
  * A React component that provides a Deck.gl-powered base map with MapLibre GL integration.
  *
  * This component serves as the foundation for building interactive map applications with
@@ -308,6 +334,7 @@ export function BaseMap({
   onDrag,
   onDragEnd,
   onViewStateChange,
+  onLoad,
   pickingRadius,
   enableRbz = false,
   rbzOptions,
@@ -504,6 +531,9 @@ export function BaseMap({
   const emitHover = useEmit<MapHoverEvent>(MapEvents.hover);
   const emitViewport = useEmit<MapViewportEvent>(MapEvents.viewport);
   const emitSetView = useEmit<CameraSetViewEvent>(CameraEventTypes.setView);
+  const emitDragStart = useEmit<MapDragStartEvent>(MapEvents.dragStart);
+  const emitDrag = useEmit<MapDragEvent>(MapEvents.drag);
+  const emitDragEnd = useEmit<MapDragEndEvent>(MapEvents.dragEnd);
 
   const resizeTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -557,7 +587,14 @@ export function BaseMap({
       // Right-drag (or ctrl + left-drag) rotates + pitches the camera; plain
       // left-drag stays a pan. The camera store is driven directly so it remains
       // the single source of truth — MapLibre's own rotate/pitch handlers are off.
-      if (!isTiltGesture(toTiltGesture(event))) {
+      // Tilt gestures belong to the camera, so only plain drags reach the bus.
+      const isTilt = isTiltGesture(toTiltGesture(event));
+
+      if (!isTilt && isLonLatTuple(info.coordinate)) {
+        emitDragStart(toDragPayload(id, info.coordinate, event.srcEvent));
+      }
+
+      if (!isTilt) {
         return;
       }
 
@@ -589,8 +626,12 @@ export function BaseMap({
       onDrag?.(info, event);
 
       // No baseline means `handleDragStart` classified this as a pan, not a
-      // tilt; leave the camera untouched.
+      // tilt: forward it to the bus and leave the camera untouched.
       if (!tiltBaselineRef.current) {
+        if (isLonLatTuple(info.coordinate)) {
+          emitDrag(toDragPayload(id, info.coordinate, event.srcEvent));
+        }
+
         return;
       }
 
@@ -620,6 +661,20 @@ export function BaseMap({
     (info: PickingInfo, event: MjolnirGestureEvent) => {
       // send full pickingInfo and event to user-defined onDragEnd first
       onDragEnd?.(info, event);
+
+      // dragEnd is a plain drag's terminator, so it always fires for one (with a
+      // null coordinate if the release position is off the globe); consumers
+      // that suppressed pan on dragStart rely on it to restore pan. A tilt has a
+      // baseline and never reached the bus, so it ends silently.
+      if (!tiltBaselineRef.current) {
+        emitDragEnd(
+          toDragPayload(
+            id,
+            isLonLatTuple(info.coordinate) ? info.coordinate : null,
+            event.srcEvent,
+          ),
+        );
+      }
 
       // Flush the last pending target so the camera lands exactly where the drag
       // ended (a frame may have been scheduled but not yet fired), then cancel
@@ -702,18 +757,12 @@ export function BaseMap({
     }, 200);
   });
 
-  // First point at which `setProjection` is safe (after `style.load`).
-  const handleMapLoad = useEffectEvent(() => {
-    mapRef.current?.getMap().setProjection({ type: cameraState.projection });
-  });
-
   const handleLoad = useEffectEvent(() => {
     //--- force update viewport state once all viewports initialized ---
     // @ts-expect-error squirrelly deckglInstance typing
-    const viewports = deckglInstance._deck?.getViewports();
-    if (!viewports) {
-      return;
-    }
+    const deck = deckglInstance._deck;
+    const viewports = deck?.isInitialized ? deck.getViewports() : [];
+
     for (const vp of viewports) {
       handleViewStateChange({
         viewId: vp.id,
@@ -750,10 +799,29 @@ export function BaseMap({
     }
   });
 
+  // First point at which `setProjection` is safe (after `style.load`).
+  //
+  // BaseMap's own load work and the consumer's `onLoad` also run from here, not
+  // from deck's `onLoad` prop. deck's MapLibre overlay wraps `onLoad` to install
+  // the listener that copies the map camera into deck, then re-sends every
+  // overlay prop on each `setProps`. An `onLoad` among those props overwrites
+  // the wrapper whenever a fiber commit lands before deck initializes, which
+  // leaves deck's picking viewport frozen at the initial frame.
+  const handleMapLoad = useEffectEvent(() => {
+    mapRef.current?.getMap().setProjection({ type: cameraState.projection });
+    handleLoad();
+    onLoad?.();
+  });
+
   return (
     <div id={container} className={className}>
       {enableControlEvents && (
-        <MapControls id={id} mapRef={mapRef} rbzRef={rbzRef} />
+        <MapControls
+          id={id}
+          mapRef={mapRef}
+          rbzRef={rbzRef}
+          boxZoom={boxZoom}
+        />
       )}
       <MapProvider id={id}>
         <MapLibre
@@ -787,7 +855,6 @@ export function BaseMap({
             onDragStart={handleDragStart}
             onDrag={handleDrag}
             onDragEnd={handleDragEnd}
-            onLoad={handleLoad}
             onResize={handleResize}
             onViewStateChange={handleViewStateChange}
             widgets={widgetsProp}

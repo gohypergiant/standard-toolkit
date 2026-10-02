@@ -773,6 +773,13 @@ importers:
         version: 4.2.1
 
   packages/formatters:
+    dependencies:
+      '@accelint/constants':
+        specifier: workspace:*
+        version: link:../constants
+      '@accelint/math':
+        specifier: workspace:*
+        version: link:../math
     devDependencies:
       '@accelint/typescript-config':
         specifier: workspace:*
@@ -780,6 +787,9 @@ importers:
       '@accelint/vitest-config':
         specifier: workspace:*
         version: link:../../tooling/vitest-config
+      fast-check:
+        specifier: ^4.1.1
+        version: 4.4.0
       tsdown:
         specifier: ^0.18.0
         version: 0.18.1(publint@0.3.16)(typescript@5.9.3)
@@ -805,6 +815,9 @@ importers:
       '@accelint/vitest-config':
         specifier: workspace:*
         version: link:../../tooling/vitest-config
+      fast-check:
+        specifier: ^4.1.1
+        version: 4.4.0
       tsdown:
         specifier: ^0.18.0
         version: 0.18.1(publint@0.3.16)(typescript@5.9.3)
@@ -977,6 +990,9 @@ importers:
       '@accelint/design-toolkit':
         specifier: workspace:*
         version: link:../design-toolkit
+      '@accelint/formatters':
+        specifier: workspace:*
+        version: link:../formatters
       '@accelint/geo':
         specifier: workspace:*
         version: link:../geo

@@ -26,17 +26,18 @@ import {
 } from 'vitest';
 import { CameraEventTypes } from '../../camera/events';
 import { cameraStore, clearCameraState, MAX_PITCH } from '../../camera/store';
+import { MapEvents } from './events';
 import { BaseMap, stripLockedMapLibreOptions } from './index';
 import { LOCKED_MAP_LIBRE_OPTION_KEYS } from './types';
 import type { MapOptions } from 'maplibre-gl';
 import type { MjolnirGestureEvent } from 'mjolnir.js';
 import type { CameraEvent, ViewType } from '../../camera/types';
-import type { MapLibreOptions } from './types';
+import type { MapDragPayload, MapEventType, MapLibreOptions } from './types';
 
-interface FakeMap {
+type FakeMap = {
   setProjection: Mock;
   isStyleLoaded: Mock;
-}
+};
 
 function createFakeMap(): FakeMap {
   return {
@@ -50,6 +51,7 @@ type DragHandler = (info: unknown, event: MjolnirGestureEvent) => void;
 let activeMap: FakeMap | null = null;
 let capturedOnLoad: (() => void) | undefined;
 let capturedMapProps: Record<string, unknown> | undefined;
+let capturedDeckOnLoad: unknown;
 let capturedDragHandlers: {
   onDragStart?: DragHandler;
   onDrag?: DragHandler;
@@ -122,13 +124,16 @@ vi.mock('@deckgl-fiber-renderer/dom', () => ({
     onDragStart,
     onDrag,
     onDragEnd,
+    onLoad,
   }: {
     children?: React.ReactNode;
     onDragStart?: DragHandler;
     onDrag?: DragHandler;
     onDragEnd?: DragHandler;
+    onLoad?: unknown;
   }) => {
     capturedDragHandlers = { onDragStart, onDrag, onDragEnd };
+    capturedDeckOnLoad = onLoad;
 
     return <div data-testid='deckgl-mock'>{children}</div>;
   },
@@ -139,6 +144,7 @@ beforeEach(() => {
   activeMap = null;
   capturedOnLoad = undefined;
   capturedMapProps = undefined;
+  capturedDeckOnLoad = undefined;
   capturedDragHandlers = {};
 });
 
@@ -341,6 +347,196 @@ describe('BaseMap', () => {
       expect(cameraStore.get(id).rotation).toBe(10);
 
       clearCameraState(id);
+    });
+  });
+
+  describe('load handling', () => {
+    // deck's MapLibre overlay wraps `onLoad` to install the listener that
+    // copies the map camera into deck, then re-sends every overlay prop on
+    // each `setProps`. An `onLoad` in those props overwrites the wrapper if a
+    // fiber commit lands before deck initializes, leaving deck's picking
+    // viewport frozen at the initial frame.
+    it('never passes an onLoad prop to the deck overlay, even a consumer one', () => {
+      useFakeMap(createFakeMap());
+
+      render(<BaseMap id={uuid()} onLoad={vi.fn()} />);
+
+      expect(capturedDeckOnLoad).toBeUndefined();
+    });
+
+    it('calls a consumer onLoad once the map has loaded', () => {
+      const onLoad = vi.fn();
+      useFakeMap(createFakeMap());
+      render(<BaseMap id={uuid()} onLoad={onLoad} />);
+
+      expect(onLoad).not.toHaveBeenCalled();
+
+      act(() => {
+        fireMapLoad();
+      });
+
+      expect(onLoad).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  describe('drag event bus emission', () => {
+    function dragEvent(
+      overrides: Partial<
+        Pick<MapDragPayload, 'shiftKey' | 'ctrlKey' | 'altKey'> & {
+          rightButton: boolean;
+        }
+      > = {},
+    ): MjolnirGestureEvent {
+      const {
+        shiftKey = false,
+        ctrlKey = false,
+        altKey = false,
+        rightButton = false,
+      } = overrides;
+
+      return {
+        leftButton: !rightButton,
+        rightButton,
+        deltaX: 0,
+        deltaY: 0,
+        srcEvent: { shiftKey, ctrlKey, altKey },
+      } as unknown as MjolnirGestureEvent;
+    }
+
+    it.each([
+      {
+        handler: 'onDragStart',
+        event: MapEvents.dragStart,
+        coordinate: [10, 20],
+        modifiers: { shiftKey: true, ctrlKey: false, altKey: false },
+      },
+      {
+        handler: 'onDrag',
+        event: MapEvents.drag,
+        coordinate: [-74.006, 40.7128],
+        modifiers: { shiftKey: false, ctrlKey: true, altKey: false },
+      },
+      {
+        handler: 'onDragEnd',
+        event: MapEvents.dragEnd,
+        coordinate: [5.5, 52.3],
+        modifiers: { shiftKey: false, ctrlKey: false, altKey: true },
+      },
+    ] as const)('emits $event on the bus with coordinate and modifier keys', ({
+      handler,
+      event,
+      coordinate,
+      modifiers,
+    }) => {
+      const id = uuid();
+      useFakeMap(createFakeMap());
+      const bus = Broadcast.getInstance<MapEventType>();
+      const listener = vi.fn();
+      bus.on(event, listener);
+
+      try {
+        render(<BaseMap id={id} />);
+
+        act(() => {
+          capturedDragHandlers[handler]?.({ coordinate }, dragEvent(modifiers));
+        });
+
+        expect(listener).toHaveBeenCalledExactlyOnceWith(
+          expect.objectContaining({
+            payload: { id, coordinate, ...modifiers },
+          }),
+        );
+      } finally {
+        bus.off(event, listener);
+      }
+    });
+
+    it('emits dragEnd with a null coordinate when info has none', () => {
+      const id = uuid();
+      useFakeMap(createFakeMap());
+      const bus = Broadcast.getInstance<MapEventType>();
+      const listener = vi.fn();
+      bus.on(MapEvents.dragEnd, listener);
+
+      try {
+        render(<BaseMap id={id} />);
+
+        act(() => {
+          capturedDragHandlers.onDragEnd?.({}, dragEvent());
+        });
+
+        expect(listener).toHaveBeenCalledExactlyOnceWith(
+          expect.objectContaining({
+            payload: {
+              id,
+              coordinate: null,
+              shiftKey: false,
+              ctrlKey: false,
+              altKey: false,
+            },
+          }),
+        );
+      } finally {
+        bus.off(MapEvents.dragEnd, listener);
+      }
+    });
+
+    it.each([
+      ['right-button', { rightButton: true }],
+      ['ctrl + left-button', { ctrlKey: true }],
+    ])('does not emit drag events for a %s tilt gesture', (_label, overrides) => {
+      const id = uuid();
+      useFakeMap(createFakeMap());
+      const bus = Broadcast.getInstance<MapEventType>();
+      const listener = vi.fn();
+      bus.on(MapEvents.dragStart, listener);
+      bus.on(MapEvents.drag, listener);
+      bus.on(MapEvents.dragEnd, listener);
+
+      try {
+        render(<BaseMap id={id} />);
+
+        act(() => {
+          capturedDragHandlers.onDragStart?.(
+            { coordinate: [10, 20] },
+            dragEvent(overrides),
+          );
+          capturedDragHandlers.onDrag?.(
+            { coordinate: [11, 21] },
+            dragEvent(overrides),
+          );
+          capturedDragHandlers.onDragEnd?.(
+            { coordinate: [11, 21] },
+            dragEvent(overrides),
+          );
+        });
+
+        expect(listener).not.toHaveBeenCalled();
+      } finally {
+        bus.off(MapEvents.dragStart, listener);
+        bus.off(MapEvents.drag, listener);
+        bus.off(MapEvents.dragEnd, listener);
+      }
+    });
+
+    it('does not emit dragStart when coordinate is missing from info', () => {
+      const id = uuid();
+      useFakeMap(createFakeMap());
+      const bus = Broadcast.getInstance<MapEventType>();
+      const listener = vi.fn();
+      bus.on(MapEvents.dragStart, listener);
+
+      try {
+        render(<BaseMap id={id} />);
+
+        act(() => {
+          capturedDragHandlers.onDragStart?.({}, dragEvent());
+        });
+
+        expect(listener).not.toHaveBeenCalled();
+      } finally {
+        bus.off(MapEvents.dragStart, listener);
+      }
     });
   });
 
