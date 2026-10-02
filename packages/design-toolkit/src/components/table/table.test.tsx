@@ -24,12 +24,12 @@ import { TableHeaderCell } from './header-cell';
 import { Table } from './index';
 import { TableRow } from './row';
 import styles from './styles.module.css';
-import type { DensityVariant } from '@/lib/types';
 import type {
   RowPinningState,
   RowSelectionState,
   SortingState,
 } from '@tanstack/react-table';
+import type { DensityVariant } from '@/lib/types';
 import type { TableProps } from './types';
 
 function setup(
@@ -420,6 +420,56 @@ describe('Table row selection', () => {
 
     expect(rowCheckboxes()[0]).not.toBeChecked();
     expect(rowCheckboxes()[2]).toBeChecked();
+  });
+
+  it('should toggle row selection when clicking a row', async () => {
+    setup();
+
+    const rows = screen.getAllByRole('row').slice(1); // skip header row
+
+    // click the first row to select it
+    await userEvent.click(rows[0] as HTMLElement);
+
+    expect(rowCheckboxes()[0]).toBeChecked();
+
+    // click it again to deselect it
+    await userEvent.click(rows[0] as HTMLElement);
+
+    expect(rowCheckboxes()[0]).not.toBeChecked();
+  });
+
+  it('should call onRowSelectionChange when clicking a row', async () => {
+    const onRowSelectionChange = vi.fn();
+    setup({ rowSelection: {}, onRowSelectionChange });
+
+    const rows = screen.getAllByRole('row').slice(1);
+
+    // click the first row (tanner)
+    await userEvent.click(rows[0] as HTMLElement);
+
+    expect(onRowSelectionChange).toHaveBeenCalledTimes(1);
+    expect(onRowSelectionChange.mock.calls[0]?.[0]).toEqual({ tanner: true });
+  });
+
+  it('should respect custom onClick handler with preventDefault', async () => {
+    const customOnClick = vi.fn((e) => e.preventDefault());
+
+    render(
+      <table>
+        <TableBody>
+          <TableRow onClick={customOnClick}>
+            <TableCell>test cell</TableCell>
+          </TableRow>
+        </TableBody>
+      </table>,
+    );
+
+    const rows = screen.getAllByRole('row');
+
+    await userEvent.click(rows[0] as HTMLElement);
+
+    expect(customOnClick).toHaveBeenCalledTimes(1);
+    expect(customOnClick.mock.calls[0]?.[0].defaultPrevented).toBe(true);
   });
 });
 
@@ -1023,5 +1073,182 @@ describe('Table variant', () => {
     expect(
       within(menu).getByRole('menuitemradio', { name: 'Sort Ascending' }),
     ).toBeInTheDocument();
+  });
+});
+
+describe('Table context', () => {
+  it('should provide default context values', () => {
+    let capturedContext: any;
+
+    render(
+      <TableContext.Consumer>
+        {(value) => {
+          capturedContext = value;
+          return null;
+        }}
+      </TableContext.Consumer>,
+    );
+
+    expect(capturedContext).toBeDefined();
+    expect(capturedContext.variant).toBe('cozy');
+    expect(capturedContext.displayNumerals).toBe(true);
+  });
+
+  it('should provide no-op moveColumnLeft and moveColumnRight by default', () => {
+    let capturedContext: any;
+
+    render(
+      <TableContext.Consumer>
+        {(value) => {
+          capturedContext = value;
+          return null;
+        }}
+      </TableContext.Consumer>,
+    );
+
+    expect(typeof capturedContext.moveColumnLeft).toBe('function');
+    expect(typeof capturedContext.moveColumnRight).toBe('function');
+
+    // Should not throw when called
+    expect(() => {
+      capturedContext.moveColumnLeft(0);
+      capturedContext.moveColumnRight(1);
+    }).not.toThrow();
+  });
+
+  it('should provide no-op setColumnSelection by default', () => {
+    let capturedContext: any;
+
+    render(
+      <TableContext.Consumer>
+        {(value) => {
+          capturedContext = value;
+          return null;
+        }}
+      </TableContext.Consumer>,
+    );
+
+    expect(typeof capturedContext.setColumnSelection).toBe('function');
+    expect(capturedContext.columnSelection).toBe(null);
+
+    // Should not throw when called
+    expect(() => {
+      capturedContext.setColumnSelection('test');
+      capturedContext.setColumnSelection(null);
+      capturedContext.setColumnSelection((prev: string | null) => prev);
+    }).not.toThrow();
+  });
+
+  it('should provide optional handleSortChange and handleColumnReordering', () => {
+    let capturedContext: any;
+
+    render(
+      <TableContext.Consumer>
+        {(value) => {
+          capturedContext = value;
+          return null;
+        }}
+      </TableContext.Consumer>,
+    );
+
+    // These should be functions (defined as no-ops in the default context)
+    expect(typeof capturedContext.handleSortChange).toBe('function');
+    expect(typeof capturedContext.handleColumnReordering).toBe('function');
+
+    // Should not throw when called
+    expect(() => {
+      capturedContext.handleSortChange?.('columnId', 'asc');
+      capturedContext.handleSortChange?.('columnId', 'desc');
+      capturedContext.handleSortChange?.('columnId', null);
+      capturedContext.handleColumnReordering?.(0);
+    }).not.toThrow();
+  });
+
+  it('should provide all boolean flags with correct defaults', () => {
+    let capturedContext: any;
+
+    render(
+      <TableContext.Consumer>
+        {(value) => {
+          capturedContext = value;
+          return null;
+        }}
+      </TableContext.Consumer>,
+    );
+
+    expect(capturedContext.enableSorting).toBe(true);
+    expect(capturedContext.enableColumnReordering).toBe(true);
+    expect(capturedContext.enableRowActions).toBe(true);
+    expect(capturedContext.persistRowKebabMenu).toBe(true);
+    expect(capturedContext.persistHeaderKebabMenu).toBe(true);
+    expect(capturedContext.persistNumerals).toBe(true);
+    expect(capturedContext.displayNumerals).toBe(true);
+    expect(capturedContext.manualSorting).toBe(false);
+  });
+});
+
+describe('Table numeral column', () => {
+  it('should display numerals by default', () => {
+    render(<Table columns={trackColumns} data={tracks} persistNumerals />);
+
+    const firstRow = within(screen.getAllByRole('row')[1] as HTMLElement);
+    expect(firstRow.getByTestId('numeral')).toBeInTheDocument();
+    expect(firstRow.getByTestId('numeral')).toBeVisible();
+  });
+
+  it('should hide numeral cells when persistNumerals is false', () => {
+    render(
+      <Table
+        columns={trackColumns}
+        data={tracks}
+        persistNumerals={false}
+        displayNumerals={true}
+      />,
+    );
+
+    const firstRow = within(screen.getAllByRole('row')[1] as HTMLElement);
+    const numeralCell = firstRow.getByTestId('numeral').closest('td');
+
+    expect(numeralCell).toHaveClass(styles.hideInRow as string);
+  });
+
+  it('should hide the numeral header when displayNumerals is false', () => {
+    render(
+      <Table columns={trackColumns} data={tracks} displayNumerals={false} />,
+    );
+
+    const headerRow = screen.getAllByRole('row')[0] as HTMLElement;
+    const headers = within(headerRow).getAllByRole('columnheader');
+
+    // First header should be the numeral column with hidden class
+    expect(headers[0]).toHaveClass(styles.hidden as string);
+  });
+
+  it('should hide numeral cells when displayNumerals is false', () => {
+    render(
+      <Table columns={trackColumns} data={tracks} displayNumerals={false} />,
+    );
+
+    const firstRow = within(screen.getAllByRole('row')[1] as HTMLElement);
+    const numeralCell = firstRow.getByTestId('numeral').closest('td');
+
+    expect(numeralCell).toHaveClass(styles.hidden as string);
+  });
+
+  it('should prioritize displayNumerals over persistNumerals', () => {
+    render(
+      <Table
+        columns={trackColumns}
+        data={tracks}
+        displayNumerals={false}
+        persistNumerals={true}
+      />,
+    );
+
+    const firstRow = within(screen.getAllByRole('row')[1] as HTMLElement);
+    const numeralCell = firstRow.getByTestId('numeral').closest('td');
+
+    // displayNumerals=false takes precedence
+    expect(numeralCell).toHaveClass(styles.hidden as string);
   });
 });

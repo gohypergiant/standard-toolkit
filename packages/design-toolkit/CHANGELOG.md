@@ -1,5 +1,14 @@
 # @accelint/design-toolkit
 
+## 11.1.0
+### Minor Changes
+
+- 0cdf562: Allows users to opt out of row numerals, adds table row hovering, adds table row highlighting on click
+
+### Patch Changes
+
+- 90e549c: Update table docs per new api
+
 ## 11.0.0
 ### Major Changes
 
