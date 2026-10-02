@@ -260,6 +260,16 @@ export class RbzHandler implements Handler {
    * disables the handler if armed. Idempotent — safe to call when not
    * listening. Invoked automatically by {@link destroy}.
    */
+  /**
+   * Whether the window keyboard listeners from {@link startListening} are
+   * currently installed.
+   *
+   * @returns True while listening for Shift on the window
+   */
+  isListening(): boolean {
+    return this._isListening;
+  }
+
   stopListening(): void {
     if (!this._isListening) {
       return;
@@ -559,7 +569,9 @@ export class RbzHandler implements Handler {
   // Distinct from the MapLibre Handler interface's `keydown` method, which
   // is invoked by the map for in-map keyboard events.
   private readonly _onWindowKeyDown = (e: KeyboardEvent): void => {
-    if (e.key !== 'Shift') {
+    // A held Shift fires key-repeat keydowns; only the first press may arm the
+    // handler, otherwise a tool that disarmed it is overridden a few ms later.
+    if (e.key !== 'Shift' || e.repeat) {
       return;
     }
 

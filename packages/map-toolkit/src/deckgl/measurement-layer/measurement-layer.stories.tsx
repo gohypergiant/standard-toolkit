@@ -23,6 +23,7 @@ import { MeasurementTool } from './measurement-tool';
 import { useMeasurement } from './use-measurement';
 import type { DistanceUnit } from '@accelint/constants/units';
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import type { RequiresModifier } from './types';
 import type { ReactNode } from 'react';
 
 const meta: Meta = {
@@ -202,41 +203,66 @@ export const SingleUnitKilometers: Story = {
 // ─── Story 3: Modifier Key Required ────────────────────────────────────────
 
 /**
- * Modifier Key Required (Alt+drag)
+ * Modifier Key Required
  *
- * Demonstrates `requiresModifier='alt'`. Plain drag pans the map normally.
- * Hold Alt while dragging to activate measurement. This allows simultaneous
- * pan + measure without mode switching.
+ * Demonstrates `requiresModifier`. Plain drag pans the map normally; holding
+ * the chosen key while dragging activates measurement, so pan and measure
+ * coexist without mode switching.
  *
- * Alt is used rather than Shift because BaseMap's rubber-band zoom (on by
- * default) also arms on Shift, and the two gestures conflict. Ctrl+drag is
- * BaseMap's rotate/tilt gesture.
+ * Use the controls to pair the modifier with BaseMap's zoom gesture:
+ * - Shift + RBZ on: the tool suppresses rubber-band zoom while Shift is held
+ * - Alt + RBZ on: Alt measures and Shift+drag still rubber-band zooms
  *
  * Instructions:
  * 1. Plain drag — pans the map (no measurement)
- * 2. Hold Alt and drag — activates measurement
- * 3. Release mouse to complete; release Alt to stop measuring mid-drag
+ * 2. Hold the modifier and drag — activates measurement
+ * 3. Release mouse to complete; release the modifier to stop measuring mid-drag
  */
 export const ModifierKeyRequired: Story = {
-  render: () => {
+  args: { requiresModifier: 'shift', enableRbz: false },
+  argTypes: {
+    requiresModifier: {
+      control: 'select',
+      options: ['shift', 'alt'],
+      description:
+        "Key that must be held for a drag to measure. 'ctrl' is omitted: Ctrl+drag is BaseMap's tilt gesture and emits no drag events.",
+    },
+    enableRbz: {
+      control: 'boolean',
+      description:
+        'Enable BaseMap rubber-band zoom instead of MapLibre box zoom. Both are Shift+drag gestures; pick Alt above to see them coexist with measuring.',
+    },
+  },
+  render: ({ enableRbz, requiresModifier }) => {
+    const modifier: RequiresModifier =
+      requiresModifier === 'alt' ? 'alt' : 'shift';
+    const keyLabel = modifier === 'alt' ? 'Alt (Option on Mac)' : 'Shift';
     const { isMeasuring, distanceMeters, bearingDeg } = useMeasurement(
       MODIFIER_MAP_ID,
-      'alt',
+      modifier,
     );
 
     return (
       <div className='relative h-dvh w-dvw'>
         <BaseMap
+          // RBZ is installed at map load, so remount when the toggle changes.
+          key={String(enableRbz)}
           className='absolute inset-0'
           id={MODIFIER_MAP_ID}
           initialViewState={DEFAULT_VIEW_STATE}
+          enableRbz={Boolean(enableRbz)}
         >
-          <MeasurementTool mapId={MODIFIER_MAP_ID} requiresModifier='alt' />
+          <MeasurementTool
+            mapId={MODIFIER_MAP_ID}
+            requiresModifier={modifier}
+          />
         </BaseMap>
 
         <ReadoutPanel
-          title='Alt+Drag to Measure'
-          status={isMeasuring ? 'Measuring (Alt held)' : 'Plain drag pans map'}
+          title={`${keyLabel}+Drag to Measure`}
+          status={
+            isMeasuring ? `Measuring (${keyLabel} held)` : 'Plain drag pans map'
+          }
         >
           {isMeasuring && (
             <div className='flex flex-col gap-xs'>
@@ -256,19 +282,27 @@ export const ModifierKeyRequired: Story = {
             <ul className='list-inside list-disc space-y-xs text-body-xs text-content-secondary'>
               <li>Plain drag: pans the map</li>
               <li>
-                <strong>Alt + drag:</strong> activates measurement
+                <strong>{keyLabel} + drag:</strong> activates measurement
               </li>
-              <li>Release Alt mid-drag to stop</li>
+              <li>Release {keyLabel} mid-drag to stop</li>
               <li>
-                Shift is not supported as a modifier: it conflicts with
-                BaseMap's rubber-band zoom
+                Shift + drag with {modifier === 'alt' ? 'Alt' : 'Shift'} as the
+                modifier:{' '}
+                {modifier === 'alt'
+                  ? enableRbz
+                    ? 'rubber-band zoom'
+                    : 'MapLibre box zoom'
+                  : 'measures; zoom is suppressed while Shift is held'}
               </li>
             </ul>
           </div>
 
           <div className='rounded-lg bg-surface-contrast-subtle p-s'>
-            <p className='mb-xs font-semibold text-body-xs'>Prop</p>
-            <code className='text-body-xs'>requiresModifier="alt"</code>
+            <p className='mb-xs font-semibold text-body-xs'>Props</p>
+            <code className='text-body-xs'>
+              requiresModifier="{modifier}" enableRbz=
+              {String(Boolean(enableRbz))}
+            </code>
           </div>
         </ReadoutPanel>
       </div>

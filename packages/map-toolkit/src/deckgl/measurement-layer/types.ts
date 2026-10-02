@@ -16,10 +16,13 @@ import type { DistanceUnit } from '@accelint/constants/units';
 /**
  * Modifier key that must be held for a drag to count as a measurement.
  *
- * Prefer `'alt'`. `'shift'` collides with BaseMap's rubber-band zoom, which is
- * enabled by default and arms on Shift keydown, so releasing the mouse or the
- * key can still zoom the map. `'ctrl'` collides with BaseMap's Ctrl+drag
- * rotate/tilt gesture.
+ * `'shift'` and `'alt'` both work. Shift+drag is also BaseMap's zoom gesture
+ * (MapLibre box zoom, or rubber-band zoom when `enableRbz` is set), so while
+ * `'shift'` is the required modifier `useMeasurement` suppresses that zoom for
+ * as long as Shift is held; Shift+drag zoom is then unavailable on that map.
+ *
+ * `'ctrl'` never activates: Ctrl+drag is BaseMap's rotate/tilt gesture, and
+ * tilt gestures do not emit drag events.
  */
 export type RequiresModifier = 'shift' | 'ctrl' | 'alt';
 

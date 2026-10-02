@@ -49,6 +49,7 @@ type DragHandler = (info: unknown, event: MjolnirGestureEvent) => void;
 let activeMap: FakeMap | null = null;
 let capturedOnLoad: (() => void) | undefined;
 let capturedMapProps: Record<string, unknown> | undefined;
+let capturedDeckOnLoad: unknown;
 let capturedDragHandlers: {
   onDragStart?: DragHandler;
   onDrag?: DragHandler;
@@ -95,13 +96,16 @@ vi.mock('@deckgl-fiber-renderer/dom', () => ({
     onDragStart,
     onDrag,
     onDragEnd,
+    onLoad,
   }: {
     children?: React.ReactNode;
     onDragStart?: DragHandler;
     onDrag?: DragHandler;
     onDragEnd?: DragHandler;
+    onLoad?: unknown;
   }) => {
     capturedDragHandlers = { onDragStart, onDrag, onDragEnd };
+    capturedDeckOnLoad = onLoad;
 
     return <div data-testid='deckgl-mock'>{children}</div>;
   },
@@ -112,6 +116,7 @@ beforeEach(() => {
   activeMap = null;
   capturedOnLoad = undefined;
   capturedMapProps = undefined;
+  capturedDeckOnLoad = undefined;
   capturedDragHandlers = {};
 });
 
@@ -314,6 +319,35 @@ describe('BaseMap', () => {
       expect(cameraStore.get(id).rotation).toBe(10);
 
       clearCameraState(id);
+    });
+  });
+
+  describe('load handling', () => {
+    // deck's MapLibre overlay wraps `onLoad` to install the listener that
+    // copies the map camera into deck, then re-sends every overlay prop on
+    // each `setProps`. An `onLoad` in those props overwrites the wrapper if a
+    // fiber commit lands before deck initializes, leaving deck's picking
+    // viewport frozen at the initial frame.
+    it('never passes an onLoad prop to the deck overlay, even a consumer one', () => {
+      useFakeMap(createFakeMap());
+
+      render(<BaseMap id={uuid()} onLoad={vi.fn()} />);
+
+      expect(capturedDeckOnLoad).toBeUndefined();
+    });
+
+    it('calls a consumer onLoad once the map has loaded', () => {
+      const onLoad = vi.fn();
+      useFakeMap(createFakeMap());
+      render(<BaseMap id={uuid()} onLoad={onLoad} />);
+
+      expect(onLoad).not.toHaveBeenCalled();
+
+      act(() => {
+        fireMapLoad();
+      });
+
+      expect(onLoad).toHaveBeenCalledTimes(1);
     });
   });
 

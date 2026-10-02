@@ -248,6 +248,44 @@ describe('useMeasurement', () => {
     });
   });
 
+  describe('shift zoom suppression', () => {
+    function pressShift(type: 'keydown' | 'keyup'): void {
+      act(() => {
+        document.dispatchEvent(new KeyboardEvent(type, { key: 'Shift' }));
+      });
+    }
+
+    it('suppresses map zoom while Shift is held when requiresModifier=shift', () => {
+      const onDisableZoom = vi.fn();
+      const onEnableZoom = vi.fn();
+      bus.on(MapEvents.disableZoom, onDisableZoom);
+      bus.on(MapEvents.enableZoom, onEnableZoom);
+      renderHook(() => useMeasurement(mapId, 'shift'));
+
+      pressShift('keydown');
+
+      expect(onDisableZoom).toHaveBeenCalledExactlyOnceWith(
+        expect.objectContaining({ payload: { id: mapId } }),
+      );
+
+      pressShift('keyup');
+
+      expect(onEnableZoom).toHaveBeenCalledExactlyOnceWith(
+        expect.objectContaining({ payload: { id: mapId } }),
+      );
+    });
+
+    it('leaves map zoom alone for other modifiers', () => {
+      const onDisableZoom = vi.fn();
+      bus.on(MapEvents.disableZoom, onDisableZoom);
+      renderHook(() => useMeasurement(mapId, 'alt'));
+
+      pressShift('keydown');
+
+      expect(onDisableZoom).not.toHaveBeenCalled();
+    });
+  });
+
   describe('geodesic calculations', () => {
     it('calculates distanceMeters when both points are set', () => {
       const { result } = renderHook(() => useMeasurement(mapId));

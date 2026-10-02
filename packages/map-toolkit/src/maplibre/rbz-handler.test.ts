@@ -693,6 +693,34 @@ describe('RbzHandler', () => {
   });
 
   describe('startListening / stopListening', () => {
+    it('reports whether the window listeners are installed', () => {
+      const { map } = makeMap();
+      const handler = new RbzHandler(map as never);
+
+      expect(handler.isListening()).toBe(false);
+
+      handler.startListening();
+
+      expect(handler.isListening()).toBe(true);
+
+      handler.stopListening();
+
+      expect(handler.isListening()).toBe(false);
+    });
+
+    it('ignores key-repeat Shift keydowns so a held Shift cannot re-arm the handler', () => {
+      const { map } = makeMap();
+      const handler = new RbzHandler(map as never);
+      handler.startListening();
+
+      window.dispatchEvent(
+        new KeyboardEvent('keydown', { key: 'Shift', repeat: true }),
+      );
+
+      expect(handler.isEnabled()).toBe(false);
+      handler.destroy();
+    });
+
     it('should enable the handler and disable dragPan on Shift keydown after startListening', () => {
       const { map, dragPan } = makeMap();
       const handler = new RbzHandler(map as never);

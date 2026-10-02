@@ -34,8 +34,8 @@ export type MeasurementToolProps = Pick<
   /**
    * If set, measurement only activates when this modifier key is held during drag.
    * Allows plain drag to continue panning the map while the modifier + drag triggers
-   * measurement. See {@link RequiresModifier} for why `'alt'` is preferred over
-   * `'shift'` and `'ctrl'`.
+   * measurement. See {@link RequiresModifier} for how each key interacts with
+   * BaseMap's own gestures.
    * @defaultValue undefined (all drag events trigger measurement)
    */
   requiresModifier?: RequiresModifier;

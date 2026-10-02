@@ -334,6 +334,7 @@ export function BaseMap({
   onDrag,
   onDragEnd,
   onViewStateChange,
+  onLoad,
   pickingRadius,
   enableRbz = false,
   rbzOptions,
@@ -758,18 +759,12 @@ export function BaseMap({
     }, 200);
   });
 
-  // First point at which `setProjection` is safe (after `style.load`).
-  const handleMapLoad = useEffectEvent(() => {
-    mapRef.current?.getMap().setProjection({ type: cameraState.projection });
-  });
-
   const handleLoad = useEffectEvent(() => {
     //--- force update viewport state once all viewports initialized ---
     // @ts-expect-error squirrelly deckglInstance typing
-    const viewports = deckglInstance._deck?.getViewports();
-    if (!viewports) {
-      return;
-    }
+    const deck = deckglInstance._deck;
+    const viewports = deck?.isInitialized ? deck.getViewports() : [];
+
     for (const vp of viewports) {
       handleViewStateChange({
         viewId: vp.id,
@@ -806,10 +801,29 @@ export function BaseMap({
     }
   });
 
+  // First point at which `setProjection` is safe (after `style.load`).
+  //
+  // BaseMap's own load work and the consumer's `onLoad` also run from here, not
+  // from deck's `onLoad` prop. deck's MapLibre overlay wraps `onLoad` to install
+  // the listener that copies the map camera into deck, then re-sends every
+  // overlay prop on each `setProps`. An `onLoad` among those props overwrites
+  // the wrapper whenever a fiber commit lands before deck initializes, which
+  // leaves deck's picking viewport frozen at the initial frame.
+  const handleMapLoad = useEffectEvent(() => {
+    mapRef.current?.getMap().setProjection({ type: cameraState.projection });
+    handleLoad();
+    onLoad?.();
+  });
+
   return (
     <div id={container} className={className}>
       {enableControlEvents && (
-        <MapControls id={id} mapRef={mapRef} rbzRef={rbzRef} />
+        <MapControls
+          id={id}
+          mapRef={mapRef}
+          rbzRef={rbzRef}
+          boxZoom={boxZoom}
+        />
       )}
       <MapProvider id={id}>
         <MapLibre
@@ -843,7 +857,6 @@ export function BaseMap({
             onDragStart={handleDragStart}
             onDrag={handleDrag}
             onDragEnd={handleDragEnd}
-            onLoad={handleLoad}
             onResize={handleResize}
             onViewStateChange={handleViewStateChange}
             widgets={widgetsProp}

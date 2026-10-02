@@ -20,6 +20,7 @@ import {
 import { useContext, useEffect } from 'react';
 import { MapContext } from '@/deckgl/base-map/provider';
 import { isLonLatTuple } from '@/shared/coordinates';
+import { useShiftZoomDisable } from '@/deckgl/shapes/shared/hooks/use-shift-zoom-disable';
 import { measurementStore } from './store';
 import type { UniqueId } from '@accelint/core';
 import type { RequiresModifier } from './types';
@@ -76,9 +77,9 @@ function deriveMeasurement(
  * An optional `requiresModifier` restricts measurement to drags holding that
  * key, so plain drag keeps panning. It is per-map state: the most recently
  * mounted hook's value wins. Releasing the modifier mid-drag completes the
- * measurement at the last captured coordinate. Prefer `'alt'`; see
- * {@link RequiresModifier} for why `'shift'` and `'ctrl'` conflict with
- * BaseMap's own gestures.
+ * measurement at the last captured coordinate. With `'shift'`, BaseMap's
+ * Shift+drag zoom is suppressed while Shift is held; see
+ * {@link RequiresModifier} for how each key interacts with BaseMap's gestures.
  *
  * Uses per-mapId store isolation so multiple map instances can measure independently.
  *
@@ -146,6 +147,10 @@ export function useMeasurement(
   useEffect(() => {
     setRequiresModifier(requiresModifier);
   }, [requiresModifier, setRequiresModifier]);
+
+  // Shift also drives BaseMap's box zoom / rubber-band zoom; suppress zoom
+  // while it is held so a Shift+drag measures instead of zooming on release.
+  useShiftZoomDisable(actualId, requiresModifier === 'shift');
 
   const { pointA, pointB, isMeasuring } = state;
 
