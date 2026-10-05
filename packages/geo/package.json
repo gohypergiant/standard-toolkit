@@ -63,6 +63,7 @@
     "./geodesy": "./dist/geodesy/index.js",
     "./geodesy/bearing": "./dist/geodesy/bearing.js",
     "./geodesy/distance": "./dist/geodesy/distance.js",
+    "./geodesy/great-circle-points": "./dist/geodesy/great-circle-points.js",
     "./geodesy/midpoint": "./dist/geodesy/midpoint.js",
     "./geodesy/to-spherical-points": "./dist/geodesy/to-spherical-points.js",
     "./patterning": "./dist/patterning.js",

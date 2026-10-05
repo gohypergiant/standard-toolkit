@@ -12,10 +12,8 @@
 
 import fc from 'fast-check';
 import { describe, expect, it } from 'vitest';
+import { lonLatArbitrary } from './__fixtures__/arbitraries';
 import { bearing } from './bearing';
-
-const longitudeArbitrary = fc.double({ min: -180, max: 180, noNaN: true });
-const latitudeArbitrary = fc.double({ min: -90, max: 90, noNaN: true });
 
 describe('bearing', () => {
   describe('cardinal directions', () => {
@@ -82,16 +80,10 @@ describe('bearing', () => {
   });
 
   describe('input validation', () => {
-    it.each([
-      ['NaN origin longitude', [Number.NaN, 0], [1, 1]],
-      ['NaN origin latitude', [0, Number.NaN], [1, 1]],
-      ['NaN destination longitude', [0, 0], [Number.NaN, 1]],
-      ['NaN destination latitude', [0, 0], [1, Number.NaN]],
-      ['Infinity origin longitude', [Number.POSITIVE_INFINITY, 0], [1, 1]],
-      ['-Infinity destination latitude', [0, 0], [1, Number.NEGATIVE_INFINITY]],
-    ] as const)('throws RangeError for %s', (_description, origin, destination) => {
-      expect(() => bearing(origin, destination)).toThrow(RangeError);
-      expect(() => bearing(origin, destination)).toThrow(
+    // The full NaN / ±Infinity table lives in to-spherical-points.test.ts;
+    // this only checks that the error names this function.
+    it('throws RangeError naming bearing for a non-finite coordinate', () => {
+      expect(() => bearing([Number.NaN, 0], [1, 1])).toThrow(
         'bearing requires finite [longitude, latitude] coordinates.',
       );
     });
@@ -100,27 +92,13 @@ describe('bearing', () => {
   describe('properties', () => {
     it('is finite and within [0, 360) for any in-range coordinate pair', () => {
       fc.assert(
-        fc.property(
-          longitudeArbitrary,
-          latitudeArbitrary,
-          longitudeArbitrary,
-          latitudeArbitrary,
-          (
-            originLongitude,
-            originLatitude,
-            destinationLongitude,
-            destinationLatitude,
-          ) => {
-            const result = bearing(
-              [originLongitude, originLatitude],
-              [destinationLongitude, destinationLatitude],
-            );
+        fc.property(lonLatArbitrary, lonLatArbitrary, (origin, destination) => {
+          const result = bearing(origin, destination);
 
-            expect(Number.isFinite(result)).toBe(true);
-            expect(result).toBeGreaterThanOrEqual(0);
-            expect(result).toBeLessThan(360);
-          },
-        ),
+          expect(Number.isFinite(result)).toBe(true);
+          expect(result).toBeGreaterThanOrEqual(0);
+          expect(result).toBeLessThan(360);
+        }),
       );
     });
   });

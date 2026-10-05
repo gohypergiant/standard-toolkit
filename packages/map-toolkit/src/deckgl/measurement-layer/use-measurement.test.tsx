@@ -13,9 +13,10 @@
 import { Broadcast } from '@accelint/bus';
 import { uuid } from '@accelint/core';
 import { act, renderHook } from '@testing-library/react';
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { MapEvents } from '@/deckgl/base-map/events';
 import { makeDragPayload } from './__fixtures__/drag-payload';
+import { listen } from './__fixtures__/listen';
 import { MeasurementEvents } from './events';
 import { measurementStore } from './store';
 import { useMeasurement } from './use-measurement';
@@ -80,70 +81,19 @@ describe('useMeasurement', () => {
     });
   });
 
-  describe('drag event handling', () => {
-    it('starts measuring on dragStart event', () => {
-      const { result } = renderHook(() => useMeasurement(mapId));
-
-      emitDrag(MapEvents.dragStart, [10, 20]);
-
-      expect(result.current.isMeasuring).toBe(true);
-      expect(result.current.pointA).toEqual([10, 20]);
-      expect(result.current.pointB).toBe(null);
-    });
-
-    it('updates pointB on drag event while measuring', () => {
-      const { result } = renderHook(() => useMeasurement(mapId));
-
-      emitDrag(MapEvents.dragStart, [10, 20]);
-      emitDrag(MapEvents.drag, [11, 21]);
-
-      expect(result.current.pointB).toEqual([11, 21]);
-    });
-
-    it('completes measurement on dragEnd event', () => {
-      const { result } = renderHook(() => useMeasurement(mapId));
-
-      emitDrag(MapEvents.dragStart, [10, 20]);
-      emitDrag(MapEvents.drag, [11, 21]);
-      emitDrag(MapEvents.dragEnd, [11, 21]);
-
-      expect(result.current.isMeasuring).toBe(false);
-      // pointA and pointB are preserved after completion
-      expect(result.current.pointA).toEqual([10, 20]);
-      expect(result.current.pointB).toEqual([11, 21]);
-    });
-
-    it('ignores drag events for other map IDs', () => {
-      const otherId = uuid();
-      const { result } = renderHook(() => useMeasurement(mapId));
-
-      act(() => {
-        bus.emit(MapEvents.dragStart, makeDragPayload(otherId, [10, 20]));
-      });
-
-      expect(result.current.isMeasuring).toBe(false);
-      expect(result.current.pointA).toBe(null);
-    });
-
-    it('ignores drag event when not currently measuring', () => {
-      const { result } = renderHook(() => useMeasurement(mapId));
-
-      emitDrag(MapEvents.drag, [11, 21]);
-
-      expect(result.current.pointB).toBe(null);
-    });
-  });
-
-  describe('bus event emissions', () => {
+  describe('store subscription', () => {
     it('emits measurement:clear and map:enablePan when clear() is called mid-drag', () => {
-      const onClear = vi.fn();
-      const onComplete = vi.fn();
-      const onEnablePan = vi.fn();
-      offListeners.push(measurementBus.on(MeasurementEvents.clear, onClear));
-      offListeners.push(
-        measurementBus.on(MeasurementEvents.complete, onComplete),
+      const onClear = listen(
+        measurementBus,
+        MeasurementEvents.clear,
+        offListeners,
       );
-      offListeners.push(bus.on(MapEvents.enablePan, onEnablePan));
+      const onComplete = listen(
+        measurementBus,
+        MeasurementEvents.complete,
+        offListeners,
+      );
+      const onEnablePan = listen(bus, MapEvents.enablePan, offListeners);
       const { result } = renderHook(() => useMeasurement(mapId));
       emitDrag(MapEvents.dragStart, [10, 20]);
       emitDrag(MapEvents.drag, [11, 21]);
@@ -165,16 +115,22 @@ describe('useMeasurement', () => {
     });
 
     it('emits each lifecycle event once when two hook instances share a map', () => {
-      const onStart = vi.fn();
-      const onUpdate = vi.fn();
-      const onComplete = vi.fn();
-      const onDisablePan = vi.fn();
-      offListeners.push(measurementBus.on(MeasurementEvents.start, onStart));
-      offListeners.push(measurementBus.on(MeasurementEvents.update, onUpdate));
-      offListeners.push(
-        measurementBus.on(MeasurementEvents.complete, onComplete),
+      const onStart = listen(
+        measurementBus,
+        MeasurementEvents.start,
+        offListeners,
       );
-      offListeners.push(bus.on(MapEvents.disablePan, onDisablePan));
+      const onUpdate = listen(
+        measurementBus,
+        MeasurementEvents.update,
+        offListeners,
+      );
+      const onComplete = listen(
+        measurementBus,
+        MeasurementEvents.complete,
+        offListeners,
+      );
+      const onDisablePan = listen(bus, MapEvents.disablePan, offListeners);
       renderHook(() => {
         useMeasurement(mapId);
         useMeasurement(mapId);
@@ -190,9 +146,9 @@ describe('useMeasurement', () => {
       expect(onUpdate).toHaveBeenCalledTimes(2);
       expect(onComplete).toHaveBeenCalledTimes(1);
     });
+
     it('finishes an in-flight measurement and restores pan when the last hook unmounts', () => {
-      const onEnablePan = vi.fn();
-      offListeners.push(bus.on(MapEvents.enablePan, onEnablePan));
+      const onEnablePan = listen(bus, MapEvents.enablePan, offListeners);
       const { unmount } = renderHook(() => useMeasurement(mapId));
 
       emitDrag(MapEvents.dragStart, [10, 20]);
@@ -237,7 +193,28 @@ describe('useMeasurement', () => {
       expect(modifier).toBe('ctrl');
     });
 
+    it('keeps the configured modifier when a second hook on the same map omits it', () => {
+      renderHook(() => useMeasurement(mapId, 'alt'));
+      const { result } = renderHook(() => useMeasurement(mapId));
+
+      emitDrag(MapEvents.dragStart, [10, 20]);
+
+      expect(measurementStore.get(mapId).requiresModifier).toBe('alt');
+      expect(result.current.isMeasuring).toBe(false);
+    });
+
+    it('clears the per-map modifier when the hook that configured it unmounts', () => {
+      const { unmount } = renderHook(() => useMeasurement(mapId, 'alt'));
+      renderHook(() => useMeasurement(mapId));
+
+      unmount();
+
+      expect(measurementStore.get(mapId).requiresModifier).toBeUndefined();
+    });
+
     it('measures a plain drag after rerendering from alt to undefined', () => {
+      // Rerendering to `undefined` runs the configuring effect's cleanup, which
+      // clears the per-map modifier rather than writing `undefined` over it.
       const { result, rerender } = renderHook(
         ({ modifier }: { modifier: 'alt' | undefined }) =>
           useMeasurement(mapId, modifier),
@@ -251,17 +228,18 @@ describe('useMeasurement', () => {
       rerender({ modifier: undefined });
       emitDrag(MapEvents.dragStart, [10, 20]);
 
+      expect(measurementStore.get(mapId).requiresModifier).toBeUndefined();
       expect(result.current.isMeasuring).toBe(true);
       expect(result.current.pointA).toEqual([10, 20]);
     });
 
     it('completes the measurement when the modifier is released mid-drag', () => {
-      const onComplete = vi.fn();
-      const onEnablePan = vi.fn();
-      offListeners.push(
-        measurementBus.on(MeasurementEvents.complete, onComplete),
+      const onComplete = listen(
+        measurementBus,
+        MeasurementEvents.complete,
+        offListeners,
       );
-      offListeners.push(bus.on(MapEvents.enablePan, onEnablePan));
+      const onEnablePan = listen(bus, MapEvents.enablePan, offListeners);
       const { result } = renderHook(() => useMeasurement(mapId, 'shift'));
       emitDrag(MapEvents.dragStart, [10, 20], { shiftKey: true });
       emitDrag(MapEvents.drag, [11, 21], { shiftKey: true });
@@ -292,10 +270,8 @@ describe('useMeasurement', () => {
     }
 
     it('suppresses map zoom while Shift is held when requiresModifier=shift', () => {
-      const onDisableZoom = vi.fn();
-      const onEnableZoom = vi.fn();
-      offListeners.push(bus.on(MapEvents.disableZoom, onDisableZoom));
-      offListeners.push(bus.on(MapEvents.enableZoom, onEnableZoom));
+      const onDisableZoom = listen(bus, MapEvents.disableZoom, offListeners);
+      const onEnableZoom = listen(bus, MapEvents.enableZoom, offListeners);
       renderHook(() => useMeasurement(mapId, 'shift'));
 
       pressShift('keydown');
@@ -312,8 +288,7 @@ describe('useMeasurement', () => {
     });
 
     it('leaves map zoom alone for other modifiers', () => {
-      const onDisableZoom = vi.fn();
-      offListeners.push(bus.on(MapEvents.disableZoom, onDisableZoom));
+      const onDisableZoom = listen(bus, MapEvents.disableZoom, offListeners);
       renderHook(() => useMeasurement(mapId, 'alt'));
 
       pressShift('keydown');
@@ -364,32 +339,6 @@ describe('useMeasurement', () => {
 
       expect(result.current.distanceMeters).toBe(0);
       expect(result.current.bearingDeg).toBe(0);
-    });
-  });
-
-  describe('imperative actions', () => {
-    it('exposes a start action to begin measurement imperatively', () => {
-      const { result } = renderHook(() => useMeasurement(mapId));
-
-      act(() => {
-        result.current.start([10, 20]);
-      });
-
-      expect(result.current.isMeasuring).toBe(true);
-      expect(result.current.pointA).toEqual([10, 20]);
-    });
-
-    it('exposes a clear action to reset measurement state', () => {
-      const { result } = renderHook(() => useMeasurement(mapId));
-      emitDrag(MapEvents.dragStart, [10, 20]);
-
-      act(() => {
-        result.current.clear();
-      });
-
-      expect(result.current.isMeasuring).toBe(false);
-      expect(result.current.pointA).toBe(null);
-      expect(result.current.pointB).toBe(null);
     });
   });
 });

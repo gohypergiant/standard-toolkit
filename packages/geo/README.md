@@ -328,10 +328,11 @@ midpoint([179, 0], [-179, 0]); // [180, 0] — follows the short way across the 
 
 - `bearing(origin, destination)` returns degrees clockwise from true north in `[0, 360)`.
 - `distance(origin, destination)` returns meters.
-- `midpoint(origin, destination)` returns the `[longitude, latitude]` halfway along the shortest great-circle path, with longitude normalized to `[-180, 180]`.
+- `midpoint(origin, destination)` returns the `[longitude, latitude]` halfway along the shortest great-circle path, with longitude normalized to `[-180, 180]`. For antipodal pairs, where no single midpoint exists, it returns a point on the equator 90° of longitude from `origin` (for example `midpoint([0, 0], [180, 0])` is `[90, 0]`).
 - `bearing` and `distance` return `0` when the two points are identical; `midpoint` returns the point itself.
 - All three throw a `RangeError` when any coordinate component is `NaN` or infinite. `distance` returns half the Earth's circumference for near-antipodal pairs where the underlying library would return `NaN`.
 - Longitude is not range-checked: map libraries such as deck.gl pass longitudes beyond ±180 when the map wraps, and the spherical math is periodic, so those values still give correct results.
+- `greatCirclePoints(origin, destination, segments = 64)` samples the geodesic into `segments + 1` `[longitude, latitude]` vertices, unwrapping longitudes so a path across the antimeridian stays monotonic (179 → 181, not 179 → -179). Use it to draw the great-circle route that `distance` measures.
 - `toSphericalPoints(origin, destination, caller)` is the shared validation step behind all three: it checks that both tuples are finite (throwing the same `RangeError`, with `caller` named in the message) and returns the pair as `LatLonSpherical` points from the `geodesy` library, so you can call other `LatLonSpherical` methods on validated input. Import it from `@accelint/geo` or `@accelint/geo/geodesy/to-spherical-points`; it is not part of the `@accelint/geo/geodesy` barrel.
 
 To render results for display, use `formatBearing` and `formatDistance` from `@accelint/formatters`.

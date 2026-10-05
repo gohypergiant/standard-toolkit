@@ -693,21 +693,6 @@ describe('RbzHandler', () => {
   });
 
   describe('startListening / stopListening', () => {
-    it('reports whether the window listeners are installed', () => {
-      const { map } = makeMap();
-      const handler = new RbzHandler(map as never);
-
-      expect(handler.isListening()).toBe(false);
-
-      handler.startListening();
-
-      expect(handler.isListening()).toBe(true);
-
-      handler.stopListening();
-
-      expect(handler.isListening()).toBe(false);
-    });
-
     it('ignores key-repeat Shift keydowns so a held Shift cannot re-arm the handler', () => {
       const { map } = makeMap();
       const handler = new RbzHandler(map as never);
@@ -787,6 +772,32 @@ describe('RbzHandler', () => {
       handler.stopListening();
 
       expect(handler.isEnabled()).toBe(false);
+
+      handler.destroy();
+    });
+
+    it('should re-enable dragPan when stopListening is called while armed', () => {
+      const { map, dragPan } = makeMap();
+      const handler = new RbzHandler(map as never);
+      handler.startListening();
+      dispatchKey('keydown', 'Shift');
+      expect(dragPan.disable).toHaveBeenCalledOnce();
+
+      handler.stopListening();
+
+      expect(dragPan.enable).toHaveBeenCalledOnce();
+
+      handler.destroy();
+    });
+
+    it('should leave dragPan alone when stopListening is called while not armed', () => {
+      const { map, dragPan } = makeMap();
+      const handler = new RbzHandler(map as never);
+      handler.startListening();
+
+      handler.stopListening();
+
+      expect(dragPan.enable).not.toHaveBeenCalled();
 
       handler.destroy();
     });

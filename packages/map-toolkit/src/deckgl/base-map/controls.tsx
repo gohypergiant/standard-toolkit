@@ -14,7 +14,6 @@
 
 import 'client-only';
 import { useOn } from '@accelint/bus/react';
-import { useRef } from 'react';
 import { MapEvents } from './events';
 import type { UniqueId } from '@accelint/core';
 import type { RefObject } from 'react';
@@ -39,10 +38,13 @@ type MapControlsProps = {
   rbzRef?: RefObject<RbzHandler | null>;
   /**
    * Whether MapLibre's native box zoom is configured on for this map. `enableZoom`
-   * only restores box zoom when it was on to begin with; BaseMap keeps it off
-   * while RBZ is enabled.
+   * only restores box zoom when it was on to begin with. BaseMap passes its
+   * derived value (off while `enableRbz` is set); the default only matters when
+   * rendering `MapControls` directly.
+   *
+   * @default true
    */
-  boxZoom: boolean;
+  boxZoom?: boolean;
 };
 
 /**
@@ -55,19 +57,15 @@ type MapControlsProps = {
  * @param props.id - Unique identifier for the map instance.
  * @param props.mapRef - Reference to the MapLibre map instance.
  * @param props.rbzRef - Optional reference to the RBZ handler instance.
- * @param props.boxZoom - Whether MapLibre's native box zoom is configured on; `enableZoom` only restores it when true.
+ * @param props.boxZoom - Whether MapLibre's native box zoom is configured on; `enableZoom` only restores it when true. BaseMap passes its derived value; defaults to `true` when rendering `MapControls` directly.
  * @returns null (headless component).
  */
 export function MapControls({
   id,
   mapRef,
   rbzRef,
-  boxZoom,
+  boxZoom = true,
 }: MapControlsProps): null {
-  // RBZ re-arms itself on every Shift keydown while listening, so a tool that
-  // needs Shift+drag has to stop the listening entirely, not just disarm once.
-  const rbzWasListeningRef = useRef(false);
-
   useOn<MapEnablePanEvent>(MapEvents.enablePan, (event) => {
     if (event.payload.id === id) {
       mapRef.current?.getMap().dragPan.enable();
@@ -91,10 +89,7 @@ export function MapControls({
       mapRef.current?.getMap().boxZoom.enable();
     }
 
-    if (rbzWasListeningRef.current) {
-      rbzWasListeningRef.current = false;
-      rbzRef?.current?.startListening();
-    }
+    rbzRef?.current?.startListening();
   });
 
   useOn<MapDisableZoomEvent>(MapEvents.disableZoom, (event) => {
@@ -104,11 +99,9 @@ export function MapControls({
 
     mapRef.current?.getMap().scrollZoom.disable();
     mapRef.current?.getMap().boxZoom.disable();
-
-    if (rbzRef?.current?.isListening()) {
-      rbzWasListeningRef.current = true;
-      rbzRef.current.stopListening();
-    }
+    // RBZ re-arms itself on every Shift keydown while listening, so a tool that
+    // needs Shift+drag has to stop the listening entirely, not just disarm once.
+    rbzRef?.current?.stopListening();
   });
 
   return null;

@@ -16,10 +16,10 @@ import { PathStyleExtension } from '@deck.gl/extensions';
 import {
   bearing as geoBearing,
   distance as geoDistance,
-  midpoint as geoMidpoint,
+  greatCirclePoints,
 } from '@accelint/geo/geodesy';
 import { formatBearing, formatDistance } from '@accelint/formatters/bearing';
-import { isLonLatTuple } from '@/shared/coordinates';
+import { toLonLat } from '@/shared/coordinates';
 import {
   DASH_ARRAYS,
   DEFAULT_EDIT_HANDLE_COLOR,
@@ -42,12 +42,17 @@ const PATH_STYLE_EXTENSION = new PathStyleExtension({ dash: true });
 
 /**
  * Resolves the `units` prop to something `formatDistance` accepts: a single
- * unit, or an array of one or two units. Arrays outside that range fall back
- * to `DEFAULT_UNITS` so a bad prop never throws inside `renderLayers`.
+ * unit, or an array of one or two units. An omitted prop and arrays outside
+ * that range fall back to `DEFAULT_UNITS` so a bad prop never throws inside
+ * `renderLayers`.
  */
 function resolveUnits(
-  units: DistanceUnit | DistanceUnit[],
+  units?: DistanceUnit | DistanceUnit[],
 ): DistanceUnit | DistanceUnit[] {
+  if (units === undefined) {
+    return DEFAULT_UNITS;
+  }
+
   if (!Array.isArray(units)) {
     return units;
   }
@@ -68,7 +73,7 @@ function resolveUnits(
  *
  * @param pointA - Origin coordinate `[longitude, latitude]`
  * @param pointB - Destination coordinate `[longitude, latitude]`
- * @param units - Single or dual distance unit(s); arrays outside 1–2 entries use the default pair
+ * @param units - Single or dual distance unit(s), already resolved by `resolveUnits`
  * @returns Formatted measurement label string
  */
 function buildDefaultLabel(
@@ -79,32 +84,10 @@ function buildDefaultLabel(
   const meters = geoDistance(pointA, pointB);
   const bearingDegrees = geoBearing(pointA, pointB);
 
-  const distanceLabel = formatDistance(meters, resolveUnits(units));
+  const distanceLabel = formatDistance(meters, units);
   const bearingLabel = formatBearing(bearingDegrees);
 
   return `${distanceLabel} | BRG: ${bearingLabel}`;
-}
-
-/**
- * Shifts `destination` by ±360° of longitude when it sits more than 180° from
- * `origin`, so a segment that crosses the antimeridian is drawn the short way
- * instead of wrapping around the globe.
- */
-function unwrapDestination(
-  origin: [number, number],
-  destination: [number, number],
-): [number, number] {
-  const longitudeGap = destination[0] - origin[0];
-
-  if (longitudeGap > 180) {
-    return [destination[0] - 360, destination[1]];
-  }
-
-  if (longitudeGap < -180) {
-    return [destination[0] + 360, destination[1]];
-  }
-
-  return destination;
 }
 
 /**
@@ -112,9 +95,14 @@ function unwrapDestination(
  * between two geographic points.
  *
  * Composes three sub-layers:
- * - **PathLayer** — dashed line connecting `pointA` to `pointB`
+ * - **PathLayer** — dashed great-circle line from `pointA` to `pointB`
  * - **ScatterplotLayer** — circular markers at `pointA` and `pointB`
- * - **TextLayer** — measurement readout at the line midpoint (optional)
+ * - **TextLayer** — measurement readout at the middle vertex of the line (optional)
+ *
+ * The line is sampled with `greatCirclePoints` from `@accelint/geo/geodesy`, so
+ * long segments follow the geodesic instead of a straight Mercator chord and a
+ * segment that crosses the antimeridian stays monotonic in longitude (drawn
+ * the short way, e.g. 179° → 181°).
  *
  * The layer is a pure function of its props (controlled). Combine it with the
  * `useMeasurement` hook for interactive drag-based measurement, or use it directly
@@ -175,32 +163,35 @@ export class MeasurementLayer extends CompositeLayer<MeasurementLayerProps> {
     endpointColor: { type: 'color', value: DEFAULT_EDIT_HANDLE_COLOR },
   };
 
-  /** Builds the dashed path, endpoint markers, and (when `showLabel`) the midpoint label. */
+  /** Builds the dashed geodesic path, endpoint markers, and (when `showLabel`) the label at the middle vertex. */
   override renderLayers(): Layer[] {
     // Defaults live in the destructuring, not `defaultProps`: deck.gl copies an
     // explicit `undefined` prop over a declared default, and JSX forwards
     // omitted optional props as `undefined`.
     const {
-      pointA,
-      pointB,
       showLabel = true,
       getLabel = buildDefaultLabel,
-      units = DEFAULT_UNITS,
       lineColor = DEFAULT_LINE_COLOR,
       endpointColor = DEFAULT_EDIT_HANDLE_COLOR,
     } = this.props;
+    const units = resolveUnits(this.props.units);
+    const pointA = toLonLat(this.props.pointA);
+    const pointB = toLonLat(this.props.pointB);
 
     // Non-finite points mean "no measurement"; geo's functions throw on them.
-    if (!(isLonLatTuple(pointA) && isLonLatTuple(pointB))) {
+    if (!(pointA && pointB)) {
       return [];
     }
 
-    const destination = unwrapDestination(pointA, pointB);
+    // `greatCirclePoints` always returns at least the two endpoints.
+    const vertices = greatCirclePoints(pointA, pointB);
+    const firstVertex = vertices[0] as [number, number];
+    const lastVertex = vertices[vertices.length - 1] as [number, number];
 
     const layers: Layer[] = [
       new PathLayer({
         id: `${this.id}-path`,
-        data: [{ path: [pointA, destination] }],
+        data: [{ path: vertices }],
         getPath: (datum: { path: [number, number][] }) => datum.path,
         getColor: lineColor,
         getWidth: 2,
@@ -212,7 +203,7 @@ export class MeasurementLayer extends CompositeLayer<MeasurementLayerProps> {
       }),
       new ScatterplotLayer({
         id: `${this.id}-endpoints`,
-        data: [pointA, destination],
+        data: [firstVertex, lastVertex],
         getPosition: (datum: [number, number]) => datum,
         getRadius: DEFAULT_EDIT_HANDLE_RADIUS,
         radiusUnits: 'pixels',
@@ -232,7 +223,7 @@ export class MeasurementLayer extends CompositeLayer<MeasurementLayerProps> {
           id: `${this.id}-label`,
           data: [
             {
-              position: unwrapDestination(pointA, geoMidpoint(pointA, pointB)),
+              position: vertices[Math.floor(vertices.length / 2)],
               text: getLabel(pointA, pointB, units),
             },
           ],

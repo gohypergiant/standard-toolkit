@@ -12,6 +12,7 @@
 
 import { clearCameraState } from '../camera/store';
 import { clearCursorCoordinateState } from '../cursor-coordinates/store';
+import { measurementStore } from '../deckgl/measurement-layer/store';
 import { clearSelectionState } from '../deckgl/shapes/display-shape-layer/store';
 import { clearDrawingState } from '../deckgl/shapes/draw-shape-layer/store';
 import { clearEditingState } from '../deckgl/shapes/edit-shape-layer/store';
@@ -93,4 +94,7 @@ export function clearAllMapStores(mapId: UniqueId): void {
   clearDrawingState(mapId);
   clearEditingState(mapId);
   clearSelectionState(mapId);
+
+  // Measurement store
+  measurementStore.clear(mapId);
 }

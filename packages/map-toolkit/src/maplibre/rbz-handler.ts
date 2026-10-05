@@ -256,19 +256,10 @@ export class RbzHandler implements Handler {
   }
 
   /**
-   * Whether the window keyboard listeners from {@link startListening} are
-   * currently installed.
-   *
-   * @returns True while listening for Shift on the window
-   */
-  isListening(): boolean {
-    return this._isListening;
-  }
-
-  /**
    * Removes the keyboard listeners installed by {@link startListening} and
-   * disables the handler if armed. Idempotent — safe to call when not
-   * listening. Invoked automatically by {@link destroy}.
+   * disables the handler if armed, restoring `dragPan` that the Shift keydown
+   * suspended. Idempotent — safe to call when not listening. Invoked
+   * automatically by {@link destroy}.
    */
   stopListening(): void {
     if (!this._isListening) {
@@ -277,6 +268,13 @@ export class RbzHandler implements Handler {
     this._isListening = false;
     window.removeEventListener('keydown', this._onWindowKeyDown);
     window.removeEventListener('keyup', this._onWindowKeyUp);
+
+    // The keyup listener is gone, so a Shift still held when listening stops
+    // would otherwise leave dragPan disabled.
+    if (this._enabled) {
+      this._map.dragPan?.enable();
+    }
+
     this.disable();
   }
 

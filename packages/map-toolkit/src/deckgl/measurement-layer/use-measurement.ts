@@ -19,7 +19,7 @@ import {
 } from '@accelint/geo/geodesy';
 import { useContext, useEffect } from 'react';
 import { MapContext } from '@/deckgl/base-map/provider';
-import { isLonLatTuple } from '@/shared/coordinates';
+import { toLonLat } from '@/shared/coordinates';
 import { useShiftZoomDisable } from '@/deckgl/shapes/shared/hooks/use-shift-zoom-disable';
 import { measurementStore } from './store';
 import type { UniqueId } from '@accelint/core';
@@ -56,13 +56,16 @@ function deriveMeasurement(
   pointA: [number, number] | null,
   pointB: [number, number] | null,
 ): { distanceMeters: number; bearingDeg: number } {
-  if (!(isLonLatTuple(pointA) && isLonLatTuple(pointB))) {
+  const origin = toLonLat(pointA);
+  const destination = toLonLat(pointB);
+
+  if (!(origin && destination)) {
     return { distanceMeters: 0, bearingDeg: 0 };
   }
 
   return {
-    distanceMeters: geoDistance(pointA, pointB),
-    bearingDeg: geoBearing(pointA, pointB),
+    distanceMeters: geoDistance(origin, destination),
+    bearingDeg: geoBearing(origin, destination),
   };
 }
 
@@ -72,10 +75,11 @@ function deriveMeasurement(
  * @param mapId - Optional map instance ID. Falls back to `MapContext` when omitted.
  *   Required when used outside of a `MapProvider` (i.e., outside BaseMap children).
  * @param requiresModifier - If set, measurement only activates when this modifier key is
- *   held during the drag. Per map; the most recently mounted hook's value wins.
+ *   held during the drag. Pass it from the hook that configures the tool; hooks that
+ *   omit it inherit the map's current value.
  * @returns Measurement state (`distanceMeters` / `bearingDeg` are `0` until both points are finite) and imperative actions. `start(pointA)` behaves like a drag
  *   start: it emits `measurement:start` and suppresses pan until `complete` or `clear`.
- * @throws Error if no `mapId` is provided and hook is used outside of a `MapProvider`
+ * @throws {Error} If no `mapId` is provided and hook is used outside of a `MapProvider`
  *
  * @remarks
  * The drag subscription lives in `measurementStore`, once per map: the first
@@ -84,11 +88,14 @@ function deriveMeasurement(
  * once per map no matter how many hooks are mounted.
  *
  * An optional `requiresModifier` restricts measurement to drags holding that
- * key, so plain drag keeps panning. It is per-map state: the most recently
- * mounted hook's value wins. Releasing the modifier mid-drag completes the
- * measurement at the last captured coordinate. With `'shift'`, BaseMap's
- * Shift+drag zoom is suppressed while Shift is held; see
- * {@link RequiresModifier} for how each key interacts with BaseMap's gestures.
+ * key, so plain drag keeps panning. It is per-map state owned by the hook that
+ * passes it: pass it where you configure the tool (typically one hook or
+ * `MeasurementTool`), omit it from readout hooks so they inherit the map's
+ * value, and it is cleared when the configuring hook unmounts. Releasing the
+ * modifier mid-drag completes the measurement at the last captured coordinate.
+ * With `'shift'`, BaseMap's Shift+drag zoom is suppressed while Shift is held;
+ * see {@link RequiresModifier} for how each key interacts with BaseMap's
+ * gestures.
  *
  * Uses per-mapId store isolation so multiple map instances can measure independently.
  *
@@ -149,8 +156,17 @@ export function useMeasurement(
   const { state, start, clear, setRequiresModifier } =
     measurementStore.use(actualId);
 
+  // Only a hook given a modifier owns the per-map value: readout hooks that
+  // omit it inherit whatever the configuring hook set, and the configuring
+  // hook clears it on unmount.
   useEffect(() => {
+    if (requiresModifier === undefined) {
+      return;
+    }
+
     setRequiresModifier(requiresModifier);
+
+    return () => setRequiresModifier(undefined);
   }, [requiresModifier, setRequiresModifier]);
 
   // Shift also drives BaseMap's box zoom / rubber-band zoom; suppress zoom

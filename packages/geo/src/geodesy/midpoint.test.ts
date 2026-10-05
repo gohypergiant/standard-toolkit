@@ -12,14 +12,12 @@
 
 import fc from 'fast-check';
 import { describe, expect, it } from 'vitest';
+import {
+  HALF_CIRCUMFERENCE_METERS,
+  lonLatArbitrary,
+} from './__fixtures__/arbitraries';
 import { distance } from './distance';
 import { midpoint } from './midpoint';
-
-const longitudeArbitrary = fc.double({ min: -180, max: 180, noNaN: true });
-const latitudeArbitrary = fc.double({ min: -90, max: 90, noNaN: true });
-
-/** Half the circumference of the geodesy library's spherical Earth (radius 6371 km). */
-const HALF_CIRCUMFERENCE_METERS = Math.PI * 6371e3;
 
 describe('midpoint', () => {
   describe('known midpoints', () => {
@@ -77,16 +75,10 @@ describe('midpoint', () => {
   });
 
   describe('input validation', () => {
-    it.each([
-      ['NaN origin longitude', [Number.NaN, 0], [1, 1]],
-      ['NaN origin latitude', [0, Number.NaN], [1, 1]],
-      ['NaN destination longitude', [0, 0], [Number.NaN, 1]],
-      ['NaN destination latitude', [0, 0], [1, Number.NaN]],
-      ['Infinity origin longitude', [Number.POSITIVE_INFINITY, 0], [1, 1]],
-      ['-Infinity destination latitude', [0, 0], [1, Number.NEGATIVE_INFINITY]],
-    ] as const)('throws RangeError for %s', (_description, origin, destination) => {
-      expect(() => midpoint(origin, destination)).toThrow(RangeError);
-      expect(() => midpoint(origin, destination)).toThrow(
+    // The full NaN / ±Infinity table lives in to-spherical-points.test.ts;
+    // this only checks that the error names this function.
+    it('throws RangeError naming midpoint for a non-finite coordinate', () => {
+      expect(() => midpoint([Number.NaN, 0], [1, 1])).toThrow(
         'midpoint requires finite [longitude, latitude] coordinates.',
       );
     });
@@ -95,67 +87,36 @@ describe('midpoint', () => {
   describe('properties', () => {
     it('is equidistant from both endpoints for any in-range coordinate pair', () => {
       fc.assert(
-        fc.property(
-          longitudeArbitrary,
-          latitudeArbitrary,
-          longitudeArbitrary,
-          latitudeArbitrary,
-          (
-            originLongitude,
-            originLatitude,
-            destinationLongitude,
-            destinationLatitude,
-          ) => {
-            const origin: [number, number] = [originLongitude, originLatitude];
-            const destination: [number, number] = [
-              destinationLongitude,
-              destinationLatitude,
-            ];
+        fc.property(lonLatArbitrary, lonLatArbitrary, (origin, destination) => {
+          // A midpoint is undefined for antipodal points (every great circle
+          // through them is a candidate), and the trigonometry becomes
+          // ill-conditioned as pairs approach that limit, so stay 1 km clear.
+          fc.pre(
+            distance(origin, destination) < HALF_CIRCUMFERENCE_METERS - 1000,
+          );
 
-            // A midpoint is undefined for antipodal points (every great circle
-            // through them is a candidate), and the trigonometry becomes
-            // ill-conditioned as pairs approach that limit, so stay 1 km clear.
-            fc.pre(
-              distance(origin, destination) < HALF_CIRCUMFERENCE_METERS - 1000,
-            );
+          const result = midpoint(origin, destination);
 
-            const result = midpoint(origin, destination);
-
-            // Millimeter tolerance; endpoint distances are equal up to
-            // floating-point error in the spherical trigonometry.
-            expect(distance(origin, result)).toBeCloseTo(
-              distance(result, destination),
-              3,
-            );
-          },
-        ),
+          // Millimeter tolerance; endpoint distances are equal up to
+          // floating-point error in the spherical trigonometry.
+          expect(distance(origin, result)).toBeCloseTo(
+            distance(result, destination),
+            3,
+          );
+        }),
       );
     });
 
     it('returns a longitude within [-180, 180] and a latitude within [-90, 90]', () => {
       fc.assert(
-        fc.property(
-          longitudeArbitrary,
-          latitudeArbitrary,
-          longitudeArbitrary,
-          latitudeArbitrary,
-          (
-            originLongitude,
-            originLatitude,
-            destinationLongitude,
-            destinationLatitude,
-          ) => {
-            const [longitude, latitude] = midpoint(
-              [originLongitude, originLatitude],
-              [destinationLongitude, destinationLatitude],
-            );
+        fc.property(lonLatArbitrary, lonLatArbitrary, (origin, destination) => {
+          const [longitude, latitude] = midpoint(origin, destination);
 
-            expect(longitude).toBeGreaterThanOrEqual(-180);
-            expect(longitude).toBeLessThanOrEqual(180);
-            expect(latitude).toBeGreaterThanOrEqual(-90);
-            expect(latitude).toBeLessThanOrEqual(90);
-          },
-        ),
+          expect(longitude).toBeGreaterThanOrEqual(-180);
+          expect(longitude).toBeLessThanOrEqual(180);
+          expect(latitude).toBeGreaterThanOrEqual(-90);
+          expect(latitude).toBeLessThanOrEqual(90);
+        }),
       );
     });
   });

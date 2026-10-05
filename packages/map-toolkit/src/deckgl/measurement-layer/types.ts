@@ -53,7 +53,7 @@ export type MeasurementLayerProps = CompositeLayerProps & {
    *
    * @param pointA - The origin coordinate as `[longitude, latitude]`
    * @param pointB - The destination coordinate as `[longitude, latitude]`
-   * @param units - The unit(s) passed to the layer
+   * @param units - The resolved unit(s): the `units` prop, or the default pair when it is omitted or has zero or more than two entries
    * @returns The label string to render at the midpoint
    */
   getLabel?: (

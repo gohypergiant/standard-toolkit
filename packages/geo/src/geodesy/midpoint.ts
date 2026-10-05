@@ -33,6 +33,14 @@ import type { LonLatTuple } from '../coordinates/latlon/internal/normalize';
  * spherical math is periodic, so out-of-range values still produce the
  * correct midpoint.
  *
+ * For antipodal pairs the midpoint is not unique (every great circle through
+ * them is a candidate). The formula degrades to `atan2(≈0, 0)` and the library
+ * returns a point on the equator 90° of longitude from `origin`, offset in the
+ * sign of the longitude difference `destination - origin`:
+ * `midpoint([0, 0], [180, 0])` is `[90, 0]` and
+ * `midpoint([10, 45], [-170, -45])` is `[-80, 0]`. Pole to pole along one
+ * meridian returns `[origin longitude, 0]`.
+ *
  * @example
  * ```typescript
  * midpoint([0, 0], [0, 10]);
@@ -42,7 +50,7 @@ import type { LonLatTuple } from '../coordinates/latlon/internal/normalize';
  * // [180, 0] — crosses the antimeridian rather than the prime meridian
  *
  * midpoint([-0.1278, 51.5074], [2.3522, 48.8566]);
- * // [~1.09, ~50.19] — between London and Paris
+ * // [~1.15, ~50.19] — between London and Paris
  * ```
  */
 export function midpoint(

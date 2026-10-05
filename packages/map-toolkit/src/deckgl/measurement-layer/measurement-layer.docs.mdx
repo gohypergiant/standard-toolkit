@@ -6,11 +6,11 @@ import * as MeasurementLayerStories from './measurement-layer.stories';
 
 # Measurement Layer
 
-Drag on the map to measure the great-circle distance and initial bearing between two points. The readout renders at the geodesic midpoint of the line as `"42.3 km / 22.8 NM | BRG: 321°"`.
+Drag on the map to measure the great-circle distance and initial bearing between two points. The line follows the great circle, and the readout renders at its midpoint as `"42.3 km / 22.8 NM | BRG: 321°"`.
 
 The feature has three parts that can be used together or independently:
 
-- **`MeasurementLayer`** — a controlled deck.gl composite layer that renders a dashed line, circular endpoints, and an optional label for a given `pointA` / `pointB`
+- **`MeasurementLayer`** — a controlled deck.gl composite layer that renders a dashed great-circle line, circular endpoints, and an optional label for a given `pointA` / `pointB`
 - **`useMeasurement`** — a hook that exposes the per-map measurement state (`pointA`, `pointB`, `distanceMeters`, `bearingDeg`) and the `start` / `clear` actions; the underlying `map:dragStart` / `map:drag` / `map:dragEnd` subscription lives in the measurement store, once per map
 - **`MeasurementTool`** — a convenience component that wires the hook and the layer together for plug-and-play usage inside `<BaseMap>`
 
@@ -19,11 +19,12 @@ The feature has three parts that can be used together or independently:
 - **Drag to measure**: Press, drag, and release to measure between the drag origin and the pointer position
 - **Great-circle distance and true bearing**: Computed with `bearing` and `distance` from `@accelint/geo/geodesy`; the hook returns raw `distanceMeters` and `bearingDeg` (0–360° true north) for you to format with `formatDistance` / `formatBearing` from `@accelint/formatters/bearing`
 - **Dual or single units**: `['kilometers', 'nauticalmiles']` by default, or any single `DistanceUnit`
-- **Antimeridian aware**: The destination is unwrapped relative to the origin so a segment that crosses the antimeridian draws the short way. The label is placed on that unwrapped path (geodesic midpoint, then unwrapped relative to the origin), so asymmetric crossings keep the label on the line
+- **Geodesic line**: The line is sampled along the great circle with `greatCirclePoints` from `@accelint/geo/geodesy`, so long segments curve the way the measured distance does instead of following a straight Mercator chord
+- **Antimeridian aware**: Vertex longitudes are unwrapped relative to the previous vertex, so a segment that crosses the antimeridian draws the short way as one continuous line (e.g. 179° → 181°) with the label on it
 - **Safe with bad input**: Non-finite coordinates produce no measurement (zeros from the hook, nothing rendered by the layer) rather than throwing
 - **Optional modifier key**: Require `shift` or `alt` so plain drag keeps panning the map. `ctrl` is not an option: Ctrl+drag is BaseMap's rotate/tilt gesture and could never activate a measurement; see [Modifier Keys](#modifier-keys)
 - **Pan suppression**: Emits `map:disablePan` while measuring and `map:enablePan` when the drag ends so the map does not pan under the measurement
-- **Custom labels**: Override the midpoint readout with `getLabel`
+- **Custom labels**: Override the readout at the line's middle vertex with `getLabel`
 - **Event bus integration**: Emits `measurement:start`, `measurement:update`, `measurement:complete`, and `measurement:clear` via `@accelint/bus`
 - **Multi-map support**: State is stored per `mapId`, so multiple maps measure independently
 - **React Fiber support**: Use as `<measurementLayer />` JSX in React Fiber-based deck.gl apps
@@ -34,7 +35,7 @@ The feature has three parts that can be used together or independently:
 - [`@accelint/bus`](https://github.com/gohypergiant/standard-toolkit/tree/main/packages/bus) — Event bus for drag and measurement events
 - [`@accelint/constants`](https://github.com/gohypergiant/standard-toolkit/tree/main/packages/constants) — `DistanceUnit` type for the `units` prop
 - [`@accelint/core`](https://github.com/gohypergiant/standard-toolkit/tree/main/packages/core) — `UniqueId` map identifiers
-- [`@accelint/geo`](https://github.com/gohypergiant/standard-toolkit/tree/main/packages/geo) — Great-circle distance, bearing, and the geodesic label midpoint
+- [`@accelint/geo`](https://github.com/gohypergiant/standard-toolkit/tree/main/packages/geo) — Great-circle distance, bearing, and the geodesic line vertices
 - [`@accelint/formatters`](https://github.com/gohypergiant/standard-toolkit/tree/main/packages/formatters) — Distance and bearing label formatting
 - [`@deck.gl/core`](https://deck.gl/) — CompositeLayer base class
 - [`@deck.gl/layers`](https://deck.gl/) — PathLayer, ScatterplotLayer, TextLayer
@@ -199,11 +200,19 @@ Releasing the modifier mid-drag completes the measurement at the last captured p
 <MeasurementTool requiresModifier="alt" />
 ```
 
-`requiresModifier` is per-map state written by the hook, not per-hook state. If two `useMeasurement` instances on the same map pass different values, the most recently mounted one wins for that map. Pass the same value to every hook on a map (or only pass it from one).
+`requiresModifier` is per-map state, not per-hook state. Pass it where you configure the tool — one `useMeasurement` call or `<MeasurementTool>` per map. Readout hooks (a distance panel, a status indicator) omit it and inherit the map's value, so they never need to repeat it. The configuring hook clears the modifier when it unmounts, returning the map to measuring on every drag.
+
+```tsx
+// Configures the map: Alt+drag measures, plain drag pans.
+<MeasurementTool requiresModifier="alt" />
+
+// Reads the same measurement; inherits 'alt' without passing it.
+const { distanceMeters } = useMeasurement(mapId);
+```
 
 ## Custom Labels
 
-`getLabel` replaces the default `"42.3 km / 22.8 NM | BRG: 321°"` readout. It is called as `getLabel(pointA, pointB, units)` — both coordinates plus the configured `units` — and returns the string to render at the geodesic midpoint.
+`getLabel` replaces the default `"42.3 km / 22.8 NM | BRG: 321°"` readout. It is called as `getLabel(pointA, pointB, units)` — both coordinates plus the resolved `units` (the default pair when the prop is omitted or has zero or more than two entries) — and returns the string to render at the middle vertex of the geodesic line.
 
 ```tsx
 import { formatBearing, formatDistance } from '@accelint/formatters/bearing';
@@ -266,7 +275,7 @@ Extends deck.gl `CompositeLayerProps`.
 | `id` | `string` | *required* | Unique layer ID |
 | `pointA` | `[number, number]` | *required* | Origin coordinate as `[longitude, latitude]`. The layer renders nothing when either point is not a finite tuple |
 | `pointB` | `[number, number]` | *required* | Destination coordinate as `[longitude, latitude]` |
-| `showLabel` | `boolean` | `true` | Render the measurement label at the geodesic midpoint of the line |
+| `showLabel` | `boolean` | `true` | Render the measurement label at the middle vertex of the geodesic line |
 | `getLabel` | `(pointA, pointB, units) => string` | `undefined` | Custom label function; overrides the default `"X km / Y NM \| BRG: ZZZ°"` format |
 | `units` | `DistanceUnit \| DistanceUnit[]` | `['kilometers', 'nauticalmiles']` | Distance unit(s) for the readout; a single unit produces `"42.3 km"`, two produce `"42.3 km / 22.8 NM"`. An array with zero or more than two entries falls back to the default pair; the layer never throws inside `renderLayers` |
 | `lineColor` | `Color` | `[255, 255, 255, 200]` | RGBA color of the dashed measurement line |
@@ -284,7 +293,7 @@ function useMeasurement(
 | Parameter | Type | Default | Description |
 |-----------|------|---------|-------------|
 | `mapId` | `UniqueId` | `MapContext` | Map instance ID. Falls back to the surrounding `MapProvider`; required outside of `BaseMap` children |
-| `requiresModifier` | `RequiresModifier` | `undefined` | Modifier key that must be held for a drag to count as a measurement. When omitted, every drag measures. Stored per map; the most recently mounted hook's value wins |
+| `requiresModifier` | `RequiresModifier` | `undefined` | Modifier key that must be held for a drag to count as a measurement. Stored per map: pass it from the hook that configures the tool (it is cleared when that hook unmounts); omit it to inherit the map's current value |
 
 Throws if no `mapId` is given and the hook is used outside of a `MapProvider`.
 
@@ -307,7 +316,7 @@ Mounting the hook starts the per-map `map:drag*` subscription if it is not alrea
 | Prop | Type | Default | Description |
 |------|------|---------|-------------|
 | `mapId` | `UniqueId` | `MapContext` | Map instance ID. Falls back to the surrounding `MapProvider`; required outside of `BaseMap` children |
-| `showLabel` | `boolean` | `true` | Render the on-canvas label at the line midpoint |
+| `showLabel` | `boolean` | `true` | Render the on-canvas label at the middle vertex of the line |
 | `units` | `DistanceUnit \| DistanceUnit[]` | `['kilometers', 'nauticalmiles']` | Distance unit(s) for the readout |
 | `requiresModifier` | `RequiresModifier` | `undefined` | Modifier key required to activate measurement; see [Modifier Keys](#modifier-keys) |
 | `getLabel` | `(pointA, pointB, units) => string` | `undefined` | Custom label function; overrides the default format |
@@ -322,4 +331,4 @@ import type { RequiresModifier } from '@accelint/map-toolkit/deckgl/measurement-
 type RequiresModifier = 'shift' | 'alt';
 ```
 
-Modifier key that must be held for a drag to count as a measurement. `'shift'` also suppresses BaseMap's Shift+drag zoom while held; `'ctrl'` is not offered because Ctrl+drag is BaseMap's tilt gesture and emits no drag events, as described in [Modifier Keys](#modifier-keys). The value is stored per map, so all hooks on one map share it.
+Modifier key that must be held for a drag to count as a measurement. `'shift'` also suppresses BaseMap's Shift+drag zoom while held; `'ctrl'` is not offered because Ctrl+drag is BaseMap's tilt gesture and emits no drag events, as described in [Modifier Keys](#modifier-keys). The value is stored per map: the hook that passes it owns it, and hooks that omit it inherit it.

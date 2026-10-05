@@ -10,33 +10,43 @@
  * governing permissions and limitations under the License.
  */
 
+/** Type guard that also narrows `number | undefined` from indexed access. */
+function isFiniteNumber(value: number | undefined): value is number {
+  return typeof value === 'number' && Number.isFinite(value);
+}
+
 /**
- * Type guard for a `[longitude, latitude]` tuple: an array of exactly two
- * finite numbers. deck.gl's `PickingInfo.coordinate` is typed `number[]` and
- * can be empty, three-element, or non-finite, so callers narrow with this
- * before treating it as a coordinate.
+ * Normalizes a picked coordinate to a fresh `[longitude, latitude]` tuple.
+ * deck.gl's `PickingInfo.coordinate` is typed `number[]` and can be empty,
+ * non-finite, or three-element (`[longitude, latitude, z]` when any layer is
+ * `pickable: '3d'`), so callers pass it through here before treating it as a
+ * coordinate. A trailing z is dropped.
  *
- * @param value - Value to validate as a coordinate
- * @returns True if value is a `[longitude, latitude]` tuple of finite numbers
+ * @param value - Picked coordinate to normalize
+ * @returns A new `[longitude, latitude]` tuple when the first two entries are
+ *   finite numbers, otherwise `null`
+ *
+ * @remarks pure function
  *
  * @example
  * ```typescript
- * // `info.coordinate` is `number[] | undefined`; narrow before storing it.
+ * // `info.coordinate` is `number[] | undefined`; normalize before storing it.
  * function onHover(info: PickingInfo) {
- *   if (isLonLatTuple(info.coordinate)) {
- *     setCoordinate(info.coordinate);
+ *   const coordinate = toLonLat(info.coordinate);
+ *
+ *   if (coordinate) {
+ *     setCoordinate(coordinate);
  *   }
  * }
  * ```
  */
-export function isLonLatTuple(
-  value?: number[] | null,
-): value is [number, number] {
+export function toLonLat(value?: number[] | null): [number, number] | null {
   // Runs on every hover and drag: two direct checks, no callback allocation.
-  return (
-    Array.isArray(value) &&
-    value.length === 2 &&
-    Number.isFinite(value[0]) &&
-    Number.isFinite(value[1])
-  );
+  const [longitude, latitude] = value ?? [];
+
+  if (!(isFiniteNumber(longitude) && isFiniteNumber(latitude))) {
+    return null;
+  }
+
+  return [longitude, latitude];
 }

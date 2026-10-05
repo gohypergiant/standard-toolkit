@@ -34,7 +34,7 @@
 import { Broadcast } from '@accelint/bus';
 import { MapEvents } from '../deckgl/base-map/events';
 import { createMapStore } from '../shared/create-map-store';
-import { isLonLatTuple } from '@/shared/coordinates';
+import { toLonLat } from '@/shared/coordinates';
 import type { UniqueId } from '@accelint/core';
 import type { MapEventType, MapHoverEvent } from '../deckgl/base-map/types';
 import type { CoordinateFormatTypes, CursorCoordinateState } from './types';
@@ -79,14 +79,10 @@ export const cursorCoordinateStore = createMapStore<
         return;
       }
 
-      const coords = data.payload.info.coordinate;
+      // A valid pick updates the coordinate; anything else clears it.
+      const coordinate = toLonLat(data.payload.info.coordinate);
 
-      // Update coordinate if valid, or clear if invalid
-      if (isLonLatTuple(coords)) {
-        set({ coordinate: coords });
-      } else {
-        set({ coordinate: null });
-      }
+      set({ coordinate });
     });
   },
 });

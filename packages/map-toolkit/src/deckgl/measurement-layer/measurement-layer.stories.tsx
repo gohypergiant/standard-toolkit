@@ -36,6 +36,12 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
+/** Controls for the modifier-key story. */
+type ModifierStoryArgs = {
+  requiresModifier: RequiresModifier;
+  enableRbz: boolean;
+};
+
 // ─── Stable map IDs for Storybook ──────────────────────────────────────────
 
 const DEFAULT_MAP_ID = uuid();
@@ -218,7 +224,7 @@ export const SingleUnitKilometers: Story = {
  * 2. Hold the modifier and drag — activates measurement
  * 3. Release mouse to complete; release the modifier to stop measuring mid-drag
  */
-export const ModifierKeyRequired: Story = {
+export const ModifierKeyRequired: StoryObj<ModifierStoryArgs> = {
   args: { requiresModifier: 'shift', enableRbz: false },
   argTypes: {
     requiresModifier: {
@@ -234,12 +240,17 @@ export const ModifierKeyRequired: Story = {
     },
   },
   render: ({ enableRbz, requiresModifier }) => {
-    const modifier: RequiresModifier =
-      requiresModifier === 'alt' ? 'alt' : 'shift';
-    const keyLabel = modifier === 'alt' ? 'Alt (Option on Mac)' : 'Shift';
+    const keyLabel =
+      requiresModifier === 'alt' ? 'Alt (Option on Mac)' : 'Shift';
+    const shiftDragBehavior =
+      requiresModifier === 'shift'
+        ? 'measures; zoom is suppressed while Shift is held'
+        : enableRbz
+          ? 'rubber-band zoom'
+          : 'MapLibre box zoom';
     const { isMeasuring, distanceMeters, bearingDeg } = useMeasurement(
       MODIFIER_MAP_ID,
-      modifier,
+      requiresModifier,
     );
 
     return (
@@ -250,11 +261,11 @@ export const ModifierKeyRequired: Story = {
           className='absolute inset-0'
           id={MODIFIER_MAP_ID}
           initialViewState={DEFAULT_VIEW_STATE}
-          enableRbz={Boolean(enableRbz)}
+          enableRbz={enableRbz}
         >
           <MeasurementTool
             mapId={MODIFIER_MAP_ID}
-            requiresModifier={modifier}
+            requiresModifier={requiresModifier}
           />
         </BaseMap>
 
@@ -285,23 +296,15 @@ export const ModifierKeyRequired: Story = {
                 <strong>{keyLabel} + drag:</strong> activates measurement
               </li>
               <li>Release {keyLabel} mid-drag to stop</li>
-              <li>
-                Shift + drag with {modifier === 'alt' ? 'Alt' : 'Shift'} as the
-                modifier:{' '}
-                {modifier === 'alt'
-                  ? enableRbz
-                    ? 'rubber-band zoom'
-                    : 'MapLibre box zoom'
-                  : 'measures; zoom is suppressed while Shift is held'}
-              </li>
+              <li>Shift + drag: {shiftDragBehavior}</li>
             </ul>
           </div>
 
           <div className='rounded-lg bg-surface-contrast-subtle p-s'>
             <p className='mb-xs font-semibold text-body-xs'>Props</p>
             <code className='text-body-xs'>
-              requiresModifier="{modifier}" enableRbz=
-              {String(Boolean(enableRbz))}
+              requiresModifier="{requiresModifier}" enableRbz=
+              {String(enableRbz)}
             </code>
           </div>
         </ReadoutPanel>

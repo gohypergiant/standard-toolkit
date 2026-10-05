@@ -188,10 +188,6 @@ Key-repeat `keydown` events (`event.repeat === true`) are ignored, so holding Sh
 
 Removes the keyboard listeners installed by `startListening()` and disables the handler if currently armed. Idempotent — safe to call when not listening. Invoked automatically by `destroy()`.
 
-##### `isListening(): boolean`
-
-Returns `true` while the keyboard listeners installed by `startListening()` are attached, i.e. between `startListening()` and `stopListening()` / `destroy()`.
-
 ##### `isEnabled(): boolean`
 
 Returns `true` when the handler is armed and ready to process mouse events.

@@ -40,7 +40,7 @@ The system SHALL provide an interactive tool that displays the great-circle dist
 
 #### Scenario: Zero-distance measurement
 - **WHEN** user drags but pointA and pointB are identical coordinates
-- **THEN** system displays "0 km / 0 NM | BRG: 0°"
+- **THEN** system displays "0.0 km / 0.0 NM | BRG: 000°"
 - **THEN** system renders endpoints but no visible line
 
 ### Requirement: Measurement SHALL emit lifecycle events on the bus
@@ -137,10 +137,12 @@ The system SHALL allow configuration of a required modifier key (`shift` or `alt
 - **THEN** system emits `map:disableZoom` so BaseMap's Shift+drag zoom (native box zoom, or rubber band zoom when `enableRbz` is set) does not compete with the measurement
 - **THEN** system emits `map:enableZoom` when Shift is released
 
-#### Scenario: Modifier is per-map state
-- **WHEN** `useMeasurement('main', 'alt')` is mounted and then `useMeasurement('main', 'shift')` is mounted
-- **THEN** map 'main' requires `shift` (the most recently mounted hook's value wins)
+#### Scenario: Modifier is per-map state owned by the configuring hook
+- **WHEN** `useMeasurement('main', 'alt')` is mounted and then `useMeasurement('main')` is mounted
+- **THEN** map 'main' still requires `alt` (a hook that omits the modifier inherits the map's value)
 - **THEN** map 'beta' is unaffected
+- **WHEN** the `useMeasurement('main', 'alt')` hook unmounts
+- **THEN** map 'main' no longer requires a modifier
 
 ### Requirement: Measurement SHALL support configurable distance units
 The system SHALL display distance in configurable units: single unit mode or dual unit mode.

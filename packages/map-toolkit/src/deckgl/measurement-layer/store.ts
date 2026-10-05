@@ -22,6 +22,7 @@ import type {
   MapDragStartEvent,
   MapEventType,
 } from '@/deckgl/base-map/types';
+import type { StoreHelpers } from '@/shared/create-map-store';
 import type { MeasurementEventType } from './events';
 import type { RequiresModifier } from './types';
 
@@ -40,8 +41,9 @@ export type MeasurementState = {
   isMeasuring: boolean;
   /**
    * Modifier key a drag must hold to count as a measurement, or `undefined`
-   * to measure on every drag. Per map: set by `useMeasurement`, and the most
-   * recently mounted hook's value wins.
+   * to measure on every drag. Per map: written by the `useMeasurement` hook
+   * that is given a value and cleared when that hook unmounts; hooks that omit
+   * it inherit this value.
    */
   requiresModifier: RequiresModifier | undefined;
 };
@@ -84,10 +86,6 @@ export type MeasurementActions = {
   setRequiresModifier: (value: RequiresModifier | undefined) => void;
 };
 
-type GetState = () => MeasurementState;
-
-type SetState = (partial: Partial<MeasurementState>) => void;
-
 const DEFAULT_STATE: MeasurementState = {
   pointA: null,
   pointB: null,
@@ -103,9 +101,10 @@ function hasRequiredModifier(
   return !requiresModifier || keys[`${requiresModifier}Key`];
 }
 
+/** Sets `pointA` with no `pointB` and `isMeasuring`, then emits `measurement:start` and `map:disablePan`. */
 function startMeasurement(
   mapId: UniqueId,
-  set: SetState,
+  { set }: StoreHelpers<MeasurementState>,
   pointA: [number, number],
 ): void {
   set({ pointA, pointB: null, isMeasuring: true });
@@ -113,10 +112,10 @@ function startMeasurement(
   mapBus.emit(MapEvents.disablePan, { id: mapId });
 }
 
+/** Sets `pointB` and emits `measurement:update`; no-op unless measuring with a `pointA`. */
 function updateMeasurement(
   mapId: UniqueId,
-  get: GetState,
-  set: SetState,
+  { get, set }: StoreHelpers<MeasurementState>,
   pointB: [number, number],
 ): void {
   const { isMeasuring, pointA } = get();
@@ -129,7 +128,11 @@ function updateMeasurement(
   measurementBus.emit(MeasurementEvents.update, { mapId, pointA, pointB });
 }
 
-function clearMeasurement(mapId: UniqueId, get: GetState, set: SetState): void {
+/** Resets both points and `isMeasuring`, emits `measurement:clear`, and emits `map:enablePan` if a drag was in progress. */
+function clearMeasurement(
+  mapId: UniqueId,
+  { get, set }: StoreHelpers<MeasurementState>,
+): void {
   const wasMeasuring = get().isMeasuring;
 
   set({ pointA: null, pointB: null, isMeasuring: false });
@@ -140,11 +143,12 @@ function clearMeasurement(mapId: UniqueId, get: GetState, set: SetState): void {
   }
 }
 
+/** Clears `isMeasuring`, emits `measurement:complete` and `map:enablePan`; clears instead when there is no `pointB`, and no-ops when not measuring. */
 function completeMeasurement(
   mapId: UniqueId,
-  get: GetState,
-  set: SetState,
+  helpers: StoreHelpers<MeasurementState>,
 ): void {
+  const { get, set } = helpers;
   const { isMeasuring, pointA, pointB } = get();
 
   if (!isMeasuring) {
@@ -153,7 +157,7 @@ function completeMeasurement(
 
   // No destination means nothing was measured: clear instead of completing.
   if (!(pointA && pointB)) {
-    clearMeasurement(mapId, get, set);
+    clearMeasurement(mapId, helpers);
 
     return;
   }
@@ -178,29 +182,30 @@ export const measurementStore = createMapStore<
 >({
   defaultState: DEFAULT_STATE,
 
-  actions: (mapId, { get, set }) => ({
+  actions: (mapId, helpers) => ({
     start: (pointA) => {
-      startMeasurement(mapId, set, pointA);
+      startMeasurement(mapId, helpers, pointA);
     },
 
     updateEnd: (pointB) => {
-      updateMeasurement(mapId, get, set, pointB);
+      updateMeasurement(mapId, helpers, pointB);
     },
 
     complete: () => {
-      completeMeasurement(mapId, get, set);
+      completeMeasurement(mapId, helpers);
     },
 
     clear: () => {
-      clearMeasurement(mapId, get, set);
+      clearMeasurement(mapId, helpers);
     },
 
     setRequiresModifier: (value) => {
-      set({ requiresModifier: value });
+      helpers.set({ requiresModifier: value });
     },
   }),
 
-  bus: (mapId, { get, set }) => {
+  bus: (mapId, helpers) => {
+    const { get } = helpers;
     const offDragStart = mapBus.on(
       MapEvents.dragStart,
       (event: MapDragStartEvent) => {
@@ -214,7 +219,7 @@ export const measurementStore = createMapStore<
           return;
         }
 
-        startMeasurement(mapId, set, coordinate);
+        startMeasurement(mapId, helpers, coordinate);
       },
     );
 
@@ -227,12 +232,12 @@ export const measurementStore = createMapStore<
 
       // Releasing the modifier mid-drag ends the measurement at the last point.
       if (!hasRequiredModifier(get().requiresModifier, event.payload)) {
-        completeMeasurement(mapId, get, set);
+        completeMeasurement(mapId, helpers);
 
         return;
       }
 
-      updateMeasurement(mapId, get, set, coordinate);
+      updateMeasurement(mapId, helpers, coordinate);
     });
 
     const offDragEnd = mapBus.on(
@@ -242,7 +247,7 @@ export const measurementStore = createMapStore<
           return;
         }
 
-        completeMeasurement(mapId, get, set);
+        completeMeasurement(mapId, helpers);
       },
     );
 
@@ -251,7 +256,7 @@ export const measurementStore = createMapStore<
       offDrag();
       offDragEnd();
       // Finish an in-flight measurement so pan is not left disabled.
-      completeMeasurement(mapId, get, set);
+      completeMeasurement(mapId, helpers);
     };
   },
 });

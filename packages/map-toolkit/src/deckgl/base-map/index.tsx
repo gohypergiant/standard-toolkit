@@ -50,7 +50,7 @@ import {
   tiltCommandFor,
 } from './tilt-gesture';
 import { LOCKED_MAP_LIBRE_OPTION_KEYS } from './types';
-import { isLonLatTuple } from '@/shared/coordinates';
+import { toLonLat } from '@/shared/coordinates';
 import type {
   IControl,
   MapOptions,
@@ -262,7 +262,7 @@ function toDragPayload<Coordinate extends [number, number] | null>(
  * **Event Bus**: Click and hover events are emitted through the event bus with the `id`
  * included in the payload, allowing multiple map instances to coexist without interference.
  *
- * @param props - Component props including id (required), className, onClick, onHover, and all Deck.gl props
+ * @param props - Component props including id (required), className, onClick, onHover, onLoad (fires once from MapLibre's `load` event, not deck's), and all other Deck.gl props
  * @returns A map component with Deck.gl and MapLibre GL integration
  *
  * @example
@@ -589,8 +589,10 @@ export function BaseMap({
       // the single source of truth — MapLibre's own rotate/pitch handlers are off.
       // Tilt gestures belong to the camera, so only plain drags reach the bus.
       if (!isTiltGesture(toTiltGesture(event))) {
-        if (isLonLatTuple(info.coordinate)) {
-          emitDragStart(toDragPayload(id, info.coordinate, event.srcEvent));
+        const coordinate = toLonLat(info.coordinate);
+
+        if (coordinate) {
+          emitDragStart(toDragPayload(id, coordinate, event.srcEvent));
         }
 
         return;
@@ -626,8 +628,10 @@ export function BaseMap({
       // No baseline means `handleDragStart` classified this as a pan, not a
       // tilt: forward it to the bus and leave the camera untouched.
       if (!tiltBaselineRef.current) {
-        if (isLonLatTuple(info.coordinate)) {
-          emitDrag(toDragPayload(id, info.coordinate, event.srcEvent));
+        const coordinate = toLonLat(info.coordinate);
+
+        if (coordinate) {
+          emitDrag(toDragPayload(id, coordinate, event.srcEvent));
         }
 
         return;
@@ -666,11 +670,7 @@ export function BaseMap({
       // baseline and never reached the bus, so it ends silently.
       if (!tiltBaselineRef.current) {
         emitDragEnd(
-          toDragPayload(
-            id,
-            isLonLatTuple(info.coordinate) ? info.coordinate : null,
-            event.srcEvent,
-          ),
+          toDragPayload(id, toLonLat(info.coordinate), event.srcEvent),
         );
       }
 
@@ -755,7 +755,20 @@ export function BaseMap({
     }, 200);
   });
 
-  const handleLoad = useEffectEvent(() => {
+  // First point at which `setProjection` is safe (after `style.load`).
+  //
+  // BaseMap's own load work and the consumer's `onLoad` also run from here, not
+  // from deck's `onLoad` prop. deck's MapLibre overlay wraps `onLoad` to install
+  // the listener that copies the map camera into deck, then re-sends every
+  // overlay prop on each `setProps`. An `onLoad` among those props overwrites
+  // the wrapper whenever a fiber commit lands before deck initializes, which
+  // leaves deck's picking viewport frozen at the initial frame. Specifically,
+  // this works around `@deck.gl/mapbox` 9.1.14's `MapboxOverlay.setProps`
+  // re-sending `onLoad` over the wrapper installed by `getDeckInstance`; the
+  // workaround can be retired once an upstream fix lands.
+  const handleMapLoad = useEffectEvent(() => {
+    mapRef.current?.getMap().setProjection({ type: cameraState.projection });
+
     //--- force update viewport state once all viewports initialized ---
     // @ts-expect-error squirrelly deckglInstance typing
     const deck = deckglInstance._deck;
@@ -775,6 +788,7 @@ export function BaseMap({
         },
       } as ViewStateChangeParameters);
     }
+
     if (enableRbz && mapRef.current) {
       const map = mapRef.current.getMap();
       rbzRef.current = new RbzHandler(map, {
@@ -795,19 +809,7 @@ export function BaseMap({
         rbzRef.current = null;
       });
     }
-  });
 
-  // First point at which `setProjection` is safe (after `style.load`).
-  //
-  // BaseMap's own load work and the consumer's `onLoad` also run from here, not
-  // from deck's `onLoad` prop. deck's MapLibre overlay wraps `onLoad` to install
-  // the listener that copies the map camera into deck, then re-sends every
-  // overlay prop on each `setProps`. An `onLoad` among those props overwrites
-  // the wrapper whenever a fiber commit lands before deck initializes, which
-  // leaves deck's picking viewport frozen at the initial frame.
-  const handleMapLoad = useEffectEvent(() => {
-    mapRef.current?.getMap().setProjection({ type: cameraState.projection });
-    handleLoad();
     onLoad?.();
   });
 

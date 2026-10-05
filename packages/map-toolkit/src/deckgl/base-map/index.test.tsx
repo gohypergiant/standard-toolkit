@@ -537,6 +537,33 @@ describe('BaseMap', () => {
     });
 
     it.each([
+      { handler: 'onDragStart', event: MapEvents.dragStart },
+      { handler: 'onDrag', event: MapEvents.drag },
+      { handler: 'onDragEnd', event: MapEvents.dragEnd },
+    ] as const)('emits $event with a 2-element coordinate when deck picks a 3-element one', ({
+      handler,
+      event,
+    }) => {
+      const id = uuid();
+      useFakeMap(createFakeMap());
+      const listener = listenTo(event);
+      render(<BaseMap id={id} />);
+
+      act(() => {
+        capturedDragHandlers[handler]?.(
+          { coordinate: [10, 20, 300] },
+          dragEvent(),
+        );
+      });
+
+      expect(listener).toHaveBeenCalledExactlyOnceWith(
+        expect.objectContaining({
+          payload: expect.objectContaining({ id, coordinate: [10, 20] }),
+        }),
+      );
+    });
+
+    it.each([
       ['right-button', { rightButton: true }],
       ['ctrl + left-button', { ctrlKey: true }],
     ])('does not emit drag events for a %s tilt gesture', (_label, overrides) => {

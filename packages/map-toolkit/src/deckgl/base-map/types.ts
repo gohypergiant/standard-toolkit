@@ -74,11 +74,19 @@ export type MapLibreOptions = Omit<
 
 /**
  * Props for the BaseMap component.
- * Extends all Deck.gl props and adds additional map-specific properties.
+ * Extends all Deck.gl props (with BaseMap's own `onLoad`) and adds additional
+ * map-specific properties.
  */
-export type BaseMapProps = DeckglProps & {
+export type BaseMapProps = Omit<DeckglProps, 'onLoad'> & {
   /** Optional CSS class name to apply to the map container element */
   className?: string;
+  /**
+   * Fires once when the MapLibre map has loaded, after BaseMap applies the
+   * projection and finishes its own load work. This is not forwarded to the
+   * deck overlay: deck may not be initialized yet when it fires, so do not call
+   * deck viewport methods from it.
+   */
+  onLoad?: () => void;
   /**
    * Whether to enable listening for map control events (pan/zoom enable/disable).
    * When true, the map will respond to control events emitted via the event bus.
@@ -301,7 +309,11 @@ export type MapDragPayload = {
   coordinate: [number, number];
   /** Whether the Shift key was held during the drag event */
   shiftKey: boolean;
-  /** Whether the Ctrl key was held during the drag event */
+  /**
+   * Whether the Ctrl key was held during the drag event. Ctrl + left-drag and
+   * Ctrl + right-drag are consumed by BaseMap as tilt gestures and never
+   * emitted, so this flag is only true for other button combinations.
+   */
   ctrlKey: boolean;
   /** Whether the Alt key was held during the drag event */
   altKey: boolean;

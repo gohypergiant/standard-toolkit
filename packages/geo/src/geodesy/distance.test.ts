@@ -12,10 +12,11 @@
 
 import fc from 'fast-check';
 import { describe, expect, it } from 'vitest';
+import {
+  HALF_CIRCUMFERENCE_METERS,
+  lonLatArbitrary,
+} from './__fixtures__/arbitraries';
 import { distance } from './distance';
-
-const longitudeArbitrary = fc.double({ min: -180, max: 180, noNaN: true });
-const latitudeArbitrary = fc.double({ min: -90, max: 90, noNaN: true });
 
 // Microdegree resolution (~0.11 m) keeps distinct points far enough apart that
 // the haversine term cannot underflow to 0 the way sub-1e-160 degree deltas do.
@@ -65,10 +66,10 @@ describe('distance', () => {
     });
 
     it('handles antipodal points', () => {
-      // Distance between north and south pole ≈ half Earth circumference ≈ 20,015,087 m
+      // Distance between north and south pole = half Earth circumference
       const result = distance([0, 90], [0, -90]);
 
-      expect(result).toBeCloseTo(20015087, -2);
+      expect(result).toBeCloseTo(HALF_CIRCUMFERENCE_METERS, -2);
     });
 
     it('returns half the circumference instead of NaN for near-antipodal points', () => {
@@ -79,7 +80,7 @@ describe('distance', () => {
         [-14.43168138306451, -20.542180512793223],
       );
 
-      expect(result).toBeCloseTo(20015087, -2);
+      expect(result).toBeCloseTo(HALF_CIRCUMFERENCE_METERS, -2);
     });
 
     it('handles antimeridian crossing', () => {
@@ -92,16 +93,10 @@ describe('distance', () => {
   });
 
   describe('input validation', () => {
-    it.each([
-      ['NaN origin longitude', [Number.NaN, 0], [1, 1]],
-      ['NaN origin latitude', [0, Number.NaN], [1, 1]],
-      ['NaN destination longitude', [0, 0], [Number.NaN, 1]],
-      ['NaN destination latitude', [0, 0], [1, Number.NaN]],
-      ['Infinity origin longitude', [Number.POSITIVE_INFINITY, 0], [1, 1]],
-      ['-Infinity destination latitude', [0, 0], [1, Number.NEGATIVE_INFINITY]],
-    ] as const)('throws RangeError for %s', (_description, origin, destination) => {
-      expect(() => distance(origin, destination)).toThrow(RangeError);
-      expect(() => distance(origin, destination)).toThrow(
+    // The full NaN / ±Infinity table lives in to-spherical-points.test.ts;
+    // this only checks that the error names this function.
+    it('throws RangeError naming distance for a non-finite coordinate', () => {
+      expect(() => distance([Number.NaN, 0], [1, 1])).toThrow(
         'distance requires finite [longitude, latitude] coordinates.',
       );
     });
@@ -110,49 +105,32 @@ describe('distance', () => {
   describe('properties', () => {
     it('is non-negative and symmetric for any in-range coordinate pair', () => {
       fc.assert(
-        fc.property(
-          longitudeArbitrary,
-          latitudeArbitrary,
-          longitudeArbitrary,
-          latitudeArbitrary,
-          (
-            originLongitude,
-            originLatitude,
-            destinationLongitude,
-            destinationLatitude,
-          ) => {
-            const forward = distance(
-              [originLongitude, originLatitude],
-              [destinationLongitude, destinationLatitude],
-            );
-            const reverse = distance(
-              [destinationLongitude, destinationLatitude],
-              [originLongitude, originLatitude],
-            );
+        fc.property(lonLatArbitrary, lonLatArbitrary, (origin, destination) => {
+          const forward = distance(origin, destination);
+          const reverse = distance(destination, origin);
 
-            expect(forward).toBeGreaterThanOrEqual(0);
-            expect(forward).toBe(reverse);
-          },
-        ),
+          expect(forward).toBeGreaterThanOrEqual(0);
+          expect(forward).toBe(reverse);
+        }),
       );
     });
 
     it('is half the circumference for near-antipodal pairs', () => {
       fc.assert(
         fc.property(
-          longitudeArbitrary,
-          latitudeArbitrary,
+          lonLatArbitrary,
           fc.double({ min: -1e-6, max: 1e-6, noNaN: true }),
           fc.double({ min: -1e-6, max: 1e-6, noNaN: true }),
-          (longitude, latitude, longitudeJitter, latitudeJitter) => {
+          (origin, longitudeJitter, latitudeJitter) => {
+            const [longitude, latitude] = origin;
             const antipodeLongitude =
               longitude > 0 ? longitude - 180 : longitude + 180;
-            const result = distance(
-              [longitude, latitude],
-              [antipodeLongitude + longitudeJitter, -latitude + latitudeJitter],
-            );
+            const result = distance(origin, [
+              antipodeLongitude + longitudeJitter,
+              -latitude + latitudeJitter,
+            ]);
 
-            expect(result).toBeCloseTo(Math.PI * 6371e3, 0);
+            expect(result).toBeCloseTo(HALF_CIRCUMFERENCE_METERS, 0);
           },
         ),
       );
@@ -187,34 +165,22 @@ describe('distance', () => {
 
     it('is invariant when 360 degrees is added to a longitude', () => {
       fc.assert(
-        fc.property(
-          longitudeArbitrary,
-          latitudeArbitrary,
-          longitudeArbitrary,
-          latitudeArbitrary,
-          (
-            originLongitude,
-            originLatitude,
-            destinationLongitude,
+        fc.property(lonLatArbitrary, lonLatArbitrary, (origin, destination) => {
+          const [originLongitude, originLatitude] = origin;
+          const [destinationLongitude, destinationLatitude] = destination;
+          const reference = distance(origin, destination);
+          const wrappedOrigin = distance(
+            [originLongitude + 360, originLatitude],
+            destination,
+          );
+          const wrappedDestination = distance(origin, [
+            destinationLongitude + 360,
             destinationLatitude,
-          ) => {
-            const reference = distance(
-              [originLongitude, originLatitude],
-              [destinationLongitude, destinationLatitude],
-            );
-            const wrappedOrigin = distance(
-              [originLongitude + 360, originLatitude],
-              [destinationLongitude, destinationLatitude],
-            );
-            const wrappedDestination = distance(
-              [originLongitude, originLatitude],
-              [destinationLongitude + 360, destinationLatitude],
-            );
+          ]);
 
-            expect(wrappedOrigin).toBeCloseTo(reference, 3);
-            expect(wrappedDestination).toBeCloseTo(reference, 3);
-          },
-        ),
+          expect(wrappedOrigin).toBeCloseTo(reference, 3);
+          expect(wrappedDestination).toBeCloseTo(reference, 3);
+        }),
       );
     });
   });
