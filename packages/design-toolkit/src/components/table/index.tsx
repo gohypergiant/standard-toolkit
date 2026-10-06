@@ -64,10 +64,6 @@ const EMPTY_ROW_SELECTION: RowSelectionState = {};
 // render.
 const EMPTY_ROW_PINNING: RowPinningState = { top: [], bottom: [] };
 
-// Stable default so an uncontrolled row highlighting slice does not re-seed on every
-// render.
-const EMPTY_ROW_HIGHLIGHTING: string[] = [];
-
 // Stable default so an uncontrolled sort slice does not re-seed on every
 // render.
 const EMPTY_SORT: SortingState = [];

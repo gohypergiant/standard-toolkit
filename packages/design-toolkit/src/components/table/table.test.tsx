@@ -1252,3 +1252,153 @@ describe('Table numeral column', () => {
     expect(numeralCell).toHaveClass(styles.hidden as string);
   });
 });
+
+type Author = { id: string; name: string; series: string[]; books: number };
+
+const personColumnHelper = createTableColumnHelper<Author>();
+
+const authors: Author[] = [
+  { id: '1', name: 'George R.R. Martin', series: ['ASOIAF'], books: 5 },
+  {
+    id: '2',
+    name: 'Brandon Sanderson',
+    series: ['Mistborn', 'Stormlight Archive'],
+    books: 10,
+  },
+];
+
+const controlledColumns = [
+  personColumnHelper.accessor('name', {
+    id: 'name',
+    header: 'Name',
+    cell: (info) => info.getValue(),
+  }),
+  personColumnHelper.accessor('series', {
+    id: 'series',
+    header: 'Series',
+    cell: (info) => info.getValue().join(', '),
+  }),
+  personColumnHelper.accessor('books', {
+    id: 'books',
+    header: 'Books',
+    cell: (info) => info.getValue(),
+  }),
+];
+
+describe('Table controlled columns', () => {
+  it('should render columns based on controlled column order', () => {
+    render(
+      <Table
+        columns={controlledColumns}
+        data={authors}
+        columnOrder={controlledColumns.map((col) => col.accessorKey!)}
+      />,
+    );
+
+    const headerRow = screen.getAllByRole('row')[0] as HTMLElement;
+    const headers = within(headerRow).getAllByRole('columnheader');
+
+    // The headers should match the controlled column order
+    controlledColumns.forEach((col, index) => {
+      expect(headers[index]).toHaveTextContent(col.header as string);
+    });
+  });
+
+  it('should update column order when user moves column right', async () => {
+    const onColumnOrderChange = vi.fn();
+
+    render(
+      <Table
+        columns={controlledColumns}
+        data={authors}
+        columnOrder={['name', 'series', 'books']}
+        onColumnOrderChange={onColumnOrderChange}
+      />,
+    );
+
+    await userEvent.click(
+      screen.getAllByRole('button', { name: 'Menu' })[0] as HTMLElement,
+    );
+    await userEvent.click(
+      await screen.findByRole('menuitemradio', { name: 'Move Column Right' }),
+    );
+
+    expect(onColumnOrderChange).toHaveBeenCalledTimes(1);
+    expect(onColumnOrderChange.mock.calls[0]?.[0]).toEqual([
+      'series',
+      'name',
+      'books',
+    ]);
+  });
+
+  it('should update column order when user moves column left', async () => {
+    const onColumnOrderChange = vi.fn();
+
+    render(
+      <Table
+        columns={controlledColumns}
+        data={authors}
+        columnOrder={['name', 'series', 'books']}
+        onColumnOrderChange={onColumnOrderChange}
+      />,
+    );
+
+    await userEvent.click(
+      screen.getAllByRole('button', { name: 'Menu' })[2] as HTMLElement,
+    );
+    await userEvent.click(
+      await screen.findByRole('menuitemradio', { name: 'Move Column Left' }),
+    );
+
+    expect(onColumnOrderChange).toHaveBeenCalledTimes(1);
+    expect(onColumnOrderChange.mock.calls[0]?.[0]).toEqual([
+      'name',
+      'books',
+      'series',
+    ]);
+  });
+
+  it('should not move the last column right', async () => {
+    const onColumnOrderChange = vi.fn();
+
+    render(
+      <Table
+        columns={controlledColumns}
+        data={authors}
+        columnOrder={['name', 'series', 'books']}
+        onColumnOrderChange={onColumnOrderChange}
+      />,
+    );
+
+    await userEvent.click(
+      screen.getAllByRole('button', { name: 'Menu' })[2] as HTMLElement,
+    );
+    await userEvent.click(
+      await screen.findByRole('menuitemradio', { name: 'Move Column Right' }),
+    );
+
+    expect(onColumnOrderChange).toHaveBeenCalledTimes(0);
+  });
+
+  it('should not move the first column left', async () => {
+    const onColumnOrderChange = vi.fn();
+
+    render(
+      <Table
+        columns={controlledColumns}
+        data={authors}
+        columnOrder={['name', 'series', 'books']}
+        onColumnOrderChange={onColumnOrderChange}
+      />,
+    );
+
+    await userEvent.click(
+      screen.getAllByRole('button', { name: 'Menu' })[0] as HTMLElement,
+    );
+    await userEvent.click(
+      await screen.findByRole('menuitemradio', { name: 'Move Column Left' }),
+    );
+
+    expect(onColumnOrderChange).toHaveBeenCalledTimes(0);
+  });
+});
