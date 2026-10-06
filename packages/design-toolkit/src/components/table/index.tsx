@@ -17,6 +17,7 @@ import Kebab from '@accelint/icons/kebab';
 import Pin from '@accelint/icons/pin';
 import {
   type ColumnDef,
+  type ColumnOrderState,
   type OnChangeFn,
   type PaginationState,
   type Row,
@@ -70,6 +71,11 @@ const EMPTY_ROW_HIGHLIGHTING: string[] = [];
 // Stable default so an uncontrolled sort slice does not re-seed on every
 // render.
 const EMPTY_SORT: SortingState = [];
+
+// Stable default so an uncontrolled column order slice does not re-seed on
+// every render. An empty array is TanStack's own "natural columns order"
+// fallback, so this reproduces today's behavior without deriving from `columns`.
+const EMPTY_COLUMN_ORDER: ColumnOrderState = [];
 
 type RowActionsMenuProps<T extends RowData> = {
   row: Row<TableFeatures, T>;
@@ -150,6 +156,10 @@ function RowActionsMenu<T extends RowData>({ row }: RowActionsMenuProps<T>) {
  * @param props.onSortChange - Callback receiving the plain next
  * `SortingState`, in both client-side and `manualSorting` modes.
  * @param props.onColumnReorderChange - Callback when column order changes.
+ * @param props.columnOrder - Controlled column order state; without
+ * `onColumnOrderChange` the order stays frozen at this value.
+ * @param props.defaultColumnOrder - Initial column order state for uncontrolled use.
+ * @param props.onColumnOrderChange - Callback receiving the plain next column order state.
  * @param props.onRowSelectionChange - Callback receiving the plain next row selection state.
  * @param props.fullWidth - Whether table uses full width.
  * @param props.pageSize - Rows per page; enables built-in pagination when set.
@@ -194,6 +204,9 @@ export function Table<T extends { id: Key }>({
   defaultSort = EMPTY_SORT,
   onSortChange,
   onColumnReorderChange,
+  columnOrder: columnOrderProp,
+  defaultColumnOrder = EMPTY_COLUMN_ORDER,
+  onColumnOrderChange,
   onRowSelectionChange,
   fullWidth = false,
   variant = DEFAULT_TABLE_VARIANT,
@@ -269,6 +282,12 @@ export function Table<T extends { id: Key }>({
     sortProp,
     defaultSort,
     onSortChange,
+  );
+
+  const [columnOrder, setColumnOrder] = useTableControlledState(
+    columnOrderProp,
+    defaultColumnOrder,
+    onColumnOrderChange,
   );
 
   const [currentPage, setCurrentPage] = useControlledState(
@@ -382,42 +401,36 @@ export function Table<T extends { id: Key }>({
     onColumnReorderChange?.(index);
   };
 
-  const {
-    getHeaderGroups,
-    getTopRows,
-    getCenterRows,
-    getBottomRows,
-    setColumnOrder,
-  } = useTable({
-    features: tableFeatures,
-    data,
-    columns,
-    enableSorting,
-    initialState: {
-      columnOrder: columns.map(({ id }) => id ?? ''),
-    },
-    state: {
-      rowSelection,
-      rowPinning,
-      rowOrdering,
-      sorting: sort,
-      ...(pagination != null && { pagination }),
-    },
-    getRowId: (row, index) => {
-      // Use the index as the row ID if no unique identifier is available
-      return row.id ? row.id.toString() : index.toString();
-    },
-    enableRowSelection: true,
-    enableRowPinning: true,
-    manualSorting: manualSorting,
-    // no pageSize → paginated row model passes rows through untouched
-    manualPagination: pagination == null,
-    onRowSelectionChange: setRowSelection,
-    onSortingChange: setSort,
-    onRowPinningChange: setRowPinning,
-    onRowOrderingChange: setRowOrdering,
-    onPaginationChange: handlePaginationChange,
-  });
+  const { getHeaderGroups, getTopRows, getCenterRows, getBottomRows } =
+    useTable({
+      features: tableFeatures,
+      data,
+      columns,
+      enableSorting,
+      state: {
+        rowSelection,
+        rowPinning,
+        rowOrdering,
+        sorting: sort,
+        columnOrder,
+        ...(pagination != null && { pagination }),
+      },
+      getRowId: (row, index) => {
+        // Use the index as the row ID if no unique identifier is available
+        return row.id ? row.id.toString() : index.toString();
+      },
+      enableRowSelection: true,
+      enableRowPinning: true,
+      manualSorting: manualSorting,
+      // no pageSize → paginated row model passes rows through untouched
+      manualPagination: pagination == null,
+      onRowSelectionChange: setRowSelection,
+      onSortingChange: setSort,
+      onRowPinningChange: setRowPinning,
+      onRowOrderingChange: setRowOrdering,
+      onColumnOrderChange: setColumnOrder,
+      onPaginationChange: handlePaginationChange,
+    });
 
   const moveColumnLeft = useCallback(
     (oldIndex: number) => {

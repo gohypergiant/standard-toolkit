@@ -14,6 +14,7 @@ import type { Key } from '@react-types/shared';
 import type {
   Cell,
   ColumnDef,
+  ColumnOrderState,
   Header,
   HeaderGroup,
   Row,
@@ -198,6 +199,37 @@ type ExtendedTableProps<T extends { id: Key }> = {
    * @param index - The new index position of the column after reordering.
    */
   onColumnReorderChange?: (index: number) => void;
+  /**
+   * Controlled column order state.
+   * An array of column ids in display order. Ids absent from the array are
+   * appended after the named ids, in `columns` definition order; unknown
+   * ids (not present in `columns`) are ignored.
+   * Example: ['age', 'name', 'id']
+   *
+   * The slice is controlled when this prop is not `undefined`; pair it with
+   * `onColumnOrderChange` to apply changes, otherwise the order stays frozen
+   * at this value.
+   */
+  columnOrder?: ColumnOrderState;
+  /**
+   * Initial column order state for uncontrolled use.
+   * Ignored while `columnOrder` is provided.
+   * @default []
+   */
+  defaultColumnOrder?: ColumnOrderState;
+  /**
+   * Callback function triggered when the column order changes (for example
+   * via the header kebab menu's Move Column Left / Right actions).
+   * Receives the plain next `ColumnOrderState`; functional updaters from the
+   * table engine are resolved internally and never reach this callback.
+   *
+   * @param columnOrder - The next column order state.
+   *
+   * @example
+   * // Using with a state setter
+   * onColumnOrderChange={setColumnOrder}
+   */
+  onColumnOrderChange?: (columnOrder: ColumnOrderState) => void;
   /**
    * Callback function triggered when row selection changes.
    * Receives the plain next selection state; functional updaters from the

@@ -80,6 +80,8 @@ interface TableProps<T extends { id: Key }> {
 | `persistRowKebabMenu` | `boolean` | `true` | No |
 | `persistHeaderKebabMenu` | `boolean` | `true` | No |
 | `persistNumerals` | `boolean` | `false` | No |
+| `defaultColumnOrder` | `string[]` | `[]` | No |
+| `columnOrder` | `string[]` | `[]` | No |
 | `enableSorting` | `boolean` | `true` | No |
 | `enableColumnReordering` | `boolean` | `true` | No |
 | `enableRowActions` | `boolean` | `true` | No |
@@ -92,6 +94,7 @@ interface TableProps<T extends { id: Key }> {
 | `defaultPage` | `number` | `1` | No |
 | `onSortChange` | `function` | - | No |
 | `onColumnReorderChange` | `function` | - | No |
+| `onColumnChange` | `function` | - | No |
 | `onRowSelectionChange` | `function` | - | No |
 | `onRowPinningChange` | `function` | - | No |
 | `onPageChange` | `function` | - | No |
