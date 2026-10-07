@@ -5,7 +5,7 @@ source: packages/design-toolkit/src/components/table/index.tsx
 source_sha: 64cbc01cd2b212f8139249ca03762baa8c48ef73
 doc_sha: 6f34a5ef05e34c363ef815edd2082a6a700a9d74
 deprecated: false
-updated: 2026-09-01
+updated: 2026-10-07
 ---
 
 ## Usage
@@ -50,19 +50,22 @@ interface TableProps<T extends { id: Key }> {
   manualSorting?: boolean;
   sort?: SortingState;
   defaultSort?: SortingState;
+  columnOrder?: ColumnOrderState;
+  defaultColumnOrder?: ColumnOrderState;
   fullWidth?: boolean;
   pageSize?: number;
   page?: number;
   defaultPage?: number;
   onSortChange?: (sort: SortingState) => void;
   onColumnReorderChange?: (index: number) => void;
+  onColumnOrderChange?: (columnOrder: ColumnOrderState) => void;
   onRowSelectionChange?: (rowSelection: RowSelectionState) => void;
   onRowPinningChange?: (rowPinning: RowPinningState) => void;
   onPageChange?: (page: number) => void;
 }
 ```
 
-`RowSelectionState`, `RowPinningState`, and `SortingState` are TanStack Table types. Import them from `@tanstack/react-table`; the design toolkit does not re-export them.
+`RowSelectionState`, `RowPinningState`, `SortingState`, and `ColumnOrderState` are TanStack Table types. Import them from `@tanstack/react-table`; the design toolkit does not re-export them.
 
 ### Props
 
@@ -86,12 +89,15 @@ interface TableProps<T extends { id: Key }> {
 | `manualSorting` | `boolean` | `false` | No |
 | `sort` | `SortingState` | - | No |
 | `defaultSort` | `SortingState` | `[]` | No |
+| `columnOrder` | `ColumnOrderState` | - | No |
+| `defaultColumnOrder` | `ColumnOrderState` | `[]` | No |
 | `fullWidth` | `boolean` | `false` | No |
 | `pageSize` | `number` | - | No |
 | `page` | `number` | - | No |
 | `defaultPage` | `number` | `1` | No |
 | `onSortChange` | `function` | - | No |
 | `onColumnReorderChange` | `function` | - | No |
+| `onColumnOrderChange` | `function` | - | No |
 | `onRowSelectionChange` | `function` | - | No |
 | `onRowPinningChange` | `function` | - | No |
 | `onPageChange` | `function` | - | No |
@@ -189,7 +195,7 @@ Enables column sorting. Use the column header menu (kebab) to sort ascending, so
 
 #### `enableColumnReordering`
 
-Enables column reordering through the header kebab menu.
+Enables column reordering through the header kebab menu's Move Column Left / Right actions. The items are disabled at the first and last of your columns.
 
 #### `enableRowActions`
 
@@ -214,6 +220,26 @@ Sorting is controlled while `sort` is provided; pair it with `onSortChange` to a
 #### `onSortChange`
 
 Called with the plain next `SortingState` whenever sorting changes: `[{ id, desc }]`, or `[]` when sorting is cleared. Functional updaters from the table engine are resolved internally and never reach this callback.
+
+#### `columnOrder` / `defaultColumnOrder`
+
+Controlled and uncontrolled column order. An array of your column ids in display order:
+
+```typescript
+['age', 'name', 'id']
+```
+
+Only your own column ids belong in the array. The numeral, selection, and kebab columns the table adds stay in their configured positions. Columns missing from the array are appended after the named ones in `columns` definition order, and unknown ids are ignored. An empty array means `columns` definition order.
+
+Column order is controlled while `columnOrder` is provided; pair it with `onColumnOrderChange` to apply changes, otherwise the order stays frozen at that value. Use `defaultColumnOrder` to seed an uncontrolled table; it is ignored while `columnOrder` is provided.
+
+#### `onColumnOrderChange`
+
+Called with the plain next `ColumnOrderState` when the order changes (for example via the header kebab menu's Move Column Left / Right actions). The array always lists every one of your columns in display order, even when `columnOrder` was partial. Functional updaters from the table engine are resolved internally and never reach this callback.
+
+#### `onColumnReorderChange`
+
+Deprecated. Called with the column's index among all visible columns before the move. Use `onColumnOrderChange` instead, which receives the resulting order.
 
 #### `fullWidth`
 
