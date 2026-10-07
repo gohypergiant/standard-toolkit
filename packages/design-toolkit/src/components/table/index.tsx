@@ -43,7 +43,7 @@ import { tableFeatures } from './features';
 import { TableHeader } from './header';
 import styles from './styles.module.css';
 import { useTableControlledState } from './use-table-controlled-state';
-import { isMetaColumnId, toMenuVariant } from './utils';
+import { getConsumerColumnIds, isMetaColumnId, toMenuVariant } from './utils';
 import type { Key } from '@react-types/shared';
 import type { TableFeatures } from './features';
 import type { RowOrderingState } from './row-ordering-feature';
@@ -286,16 +286,17 @@ export function Table<T extends { id: Key }>({
     onColumnOrderChange,
   );
 
-  // The public `columnOrder` names consumer columns only. The leading meta
-  // columns are listed first here; TanStack appends every unlisted column
-  // (unlisted consumer columns, then a right-side kebab) in `columns`
-  // definition order, so the meta columns keep their configured positions.
+  // The public `columnOrder` names consumer columns only, so meta ids in it
+  // are dropped. The leading meta columns are listed first here; TanStack
+  // appends every unlisted column (unlisted consumer columns, then a
+  // right-side kebab) in `columns` definition order, so the meta columns keep
+  // their configured positions.
   const tableColumnOrder = useMemo<ColumnOrderState>(
     () => [
       HeaderColumnAction.NUMERAL,
       HeaderColumnAction.SELECTION,
       ...(kebabPosition === 'left' ? [HeaderColumnAction.KEBAB] : []),
-      ...columnOrder,
+      ...columnOrder.filter((id) => !isMetaColumnId(id)),
     ],
     [columnOrder, kebabPosition],
   );
@@ -444,45 +445,35 @@ export function Table<T extends { id: Key }>({
 
   // `visibleIndex` is the header's position among all visible columns (what
   // `column.getIndex()` returns); the swap happens among consumer columns
-  // only, and the emitted order always lists every consumer column.
-  const moveColumn = useCallback(
-    (visibleIndex: number, offset: -1 | 1) => {
-      const visibleColumnIds = table.getAllLeafColumns().map(({ id }) => id);
-      const columnId = visibleColumnIds[visibleIndex];
+  // only, and the emitted order always lists every consumer column. Plain
+  // functions: `table` is a new object every render, so memoizing on it
+  // would never hit.
+  const moveColumn = (visibleIndex: number, offset: -1 | 1) => {
+    const columnId = table.getAllLeafColumns()[visibleIndex]?.id;
 
-      if (columnId === undefined) {
-        return;
-      }
+    if (columnId === undefined) {
+      return;
+    }
 
-      const consumerColumnIds = visibleColumnIds.filter(
-        (id) => !isMetaColumnId(id),
-      );
-      const fromIndex = consumerColumnIds.indexOf(columnId);
-      const toIndex = fromIndex + offset;
+    const consumerColumnIds = getConsumerColumnIds(table);
+    const fromIndex = consumerColumnIds.indexOf(columnId);
+    const toIndex = fromIndex + offset;
 
-      if (fromIndex < 0 || toIndex < 0 || toIndex >= consumerColumnIds.length) {
-        return;
-      }
+    if (fromIndex < 0 || toIndex < 0 || toIndex >= consumerColumnIds.length) {
+      return;
+    }
 
-      [consumerColumnIds[fromIndex], consumerColumnIds[toIndex]] = [
-        consumerColumnIds[toIndex] as string,
-        consumerColumnIds[fromIndex] as string,
-      ];
+    [consumerColumnIds[fromIndex], consumerColumnIds[toIndex]] = [
+      consumerColumnIds[toIndex] as string,
+      consumerColumnIds[fromIndex] as string,
+    ];
 
-      setColumnOrder(consumerColumnIds);
-    },
-    [table, setColumnOrder],
-  );
+    setColumnOrder(consumerColumnIds);
+  };
 
-  const moveColumnLeft = useCallback(
-    (visibleIndex: number) => moveColumn(visibleIndex, -1),
-    [moveColumn],
-  );
+  const moveColumnLeft = (visibleIndex: number) => moveColumn(visibleIndex, -1);
 
-  const moveColumnRight = useCallback(
-    (visibleIndex: number) => moveColumn(visibleIndex, 1),
-    [moveColumn],
-  );
+  const moveColumnRight = (visibleIndex: number) => moveColumn(visibleIndex, 1);
 
   const className = clsx(
     styles.table,

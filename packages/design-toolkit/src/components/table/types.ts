@@ -198,7 +198,7 @@ type ExtendedTableProps<T extends { id: Key }> = {
    * kebab menu.
    *
    * @deprecated Use `onColumnOrderChange`, which receives the resulting order.
-   * @param index - The moved column's index among all visible columns.
+   * @param index - The column's index among all visible columns before the move.
    */
   onColumnReorderChange?: (index: number) => void;
   /**

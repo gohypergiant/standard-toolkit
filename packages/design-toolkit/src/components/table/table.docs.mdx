@@ -227,11 +227,9 @@ const [columnOrder, setColumnOrder] = useState<ColumnOrderState>([
 />
 ```
 
-The order names your own column ids only; the numeral, selection, and kebab
-columns stay in their configured positions. Columns missing from the array are
-appended after the named ones in `columns` definition order, and unknown ids
-are ignored. `onColumnOrderChange` receives the plain next `ColumnOrderState`
-listing every one of your columns in display order.
+Only your own column ids belong in the order; the numeral, selection, and kebab
+columns stay put. `onColumnOrderChange` receives the plain next
+`ColumnOrderState` listing every one of your columns in display order.
 
 <Canvas of={TableStories.ControlledColumnOrder} />
 
@@ -309,9 +307,9 @@ Only data mode (`columns` + `data`) accepts `variant`. Custom-children mode
 | `displayNumerals` | `boolean` | `true` | Display cell with row numbers |
 | `enableSorting` | `boolean` | `true` | Enable column sorting |
 | `enableColumnReordering` | `boolean` | `true` | Enable column reordering through the header menu |
-| `columnOrder` | `ColumnOrderState` | - | Controlled column order: your column ids in display order, e.g. `['age', 'name']` |
+| `columnOrder` | `ColumnOrderState` | - | Controlled column order, e.g. `['age', 'name']` |
 | `defaultColumnOrder` | `ColumnOrderState` | `[]` | Initial column order for uncontrolled use; ignored while `columnOrder` is set |
-| `onColumnOrderChange` | `(columnOrder: ColumnOrderState) => void` | - | Called with the plain next order, listing every one of your columns |
+| `onColumnOrderChange` | `(columnOrder: ColumnOrderState) => void` | - | Called with the plain next column order |
 | `enableRowActions` | `boolean` | `true` | Enable row action menu |
 | `manualSorting` | `boolean` | `false` | Server-side sorting mode; data renders in the order provided |
 | `onColumnReorderChange` | `(index) => void` | - | Deprecated; use `onColumnOrderChange` |

@@ -565,20 +565,20 @@ export const ControlledColumnOrder: Story = {
     docs: {
       description: {
         story:
-          'The `columnOrder` prop is the controlled column order value: pair it with `onColumnOrderChange`, which always receives the plain next `ColumnOrderState` (`string[]`), never an updater function. Only your own column ids appear in the order; the numeral, selection, and kebab columns stay in place. Reorder columns via the header kebab menu (Move Column Left / Right), or use the "Reset order" button to restore the original order from outside the table without a remount. The current order is rendered below the table as JSON.',
+          'The `columnOrder` prop is the controlled column order value: pair it with `onColumnOrderChange`, which always receives the plain next `ColumnOrderState` (`string[]`), never an updater function. The story starts with `age` first and the name columns swapped, so the controlled value visibly differs from the `columns` definition order. Reorder columns via the header kebab menu (Move Column Left / Right), or use the "Reset order" button to restore that starting order from outside the table without a remount. The current order is rendered below the table as JSON.',
       },
     },
   },
   render: (args) => {
-    const defaultOrder: ColumnOrderState = [
-      'firstName',
-      'lastName',
+    const startingOrder: ColumnOrderState = [
       'age',
+      'lastName',
+      'firstName',
       'visits',
       'status',
       'progress',
     ];
-    const [order, setOrder] = useState<ColumnOrderState>(defaultOrder);
+    const [order, setOrder] = useState<ColumnOrderState>(startingOrder);
 
     return (
       <div>
@@ -589,7 +589,7 @@ export const ControlledColumnOrder: Story = {
           key={JSON.stringify(args)}
         />
         <div style={{ marginTop: '1rem' }}>
-          <Button onPress={() => setOrder(defaultOrder)}>Reset order</Button>
+          <Button onPress={() => setOrder(startingOrder)}>Reset order</Button>
           <p>
             <strong>Column order:</strong> {JSON.stringify(order)}
           </p>

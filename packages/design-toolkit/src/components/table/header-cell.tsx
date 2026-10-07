@@ -23,14 +23,10 @@ import { Menu } from '../menu';
 import { MenuItem } from '../menu/item';
 import { MenuSeparator } from '../menu/separator';
 import { MenuTrigger } from '../menu/trigger';
-import {
-  HeaderColumnAction,
-  headerColumnActionValues,
-  SortDirection,
-} from './constants/table';
+import { HeaderColumnAction, SortDirection } from './constants/table';
 import { TableContext } from './context';
 import styles from './styles.module.css';
-import { isMetaColumnId, toMenuVariant } from './utils';
+import { getConsumerColumnIds, isMetaColumnId, toMenuVariant } from './utils';
 import type { TableFeatures } from './features';
 import type { TableHeaderCellProps } from './types';
 
@@ -55,9 +51,7 @@ function HeaderCellMenu<T extends RowData>({
   const hideHeaderKebab = !persistHeaderKebabMenu;
 
   if (
-    headerColumnActionValues.includes(
-      header.column.id as 'numeral' | 'kebab' | 'selection',
-    ) ||
+    isMetaColumnId(header.column.id) ||
     !(enableSorting || enableColumnReordering)
   ) {
     return null;
@@ -67,10 +61,7 @@ function HeaderCellMenu<T extends RowData>({
 
   // Meta columns never move, so the edges are the first and last consumer
   // columns rather than TanStack's first and last visible columns.
-  const consumerColumnIds = header.column.table
-    .getAllLeafColumns()
-    .map(({ id }) => id)
-    .filter((id) => !isMetaColumnId(id));
+  const consumerColumnIds = getConsumerColumnIds(header.column.table);
   const isFirstConsumerColumn = consumerColumnIds[0] === header.column.id;
   const isLastConsumerColumn =
     consumerColumnIds[consumerColumnIds.length - 1] === header.column.id;

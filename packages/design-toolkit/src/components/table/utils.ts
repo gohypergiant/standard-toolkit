@@ -12,8 +12,10 @@
  */
 
 import { headerColumnActionValues } from './constants/table';
+import type { RowData, Table } from '@tanstack/react-table';
 import type { DensityVariant } from '@/lib/types';
 import type { MenuProps } from '../menu/types';
+import type { TableFeatures } from './features';
 
 /**
  * Clamps a table density to the subset the Menu accepts, so the row actions
@@ -57,4 +59,29 @@ const metaColumnIds: ReadonlySet<string> = new Set(headerColumnActionValues);
  */
 export function isMetaColumnId(columnId: string): boolean {
   return metaColumnIds.has(columnId);
+}
+
+/**
+ * Ids of the consumer-defined columns in their current display order: every
+ * leaf column except the Table's meta columns. Column reordering swaps within
+ * this list, and `onColumnOrderChange` emits it.
+ *
+ * @remarks pure function
+ *
+ * @template TData - Row data type of the table.
+ * @param table - The TanStack table instance.
+ * @returns Consumer column ids in display order.
+ *
+ * @example
+ * ```ts
+ * getConsumerColumnIds(table); // ['firstName', 'lastName', 'age']
+ * ```
+ */
+export function getConsumerColumnIds<TData extends RowData>(
+  table: Table<TableFeatures, TData>,
+): string[] {
+  return table
+    .getAllLeafColumns()
+    .map(({ id }) => id)
+    .filter((id) => !isMetaColumnId(id));
 }
