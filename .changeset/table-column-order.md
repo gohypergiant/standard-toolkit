@@ -1,5 +1,5 @@
 ---
-"@accelint/design-toolkit": patch
+"@accelint/design-toolkit": minor
 ---
 
-Fix `Table` not updating column order after mount. `columnOrder` was seeded once through TanStack's `initialState`, so manual reorders (via the header kebab's "Move Column Left/Right") never persisted and later `columns` prop changes never adjusted the order. `columnOrder` is now tracked as reactive state wired through `useTable`'s `state` and `onColumnOrderChange`, matching the pattern already used for row selection, row pinning, sort, and row ordering.
+Add controlled column order to `Table`. `columnOrder`, `defaultColumnOrder`, and `onColumnOrderChange` follow the same convention as sorting, row selection, and row pinning: uncontrolled by default, seedable, and controlled when the value prop is set. The order names your own column ids only; the numeral, selection, and kebab columns stay in place. Column order now follows later `columns` prop changes instead of being fixed at mount, and the header menu's Move Column Left / Right items are disabled at the edges of your columns. `onColumnReorderChange` is deprecated in favor of `onColumnOrderChange`.

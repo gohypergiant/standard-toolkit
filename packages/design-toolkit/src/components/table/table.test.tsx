@@ -1255,7 +1255,7 @@ describe('Table numeral column', () => {
 
 type Author = { id: string; name: string; series: string[]; books: number };
 
-const personColumnHelper = createTableColumnHelper<Author>();
+const authorColumnHelper = createTableColumnHelper<Author>();
 
 const authors: Author[] = [
   { id: '1', name: 'George R.R. Martin', series: ['ASOIAF'], books: 5 },
@@ -1267,138 +1267,236 @@ const authors: Author[] = [
   },
 ];
 
-const controlledColumns = [
-  personColumnHelper.accessor('name', {
+const authorColumns = [
+  authorColumnHelper.accessor('name', {
     id: 'name',
     header: 'Name',
     cell: (info) => info.getValue(),
   }),
-  personColumnHelper.accessor('series', {
+  authorColumnHelper.accessor('series', {
     id: 'series',
     header: 'Series',
     cell: (info) => info.getValue().join(', '),
   }),
-  personColumnHelper.accessor('books', {
+  authorColumnHelper.accessor('books', {
     id: 'books',
     header: 'Books',
     cell: (info) => info.getValue(),
   }),
 ];
 
-describe('Table controlled columns', () => {
-  it('should render columns based on controlled column order', () => {
+// Header text per column in display order; the numeral, selection, and kebab
+// header cells have no text, so they show up as ''.
+function headerTexts() {
+  const headerRow = screen.getAllByRole('row')[0] as HTMLElement;
+
+  return within(headerRow)
+    .getAllByRole('columnheader')
+    .map((header) => header.textContent);
+}
+
+async function moveColumn(
+  headerIndex: number,
+  direction: 'Move Column Left' | 'Move Column Right',
+) {
+  await userEvent.click(
+    screen.getAllByRole('button', { name: 'Menu' })[headerIndex] as HTMLElement,
+  );
+  await userEvent.click(
+    await screen.findByRole('menuitemradio', { name: direction }),
+  );
+}
+
+describe('Table column order', () => {
+  it('should render consumer columns in the controlled order and keep meta columns in place', () => {
     render(
       <Table
-        columns={controlledColumns}
+        columns={authorColumns}
         data={authors}
-        columnOrder={controlledColumns.map((col) => col.accessorKey!)}
+        columnOrder={['series', 'name', 'books']}
       />,
     );
 
-    const headerRow = screen.getAllByRole('row')[0] as HTMLElement;
-    const headers = within(headerRow).getAllByRole('columnheader');
-
-    // The headers should match the controlled column order
-    controlledColumns.forEach((col, index) => {
-      expect(headers[index]).toHaveTextContent(col.header as string);
-    });
+    expect(headerTexts()).toEqual(['', 'Series', 'Name', 'Books', '']);
   });
 
-  it('should update column order when user moves column right', async () => {
+  it('should keep the selection and left kebab columns ahead of a controlled order', () => {
+    render(
+      <Table
+        columns={authorColumns}
+        data={authors}
+        showCheckbox
+        kebabPosition='left'
+        columnOrder={['series', 'name', 'books']}
+      />,
+    );
+
+    expect(headerTexts()).toEqual(['', '', '', 'Series', 'Name', 'Books']);
+  });
+
+  it('should append consumer columns missing from a partial controlled order', () => {
+    render(
+      <Table columns={authorColumns} data={authors} columnOrder={['books']} />,
+    );
+
+    expect(headerTexts()).toEqual(['', 'Books', 'Name', 'Series', '']);
+  });
+
+  it('should reorder header and body columns when uncontrolled', async () => {
+    render(<Table columns={authorColumns} data={authors} />);
+
+    await moveColumn(0, 'Move Column Right');
+
+    expect(headerTexts()).toEqual(['', 'Series', 'Name', 'Books', '']);
+
+    const firstDataRow = screen.getAllByRole('row')[1] as HTMLElement;
+    const cellTexts = within(firstDataRow)
+      .getAllByRole('cell')
+      .map((cell) => cell.textContent);
+
+    expect(cellTexts).toEqual(['1', 'ASOIAF', 'George R.R. Martin', '5', '']);
+  });
+
+  it('should seed an uncontrolled order from defaultColumnOrder', async () => {
+    render(
+      <Table
+        columns={authorColumns}
+        data={authors}
+        defaultColumnOrder={['books']}
+      />,
+    );
+
+    expect(headerTexts()).toEqual(['', 'Books', 'Name', 'Series', '']);
+
+    await moveColumn(0, 'Move Column Right');
+
+    expect(headerTexts()).toEqual(['', 'Name', 'Books', 'Series', '']);
+  });
+
+  it('should follow columns prop changes without remount', () => {
+    const { rerender } = render(
+      <Table
+        columns={authorColumns.slice(0, 2)}
+        data={authors}
+        columnOrder={['series', 'name']}
+      />,
+    );
+
+    expect(headerTexts()).toEqual(['', 'Series', 'Name', '']);
+
+    rerender(
+      <Table
+        columns={authorColumns}
+        data={authors}
+        columnOrder={['series', 'name']}
+      />,
+    );
+
+    expect(headerTexts()).toEqual(['', 'Series', 'Name', 'Books', '']);
+  });
+
+  it('should call onColumnOrderChange with the next order when moving a column right', async () => {
     const onColumnOrderChange = vi.fn();
 
     render(
       <Table
-        columns={controlledColumns}
+        columns={authorColumns}
         data={authors}
         columnOrder={['name', 'series', 'books']}
         onColumnOrderChange={onColumnOrderChange}
       />,
     );
 
-    await userEvent.click(
-      screen.getAllByRole('button', { name: 'Menu' })[0] as HTMLElement,
-    );
-    await userEvent.click(
-      await screen.findByRole('menuitemradio', { name: 'Move Column Right' }),
-    );
+    await moveColumn(0, 'Move Column Right');
 
     expect(onColumnOrderChange).toHaveBeenCalledTimes(1);
-    expect(onColumnOrderChange.mock.calls[0]?.[0]).toEqual([
+    expect(onColumnOrderChange).toHaveBeenCalledWith([
       'series',
       'name',
       'books',
     ]);
   });
 
-  it('should update column order when user moves column left', async () => {
+  it('should call onColumnOrderChange with the next order when moving a column left', async () => {
     const onColumnOrderChange = vi.fn();
 
     render(
       <Table
-        columns={controlledColumns}
+        columns={authorColumns}
         data={authors}
         columnOrder={['name', 'series', 'books']}
         onColumnOrderChange={onColumnOrderChange}
       />,
     );
 
-    await userEvent.click(
-      screen.getAllByRole('button', { name: 'Menu' })[2] as HTMLElement,
-    );
-    await userEvent.click(
-      await screen.findByRole('menuitemradio', { name: 'Move Column Left' }),
-    );
+    await moveColumn(2, 'Move Column Left');
 
     expect(onColumnOrderChange).toHaveBeenCalledTimes(1);
-    expect(onColumnOrderChange.mock.calls[0]?.[0]).toEqual([
+    expect(onColumnOrderChange).toHaveBeenCalledWith([
       'name',
       'books',
       'series',
     ]);
   });
 
-  it('should not move the last column right', async () => {
+  it('should emit every consumer column id when the controlled order was partial', async () => {
     const onColumnOrderChange = vi.fn();
 
     render(
       <Table
-        columns={controlledColumns}
+        columns={authorColumns}
         data={authors}
-        columnOrder={['name', 'series', 'books']}
+        columnOrder={['books']}
         onColumnOrderChange={onColumnOrderChange}
       />,
     );
 
-    await userEvent.click(
-      screen.getAllByRole('button', { name: 'Menu' })[2] as HTMLElement,
-    );
-    await userEvent.click(
-      await screen.findByRole('menuitemradio', { name: 'Move Column Right' }),
-    );
+    await moveColumn(0, 'Move Column Right');
 
-    expect(onColumnOrderChange).toHaveBeenCalledTimes(0);
+    expect(onColumnOrderChange).toHaveBeenCalledWith([
+      'name',
+      'books',
+      'series',
+    ]);
   });
 
-  it('should not move the first column left', async () => {
+  it('should disable moving the first column left', async () => {
     const onColumnOrderChange = vi.fn();
 
     render(
       <Table
-        columns={controlledColumns}
+        columns={authorColumns}
         data={authors}
         columnOrder={['name', 'series', 'books']}
         onColumnOrderChange={onColumnOrderChange}
       />,
     );
 
-    await userEvent.click(
-      screen.getAllByRole('button', { name: 'Menu' })[0] as HTMLElement,
-    );
-    await userEvent.click(
-      await screen.findByRole('menuitemradio', { name: 'Move Column Left' }),
+    await moveColumn(0, 'Move Column Left');
+
+    expect(
+      screen.getByRole('menuitemradio', { name: 'Move Column Left' }),
+    ).toHaveAttribute('aria-disabled', 'true');
+    expect(onColumnOrderChange).not.toHaveBeenCalled();
+  });
+
+  it('should disable moving the last column right', async () => {
+    const onColumnOrderChange = vi.fn();
+
+    render(
+      <Table
+        columns={authorColumns}
+        data={authors}
+        columnOrder={['name', 'series', 'books']}
+        onColumnOrderChange={onColumnOrderChange}
+      />,
     );
 
-    expect(onColumnOrderChange).toHaveBeenCalledTimes(0);
+    await moveColumn(2, 'Move Column Right');
+
+    expect(
+      screen.getByRole('menuitemradio', { name: 'Move Column Right' }),
+    ).toHaveAttribute('aria-disabled', 'true');
+    expect(onColumnOrderChange).not.toHaveBeenCalled();
   });
 });

@@ -46,15 +46,15 @@ const data = [
 
 ## Controlled and Uncontrolled State
 
-Sorting, row selection, and row pinning each follow the same convention: the
-state is uncontrolled by default, can be seeded with a `default*` prop, and
+Sorting, row selection, row pinning, and column order each follow the same
+convention: the state is uncontrolled by default, can be seeded with a `default*` prop, and
 becomes controlled when the value prop is set. Every `on*Change` callback
 receives the plain next state value, ready to pass to a `useState` setter. A
 controlled value without a matching callback stays frozen at that value.
 
-The state types (`SortingState`, `RowSelectionState`, `RowPinningState`) are
-imported from `@tanstack/react-table`; the design toolkit does not re-export
-them.
+The state types (`SortingState`, `RowSelectionState`, `RowPinningState`,
+`ColumnOrderState`) are imported from `@tanstack/react-table`; the design
+toolkit does not re-export them.
 
 ## Static Table
 
@@ -204,6 +204,37 @@ const [rowPinning, setRowPinning] = useState<RowPinningState>({
 
 <Canvas of={TableStories.ControlledRowPinning} />
 
+## Column Order
+
+Move columns left or right through the column header menu (kebab). Column
+order is uncontrolled by default; seed it with `defaultColumnOrder`, or
+control it with `columnOrder` and `onColumnOrderChange`.
+
+```tsx
+import type { ColumnOrderState } from '@tanstack/react-table';
+
+const [columnOrder, setColumnOrder] = useState<ColumnOrderState>([
+  'age',
+  'firstName',
+  'lastName',
+]);
+
+<Table
+  columns={columns}
+  data={data}
+  columnOrder={columnOrder}
+  onColumnOrderChange={setColumnOrder}
+/>
+```
+
+The order names your own column ids only; the numeral, selection, and kebab
+columns stay in their configured positions. Columns missing from the array are
+appended after the named ones in `columns` definition order, and unknown ids
+are ignored. `onColumnOrderChange` receives the plain next `ColumnOrderState`
+listing every one of your columns in display order.
+
+<Canvas of={TableStories.ControlledColumnOrder} />
+
 ## Pagination
 
 Table handles client-side data slicing internally when `pageSize` is set. Render `<Pagination>` alongside the Table to provide page navigation - the two components are kept separate so you have full control over Pagination's placement and props.
@@ -254,7 +285,7 @@ Only data mode (`columns` + `data`) accepts `variant`. Custom-children mode
 
 ## Props
 
-`SortingState`, `RowSelectionState`, and `RowPinningState` are imported from `@tanstack/react-table`.
+`SortingState`, `RowSelectionState`, `RowPinningState`, and `ColumnOrderState` are imported from `@tanstack/react-table`.
 
 | Prop | Type | Default | Description |
 |------|------|---------|-------------|
@@ -277,10 +308,13 @@ Only data mode (`columns` + `data`) accepts `variant`. Custom-children mode
 | `persistNumerals` | `boolean` | `false` | Always show row numbers |
 | `displayNumerals` | `boolean` | `true` | Display cell with row numbers |
 | `enableSorting` | `boolean` | `true` | Enable column sorting |
-| `enableColumnReordering` | `boolean` | `true` | Enable column reordering |
+| `enableColumnReordering` | `boolean` | `true` | Enable column reordering through the header menu |
+| `columnOrder` | `ColumnOrderState` | - | Controlled column order: your column ids in display order, e.g. `['age', 'name']` |
+| `defaultColumnOrder` | `ColumnOrderState` | `[]` | Initial column order for uncontrolled use; ignored while `columnOrder` is set |
+| `onColumnOrderChange` | `(columnOrder: ColumnOrderState) => void` | - | Called with the plain next order, listing every one of your columns |
 | `enableRowActions` | `boolean` | `true` | Enable row action menu |
 | `manualSorting` | `boolean` | `false` | Server-side sorting mode; data renders in the order provided |
-| `onColumnReorderChange` | `(index) => void` | - | Callback when column is reordered |
+| `onColumnReorderChange` | `(index) => void` | - | Deprecated; use `onColumnOrderChange` |
 | `fullWidth` | `boolean` | `false` | Apply full width with fixed layout |
 | `pageSize` | `number` | - | Rows per page; enables built-in pagination |
 | `page` | `number` | - | Controlled current page (1-indexed) |

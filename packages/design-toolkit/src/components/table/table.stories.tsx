@@ -565,7 +565,7 @@ export const ControlledColumnOrder: Story = {
     docs: {
       description: {
         story:
-          'The `columnOrder` prop is the controlled column order value: pair it with `onColumnOrderChange`, which always receives the plain next `ColumnOrderState` (`string[]`), never an updater function. Reorder columns via the header kebab menu (Move Column Left / Right), or use the "Reset order" button to restore the original order from outside the table without a remount. The current order is rendered below the table as JSON.',
+          'The `columnOrder` prop is the controlled column order value: pair it with `onColumnOrderChange`, which always receives the plain next `ColumnOrderState` (`string[]`), never an updater function. Only your own column ids appear in the order; the numeral, selection, and kebab columns stay in place. Reorder columns via the header kebab menu (Move Column Left / Right), or use the "Reset order" button to restore the original order from outside the table without a remount. The current order is rendered below the table as JSON.',
       },
     },
   },

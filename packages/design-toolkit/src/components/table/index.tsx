@@ -37,13 +37,13 @@ import { MenuItem } from '../menu/item';
 import { MenuSeparator } from '../menu/separator';
 import { MenuTrigger } from '../menu/trigger';
 import { TableBody } from './body';
-import { DEFAULT_TABLE_VARIANT } from './constants/table';
+import { DEFAULT_TABLE_VARIANT, HeaderColumnAction } from './constants/table';
 import { TableContext } from './context';
 import { tableFeatures } from './features';
 import { TableHeader } from './header';
 import styles from './styles.module.css';
 import { useTableControlledState } from './use-table-controlled-state';
-import { toMenuVariant } from './utils';
+import { isMetaColumnId, toMenuVariant } from './utils';
 import type { Key } from '@react-types/shared';
 import type { TableFeatures } from './features';
 import type { RowOrderingState } from './row-ordering-feature';
@@ -69,8 +69,7 @@ const EMPTY_ROW_PINNING: RowPinningState = { top: [], bottom: [] };
 const EMPTY_SORT: SortingState = [];
 
 // Stable default so an uncontrolled column order slice does not re-seed on
-// every render. An empty array is TanStack's own "natural columns order"
-// fallback, so this reproduces today's behavior without deriving from `columns`.
+// every render. An empty array means the `columns` definition order.
 const EMPTY_COLUMN_ORDER: ColumnOrderState = [];
 
 type RowActionsMenuProps<T extends RowData> = {
@@ -151,11 +150,12 @@ function RowActionsMenu<T extends RowData>({ row }: RowActionsMenuProps<T>) {
  * @param props.defaultSort - Initial sort state for uncontrolled use.
  * @param props.onSortChange - Callback receiving the plain next
  * `SortingState`, in both client-side and `manualSorting` modes.
- * @param props.onColumnReorderChange - Callback when column order changes.
- * @param props.columnOrder - Controlled column order state; without
- * `onColumnOrderChange` the order stays frozen at this value.
- * @param props.defaultColumnOrder - Initial column order state for uncontrolled use.
- * @param props.onColumnOrderChange - Callback receiving the plain next column order state.
+ * @param props.onColumnReorderChange - Deprecated; use `onColumnOrderChange`.
+ * @param props.columnOrder - Controlled column order (consumer column ids);
+ * without `onColumnOrderChange` the order stays frozen at this value.
+ * @param props.defaultColumnOrder - Initial column order for uncontrolled use.
+ * @param props.onColumnOrderChange - Callback receiving the plain next
+ * `ColumnOrderState` of consumer column ids.
  * @param props.onRowSelectionChange - Callback receiving the plain next row selection state.
  * @param props.fullWidth - Whether table uses full width.
  * @param props.pageSize - Rows per page; enables built-in pagination when set.
@@ -286,6 +286,20 @@ export function Table<T extends { id: Key }>({
     onColumnOrderChange,
   );
 
+  // The public `columnOrder` names consumer columns only. The leading meta
+  // columns are listed first here; TanStack appends every unlisted column
+  // (unlisted consumer columns, then a right-side kebab) in `columns`
+  // definition order, so the meta columns keep their configured positions.
+  const tableColumnOrder = useMemo<ColumnOrderState>(
+    () => [
+      HeaderColumnAction.NUMERAL,
+      HeaderColumnAction.SELECTION,
+      ...(kebabPosition === 'left' ? [HeaderColumnAction.KEBAB] : []),
+      ...columnOrder,
+    ],
+    [columnOrder, kebabPosition],
+  );
+
   const [currentPage, setCurrentPage] = useControlledState(
     pageProp,
     defaultPage,
@@ -397,77 +411,77 @@ export function Table<T extends { id: Key }>({
     onColumnReorderChange?.(index);
   };
 
-  const { getHeaderGroups, getTopRows, getCenterRows, getBottomRows } =
-    useTable({
-      features: tableFeatures,
-      data,
-      columns,
-      enableSorting,
-      state: {
-        rowSelection,
-        rowPinning,
-        rowOrdering,
-        sorting: sort,
-        columnOrder,
-        ...(pagination != null && { pagination }),
-      },
-      getRowId: (row, index) => {
-        // Use the index as the row ID if no unique identifier is available
-        return row.id ? row.id.toString() : index.toString();
-      },
-      enableRowSelection: true,
-      enableRowPinning: true,
-      manualSorting: manualSorting,
-      // no pageSize → paginated row model passes rows through untouched
-      manualPagination: pagination == null,
-      onRowSelectionChange: setRowSelection,
-      onSortingChange: setSort,
-      onRowPinningChange: setRowPinning,
-      onRowOrderingChange: setRowOrdering,
-      onColumnOrderChange: setColumnOrder,
-      onPaginationChange: handlePaginationChange,
-    });
+  const table = useTable({
+    features: tableFeatures,
+    data,
+    columns,
+    enableSorting,
+    state: {
+      rowSelection,
+      rowPinning,
+      rowOrdering,
+      sorting: sort,
+      columnOrder: tableColumnOrder,
+      ...(pagination != null && { pagination }),
+    },
+    getRowId: (row, index) => {
+      // Use the index as the row ID if no unique identifier is available
+      return row.id ? row.id.toString() : index.toString();
+    },
+    enableRowSelection: true,
+    enableRowPinning: true,
+    manualSorting: manualSorting,
+    // no pageSize → paginated row model passes rows through untouched
+    manualPagination: pagination == null,
+    onRowSelectionChange: setRowSelection,
+    onSortingChange: setSort,
+    onRowPinningChange: setRowPinning,
+    onRowOrderingChange: setRowOrdering,
+    onPaginationChange: handlePaginationChange,
+  });
+
+  const { getHeaderGroups, getTopRows, getCenterRows, getBottomRows } = table;
+
+  // `visibleIndex` is the header's position among all visible columns (what
+  // `column.getIndex()` returns); the swap happens among consumer columns
+  // only, and the emitted order always lists every consumer column.
+  const moveColumn = useCallback(
+    (visibleIndex: number, offset: -1 | 1) => {
+      const visibleColumnIds = table.getAllLeafColumns().map(({ id }) => id);
+      const columnId = visibleColumnIds[visibleIndex];
+
+      if (columnId === undefined) {
+        return;
+      }
+
+      const consumerColumnIds = visibleColumnIds.filter(
+        (id) => !isMetaColumnId(id),
+      );
+      const fromIndex = consumerColumnIds.indexOf(columnId);
+      const toIndex = fromIndex + offset;
+
+      if (fromIndex < 0 || toIndex < 0 || toIndex >= consumerColumnIds.length) {
+        return;
+      }
+
+      [consumerColumnIds[fromIndex], consumerColumnIds[toIndex]] = [
+        consumerColumnIds[toIndex] as string,
+        consumerColumnIds[fromIndex] as string,
+      ];
+
+      setColumnOrder(consumerColumnIds);
+    },
+    [table, setColumnOrder],
+  );
 
   const moveColumnLeft = useCallback(
-    (oldIndex: number) => {
-      setColumnOrder((order) => {
-        const newColumnOrder = [...order];
-        const newIndex = oldIndex - 1;
-
-        if (newIndex < 0) {
-          return order;
-        }
-
-        [newColumnOrder[oldIndex], newColumnOrder[newIndex]] = [
-          newColumnOrder[newIndex] as string,
-          newColumnOrder[oldIndex] as string,
-        ];
-
-        return newColumnOrder;
-      });
-    },
-    [setColumnOrder],
+    (visibleIndex: number) => moveColumn(visibleIndex, -1),
+    [moveColumn],
   );
 
   const moveColumnRight = useCallback(
-    (oldIndex: number) => {
-      setColumnOrder((order) => {
-        const newColumnOrder = [...order];
-        const newIndex = oldIndex + 1;
-
-        if (newIndex >= order.length) {
-          return order;
-        }
-
-        [newColumnOrder[oldIndex], newColumnOrder[newIndex]] = [
-          newColumnOrder[newIndex] as string,
-          newColumnOrder[oldIndex] as string,
-        ];
-
-        return newColumnOrder;
-      });
-    },
-    [setColumnOrder],
+    (visibleIndex: number) => moveColumn(visibleIndex, 1),
+    [moveColumn],
   );
 
   const className = clsx(

@@ -30,7 +30,7 @@ import {
 } from './constants/table';
 import { TableContext } from './context';
 import styles from './styles.module.css';
-import { toMenuVariant } from './utils';
+import { isMetaColumnId, toMenuVariant } from './utils';
 import type { TableFeatures } from './features';
 import type { TableHeaderCellProps } from './types';
 
@@ -65,6 +65,16 @@ function HeaderCellMenu<T extends RowData>({
 
   const sort = header.column.getIsSorted();
 
+  // Meta columns never move, so the edges are the first and last consumer
+  // columns rather than TanStack's first and last visible columns.
+  const consumerColumnIds = header.column.table
+    .getAllLeafColumns()
+    .map(({ id }) => id)
+    .filter((id) => !isMetaColumnId(id));
+  const isFirstConsumerColumn = consumerColumnIds[0] === header.column.id;
+  const isLastConsumerColumn =
+    consumerColumnIds[consumerColumnIds.length - 1] === header.column.id;
+
   return (
     <div className={clsx(hideHeaderKebab && styles.hideInHeader)}>
       <MenuTrigger
@@ -92,7 +102,7 @@ function HeaderCellMenu<T extends RowData>({
                   moveColumnLeft(index);
                   handleColumnReordering?.(index);
                 }}
-                isDisabled={header.column.getIsFirstColumn('center')}
+                isDisabled={isFirstConsumerColumn}
               >
                 Move Column Left
               </MenuItem>
@@ -102,7 +112,7 @@ function HeaderCellMenu<T extends RowData>({
                   moveColumnRight(index);
                   handleColumnReordering?.(index);
                 }}
-                isDisabled={header.column.getIsLastColumn('center')}
+                isDisabled={isLastConsumerColumn}
               >
                 Move Column Right
               </MenuItem>
