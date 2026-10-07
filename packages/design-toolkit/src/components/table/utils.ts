@@ -11,8 +11,11 @@
  * governing permissions and limitations under the License.
  */
 
+import { headerColumnActionValues } from './constants/table';
+import type { RowData, Table } from '@tanstack/react-table';
 import type { DensityVariant } from '@/lib/types';
 import type { MenuProps } from '../menu/types';
+import type { TableFeatures } from './features';
 
 /**
  * Clamps a table density to the subset the Menu accepts, so the row actions
@@ -34,4 +37,51 @@ export function toMenuVariant(
   variant: DensityVariant,
 ): NonNullable<MenuProps<object>['variant']> {
   return variant === 'crammed' ? 'compact' : variant;
+}
+
+const metaColumnIds: ReadonlySet<string> = new Set(headerColumnActionValues);
+
+/**
+ * Whether a column id belongs to one of the Table's own meta columns (numeral,
+ * selection, kebab) rather than a consumer-defined column. Meta columns keep
+ * their configured positions and never take part in column reordering.
+ *
+ * @remarks pure function
+ *
+ * @param columnId - A TanStack column id.
+ * @returns `true` for the numeral, selection, and kebab column ids.
+ *
+ * @example
+ * ```ts
+ * isMetaColumnId('kebab'); // true
+ * isMetaColumnId('firstName'); // false
+ * ```
+ */
+export function isMetaColumnId(columnId: string): boolean {
+  return metaColumnIds.has(columnId);
+}
+
+/**
+ * Ids of the consumer-defined columns in their current display order: every
+ * leaf column except the Table's meta columns. Column reordering swaps within
+ * this list, and `onColumnOrderChange` emits it.
+ *
+ * @remarks pure function
+ *
+ * @template TData - Row data type of the table.
+ * @param table - The TanStack table instance.
+ * @returns Consumer column ids in display order.
+ *
+ * @example
+ * ```ts
+ * getConsumerColumnIds(table); // ['firstName', 'lastName', 'age']
+ * ```
+ */
+export function getConsumerColumnIds<TData extends RowData>(
+  table: Table<TableFeatures, TData>,
+): string[] {
+  return table
+    .getAllLeafColumns()
+    .map(({ id }) => id)
+    .filter((id) => !isMetaColumnId(id));
 }
