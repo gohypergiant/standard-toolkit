@@ -23,14 +23,10 @@ import { Menu } from '../menu';
 import { MenuItem } from '../menu/item';
 import { MenuSeparator } from '../menu/separator';
 import { MenuTrigger } from '../menu/trigger';
-import {
-  HeaderColumnAction,
-  headerColumnActionValues,
-  SortDirection,
-} from './constants/table';
+import { HeaderColumnAction, SortDirection } from './constants/table';
 import { TableContext } from './context';
 import styles from './styles.module.css';
-import { toMenuVariant } from './utils';
+import { getConsumerColumnIds, isMetaColumnId, toMenuVariant } from './utils';
 import type { TableFeatures } from './features';
 import type { TableHeaderCellProps } from './types';
 
@@ -55,15 +51,20 @@ function HeaderCellMenu<T extends RowData>({
   const hideHeaderKebab = !persistHeaderKebabMenu;
 
   if (
-    headerColumnActionValues.includes(
-      header.column.id as 'numeral' | 'kebab' | 'selection',
-    ) ||
+    isMetaColumnId(header.column.id) ||
     !(enableSorting || enableColumnReordering)
   ) {
     return null;
   }
 
   const sort = header.column.getIsSorted();
+
+  // Meta columns never move, so the edges are the first and last consumer
+  // columns rather than TanStack's first and last visible columns.
+  const consumerColumnIds = getConsumerColumnIds(header.column.table);
+  const isFirstConsumerColumn = consumerColumnIds[0] === header.column.id;
+  const isLastConsumerColumn =
+    consumerColumnIds[consumerColumnIds.length - 1] === header.column.id;
 
   return (
     <div className={clsx(hideHeaderKebab && styles.hideInHeader)}>
@@ -92,7 +93,7 @@ function HeaderCellMenu<T extends RowData>({
                   moveColumnLeft(index);
                   handleColumnReordering?.(index);
                 }}
-                isDisabled={header.column.getIsFirstColumn('center')}
+                isDisabled={isFirstConsumerColumn}
               >
                 Move Column Left
               </MenuItem>
@@ -102,7 +103,7 @@ function HeaderCellMenu<T extends RowData>({
                   moveColumnRight(index);
                   handleColumnReordering?.(index);
                 }}
-                isDisabled={header.column.getIsLastColumn('center')}
+                isDisabled={isLastConsumerColumn}
               >
                 Move Column Right
               </MenuItem>
