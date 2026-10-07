@@ -52,7 +52,9 @@ export type MeasurementToolProps = Pick<
  * distance between two points. The component mounts `useMeasurement`, whose
  * store owns the once-per-map `map:dragStart` / `map:drag` / `map:dragEnd`
  * subscription, renders a dashed line with circular endpoints and an optional
- * readout label, and suppresses map pan during the measurement drag.
+ * readout label, and suppresses map pan during the measurement drag. The drag
+ * holds the `measure` map mode, so it never competes with a shape being drawn
+ * or edited.
  *
  * The measurement layer is only rendered when a drag is active and both `pointA`
  * and `pointB` are set, so there is no visual overhead when the tool is idle.

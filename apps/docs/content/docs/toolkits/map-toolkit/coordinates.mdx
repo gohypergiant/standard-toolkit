@@ -1,0 +1,87 @@
+---
+title: "toLonLat"
+description: Normalizes a picked deck.gl coordinate to a fresh [longitude, latitude] tuple, or null when it is empty or non-finite.
+source: packages/map-toolkit/src/shared/coordinates.ts
+source_sha: 6bef2be533ae8b2f4bb6ba6fb5095946d7532243
+doc_sha: 67e8731f174cfccbe9c815ebb154f13f549f17e5
+deprecated: false
+updated: 2026-10-07
+---
+
+## Usage
+
+```typescript
+import { toLonLat } from '@accelint/map-toolkit/shared/coordinates';
+import type { PickingInfo } from '@deck.gl/core';
+
+// `info.coordinate` is `number[] | undefined`; normalize before storing it.
+function onHover(info: PickingInfo) {
+  const coordinate = toLonLat(info.coordinate);
+
+  if (coordinate) {
+    setCoordinate(coordinate);
+  }
+}
+```
+
+## Reference
+
+```typescript
+function toLonLat(value?: number[] | null): [number, number] | null
+```
+
+### Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `value` | `number[] \| null \| undefined` | Picked coordinate to normalize, typically `PickingInfo.coordinate`. |
+
+### Returns
+
+Returns a new `[longitude, latitude]` tuple when the first two entries are finite numbers, otherwise `null`. A trailing `z` entry is dropped.
+
+deck.gl's `PickingInfo.coordinate` is typed `number[]` and can be empty, non-finite, or three-element (`[longitude, latitude, z]` when any layer is `pickable: '3d'`), so pass it through `toLonLat` before treating it as a coordinate.
+
+> **Good to know:** `toLonLat` is a pure function and always returns a fresh tuple; it never returns the input array. It runs on every hover and drag inside `BaseMap`, so it performs two direct checks with no callback allocation.
+
+## Examples
+
+### Example: Guarding a bus payload
+
+```typescript
+import { toLonLat } from '@accelint/map-toolkit/shared/coordinates';
+
+const coordinate = toLonLat(info.coordinate);
+
+// Skip the emit when the pointer is off the globe.
+if (coordinate) {
+  emitDragStart({ id, coordinate, shiftKey, ctrlKey, altKey });
+}
+```
+
+### Example: Dropping a z component
+
+```typescript
+import { toLonLat } from '@accelint/map-toolkit/shared/coordinates';
+
+toLonLat([-97.74, 30.27, 120]);
+// [-97.74, 30.27]
+```
+
+### Example: Rejecting invalid input
+
+```typescript
+import { toLonLat } from '@accelint/map-toolkit/shared/coordinates';
+
+toLonLat(undefined); // null
+toLonLat(null); // null
+toLonLat([]); // null
+toLonLat([Number.NaN, 30.27]); // null
+toLonLat([-97.74]); // null
+```
+
+## Related
+
+- [BaseMap](./deckgl/base-map.mdx) - Normalizes drag coordinates with `toLonLat` before emitting `map:dragStart` / `map:drag` / `map:dragEnd`
+- [Measurement Layer](./deckgl/measurement-layer.mdx) - Applies `toLonLat` to `pointA` / `pointB` so non-finite points render nothing
+- [cursor-coordinates](./cursor-coordinates.mdx) - Track and format cursor coordinates in multiple systems

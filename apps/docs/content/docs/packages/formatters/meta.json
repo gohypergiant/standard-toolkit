@@ -2,6 +2,7 @@
   "title": "@accelint/formatters",
   "pages": [
     "index",
+    "bearing",
     "..."
   ]
 }

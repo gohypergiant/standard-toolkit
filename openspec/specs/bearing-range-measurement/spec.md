@@ -144,6 +144,32 @@ The system SHALL allow configuration of a required modifier key (`shift` or `alt
 - **WHEN** the `useMeasurement('main', 'alt')` hook unmounts
 - **THEN** map 'main' no longer requires a modifier
 
+### Requirement: Measurement SHALL participate in map mode
+The system SHALL claim the `measure` map mode (owner `measurement-layer`) for the duration of a measurement, SHALL NOT start a measurement while another owner holds the map mode, and SHALL return the map to the default mode when the measurement completes or is cleared.
+
+#### Scenario: Measurement claims and releases the mode
+- **WHEN** a measurement starts on a map in the default mode
+- **THEN** the map mode becomes `measure`, owned by `measurement-layer`
+- **WHEN** the measurement completes or is cleared
+- **THEN** the map mode returns to `default`
+
+#### Scenario: Drag ignored while another tool owns the mode
+- **WHEN** the map mode is owned by another tool (e.g. `draw-shape`)
+- **WHEN** the user drags, or `start()` is called
+- **THEN** no measurement starts and no `measurement:start` event is emitted
+- **THEN** the map mode is unchanged
+
+#### Scenario: Restart mid-drag keeps the mode
+- **WHEN** a measurement is in progress and `start()` is called again
+- **THEN** the measurement restarts from the new origin
+- **THEN** the map mode remains `measure`
+
+#### Scenario: Mode requested during a drag is granted afterwards
+- **WHEN** a measurement is in progress and another owner requests a mode
+- **THEN** the request stays pending and the measurement continues
+- **WHEN** the measurement completes
+- **THEN** the pending request is granted
+
 ### Requirement: Measurement SHALL support configurable distance units
 The system SHALL display distance in configurable units: single unit mode or dual unit mode.
 

@@ -1,0 +1,92 @@
+---
+title: "bearing"
+description: Computes the initial great-circle bearing from an origin to a destination in degrees clockwise from true north.
+source: packages/geo/src/geodesy/bearing.ts
+source_sha: e45b558d713f57be8b2b8b39910c483096e8a261
+doc_sha: c17fef3ec6a1a93488fbec1257159aab1ef7fb03
+deprecated: false
+updated: 2026-10-07
+---
+
+## Usage
+
+```typescript
+import { bearing } from '@accelint/geo/geodesy';
+
+bearing([0, 0], [0, 1]);  // 0   — due north
+bearing([0, 0], [1, 0]);  // 90  — due east
+bearing([0, 1], [0, 0]);  // 180 — due south
+bearing([0, 0], [-1, 0]); // 270 — due west
+```
+
+## Reference
+
+```typescript
+function bearing(origin: LonLatTuple, destination: LonLatTuple): number
+```
+
+### Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `origin` | `LonLatTuple` | Starting coordinate as `[longitude, latitude]` in decimal degrees. |
+| `destination` | `LonLatTuple` | Ending coordinate as `[longitude, latitude]` in decimal degrees. |
+
+### Returns
+
+Returns the initial bearing in degrees clockwise from true north, in `[0, 360)`. Returns `0` when `origin` and `destination` coincide (within `Number.EPSILON` degrees).
+
+### Throws
+
+- `RangeError` when any coordinate component is not a finite number. The message names the function: `bearing requires finite [longitude, latitude] coordinates.`
+
+## Examples
+
+### Example: Bearing between two cities
+
+```typescript
+import { bearing } from '@accelint/geo/geodesy';
+
+const london = [-0.1278, 51.5074] as const;
+const paris = [2.3522, 48.8566] as const;
+
+bearing(london, paris);
+// ~148.1 — southeast
+```
+
+### Example: Crossing the antimeridian
+
+```typescript
+import { bearing } from '@accelint/geo/geodesy';
+
+// 179°E to 179°W is 2° east along the equator, not 358° west
+bearing([179, 0], [-179, 0]);
+// ~90
+```
+
+### Example: Identical points
+
+```typescript
+import { bearing } from '@accelint/geo/geodesy';
+
+bearing([10, 20], [10, 20]);
+// 0
+```
+
+### Example: Rejecting non-finite input
+
+```typescript
+import { bearing } from '@accelint/geo/geodesy';
+
+bearing([Number.NaN, 0], [1, 1]);
+// throws RangeError: bearing requires finite [longitude, latitude] coordinates.
+```
+
+> **Good to know:** Longitude and latitude are not range-checked. Map libraries such as deck.gl pass longitudes beyond ±180 when the map wraps, and the spherical math is periodic, so those values still produce the correct bearing. For antipodal points (such as pole to pole) the bearing is mathematically undefined; the function still returns a finite value in `[0, 360)`.
+
+## Related
+
+- [distance](./distance.md) - Great-circle distance in meters
+- [midpoint](./midpoint.md) - Great-circle midpoint between two points
+- [greatCirclePoints](./great-circle-points.md) - Sample vertices along the great-circle path
+- [toSphericalPoints](./to-spherical-points.md) - Shared validation and conversion step

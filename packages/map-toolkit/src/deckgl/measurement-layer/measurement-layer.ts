@@ -37,8 +37,16 @@ const DEFAULT_LINE_COLOR: Color = [255, 255, 255, 200];
 /** Default units: dual km + NM covers both maritime/air and land operations */
 const DEFAULT_UNITS: DistanceUnit[] = ['kilometers', 'nauticalmiles'];
 
-/** Stable PathStyleExtension instance — avoids re-creating per render */
-const PATH_STYLE_EXTENSION = new PathStyleExtension({ dash: true });
+/**
+ * Stable PathStyleExtension instance — avoids re-creating per render.
+ * `highPrecisionDash` maps the dash pattern along the whole path: the geodesic
+ * is sampled into many short segments, and plain `dash` restarts the pattern
+ * at every vertex, which renders a segment shorter than one dash cycle as a
+ * solid line.
+ */
+const PATH_STYLE_EXTENSION = new PathStyleExtension({
+  highPrecisionDash: true,
+});
 
 /**
  * Resolves the `units` prop to something `formatDistance` accepts: a single
@@ -198,7 +206,6 @@ export class MeasurementLayer extends CompositeLayer<MeasurementLayerProps> {
         widthUnits: 'pixels',
         pickable: false,
         getDashArray: DASH_ARRAYS.dashed,
-        dashJustified: true,
         extensions: [PATH_STYLE_EXTENSION],
       }),
       new ScatterplotLayer({

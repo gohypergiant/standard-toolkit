@@ -14,6 +14,14 @@ import { Broadcast } from '@accelint/bus';
 import { uuid } from '@accelint/core';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { MapEvents } from '@/deckgl/base-map/events';
+import {
+  clearMapModeState,
+  DEFAULT_MODE,
+  getCurrentModeOwner,
+  getMode,
+  modeStore,
+} from '@/map-mode/store';
+import { MEASUREMENT_LAYER_ID, MEASUREMENT_MODE } from './constants';
 import { makeDragPayload } from './__fixtures__/drag-payload';
 import { listen } from './__fixtures__/listen';
 import { MeasurementEvents } from './events';
@@ -371,6 +379,84 @@ describe('measurementStore', () => {
       expect(onClear).not.toHaveBeenCalled();
       expect(onComplete).not.toHaveBeenCalled();
       expect(onEnablePan).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('map mode', () => {
+    const otherMode = 'draw-shape';
+    const otherOwner = 'draw-shape-layer';
+    let unsubscribeMode: () => void;
+
+    beforeEach(() => {
+      // The mode store only handles requests while it has a subscriber.
+      unsubscribeMode = modeStore.subscribe(mapId)(() => undefined);
+    });
+
+    afterEach(() => {
+      unsubscribeMode();
+      clearMapModeState(mapId);
+    });
+
+    it('claims the measurement mode on start and releases it on complete', () => {
+      const actions = measurementStore.actions(mapId);
+      actions.start([10, 20]);
+
+      expect(getMode(mapId)).toBe(MEASUREMENT_MODE);
+      expect(getCurrentModeOwner(mapId)).toBe(MEASUREMENT_LAYER_ID);
+
+      actions.updateEnd([11, 21]);
+      actions.complete();
+
+      expect(getMode(mapId)).toBe(DEFAULT_MODE);
+    });
+
+    it('releases the measurement mode on clear', () => {
+      const actions = measurementStore.actions(mapId);
+      actions.start([10, 20]);
+      actions.clear();
+
+      expect(getMode(mapId)).toBe(DEFAULT_MODE);
+    });
+
+    it('keeps the mode when restarting mid-drag', () => {
+      const actions = measurementStore.actions(mapId);
+      actions.start([10, 20]);
+      actions.start([12, 22]);
+
+      expect(measurementStore.get(mapId).pointA).toEqual([12, 22]);
+      expect(getMode(mapId)).toBe(MEASUREMENT_MODE);
+    });
+
+    it('ignores drags and start() while another owner holds the mode', () => {
+      const onStart = listen(
+        measurementBus,
+        MeasurementEvents.start,
+        offListeners,
+      );
+      const unsubscribe = measurementStore.subscribe(mapId)(() => undefined);
+      modeStore.actions(mapId).requestModeChange(otherMode, otherOwner);
+
+      mapBus.emit(MapEvents.dragStart, makeDragPayload(mapId, [10, 20]));
+      measurementStore.actions(mapId).start([10, 20]);
+
+      expect(measurementStore.get(mapId).isMeasuring).toBe(false);
+      expect(onStart).not.toHaveBeenCalled();
+      expect(getMode(mapId)).toBe(otherMode);
+      unsubscribe();
+    });
+
+    it('grants a mode requested during the drag once the measurement ends', () => {
+      const actions = measurementStore.actions(mapId);
+      actions.start([10, 20]);
+      modeStore.actions(mapId).requestModeChange(otherMode, otherOwner);
+
+      expect(getMode(mapId)).toBe(MEASUREMENT_MODE);
+
+      actions.updateEnd([11, 21]);
+      actions.complete();
+
+      expect(getMode(mapId)).toBe(otherMode);
+      expect(getCurrentModeOwner(mapId)).toBe(otherOwner);
     });
   });
 

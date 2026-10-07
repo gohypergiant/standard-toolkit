@@ -10,6 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
+export { MEASUREMENT_LAYER_ID, MEASUREMENT_MODE } from './constants';
 export { MeasurementLayer } from './measurement-layer';
 export { MeasurementTool } from './measurement-tool';
 export { measurementStore } from './store';

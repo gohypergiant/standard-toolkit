@@ -210,6 +210,24 @@ Releasing the modifier mid-drag completes the measurement at the last captured p
 const { distanceMeters } = useMeasurement(mapId);
 ```
 
+## Map Mode
+
+Measurement takes part in the [map mode](?path=/docs/map-mode--docs) system, the same coordination the draw and edit shape layers use, so the tools never run over each other:
+
+- A drag only starts a measurement while the map is in the default mode. While a shape is being drawn or edited, drags are left to that tool and nothing is measured.
+- For the length of the drag the store holds the `measure` mode (`MEASUREMENT_MODE`) as owner `measurement-layer` (`MEASUREMENT_LAYER_ID`), so a draw or edit cannot begin mid-measurement. The store does not answer mode authorization requests; a mode requested during the drag is granted as soon as the measurement completes or is cleared.
+- `start(pointA)` follows the same rule and is a no-op while another tool owns the mode.
+
+```tsx
+import { MEASUREMENT_MODE } from '@accelint/map-toolkit/deckgl/measurement-layer';
+import { useMapMode } from '@accelint/map-toolkit/map-mode';
+
+const { mode } = useMapMode(mapId);
+const isMeasuring = mode === MEASUREMENT_MODE;
+```
+
+The mode store handles requests only while something subscribes to it for the map (for example a `useMapMode(mapId)` hook). Without a subscriber the map always reports the default mode and measurement works as before, without the exclusion.
+
 ## Custom Labels
 
 `getLabel` replaces the default `"42.3 km / 22.8 NM | BRG: 321°"` readout. It is called as `getLabel(pointA, pointB, units)` — both coordinates plus the resolved `units` (the default pair when the prop is omitted or has zero or more than two entries) — and returns the string to render at the middle vertex of the geodesic line.
@@ -308,8 +326,8 @@ Mounting the hook starts the per-map `map:drag*` subscription if it is not alrea
 | `pointB` | `[number, number] \| null` | Destination coordinate, or `null` before the first drag move |
 | `distanceMeters` | `number` | Great-circle distance in meters, or `0` when either point is missing or not finite. Format with `formatDistance(distanceMeters, units)` from `@accelint/formatters/bearing` |
 | `bearingDeg` | `number` | Initial bearing from `pointA` to `pointB` in degrees (0–360), or `0` when either point is missing or not finite. Format with `formatBearing(bearingDeg)` |
-| `start` | `(pointA: [number, number]) => void` | Imperatively start a measurement from a coordinate (e.g. a context-menu "Measure from here"). Restarts an active measurement: resets `pointB`, emits `measurement:start`, and suppresses pan |
-| `clear` | `() => void` | Clear the measurement, reset to idle, emit `measurement:clear`, and restore pan if a drag was in progress |
+| `start` | `(pointA: [number, number]) => void` | Imperatively start a measurement from a coordinate (e.g. a context-menu "Measure from here"). Restarts an active measurement: resets `pointB`, emits `measurement:start`, suppresses pan, and claims the `measure` map mode. No-op while another tool owns the map mode |
+| `clear` | `() => void` | Clear the measurement, reset to idle, emit `measurement:clear`, and restore pan and the map mode if a drag was in progress |
 
 ### MeasurementToolProps
 
@@ -332,3 +350,14 @@ type RequiresModifier = 'shift' | 'alt';
 ```
 
 Modifier key that must be held for a drag to count as a measurement. `'shift'` also suppresses BaseMap's Shift+drag zoom while held; `'ctrl'` is not offered because Ctrl+drag is BaseMap's tilt gesture and emits no drag events, as described in [Modifier Keys](#modifier-keys). The value is stored per map: the hook that passes it owns it, and hooks that omit it inherit it.
+
+### Mode constants
+
+```typescript
+import { MEASUREMENT_LAYER_ID, MEASUREMENT_MODE } from '@accelint/map-toolkit/deckgl/measurement-layer';
+
+const MEASUREMENT_MODE = 'measure';
+const MEASUREMENT_LAYER_ID = 'measurement-layer';
+```
+
+The map mode the store holds during a drag and the owner it registers with, as described in [Map Mode](#map-mode).

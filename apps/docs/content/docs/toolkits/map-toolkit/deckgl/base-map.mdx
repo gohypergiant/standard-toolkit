@@ -2,15 +2,11 @@
 title: BaseMap
 description: Deck.gl-powered base map with MapLibre GL integration, event bus coordination, and mode management.
 source: packages/map-toolkit/src/deckgl/base-map/index.tsx
-source_sha: 5449737bbb4f30acbd8cb71d09ebaf8a87387a86
-doc_sha: 81e93a81ca8b4c32480ed4d62c343a755840375f
+source_sha: 3f28b26aed5ecdcac16bb7bbd2e05baa4d0b6a07
+doc_sha: abd4c07ad706756d80127511b55b7e3c540c4f63
 deprecated: false
-updated: 2026-07-13
+updated: 2026-10-07
 ---
-
-A React component that provides a Deck.gl-powered base map with MapLibre GL integration.
-
-Serves as the foundation for building interactive map applications with support for click and hover events through a centralized event bus. Integrates Deck.gl for 3D visualizations with MapLibre GL for base map tiles.
 
 ## Usage
 
@@ -29,7 +25,7 @@ export function MapView() {
 ## Reference
 
 ```typescript
-interface BaseMapProps extends DeckglProps {
+interface BaseMapProps extends Omit<DeckglProps, 'onLoad'> {
   // Required
   id: UniqueId;
   
@@ -51,9 +47,13 @@ interface BaseMapProps extends DeckglProps {
   // Event handlers
   onClick?: (info: PickingInfo, event: MjolnirGestureEvent) => void;
   onHover?: (info: PickingInfo, event: MjolnirPointerEvent) => void;
+  onDragStart?: (info: PickingInfo, event: MjolnirGestureEvent) => void;
+  onDrag?: (info: PickingInfo, event: MjolnirGestureEvent) => void;
+  onDragEnd?: (info: PickingInfo, event: MjolnirGestureEvent) => void;
   onViewStateChange?: (params: ViewStateChangeParameters) => void;
+  onLoad?: () => void;
   
-  // All Deck.gl props (controller, parameters, layers, etc.)
+  // All other Deck.gl props (controller, parameters, layers, etc.)
 }
 ```
 
@@ -73,7 +73,11 @@ interface BaseMapProps extends DeckglProps {
 | `rbzOptions` | `RbzOptions` | - | No |
 | `onClick` | `(info, event) => void` | - | No |
 | `onHover` | `(info, event) => void` | - | No |
+| `onDragStart` | `(info, event) => void` | - | No |
+| `onDrag` | `(info, event) => void` | - | No |
+| `onDragEnd` | `(info, event) => void` | - | No |
 | `onViewStateChange` | `(params) => void` | - | No |
+| `onLoad` | `() => void` | - | No |
 | `mapLibreOptions` | `MapLibreOptions` | - | No |
 
 #### `id`
@@ -123,6 +127,16 @@ Keys BaseMap manages internally are stripped:
 - WebGL context: `canvasContextAttributes`
 - Already exposed props: `style`, `container`, `maxPitch`
 
+#### `onLoad`
+
+Fires once when the MapLibre map has loaded, after BaseMap applies the projection and finishes its own load work. Typed `() => void`; it receives no arguments.
+
+BaseMap runs it from MapLibre's `load` event, not deck's `onLoad` prop. It is not forwarded to the deck overlay: deck may not be initialized yet when it fires, so do not call deck viewport methods from it. (An `onLoad` passed through the overlay could overwrite the overlay's own load wrapper and freeze deck's picking viewport at the initial frame.)
+
+#### `onDragStart`, `onDrag` & `onDragEnd`
+
+Standard Deck.gl drag handlers, called first with the full `PickingInfo` and gesture event. After each handler runs, BaseMap emits the matching `map:dragStart` / `map:drag` / `map:dragEnd` bus event for plain drags; see [Drag events](#drag-events).
+
 ### Map Mode Integration
 
 BaseMap automatically creates a `MapProvider` internally, setting up map mode state management for this instance.
@@ -151,13 +165,16 @@ BaseMap automatically creates a `MapProvider` internally, setting up map mode st
 
 ### Event Bus
 
-Click, hover, and viewport events are emitted through the event bus with `id` included in the payload, allowing multiple map instances to coexist without interference.
+Click, hover, viewport, and drag events are emitted through the event bus with `id` included in the payload, allowing multiple map instances to coexist without interference.
 
 ```typescript
 // Events
-MapEvents.click    // MapClickEvent
-MapEvents.hover    // MapHoverEvent
-MapEvents.viewport // MapViewportEvent
+MapEvents.click     // MapClickEvent
+MapEvents.hover     // MapHoverEvent
+MapEvents.viewport  // MapViewportEvent
+MapEvents.dragStart // MapDragStartEvent
+MapEvents.drag      // MapDragEvent
+MapEvents.dragEnd   // MapDragEndEvent
 
 // Control events
 MapEvents.enablePan
@@ -165,6 +182,40 @@ MapEvents.disablePan
 MapEvents.enableZoom
 MapEvents.disableZoom
 ```
+
+#### Drag events
+
+`map:dragStart` and `map:drag` carry a `MapDragPayload`; `map:dragEnd` carries a `MapDragEndPayload`. The modifier flags let subscribers decide whether to claim a gesture (the [Measurement Layer](./measurement-layer.mdx)'s `useMeasurement` hook is built on these events).
+
+```typescript
+type MapDragPayload = {
+  id: UniqueId;
+  coordinate: [number, number]; // Unprojected [longitude, latitude] at the drag position
+  shiftKey: boolean;
+  ctrlKey: boolean;
+  altKey: boolean;
+};
+
+type MapDragEndPayload = Omit<MapDragPayload, 'coordinate'> & {
+  coordinate: [number, number] | null; // null when the release position is off the globe
+};
+```
+
+- `map:dragStart` and `map:drag` fire after the corresponding `onDragStart` / `onDrag` prop, and only when the pointer position unprojects to finite map coordinates. Drags that start or move off the globe are skipped, so `coordinate` is always a finite tuple.
+- `map:dragEnd` is always emitted for a plain drag, so subscribers that claimed the gesture can always release it. Its `coordinate` is `null` when the release position does not unproject to finite coordinates (for example, released off the globe in 3D view); check for `null` before using it.
+- Tilt gestures (right-drag, or Ctrl + left-drag) rotate and pitch the camera and emit none of the three drag events. `ctrlKey` is therefore only `true` for other button combinations.
+
+The payload types and their `Payload` wrappers (`MapDragPayload`, `MapDragEndPayload`, `MapDragStartEvent`, `MapDragEvent`, `MapDragEndEvent`) are exported from `@accelint/map-toolkit/deckgl` alongside the other `Map*` event types.
+
+#### Control events
+
+BaseMap listens for control events when `enableControlEvents` is `true` and applies them to the MapLibre map for the `id` in the payload:
+
+- `map:disablePan` disables MapLibre's `dragPan` handler; `map:enablePan` re-enables it.
+- `map:disableZoom` turns off scroll zoom and native box zoom and, when `enableRbz` is set, stops the rubber band zoom handler listening for Shift.
+- `map:enableZoom` restores only what BaseMap configured: scroll zoom always, native box zoom only when the `boxZoom` prop resolves to `true` (it is `false` while `enableRbz` is set), and RBZ listening only if `map:disableZoom` stopped it. Double-click zoom is never touched; BaseMap locks it off.
+
+BaseMap passes its resolved `boxZoom` to the internal `MapControls` component, which accepts an optional `boxZoom` prop (default `true`) for this purpose.
 
 ### Inherited Props
 
@@ -338,6 +389,68 @@ export function TrackedMap() {
 }
 ```
 
+### Example: Listening to drag events
+
+```tsx
+import { useOn } from '@accelint/bus/react';
+import { BaseMap, MapEvents } from '@accelint/map-toolkit/deckgl';
+import type { MapDragEndEvent, MapDragStartEvent } from '@accelint/map-toolkit/deckgl';
+import { uuid } from '@accelint/core';
+
+const MAP_ID = uuid();
+
+function DragLogger() {
+  useOn<MapDragStartEvent>(MapEvents.dragStart, (event) => {
+    if (event.payload.id === MAP_ID && event.payload.altKey) {
+      console.log('Alt+drag started at', event.payload.coordinate);
+    }
+  });
+
+  useOn<MapDragEndEvent>(MapEvents.dragEnd, (event) => {
+    if (event.payload.id !== MAP_ID || event.payload.coordinate === null) {
+      return; // other map, or released off the globe
+    }
+
+    const [longitude, latitude] = event.payload.coordinate;
+    console.log('Drag ended at', longitude, latitude);
+  });
+
+  return null;
+}
+
+export function DragTrackedMap() {
+  return (
+    <>
+      <DragLogger />
+      <BaseMap id={MAP_ID} className="w-full h-full" />
+    </>
+  );
+}
+```
+
+### Example: Running setup once the map has loaded
+
+```tsx
+import { BaseMap } from '@accelint/map-toolkit/deckgl';
+import { uuid } from '@accelint/core';
+
+const MAP_ID = uuid();
+
+export function LoadedMap() {
+  return (
+    <BaseMap
+      id={MAP_ID}
+      className="w-full h-full"
+      onLoad={() => {
+        console.log('MapLibre loaded; projection applied');
+      }}
+    />
+  );
+}
+```
+
+> **Good to know:** `onLoad` fires from MapLibre's `load` event. Deck may not be initialized yet at that point, so do not call deck viewport methods from it.
+
 ### Example: Multiple map instances
 
 ```tsx
@@ -429,4 +542,6 @@ export function RestrictedMap() {
 - [useMapMode](../map-mode/index.mdx) - Access map mode state within or outside BaseMap
 - [useMapCursor](../map-cursor/index.mdx) - Coordinate cursor styles across features
 - [useMapCamera](../camera/index.mdx) - Control camera position and view state
+- [Measurement Layer](./measurement-layer.mdx) - Drag-to-measure tool built on the `map:drag*` events
+- [toLonLat](../coordinates.mdx) - Coordinate normalization applied to drag payloads
 - [@accelint/bus](../../../packages/bus/index.mdx) - Event bus for map event coordination

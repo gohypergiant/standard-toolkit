@@ -12,7 +12,14 @@
 
 import { Broadcast } from '@accelint/bus';
 import { MapEvents } from '@/deckgl/base-map/events';
+import {
+  DEFAULT_MODE,
+  getCurrentModeOwner,
+  getMode,
+  modeStore,
+} from '@/map-mode/store';
 import { createMapStore } from '@/shared/create-map-store';
+import { MEASUREMENT_LAYER_ID, MEASUREMENT_MODE } from './constants';
 import { MeasurementEvents } from './events';
 import type { UniqueId } from '@accelint/core';
 import type {
@@ -55,7 +62,8 @@ export type MeasurementState = {
 export type MeasurementActions = {
   /**
    * Begin (or restart) a measurement from the given coordinate. Resets
-   * `pointB`, emits `measurement:start`, and suppresses map pan.
+   * `pointB`, emits `measurement:start`, suppresses map pan, and claims the
+   * `measure` map mode. No-op while another tool owns the map mode.
    *
    * @param pointA - The origin coordinate as `[longitude, latitude]`
    */
@@ -74,8 +82,8 @@ export type MeasurementActions = {
    */
   complete: () => void;
   /**
-   * Reset all measurement state, emit `measurement:clear`, and restore pan if
-   * a drag was in progress.
+   * Reset all measurement state, emit `measurement:clear`, and restore pan
+   * and the map mode if a drag was in progress.
    */
   clear: () => void;
   /**
@@ -101,15 +109,50 @@ function hasRequiredModifier(
   return !requiresModifier || keys[`${requiresModifier}Key`];
 }
 
-/** Sets `pointA` with no `pointB` and `isMeasuring`, then emits `measurement:start` and `map:disablePan`. */
+/** Whether this store owns the map's current mode. */
+function ownsMeasurementMode(mapId: UniqueId): boolean {
+  return (
+    getMode(mapId) === MEASUREMENT_MODE &&
+    getCurrentModeOwner(mapId) === MEASUREMENT_LAYER_ID
+  );
+}
+
+/** Returns the map to the default mode when this store owns the current mode. */
+function releaseMeasurementMode(mapId: UniqueId): void {
+  if (ownsMeasurementMode(mapId)) {
+    modeStore
+      .actions(mapId)
+      .requestModeChange(DEFAULT_MODE, MEASUREMENT_LAYER_ID);
+  }
+}
+
+/**
+ * Sets `pointA` with no `pointB` and `isMeasuring`, emits `measurement:start`
+ * and `map:disablePan`, and claims the `measure` map mode. No-op while another
+ * tool (drawing, editing) owns the map mode, so its gesture is left alone.
+ */
 function startMeasurement(
   mapId: UniqueId,
   { set }: StoreHelpers<MeasurementState>,
   pointA: [number, number],
 ): void {
+  const isMapIdle = getMode(mapId) === DEFAULT_MODE;
+
+  if (!(isMapIdle || ownsMeasurementMode(mapId))) {
+    return;
+  }
+
   set({ pointA, pointB: null, isMeasuring: true });
   measurementBus.emit(MeasurementEvents.start, { mapId, pointA, pointB: null });
   mapBus.emit(MapEvents.disablePan, { id: mapId });
+
+  // Entering from idle is auto-accepted by the mode store; a restart mid-drag
+  // already holds the mode.
+  if (isMapIdle) {
+    modeStore
+      .actions(mapId)
+      .requestModeChange(MEASUREMENT_MODE, MEASUREMENT_LAYER_ID);
+  }
 }
 
 /** Sets `pointB` and emits `measurement:update`; no-op unless measuring with a `pointA`. */
@@ -128,7 +171,7 @@ function updateMeasurement(
   measurementBus.emit(MeasurementEvents.update, { mapId, pointA, pointB });
 }
 
-/** Resets both points and `isMeasuring`, emits `measurement:clear`, and emits `map:enablePan` if a drag was in progress. */
+/** Resets both points and `isMeasuring`, emits `measurement:clear`, and emits `map:enablePan` and releases the map mode if a drag was in progress. */
 function clearMeasurement(
   mapId: UniqueId,
   { get, set }: StoreHelpers<MeasurementState>,
@@ -140,10 +183,11 @@ function clearMeasurement(
 
   if (wasMeasuring) {
     mapBus.emit(MapEvents.enablePan, { id: mapId });
+    releaseMeasurementMode(mapId);
   }
 }
 
-/** Clears `isMeasuring`, emits `measurement:complete` and `map:enablePan`; clears instead when there is no `pointB`, and no-ops when not measuring. */
+/** Clears `isMeasuring`, emits `measurement:complete` and `map:enablePan`, and releases the map mode; clears instead when there is no `pointB`, and no-ops when not measuring. */
 function completeMeasurement(
   mapId: UniqueId,
   helpers: StoreHelpers<MeasurementState>,
@@ -165,6 +209,7 @@ function completeMeasurement(
   set({ isMeasuring: false });
   measurementBus.emit(MeasurementEvents.complete, { mapId, pointA, pointB });
   mapBus.emit(MapEvents.enablePan, { id: mapId });
+  releaseMeasurementMode(mapId);
 }
 
 /**
@@ -174,7 +219,14 @@ function completeMeasurement(
  * map (one subscription per map, started by the first subscriber and torn down
  * by the last), so lifecycle events and pan toggles fire once no matter how
  * many `useMeasurement` instances are mounted. When the last subscriber leaves
- * mid-drag, the measurement is finished so map pan is restored.
+ * mid-drag, the measurement is finished so map pan and the map mode are
+ * restored.
+ *
+ * A drag only starts a measurement while the map is in the default mode (or
+ * already in the `measure` mode this store owns); the drag is left to whichever
+ * tool owns any other mode. The store does not answer mode authorization
+ * requests, so a mode requested during a drag is granted when the measurement
+ * ends.
  */
 export const measurementStore = createMapStore<
   MeasurementState,

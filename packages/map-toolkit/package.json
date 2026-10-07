@@ -107,6 +107,7 @@
     "./deckgl/grid-layers/shared/utils": "./dist/deckgl/grid-layers/shared/utils.js",
     "./deckgl/grid-layers/shared/viewport-utils": "./dist/deckgl/grid-layers/shared/viewport-utils.js",
     "./deckgl/measurement-layer": "./dist/deckgl/measurement-layer/index.js",
+    "./deckgl/measurement-layer/constants": "./dist/deckgl/measurement-layer/constants.js",
     "./deckgl/measurement-layer/events": "./dist/deckgl/measurement-layer/events.js",
     "./deckgl/measurement-layer/fiber": "./dist/deckgl/measurement-layer/fiber.js",
     "./deckgl/measurement-layer/measurement-layer": "./dist/deckgl/measurement-layer/measurement-layer.js",

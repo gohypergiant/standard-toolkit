@@ -10,9 +10,14 @@
  * governing permissions and limitations under the License.
  */
 
+import type {
+  PathStyleExtension,
+  PathStyleExtensionProps,
+} from '@deck.gl/extensions';
 import { PathLayer, ScatterplotLayer, TextLayer } from '@deck.gl/layers';
 import { midpoint } from '@accelint/geo/geodesy';
 import { describe, expect, it, vi } from 'vitest';
+import { DASH_ARRAYS } from '@/deckgl/shapes/shared/constants';
 import { MeasurementLayer } from './measurement-layer';
 import type { MeasurementLayerProps } from './types';
 
@@ -47,6 +52,18 @@ describe('MeasurementLayer', () => {
       expect(endpointsLayer?.id).toBe('test-measurement-endpoints');
       expect(labelLayer).toBeInstanceOf(TextLayer);
       expect(labelLayer?.id).toBe('test-measurement-label');
+    });
+
+    it('should dash the path continuously along the sampled geodesic', () => {
+      const [pathLayer] = makeLayer().renderLayers() as [PathLayer];
+      const { extensions, getDashArray } =
+        pathLayer.props as typeof pathLayer.props & PathStyleExtensionProps;
+      const [extension] = extensions as [PathStyleExtension];
+
+      expect(getDashArray).toBe(DASH_ARRAYS.dashed);
+      // Plain `dash` restarts the pattern at each of the many short vertices
+      // and renders as a solid line; the pattern must span the whole path.
+      expect(extension.opts.highPrecisionDash).toBe(true);
     });
 
     it('should return only the PathLayer and ScatterplotLayer when showLabel is false', () => {

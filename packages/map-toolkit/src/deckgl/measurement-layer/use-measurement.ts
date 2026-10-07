@@ -42,7 +42,9 @@ export type UseMeasurementReturn = {
   /**
    * Imperatively start (or restart) a measurement from a coordinate.
    * Useful for programmatic activation (e.g., context menu "Measure from here").
-   * Behaves like a drag start: emits `measurement:start` and suppresses map pan.
+   * Behaves like a drag start: emits `measurement:start`, suppresses map pan,
+   * and claims the `measure` map mode. No-op while another tool owns the map
+   * mode.
    *
    * @param pointA - The origin coordinate as `[longitude, latitude]`
    */
@@ -96,6 +98,12 @@ function deriveMeasurement(
  * With `'shift'`, BaseMap's Shift+drag zoom is suppressed while Shift is held;
  * see {@link RequiresModifier} for how each key interacts with BaseMap's
  * gestures.
+ *
+ * Measurement takes part in the map mode system: a drag only measures while
+ * the map is in the default mode, the store holds the `measure` mode
+ * (`MEASUREMENT_MODE`) for the drag, and releases it when the measurement
+ * completes or is cleared. Drags made while a shape is being drawn or edited
+ * are left to that tool.
  *
  * Uses per-mapId store isolation so multiple map instances can measure independently.
  *

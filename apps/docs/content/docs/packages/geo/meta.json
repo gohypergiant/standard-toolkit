@@ -2,6 +2,8 @@
   "title": "@accelint/geo",
   "pages": [
     "index",
+    "coordinates",
+    "geodesy",
     "..."
   ]
 }
