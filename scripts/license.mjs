@@ -15,15 +15,6 @@
 import { argv, fs, glob, path } from 'zx';
 import { COMMENT_STYLES, getFormattedHeader } from './license.js';
 
-// Memoize formatted headers (only 9 possible extensions)
-const headerCache = new Map();
-function getCachedHeader(fileExtension) {
-  if (!headerCache.has(fileExtension)) {
-    headerCache.set(fileExtension, getFormattedHeader(fileExtension));
-  }
-  return headerCache.get(fileExtension);
-}
-
 const filesToParse = argv.files?.split(' ');
 const files = await glob(
   filesToParse && filesToParse.length > 0
@@ -50,7 +41,7 @@ for (const file of files) {
 
   let contents = fs.readFileSync(file, 'utf8');
   if (isFileExtensionSupported && !/Copyright \d+ Hypergiant/.test(contents)) {
-    const header = getCachedHeader(fileExtension);
+    const header = getFormattedHeader(fileExtension);
     const interpreterDirective = contents.match(/^#!.*$/m)?.[0];
 
     if (interpreterDirective) {

@@ -411,8 +411,8 @@ export type {
   MediaControlsContextValue,
   MediaControlsProps,
   MuteButtonProps,
-  PlaybackRateButtonProps,
   PlayButtonProps,
+  PlaybackRateButtonProps,
   SeekButtonProps,
   TimeDisplayMode,
   TimeDisplayProps,
@@ -643,8 +643,8 @@ export { TabPanel } from './components/tabs/panel';
 export { Tab } from './components/tabs/tab';
 export type {
   TabProps,
-  TabsProps,
   TabStyleProps,
+  TabsProps,
 } from './components/tabs/types';
 export {
   TextAreaFieldContext,
