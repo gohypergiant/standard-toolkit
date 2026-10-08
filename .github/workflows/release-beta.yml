@@ -81,7 +81,7 @@ jobs:
         with:
           # Call changeset command directly (skips constellation-tracker for beta)
           version-script: pnpm changeset version
-          publish-script: changeset:release-beta
+          publish-script: pnpm run changeset:release-beta
           commit-message: 'build: version beta packages'
           pr-title: 'Changeset Action: Version Beta Packages + Publish'
         env:
@@ -93,10 +93,11 @@ jobs:
         if: steps.changesets.outputs.published == 'true'
         run: |
           echo "✓ Beta packages published successfully"
-          echo "Published packages: ${{ steps.changesets.outputs.publishedPackages }}"
+          echo "Published packages: ${{ steps.changesets.outputs.published-packages }}"
 
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "## ✅ Published Successfully" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "**Packages published to npm with \`@beta\` tag:**" >> $GITHUB_STEP_SUMMARY
-          echo "${{ steps.changesets.outputs.publishedPackages }}" >> $GITHUB_STEP_SUMMARY
+          echo "${{ steps.changesets.outputs.published-packages }}" >> $GITHUB_STEP_SUMMARY
+
