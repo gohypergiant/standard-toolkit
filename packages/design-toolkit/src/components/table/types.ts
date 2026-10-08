@@ -14,6 +14,7 @@ import type { Key } from '@react-types/shared';
 import type {
   Cell,
   ColumnDef,
+  ColumnOrderState,
   Header,
   HeaderGroup,
   Row,
@@ -193,11 +194,49 @@ type ExtendedTableProps<T extends { id: Key }> = {
    */
   onSortChange?: (sort: SortingState) => void;
   /**
-   * Callback function triggered when a column is reordered via drag-and-drop or other mechanism.
+   * Callback function triggered when a column is moved through the header
+   * kebab menu.
    *
-   * @param index - The new index position of the column after reordering.
+   * @deprecated Use `onColumnOrderChange`, which receives the resulting order.
+   * @param index - The column's index among all visible columns before the move.
    */
   onColumnReorderChange?: (index: number) => void;
+  /**
+   * Controlled column order: an array of your column ids in display order.
+   * Example: ['age', 'name', 'id']
+   *
+   * Only your own column ids belong here; the numeral, selection, and kebab
+   * columns the table adds stay in their configured positions. Ids absent
+   * from the array are appended after the named ids in `columns` definition
+   * order, unknown ids are ignored, and an empty array means `columns`
+   * definition order.
+   *
+   * The slice is controlled when this prop is not `undefined`; pair it with
+   * `onColumnOrderChange` to apply changes, otherwise the order stays frozen
+   * at this value.
+   */
+  columnOrder?: ColumnOrderState;
+  /**
+   * Initial column order for uncontrolled use.
+   * Ignored while `columnOrder` is provided.
+   * @default []
+   */
+  defaultColumnOrder?: ColumnOrderState;
+  /**
+   * Callback function triggered when the column order changes (for example
+   * via the header kebab menu's Move Column Left / Right actions).
+   * Receives the plain next `ColumnOrderState`, listing every one of your
+   * columns in display order even when `columnOrder` was partial. Functional
+   * updaters from the table engine are resolved internally and never reach
+   * this callback.
+   *
+   * @param columnOrder - The next column order.
+   *
+   * @example
+   * // Using with a state setter
+   * onColumnOrderChange={setColumnOrder}
+   */
+  onColumnOrderChange?: (columnOrder: ColumnOrderState) => void;
   /**
    * Callback function triggered when row selection changes.
    * Receives the plain next selection state; functional updaters from the

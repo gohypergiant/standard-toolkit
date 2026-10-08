@@ -525,11 +525,12 @@ function ControlledSortingTable() {
   );
 }
 
-// header menus in column order; meta columns (numeral, kebab) render none
+// header menus in column order; meta columns (numeral, kebab) render none.
+// Used for sort and reorder items alike.
 const FIRST_NAME_MENU = 0;
 const AGE_MENU = 1;
 
-async function chooseSortItem(menuIndex: number, itemName: string) {
+async function chooseHeaderMenuItem(menuIndex: number, itemName: string) {
   await userEvent.click(
     screen.getAllByRole('button', { name: 'Menu' })[menuIndex] as HTMLElement,
   );
@@ -556,20 +557,20 @@ describe('Table sorting', () => {
     const onSortChange = vi.fn();
     setup({ onSortChange });
 
-    await chooseSortItem(AGE_MENU, 'Sort Descending');
+    await chooseHeaderMenuItem(AGE_MENU, 'Sort Descending');
 
     expect(onSortChange).toHaveBeenCalledTimes(1);
     const payload = onSortChange.mock.calls[0]?.[0];
     expect(Array.isArray(payload)).toBe(true);
     expect(payload).toEqual([{ id: 'age', desc: true }]);
 
-    await chooseSortItem(AGE_MENU, 'Sort Ascending');
+    await chooseHeaderMenuItem(AGE_MENU, 'Sort Ascending');
 
     expect(onSortChange.mock.calls[1]?.[0]).toEqual([
       { id: 'age', desc: false },
     ]);
 
-    await chooseSortItem(AGE_MENU, 'Clear Sort');
+    await chooseHeaderMenuItem(AGE_MENU, 'Clear Sort');
 
     expect(onSortChange.mock.calls[2]?.[0]).toEqual([]);
   });
@@ -578,8 +579,8 @@ describe('Table sorting', () => {
     const onSortChange = vi.fn();
     setup({ onSortChange });
 
-    await chooseSortItem(AGE_MENU, 'Sort Descending');
-    await chooseSortItem(FIRST_NAME_MENU, 'Sort Ascending');
+    await chooseHeaderMenuItem(AGE_MENU, 'Sort Descending');
+    await chooseHeaderMenuItem(FIRST_NAME_MENU, 'Sort Ascending');
 
     expect(onSortChange).toHaveBeenCalledTimes(2);
     expect(onSortChange.mock.calls[1]?.[0]).toEqual([
@@ -614,7 +615,7 @@ describe('Table sorting', () => {
   it('should freeze the sort when controlled without a callback', async () => {
     setup({ sort: [{ id: 'age', desc: true }] });
 
-    await chooseSortItem(AGE_MENU, 'Sort Ascending');
+    await chooseHeaderMenuItem(AGE_MENU, 'Sort Ascending');
 
     expect(columnHeader('Age')).toHaveAttribute('aria-sort', 'descending');
     expect(dataRowNames()).toEqual(['joe', 'tandy', 'tanner']);
@@ -1251,4 +1252,191 @@ describe('Table numeral column', () => {
     // displayNumerals=false takes precedence
     expect(numeralCell).toHaveClass(styles.hidden as string);
   });
+});
+
+type Author = { id: string; name: string; series: string[]; books: number };
+
+const authorColumnHelper = createTableColumnHelper<Author>();
+
+const authors: Author[] = [
+  { id: '1', name: 'George R.R. Martin', series: ['ASOIAF'], books: 5 },
+  {
+    id: '2',
+    name: 'Brandon Sanderson',
+    series: ['Mistborn', 'Stormlight Archive'],
+    books: 10,
+  },
+];
+
+const authorColumns = [
+  authorColumnHelper.accessor('name', {
+    id: 'name',
+    header: 'Name',
+    cell: (info) => info.getValue(),
+  }),
+  authorColumnHelper.accessor('series', {
+    id: 'series',
+    header: 'Series',
+    cell: (info) => info.getValue().join(', '),
+  }),
+  authorColumnHelper.accessor('books', {
+    id: 'books',
+    header: 'Books',
+    cell: (info) => info.getValue(),
+  }),
+];
+
+// The data-mode member of the TableProps union (the other is static children
+// mode), so the spread below type-checks against one shape.
+type AuthorTableProps = Partial<
+  Extract<TableProps<Author>, { columns: unknown }>
+>;
+
+function renderAuthors(props: AuthorTableProps = {}) {
+  return render(<Table columns={authorColumns} data={authors} {...props} />);
+}
+
+// Header text per column in display order; the numeral, selection, and kebab
+// header cells have no text, so they show up as ''.
+function headerTexts() {
+  return screen
+    .getAllByRole('columnheader')
+    .map((header) => header.textContent);
+}
+
+describe('Table column order', () => {
+  it('should render consumer columns in the controlled order and keep meta columns in place', () => {
+    renderAuthors({ columnOrder: ['series', 'name', 'books'] });
+
+    expect(headerTexts()).toEqual(['', 'Series', 'Name', 'Books', '']);
+  });
+
+  it('should keep the selection and left kebab columns ahead of a controlled order', () => {
+    renderAuthors({
+      showCheckbox: true,
+      kebabPosition: 'left',
+      columnOrder: ['series', 'name', 'books'],
+    });
+
+    expect(headerTexts()).toEqual(['', '', '', 'Series', 'Name', 'Books']);
+  });
+
+  it('should append consumer columns missing from a partial controlled order', () => {
+    renderAuthors({ columnOrder: ['books'] });
+
+    expect(headerTexts()).toEqual(['', 'Books', 'Name', 'Series', '']);
+  });
+
+  it('should ignore meta column ids in a controlled order', () => {
+    renderAuthors({ columnOrder: ['kebab', 'series', 'name', 'books'] });
+
+    expect(headerTexts()).toEqual(['', 'Series', 'Name', 'Books', '']);
+  });
+
+  it('should reorder header and body columns when uncontrolled', async () => {
+    renderAuthors();
+
+    await chooseHeaderMenuItem(0, 'Move Column Right');
+
+    expect(headerTexts()).toEqual(['', 'Series', 'Name', 'Books', '']);
+
+    const cellTexts = within(firstDataRow())
+      .getAllByRole('cell')
+      .map((cell) => cell.textContent);
+
+    expect(cellTexts).toEqual(['1', 'ASOIAF', 'George R.R. Martin', '5', '']);
+  });
+
+  it('should seed an uncontrolled order from defaultColumnOrder', async () => {
+    renderAuthors({ defaultColumnOrder: ['books'] });
+
+    expect(headerTexts()).toEqual(['', 'Books', 'Name', 'Series', '']);
+
+    await chooseHeaderMenuItem(0, 'Move Column Right');
+
+    expect(headerTexts()).toEqual(['', 'Name', 'Books', 'Series', '']);
+  });
+
+  it('should follow columns prop changes without remount', () => {
+    const { rerender } = renderAuthors({
+      columns: authorColumns.slice(0, 2),
+      columnOrder: ['series', 'name'],
+    });
+
+    expect(headerTexts()).toEqual(['', 'Series', 'Name', '']);
+
+    rerender(
+      <Table
+        columns={authorColumns}
+        data={authors}
+        columnOrder={['series', 'name']}
+      />,
+    );
+
+    expect(headerTexts()).toEqual(['', 'Series', 'Name', 'Books', '']);
+  });
+
+  it.each([
+    {
+      direction: 'Move Column Right',
+      headerIndex: 0,
+      expectedOrder: ['series', 'name', 'books'],
+    },
+    {
+      direction: 'Move Column Left',
+      headerIndex: 2,
+      expectedOrder: ['name', 'books', 'series'],
+    },
+  ])(
+    'should call onColumnOrderChange with the next order on $direction',
+    async ({ direction, headerIndex, expectedOrder }) => {
+      const onColumnOrderChange = vi.fn();
+
+      renderAuthors({
+        columnOrder: ['name', 'series', 'books'],
+        onColumnOrderChange,
+      });
+
+      await chooseHeaderMenuItem(headerIndex, direction);
+
+      expect(onColumnOrderChange).toHaveBeenCalledTimes(1);
+      expect(onColumnOrderChange).toHaveBeenCalledWith(expectedOrder);
+    },
+  );
+
+  it('should emit every consumer column id when the controlled order was partial', async () => {
+    const onColumnOrderChange = vi.fn();
+
+    renderAuthors({ columnOrder: ['books'], onColumnOrderChange });
+
+    await chooseHeaderMenuItem(0, 'Move Column Right');
+
+    expect(onColumnOrderChange).toHaveBeenCalledWith([
+      'name',
+      'books',
+      'series',
+    ]);
+  });
+
+  it.each([
+    { direction: 'Move Column Left', headerIndex: 0 },
+    { direction: 'Move Column Right', headerIndex: 2 },
+  ])(
+    'should disable $direction at the edge of the consumer columns',
+    async ({ direction, headerIndex }) => {
+      const onColumnOrderChange = vi.fn();
+
+      renderAuthors({
+        columnOrder: ['name', 'series', 'books'],
+        onColumnOrderChange,
+      });
+
+      await chooseHeaderMenuItem(headerIndex, direction);
+
+      expect(
+        screen.getByRole('menuitemradio', { name: direction }),
+      ).toHaveAttribute('aria-disabled', 'true');
+      expect(onColumnOrderChange).not.toHaveBeenCalled();
+    },
+  );
 });
