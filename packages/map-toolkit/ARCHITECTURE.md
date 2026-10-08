@@ -145,7 +145,7 @@ This package has no server, database, or hosted runtime of its own. It is a publ
 
 > Testing patterns and standards are defined in [../../openspec/config.yaml](../../openspec/config.yaml); this section covers local setup and commands.
 
-**Local Setup:** Use Node.js 24+ and pnpm 10+. Install from the repo root. Some geospatial dependencies are optional by feature, and local development includes Storybook preview plus package-local build/test flows.
+**Local Setup:** Develop on Node.js 24+ (`.nvmrc`); published packages support Node 22+. Use pnpm 10+. Install from the repo root. Some geospatial dependencies are optional by feature, and local development includes Storybook preview plus package-local build/test flows.
 
 **Testing Frameworks:** Vitest with jsdom, React Testing Library where relevant, shared test setup, and integration-style tests for map layers, state flows, and event-driven behavior.
 

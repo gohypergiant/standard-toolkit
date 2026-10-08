@@ -140,7 +140,7 @@ This package has no server, database, or hosted runtime. It is a published styli
 
 > Testing patterns and standards are defined in [../../openspec/config.yaml](../../openspec/config.yaml); this section covers local setup and commands.
 
-**Local Setup:** Use Node.js 24+ and pnpm 10+. Install from the repo root. The package includes generation scripts for tokens and variants, and README guidance points to Design Toolkit preview flows plus editor configuration for Tailwind/Biome support.
+**Local Setup:** Develop on Node.js 24+ (`.nvmrc`); published packages support Node 22+. Use pnpm 10+. Install from the repo root. The package includes generation scripts for tokens and variants, and README guidance points to Design Toolkit preview flows plus editor configuration for Tailwind/Biome support.
 
 **Testing Frameworks:** Vitest with the shared no-DOM base config. Tests are focused on CSS/token helper behavior rather than component rendering.
 

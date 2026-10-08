@@ -155,7 +155,7 @@ None. This is a library monorepo with no databases, caches, or queues. Data hand
 
 > Testing patterns and standards are defined in [openspec/config.yaml](./openspec/config.yaml); this section covers local setup and commands.
 
-**Local Setup:** Node ≥24 + pnpm 10.25 (see `packageManager`); `pnpm install`, then `pnpm build`. See [CONTRIBUTING.md](./CONTRIBUTING.md) and [documentation/getting-started.md](./documentation/getting-started.md).
+**Local Setup:** Node ≥24 for development (`.nvmrc`; published packages support ≥22) + pnpm 10.25 (see `packageManager`); `pnpm install`, then `pnpm build`. See [CONTRIBUTING.md](./CONTRIBUTING.md) and [documentation/getting-started.md](./documentation/getting-started.md).
 
 **Verification Gate (run after every change):** `pnpm run build` → `pnpm run test` → `pnpm run lint` → `pnpm run format`.
 

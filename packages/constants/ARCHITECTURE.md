@@ -133,7 +133,7 @@ This package has no server, database, or hosted runtime. It is a published utili
 
 > Testing patterns and standards are defined in [../../openspec/config.yaml](../../openspec/config.yaml); this section covers local setup and commands.
 
-**Local Setup:** Use Node.js 24+ and pnpm 10+. Install dependencies from the repo root with `pnpm install`, then use the repo verification gate or run package-local commands from `packages/constants`.
+**Local Setup:** Develop on Node.js 24+ (`.nvmrc`); published packages support Node 22+. Use pnpm 10+. Install dependencies from the repo root with `pnpm install`, then use the repo verification gate or run package-local commands from `packages/constants`.
 
 **Testing Frameworks:** Vitest configuration is present through the shared DOM base config. This package is primarily static exports and currently has little or no package-local runtime test surface.
 

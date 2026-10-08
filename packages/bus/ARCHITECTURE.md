@@ -143,7 +143,7 @@ This package has no server, database, or hosted deployment of its own. It is a p
 
 > Testing patterns and standards are defined in [../../openspec/config.yaml](../../openspec/config.yaml); this section covers local setup and commands.
 
-**Local Setup:** Use Node.js 24+ and pnpm 10+. Install dependencies from the repo root with `pnpm install`, then use the repo verification gate (`pnpm run build`, `pnpm run test`, `pnpm run lint`, `pnpm run format`) or package-local commands inside `packages/bus` such as `pnpm build` and `pnpm test`.
+**Local Setup:** Develop on Node.js 24+ (`.nvmrc`); published packages support Node 22+. Use pnpm 10+. Install dependencies from the repo root with `pnpm install`, then use the repo verification gate (`pnpm run build`, `pnpm run test`, `pnpm run lint`, `pnpm run format`) or package-local commands inside `packages/bus` such as `pnpm build` and `pnpm test`.
 
 **Testing Frameworks:** Vitest with the shared `@accelint/vitest-config/dom` base, jsdom test environment, `@testing-library/react`, `@testing-library/dom`, and `@testing-library/jest-dom`.
 
