@@ -139,7 +139,7 @@ This package has no server, database, or hosted runtime. It is a published loggi
 
 > Testing patterns and standards are defined in [../../openspec/config.yaml](../../openspec/config.yaml); this section covers local setup and commands.
 
-**Local Setup:** Use Node.js 24+ and pnpm 10+. Install from the repo root, then run repo-wide verification or package-local scripts from `packages/logger`.
+**Local Setup:** Develop on Node.js 24+ (`.nvmrc`); published packages support Node 22+. Use pnpm 10+. Install from the repo root, then run repo-wide verification or package-local scripts from `packages/logger`.
 
 **Testing Frameworks:** Vitest with jsdom and shared jest-dom setup. Tests use mocks extensively to isolate transport and plugin behavior.
 

@@ -128,7 +128,7 @@ This package currently has no meaningful implemented runtime behavior beyond pub
 
 > Testing patterns and standards are defined in [../../openspec/config.yaml](../../openspec/config.yaml); this section covers local setup and commands.
 
-**Local Setup:** Use Node.js 24+ and pnpm 10+. Install from the repo root. The README currently marks the package as under construction.
+**Local Setup:** Develop on Node.js 24+ (`.nvmrc`); published packages support Node 22+. Use pnpm 10+. Install from the repo root. The README currently marks the package as under construction.
 
 **Testing Frameworks:** Vitest configuration is present through the shared DOM base config, but the package currently lacks a meaningful implementation-specific test surface.
 

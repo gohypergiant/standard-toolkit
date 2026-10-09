@@ -142,7 +142,7 @@ This package has no server, database, or hosted runtime of its own. It is a publ
 
 > Testing patterns and standards are defined in [../../openspec/config.yaml](../../openspec/config.yaml); this section covers local setup and commands.
 
-**Local Setup:** Use Node.js 24+ and pnpm 10+. Install from the repo root. React is optional for core-only use, and local development includes package-local test flows with mocked EventSource and WebSocket behavior.
+**Local Setup:** Develop on Node.js 24+ (`.nvmrc`); published packages support Node 22+. Use pnpm 10+. Install from the repo root. React is optional for core-only use, and local development includes package-local test flows with mocked EventSource and WebSocket behavior.
 
 **Testing Frameworks:** Vitest with jsdom, React Testing Library for hook/provider flows, and shared transport mocks installed by package-local test setup.
 

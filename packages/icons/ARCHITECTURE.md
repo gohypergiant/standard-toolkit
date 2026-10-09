@@ -133,7 +133,7 @@ This package has no server, database, or hosted runtime. It is a published React
 
 > Testing patterns and standards are defined in [../../openspec/config.yaml](../../openspec/config.yaml); this section covers local setup and commands.
 
-**Local Setup:** Use Node.js 24+ and pnpm 10+. Install from the repo root, then run package or repo build/format flows to regenerate and package icons as needed.
+**Local Setup:** Develop on Node.js 24+ (`.nvmrc`); published packages support Node 22+. Use pnpm 10+. Install from the repo root, then run package or repo build/format flows to regenerate and package icons as needed.
 
 **Testing Frameworks:** This package does not expose a notable package-local runtime test suite. Validation is primarily through generation, build, lint, and published component consumption.
 

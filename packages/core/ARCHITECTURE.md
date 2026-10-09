@@ -139,7 +139,7 @@ This package has no server, database, or hosted runtime. It is a foundational ut
 
 > Testing patterns and standards are defined in [../../openspec/config.yaml](../../openspec/config.yaml); this section covers local setup and commands.
 
-**Local Setup:** Use Node.js 24+ and pnpm 10+. Install from the repo root, then use the repo verification gate or package-local scripts inside `packages/core`.
+**Local Setup:** Develop on Node.js 24+ (`.nvmrc`); published packages support Node 22+. Use pnpm 10+. Install from the repo root, then use the repo verification gate or package-local scripts inside `packages/core`.
 
 **Testing Frameworks:** Vitest with the shared no-DOM base config. Tests are predominantly small pure-function unit tests, with focused law-style coverage for helpers such as lenses.
 

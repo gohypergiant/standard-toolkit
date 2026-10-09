@@ -48,7 +48,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v7
         with:
-          node-version-file: 'package.json'
+          node-version-file: '.nvmrc'
           cache: 'pnpm'
 
       - name: Install dependencies
@@ -89,7 +89,7 @@ jobs:
         uses: actions/setup-node@v7
         with:
           cache: 'pnpm'
-          node-version-file: 'package.json'
+          node-version-file: '.nvmrc'
 
       - name: Install dependencies
         run: pnpm install
@@ -106,7 +106,7 @@ jobs:
         run: node ./.github/scripts/generate-summary.mjs ""
 
       - name: Download base coverage summary artifact
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v7
         with:
           name: base-coverage-summary
           path: coverage/

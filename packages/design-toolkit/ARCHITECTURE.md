@@ -145,7 +145,7 @@ This package has no server, database, or hosted runtime of its own. It is a publ
 
 > Testing patterns and standards are defined in [../../openspec/config.yaml](../../openspec/config.yaml); this section covers local setup and commands.
 
-**Local Setup:** Use Node.js 24+ and pnpm 10+. Install from the repo root. Local development includes Storybook preview flows, package-local build/test/typecheck scripts, and editor guidance for Tailwind and Biome support.
+**Local Setup:** Develop on Node.js 24+ (`.nvmrc`); published packages support Node 22+. Use pnpm 10+. Install from the repo root. Local development includes Storybook preview flows, package-local build/test/typecheck scripts, and editor guidance for Tailwind and Biome support.
 
 **Testing Frameworks:** Vitest with jsdom, React Testing Library, `@testing-library/user-event`, and `@testing-library/jest-dom`. Storybook is used for interactive review, and UI ecosystem workflows include visual regression and MemLab checks.
 
