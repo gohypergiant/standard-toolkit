@@ -1387,22 +1387,23 @@ describe('Table column order', () => {
       headerIndex: 2,
       expectedOrder: ['name', 'books', 'series'],
     },
-  ])(
-    'should call onColumnOrderChange with the next order on $direction',
-    async ({ direction, headerIndex, expectedOrder }) => {
-      const onColumnOrderChange = vi.fn();
+  ])('should call onColumnOrderChange with the next order on $direction', async ({
+    direction,
+    headerIndex,
+    expectedOrder,
+  }) => {
+    const onColumnOrderChange = vi.fn();
 
-      renderAuthors({
-        columnOrder: ['name', 'series', 'books'],
-        onColumnOrderChange,
-      });
+    renderAuthors({
+      columnOrder: ['name', 'series', 'books'],
+      onColumnOrderChange,
+    });
 
-      await chooseHeaderMenuItem(headerIndex, direction);
+    await chooseHeaderMenuItem(headerIndex, direction);
 
-      expect(onColumnOrderChange).toHaveBeenCalledTimes(1);
-      expect(onColumnOrderChange).toHaveBeenCalledWith(expectedOrder);
-    },
-  );
+    expect(onColumnOrderChange).toHaveBeenCalledTimes(1);
+    expect(onColumnOrderChange).toHaveBeenCalledWith(expectedOrder);
+  });
 
   it('should emit every consumer column id when the controlled order was partial', async () => {
     const onColumnOrderChange = vi.fn();
@@ -1421,22 +1422,22 @@ describe('Table column order', () => {
   it.each([
     { direction: 'Move Column Left', headerIndex: 0 },
     { direction: 'Move Column Right', headerIndex: 2 },
-  ])(
-    'should disable $direction at the edge of the consumer columns',
-    async ({ direction, headerIndex }) => {
-      const onColumnOrderChange = vi.fn();
+  ])('should disable $direction at the edge of the consumer columns', async ({
+    direction,
+    headerIndex,
+  }) => {
+    const onColumnOrderChange = vi.fn();
 
-      renderAuthors({
-        columnOrder: ['name', 'series', 'books'],
-        onColumnOrderChange,
-      });
+    renderAuthors({
+      columnOrder: ['name', 'series', 'books'],
+      onColumnOrderChange,
+    });
 
-      await chooseHeaderMenuItem(headerIndex, direction);
+    await chooseHeaderMenuItem(headerIndex, direction);
 
-      expect(
-        screen.getByRole('menuitemradio', { name: direction }),
-      ).toHaveAttribute('aria-disabled', 'true');
-      expect(onColumnOrderChange).not.toHaveBeenCalled();
-    },
-  );
+    expect(
+      screen.getByRole('menuitemradio', { name: direction }),
+    ).toHaveAttribute('aria-disabled', 'true');
+    expect(onColumnOrderChange).not.toHaveBeenCalled();
+  });
 });
