@@ -1,0 +1,102 @@
+---
+title: "distance"
+description: Computes the great-circle distance between two coordinates in meters using the Haversine formula.
+source: packages/geo/src/geodesy/distance.ts
+source_sha: 04e8f89769329d984afd7aab91c9ce01f918a053
+doc_sha: b25723d5b4b72e5d464d65776f4d2c35a2c55433
+deprecated: false
+updated: 2026-10-07
+---
+
+## Usage
+
+```typescript
+import { distance } from '@accelint/geo/geodesy';
+
+// London to Paris
+distance([-0.1278, 51.5074], [2.3522, 48.8566]);
+// ~343556 — meters (~343.6 km)
+
+// One degree of latitude at the equator
+distance([0, 0], [0, 1]);
+// ~111195
+```
+
+## Reference
+
+```typescript
+function distance(origin: LonLatTuple, destination: LonLatTuple): number
+```
+
+### Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `origin` | `LonLatTuple` | Starting coordinate as `[longitude, latitude]` in decimal degrees. |
+| `destination` | `LonLatTuple` | Ending coordinate as `[longitude, latitude]` in decimal degrees. |
+
+### Returns
+
+Returns the great-circle distance in meters on a sphere with a mean radius of 6371 km. Returns `0` when the two points are identical. The result is symmetric: `distance(a, b)` equals `distance(b, a)`.
+
+### Throws
+
+- `RangeError` when any coordinate component is not a finite number. The message names the function: `distance requires finite [longitude, latitude] coordinates.`
+
+## Examples
+
+### Example: Crossing the antimeridian
+
+```typescript
+import { distance } from '@accelint/geo/geodesy';
+
+// 2 degrees of longitude at the equator, measured the short way around
+distance([179, 0], [-179, 0]);
+// ~222390
+```
+
+### Example: Antipodal and near-antipodal points
+
+```typescript
+import { distance } from '@accelint/geo/geodesy';
+
+// Pole to pole is half the Earth's circumference
+distance([0, 90], [0, -90]);
+// ~20015087 — Math.PI * 6371e3
+
+// Near-antipodal pairs where the underlying haversine would return NaN
+// resolve to the same value instead
+distance(
+  [165.56831887102487, 20.542180502772695],
+  [-14.43168138306451, -20.542180512793223],
+);
+// ~20015087
+```
+
+### Example: Wrapped-map longitudes
+
+```typescript
+import { distance } from '@accelint/geo/geodesy';
+
+// Longitudes beyond ±180 are not rejected; the math is periodic
+distance([360, 0], [0, 1]);
+// ~111195 — same as distance([0, 0], [0, 1])
+```
+
+### Example: Rejecting non-finite input
+
+```typescript
+import { distance } from '@accelint/geo/geodesy';
+
+distance([Number.NaN, 0], [1, 1]);
+// throws RangeError: distance requires finite [longitude, latitude] coordinates.
+```
+
+> **Good to know:** The Haversine formula takes `sqrt(1 - a)`, and floating-point rounding can push `a` just past 1 for near-antipodal pairs, which the `geodesy` library reports as `NaN`. `distance` clamps that band to half the circumference (`Math.PI * 6371e3`, about 20,015 km), which is the true value there.
+
+## Related
+
+- [bearing](./bearing.md) - Initial great-circle bearing
+- [midpoint](./midpoint.md) - Great-circle midpoint between two points
+- [greatCirclePoints](./great-circle-points.md) - Draw the route this function measures
+- [toSphericalPoints](./to-spherical-points.md) - Shared validation and conversion step

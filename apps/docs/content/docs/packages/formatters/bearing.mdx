@@ -1,0 +1,190 @@
+---
+title: "formatBearing & formatDistance"
+description: Format tactical bearing readouts as zero-padded degrees and distances in meters as one-decimal strings with SI unit symbols.
+source: packages/formatters/src/bearing/index.ts
+source_sha: f119e0d8381db2bb56fe97a555ca27352bed1c74
+doc_sha: 6d8efc0da26297f61a43598f20641d20be54e5f8
+deprecated: false
+updated: 2026-10-07
+---
+
+## Usage
+
+```typescript
+import { formatBearing, formatDistance } from '@accelint/formatters/bearing';
+
+// Bearing: wrapped into 0–360, rounded to a whole degree, zero-padded
+formatBearing(45);    // "045°"
+formatBearing(-10);   // "350°"
+formatBearing(359.6); // "000°"
+
+// Distance: meters in, one decimal place and a unit symbol out
+formatDistance(42300, 'kilometers');                    // "42.3 km"
+formatDistance(42300, ['kilometers', 'nauticalmiles']); // "42.3 km / 22.8 NM"
+```
+
+Both functions are pure. Conversion factors come from `METERS_PER_UNIT` and symbols from `DISTANCE_UNIT_SYMBOLS`, both in `@accelint/constants/units`.
+
+## formatBearing
+
+Format a bearing in degrees as a zero-padded 3-digit string with a trailing degree symbol. Uses true north reference per NTDS/C2 tactical display conventions.
+
+### Reference
+
+```typescript
+function formatBearing(degrees: number): string
+```
+
+#### Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `degrees` | `number` | The bearing in degrees. May be negative or greater than 360. |
+
+#### Returns
+
+A zero-padded 3-digit string with a trailing degree symbol, e.g. `"045°"`. The value is rounded to the nearest whole degree and wrapped into the `0–360` range, so the output is always `"000°"` through `"359°"`.
+
+#### Throws
+
+- `RangeError` - `degrees must be a finite number.` when `degrees` is `NaN`, `Infinity`, or `-Infinity`.
+
+### Examples
+
+#### Example: Formatting whole-degree bearings
+
+```typescript
+import { formatBearing } from '@accelint/formatters/bearing';
+
+formatBearing(45);  // "045°"
+formatBearing(0);   // "000°"
+formatBearing(180); // "180°"
+```
+
+#### Example: Wrapping out-of-range bearings
+
+```typescript
+import { formatBearing } from '@accelint/formatters/bearing';
+
+formatBearing(-10);  // "350°"
+formatBearing(370);  // "010°"
+formatBearing(360);  // "000°"
+formatBearing(-360); // "000°"
+```
+
+#### Example: Rounding fractional bearings
+
+```typescript
+import { formatBearing } from '@accelint/formatters/bearing';
+
+formatBearing(44.5);  // "045°"
+formatBearing(0.4);   // "000°"
+formatBearing(-0.4);  // "000°"
+formatBearing(359.6); // "000°" (rounds to 360, then wraps)
+```
+
+#### Example: Rejecting non-finite input
+
+```typescript
+import { formatBearing } from '@accelint/formatters/bearing';
+
+formatBearing(Number.NaN);               // RangeError: degrees must be a finite number.
+formatBearing(Number.POSITIVE_INFINITY); // RangeError: degrees must be a finite number.
+```
+
+> **Good to know:** Rounding happens before wrapping, so a bearing that rounds up to exactly 360 renders as `"000°"`. Bearings 360 degrees apart always produce the same string.
+
+## formatDistance
+
+Format a distance in meters as a string with one decimal place and a unit symbol. Pass a single `DistanceUnit` or an array of one or two units; two units are joined with `" / "`.
+
+Supported units: `kilometers`, `meters`, `nauticalmiles`, `miles`, `feet`.
+
+### Reference
+
+```typescript
+function formatDistance(
+  meters: number,
+  units: DistanceUnit | DistanceUnit[],
+): string
+```
+
+#### Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `meters` | `number` | The distance in meters. |
+| `units` | `DistanceUnit \| DistanceUnit[]` | A single `DistanceUnit`, or an array of one or two `DistanceUnit` values. |
+
+#### Returns
+
+A formatted distance string with unit symbol(s). Each value is `meters / METERS_PER_UNIT[unit]`, rounded to one decimal place and followed by `DISTANCE_UNIT_SYMBOLS[unit]`. A single-element array formats the same as a bare unit.
+
+#### Throws
+
+- `RangeError` - `meters must be a finite number.` when `meters` is `NaN`, `Infinity`, or `-Infinity`.
+- `Error` - `formatDistance accepts 1 or 2 units.` when `units` is an empty array or has more than two entries.
+- `Error` - `Unsupported distance unit: <unit>` when a unit is not a key of `METERS_PER_UNIT`.
+
+### Examples
+
+#### Example: Formatting a single unit
+
+```typescript
+import { formatDistance } from '@accelint/formatters/bearing';
+
+formatDistance(42300, 'kilometers');    // "42.3 km"
+formatDistance(42336, 'nauticalmiles'); // "22.9 NM"
+formatDistance(500, 'meters');          // "500.0 m"
+formatDistance(1609.344, 'miles');      // "1.0 mi"
+formatDistance(30.48, 'feet');          // "100.0 ft"
+formatDistance(0, 'kilometers');        // "0.0 km"
+```
+
+#### Example: Formatting dual units for a range readout
+
+```typescript
+import { formatDistance } from '@accelint/formatters/bearing';
+
+formatDistance(42300, ['kilometers', 'nauticalmiles']); // "42.3 km / 22.8 NM"
+formatDistance(1609.344, ['miles', 'feet']);            // "1.0 mi / 5280.0 ft"
+formatDistance(0, ['kilometers', 'nauticalmiles']);     // "0.0 km / 0.0 NM"
+```
+
+#### Example: Passing a single-element array
+
+```typescript
+import { formatDistance } from '@accelint/formatters/bearing';
+
+formatDistance(42300, ['kilometers']); // "42.3 km" (same as the bare unit)
+```
+
+#### Example: Combining with formatBearing for a bearing/range label
+
+```typescript
+import { formatBearing, formatDistance } from '@accelint/formatters/bearing';
+
+function formatBearingRange(degrees: number, meters: number): string {
+  return `${formatBearing(degrees)} ${formatDistance(meters, ['kilometers', 'nauticalmiles'])}`;
+}
+
+formatBearingRange(44.5, 42300); // "045° 42.3 km / 22.8 NM"
+```
+
+#### Example: Rejecting invalid input
+
+```typescript
+import { formatDistance } from '@accelint/formatters/bearing';
+
+formatDistance(42300, []);                              // Error: formatDistance accepts 1 or 2 units.
+formatDistance(42300, ['kilometers', 'miles', 'feet']); // Error: formatDistance accepts 1 or 2 units.
+formatDistance(Number.NaN, 'kilometers');               // RangeError: meters must be a finite number.
+```
+
+> **Good to know:** Output always has exactly one decimal place, even for whole numbers (`"1.0 mi"`, not `"1 mi"`). Symbols follow SI and ICAO/IMO conventions (`km`, `m`, `NM`, `mi`, `ft`).
+
+## Related
+
+- [IFF Formatters](./iff.md) - Format IFF transponder mode codes
+- [Distances](../constants/units.md) - `DISTANCE_UNIT_SYMBOLS`, `METERS_PER_UNIT`, and `DistanceUnit` from `@accelint/constants/units`
+- [round](../math/round.md) - Round to a fixed number of decimal places

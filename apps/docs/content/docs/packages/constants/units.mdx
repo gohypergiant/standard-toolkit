@@ -1,11 +1,11 @@
 ---
 title: "Distances"
-description: SI-compliant display symbols for distance units and bidirectional mapping between unit names and symbols.
+description: SI-compliant display symbols for distance units, meters-per-unit conversion factors, and bidirectional mapping between unit names and symbols.
 source: packages/constants/src/units/index.ts
-source_sha: 2eb2aeec378a8df693295660d015c4968dd924a5
-doc_sha: e97a752c0c0110c3956293da24fcf4cdc80b46e1
+source_sha: 089683ca5bb88f661597ec33d98ca98e465e8c81
+doc_sha: 469f22e6f98f1c27298c3d700791bf25e78fcf86
 deprecated: false
-updated: 2026-07-13
+updated: 2026-10-07
 ---
 
 ## Usage
@@ -14,6 +14,7 @@ updated: 2026-07-13
 import { 
   DISTANCE_UNIT_SYMBOLS, 
   DISTANCE_UNIT_BY_SYMBOL,
+  METERS_PER_UNIT,
   type DistanceUnit,
   type DistanceUnitSymbol,
 } from '@accelint/constants/units';
@@ -23,6 +24,9 @@ const symbol = DISTANCE_UNIT_SYMBOLS.kilometers; // 'km'
 
 // Get unit name from display symbol
 const unit = DISTANCE_UNIT_BY_SYMBOL['km']; // 'kilometers'
+
+// Convert meters to a unit
+const nauticalMiles = 3704 / METERS_PER_UNIT.nauticalmiles; // 2
 
 // Format distance with correct symbol
 const distance = 42.195;
@@ -74,6 +78,30 @@ DISTANCE_UNIT_BY_SYMBOL['mi']  // 'miles'
 DISTANCE_UNIT_BY_SYMBOL['ft']  // 'feet'
 ```
 
+### METERS_PER_UNIT
+
+```typescript
+const METERS_PER_UNIT: {
+  readonly kilometers: 1000;
+  readonly meters: 1;
+  readonly nauticalmiles: 1852;
+  readonly miles: 1609.344;
+  readonly feet: 0.3048;
+};
+```
+
+Meters in one of each supported distance unit. This is the single conversion table for distance formatting across packages. Divide a distance in meters by the factor to convert to the unit, or multiply to convert back to meters.
+
+```typescript
+METERS_PER_UNIT.kilometers    // 1000
+METERS_PER_UNIT.meters        // 1
+METERS_PER_UNIT.nauticalmiles // 1852
+METERS_PER_UNIT.miles         // 1609.344
+METERS_PER_UNIT.feet          // 0.3048
+```
+
+The object is declared `as const satisfies Record<DistanceUnit, number>`, so it has exactly one entry per `DistanceUnit` and each value is a literal type.
+
 ### DistanceUnit
 
 ```typescript
@@ -108,6 +136,25 @@ formatDistance(42.195, 'kilometers');   // '42.19 km'
 formatDistance(26.219, 'miles');        // '26.22 mi'
 formatDistance(1852, 'meters');         // '1852.00 m'
 formatDistance(22.24, 'nauticalmiles'); // '22.24 NM'
+```
+
+### Example: Converting between meters and a unit
+
+```typescript
+import { METERS_PER_UNIT, type DistanceUnit } from '@accelint/constants/units';
+
+function metersToUnit(meters: number, unit: DistanceUnit): number {
+  return meters / METERS_PER_UNIT[unit];
+}
+
+function unitToMeters(value: number, unit: DistanceUnit): number {
+  return value * METERS_PER_UNIT[unit];
+}
+
+metersToUnit(3704, 'nauticalmiles'); // 2
+metersToUnit(42300, 'kilometers');   // 42.3
+unitToMeters(2, 'nauticalmiles');    // 3704
+unitToMeters(1, 'miles');            // 1609.344
 ```
 
 ### Example: Parsing user input with symbol lookup
@@ -247,6 +294,7 @@ formatViewport({ width: 600, height: 400, unit: 'nauticalmiles' });
 
 ## Related
 
+- [formatBearing & formatDistance](../formatters/bearing.md) - Formatters that consume `METERS_PER_UNIT` and `DISTANCE_UNIT_SYMBOLS`
 - [International System of Units (SI)](https://en.wikipedia.org/wiki/International_System_of_Units) - SI unit standards
 - [@turf/helpers](https://turfjs.org/docs/api/helpers) - Turf.js unit conversion utilities
 - [ICAO standards](https://www.icao.int/) - Aviation unit conventions

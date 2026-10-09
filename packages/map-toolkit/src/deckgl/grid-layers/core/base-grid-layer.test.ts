@@ -573,6 +573,34 @@ describe('BaseGridLayer', () => {
       });
     });
 
+    it('should emit click event with 2D coords when coordinate has a z component', () => {
+      const layer = new BaseGridLayer({
+        id: 'test-layer',
+        definition: mockDefinition,
+        enableInteractivity: true,
+        mapId: 'test-map',
+      });
+
+      setLayerContext(layer, mockViewport);
+
+      // deck.gl produces [lon, lat, z] coordinates when any layer is pickable: '3d'
+      const pickingInfo = {
+        picked: true,
+        object: { cellId: 'TEST-123' },
+        coordinate: [-122.4194, 37.7749, 0],
+      } as PickingInfo;
+
+      layer.getPickingInfo({ info: pickingInfo, mode: 'query' });
+
+      expect(emitSpy).toHaveBeenCalledWith(GridCellEvents.click, {
+        cellId: 'TEST-123',
+        gridType: 'test-grid',
+        coords: [-122.4194, 37.7749],
+        mapId: 'test-map',
+        bounds: undefined,
+      });
+    });
+
     it('should emit hover event only when cell changes (deduplication)', () => {
       const layer = new BaseGridLayer({
         id: 'test-layer',

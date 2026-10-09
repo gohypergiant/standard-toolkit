@@ -36,6 +36,15 @@ type MapControlsProps = {
   mapRef: RefObject<MapRef | null>;
   /** Reference to the RBZ handler instance */
   rbzRef?: RefObject<RbzHandler | null>;
+  /**
+   * Whether MapLibre's native box zoom is configured on for this map. `enableZoom`
+   * only restores box zoom when it was on to begin with. BaseMap passes its
+   * derived value (off while `enableRbz` is set); the default only matters when
+   * rendering `MapControls` directly.
+   *
+   * @default true
+   */
+  boxZoom?: boolean;
 };
 
 /**
@@ -48,9 +57,15 @@ type MapControlsProps = {
  * @param props.id - Unique identifier for the map instance.
  * @param props.mapRef - Reference to the MapLibre map instance.
  * @param props.rbzRef - Optional reference to the RBZ handler instance.
+ * @param props.boxZoom - Whether MapLibre's native box zoom is configured on; `enableZoom` only restores it when true. BaseMap passes its derived value; defaults to `true` when rendering `MapControls` directly.
  * @returns null (headless component).
  */
-export function MapControls({ id, mapRef, rbzRef }: MapControlsProps) {
+export function MapControls({
+  id,
+  mapRef,
+  rbzRef,
+  boxZoom = true,
+}: MapControlsProps): null {
   useOn<MapEnablePanEvent>(MapEvents.enablePan, (event) => {
     if (event.payload.id === id) {
       mapRef.current?.getMap().dragPan.enable();
@@ -64,20 +79,29 @@ export function MapControls({ id, mapRef, rbzRef }: MapControlsProps) {
   });
 
   useOn<MapEnableZoomEvent>(MapEvents.enableZoom, (event) => {
-    if (event.payload.id === id) {
-      mapRef.current?.getMap().scrollZoom.enable();
-      mapRef.current?.getMap().doubleClickZoom.enable();
+    if (event.payload.id !== id) {
+      return;
+    }
+
+    mapRef.current?.getMap().scrollZoom.enable();
+
+    if (boxZoom) {
       mapRef.current?.getMap().boxZoom.enable();
     }
+
+    rbzRef?.current?.startListening();
   });
 
   useOn<MapDisableZoomEvent>(MapEvents.disableZoom, (event) => {
-    if (event.payload.id === id) {
-      mapRef.current?.getMap().scrollZoom.disable();
-      mapRef.current?.getMap().doubleClickZoom.disable();
-      mapRef.current?.getMap().boxZoom.disable();
-      rbzRef?.current?.disable();
+    if (event.payload.id !== id) {
+      return;
     }
+
+    mapRef.current?.getMap().scrollZoom.disable();
+    mapRef.current?.getMap().boxZoom.disable();
+    // RBZ re-arms itself on every Shift keydown while listening, so a tool that
+    // needs Shift+drag has to stop the listening entirely, not just disarm once.
+    rbzRef?.current?.stopListening();
   });
 
   return null;

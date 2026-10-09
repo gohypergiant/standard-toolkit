@@ -66,9 +66,12 @@ const EMPTY_HANDLE: MapTestHandle = {
  * `window.__mapTest` so Playwright integration tests can make deterministic
  * assertions without scraping the WebGL canvas.
  *
- * BaseMap emits `map:viewport` once deck.gl finishes initializing over MapLibre
- * (see its deck `onLoad` handler), so the first event doubles as the
- * "deck + maplibre ready" signal, and every later event reflects camera moves.
+ * BaseMap emits the first `map:viewport` from its MapLibre `load` handler,
+ * which syncs each deck viewport into the viewport store when deck is already
+ * initialized; otherwise the first event comes from BaseMap's debounced resize
+ * path once deck reports its viewports. Either way the first event doubles as
+ * the "deck + maplibre ready" signal, and every later event reflects camera
+ * moves.
  *
  * It also mirrors the most recent click pick (emitted on `map:click`) onto
  * `lastPick`, so any route that drops layers into the shared map gets pick

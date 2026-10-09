@@ -13,6 +13,7 @@
 import { Broadcast } from '@accelint/bus';
 import { type Color, CompositeLayer } from '@deck.gl/core';
 import { PathLayer, PolygonLayer, TextLayer } from '@deck.gl/layers';
+import { toLonLat } from '@/shared/coordinates';
 import { getViewportBounds } from '../shared/viewport-utils';
 import {
   type BaseGridLayerProps,
@@ -311,15 +312,17 @@ export class BaseGridLayer extends CompositeLayer<BaseGridLayerProps> {
    */
   private handleClick = (info: PickingInfo): void => {
     const cellId = info.object?.cellId;
+    const coords = toLonLat(info.coordinate);
 
-    if (!(info.object && info.coordinate)) {
+    if (!(info.object && coords)) {
       return;
     }
+
     if (cellId) {
       this.eventBus.emit(GridCellEvents.click, {
         cellId,
         gridType: this.props.definition.id,
-        coords: [info.coordinate[0], info.coordinate[1]] as [number, number],
+        coords,
         mapId: this.props.mapId ?? 'default',
         bounds: info.object?.bounds,
       });

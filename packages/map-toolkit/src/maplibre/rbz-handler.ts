@@ -257,8 +257,9 @@ export class RbzHandler implements Handler {
 
   /**
    * Removes the keyboard listeners installed by {@link startListening} and
-   * disables the handler if armed. Idempotent — safe to call when not
-   * listening. Invoked automatically by {@link destroy}.
+   * disables the handler if armed, restoring `dragPan` that the Shift keydown
+   * suspended. Idempotent — safe to call when not listening. Invoked
+   * automatically by {@link destroy}.
    */
   stopListening(): void {
     if (!this._isListening) {
@@ -267,6 +268,13 @@ export class RbzHandler implements Handler {
     this._isListening = false;
     window.removeEventListener('keydown', this._onWindowKeyDown);
     window.removeEventListener('keyup', this._onWindowKeyUp);
+
+    // The keyup listener is gone, so a Shift still held when listening stops
+    // would otherwise leave dragPan disabled.
+    if (this._enabled) {
+      this._map.dragPan?.enable();
+    }
+
     this.disable();
   }
 
@@ -559,7 +567,9 @@ export class RbzHandler implements Handler {
   // Distinct from the MapLibre Handler interface's `keydown` method, which
   // is invoked by the map for in-map keyboard events.
   private readonly _onWindowKeyDown = (e: KeyboardEvent): void => {
-    if (e.key !== 'Shift') {
+    // A held Shift fires key-repeat keydowns; only the first press may arm the
+    // handler, otherwise a tool that disarmed it is overridden a few ms later.
+    if (e.key !== 'Shift' || e.repeat) {
       return;
     }
 

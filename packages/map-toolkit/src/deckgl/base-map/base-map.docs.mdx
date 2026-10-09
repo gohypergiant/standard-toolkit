@@ -163,8 +163,9 @@ The `BaseMap` component extends all `DeckglProps` from `@deckgl-fiber-renderer/t
 | `enableRbz` | `boolean` | `false` | Enable rubber band zoom. See [Rubber Band Zoom](#rubber-band-zoom). |
 | `rbzOptions` | [`RbzOptions`](?path=/docs/deckgl-rubber-band-zoom--docs) | `undefined` | Configuration for rubber band zoom. Only applies when `enableRbz` is `true`. |
 | `mapLibreOptions` | [`MapLibreOptions`](#forwarding-maplibre-options) | `undefined` | Additional MapLibre `MapOptions` forwarded to the underlying map (e.g. `transformRequest`, `maxBounds`, `minZoom`, `maxZoom`, `locale`, `interactive`, `cooperativeGestures`). Locked keys are stripped. |
+| `onLoad` | `() => void` | `undefined` | Called once when the MapLibre map has loaded, after BaseMap has applied the projection and finished its own load work. Not forwarded to the deck overlay: BaseMap runs it from MapLibre's `load` event instead, because an `onLoad` passed through the overlay could overwrite the overlay's own load wrapper and freeze deck's picking viewport at the initial frame. |
 
-All `DeckglProps` (including `onClick`, `onHover`, `parameters`, `initialViewState`, `controller`, `widgets`, etc.) are also accepted and forwarded to Deck.gl. See the [Deck.gl documentation](https://deck.gl/docs/api-reference/core/deck) for the full set.
+All other `DeckglProps` (including `onClick`, `onHover`, `parameters`, `initialViewState`, `controller`, `widgets`, etc.) are also accepted and forwarded to Deck.gl; `onLoad` is the one exception, handled by BaseMap as described above. See the [Deck.gl documentation](https://deck.gl/docs/api-reference/core/deck) for the full set.
 
 #### Using `id`
 
@@ -318,6 +319,10 @@ useOn(MapEvents.click, (payload) => {
 useOn(MapEvents.hover, (payload) => {
   // Handle hover event
 });
+
+useOn(MapEvents.dragEnd, (payload) => {
+  // Handle the end of a drag gesture
+});
 ```
 
 #### `MapEvents`
@@ -327,6 +332,9 @@ Event names for map interactions:
 - `MapEvents.click`: `'map:click'`
 - `MapEvents.hover`: `'map:hover'`
 - `MapEvents.viewport`: `'map:viewport'`
+- `MapEvents.dragStart`: `'map:dragStart'`
+- `MapEvents.drag`: `'map:drag'`
+- `MapEvents.dragEnd`: `'map:dragEnd'`
 - `MapEvents.enablePan`: `'map:enablePan'`
 - `MapEvents.disablePan`: `'map:disablePan'`
 - `MapEvents.enableZoom`: `'map:enableZoom'`
@@ -387,6 +395,55 @@ type MapHoverPayload = {
 };
 ```
 
+### `MapDragPayload`
+
+Shared by `MapEvents.dragStart` and `MapEvents.drag`:
+
+Tilt and rotate gestures (right-drag, or Ctrl + left-drag) never emit drag events: BaseMap claims those for the camera, so bus consumers such as the measurement tool only ever see plain left-drags.
+
+```typescript
+type MapDragPayload = {
+  id: UniqueId; // The map instance ID
+  coordinate: [number, number]; // Unprojected [longitude, latitude] at the drag position
+  shiftKey: boolean; // Whether Shift was held during the drag event
+  ctrlKey: boolean; // Whether Ctrl was held during the drag event
+  altKey: boolean; // Whether Alt was held during the drag event
+};
+```
+
+`map:dragStart` and `map:drag` fire after the corresponding `onDragStart` / `onDrag` prop, and only when the pointer position unprojects to finite map coordinates (drags that start or move off the globe are skipped). The modifier flags let subscribers decide whether to claim a gesture — the [Measurement Layer](?path=/docs/deckgl-measurement-layer--docs)'s `useMeasurement` hook is built on these events.
+
+### `MapDragEndPayload`
+
+Emitted by `MapEvents.dragEnd`:
+
+```typescript
+type MapDragEndPayload = {
+  id: UniqueId; // The map instance ID
+  coordinate: [number, number] | null; // Unprojected [longitude, latitude] at release, or null off the globe
+  shiftKey: boolean; // Whether Shift was held during the drag event
+  ctrlKey: boolean; // Whether Ctrl was held during the drag event
+  altKey: boolean; // Whether Alt was held during the drag event
+};
+```
+
+Unlike the start and move events, `map:dragEnd` is always emitted for a plain (non-tilt) drag, so subscribers that claimed the gesture can always release it. Tilt gestures (right-drag, Ctrl + left-drag) emit none of the three drag events. `coordinate` is `null` when the release position does not unproject to finite coordinates (for example, when the pointer is released off the globe in 3D view); check for `null` before using it.
+
+The payload types and their `Payload` wrappers — `MapDragPayload`, `MapDragEndPayload`, `MapDragStartEvent`, `MapDragEvent`, and `MapDragEndEvent` — are exported from `@accelint/map-toolkit/deckgl` alongside the other `Map*` event types:
+
+```typescript
+import { MapEvents, type MapDragEndEvent } from '@accelint/map-toolkit/deckgl';
+import { useOn } from '@accelint/bus/react';
+
+useOn<MapDragEndEvent>(MapEvents.dragEnd, (event) => {
+  if (event.payload.coordinate === null) {
+    return; // released off the globe
+  }
+
+  const [longitude, latitude] = event.payload.coordinate;
+});
+```
+
 ### `NonFuncPickingInfo`
 
 The picking info is modified for serialization through the event bus:
@@ -434,6 +491,14 @@ function DrawingToolbar() {
   );
 }
 ```
+
+What each event does to the MapLibre map, for the `id` in its payload:
+
+- `map:disablePan` disables MapLibre's `dragPan` handler; `map:enablePan` re-enables it.
+- `map:disableZoom` turns off scroll zoom and native box zoom and, when `enableRbz` is set, stops the rubber band zoom handler listening for Shift.
+- `map:enableZoom` restores only what BaseMap configured: scroll zoom always, native box zoom only when the `boxZoom` prop resolves to `true` (it is `false` while `enableRbz` is set), and RBZ listening only if `map:disableZoom` stopped it. Double-click zoom is never touched; BaseMap locks it off.
+
+The [Measurement Layer](?path=/docs/deckgl-measurement-layer--docs) uses the zoom pair to suppress Shift+drag zoom while a Shift-gated measurement is in progress.
 
 ### Control Event Payloads
 
