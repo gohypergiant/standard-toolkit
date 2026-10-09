@@ -1,0 +1,10 @@
+{
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "extends": "@accelint/typescript-config/tsc/no-dom/app",
+  "include": ["./*.ts"],
+  "compilerOptions": {
+    "noEmit": true,
+    "sourceMap": false,
+    "types": ["node"]
+  }
+}

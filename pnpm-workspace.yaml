@@ -7,7 +7,6 @@ enablePrePostScripts: true
 
 onlyBuiltDependencies:
   - '@parcel/watcher'
-  - '@swc/core'
   - esbuild
   - lefthook
   - puppeteer
