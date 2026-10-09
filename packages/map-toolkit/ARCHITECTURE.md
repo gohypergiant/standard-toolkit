@@ -113,13 +113,13 @@ This package has no server, database, or hosted runtime of its own. It is a publ
 
 ## 5. External Integrations / APIs
 
-| Service | Purpose | Integration Method |
-|---------|---------|-------------------|
-| deck.gl ecosystem | Layer rendering, overlays, editing, and interaction support | Optional peer/runtime integration |
-| MapLibre | Base map and map event integration | Optional peer/runtime integration |
-| `@accelint/bus` | Event-driven state coordination across map features | Peer dependency |
-| `@accelint/logger` | Logging and diagnostics for shared runtime behavior | Peer dependency |
-| Turf / milsymbol / NGA grid libs | Geospatial computation, symbology, and grid support | Optional integration |
+| Service                          | Purpose                                                     | Integration Method                |
+| -------------------------------- | ----------------------------------------------------------- | --------------------------------- |
+| deck.gl ecosystem                | Layer rendering, overlays, editing, and interaction support | Optional peer/runtime integration |
+| MapLibre                         | Base map and map event integration                          | Optional peer/runtime integration |
+| `@accelint/bus`                  | Event-driven state coordination across map features         | Peer dependency                   |
+| `@accelint/logger`               | Logging and diagnostics for shared runtime behavior         | Peer dependency                   |
+| Turf / milsymbol / NGA grid libs | Geospatial computation, symbology, and grid support         | Optional integration              |
 
 ## 6. Deployment & Infrastructure
 
@@ -145,7 +145,7 @@ This package has no server, database, or hosted runtime of its own. It is a publ
 
 > Testing patterns and standards are defined in [../../openspec/config.yaml](../../openspec/config.yaml); this section covers local setup and commands.
 
-**Local Setup:** Use Node.js 22+ and pnpm 10+. Install from the repo root. Some geospatial dependencies are optional by feature, and local development includes Storybook preview plus package-local build/test flows.
+**Local Setup:** Develop on Node.js 24+ (`.nvmrc`); published packages support Node 22+. Use pnpm 10+. Install from the repo root. Some geospatial dependencies are optional by feature, and local development includes Storybook preview plus package-local build/test flows.
 
 **Testing Frameworks:** Vitest with jsdom, React Testing Library where relevant, shared test setup, and integration-style tests for map layers, state flows, and event-driven behavior.
 
@@ -168,9 +168,9 @@ This package has no server, database, or hosted runtime of its own. It is a publ
 
 ## 11. Glossary / Acronyms
 
-| Term | Definition |
-|------|-----------|
-| deck.gl layer | Rendering module used to draw map data, symbols, grids, or overlays |
-| Map mode | Interaction state that controls how the map responds to input |
-| Saved viewport | Persisted map camera/viewport snapshot reused by a user |
-| Milsymbol | Military symbology rendering library used in the tactical map surface |
+| Term           | Definition                                                            |
+| -------------- | --------------------------------------------------------------------- |
+| deck.gl layer  | Rendering module used to draw map data, symbols, grids, or overlays   |
+| Map mode       | Interaction state that controls how the map responds to input         |
+| Saved viewport | Persisted map camera/viewport snapshot reused by a user               |
+| Milsymbol      | Military symbology rendering library used in the tactical map surface |

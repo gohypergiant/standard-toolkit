@@ -105,9 +105,9 @@ This package has no server, database, or hosted runtime. It is a published utili
 
 ## 5. External Integrations / APIs
 
-| Service | Purpose | Integration Method |
-|---------|---------|-------------------|
-| `@accelint/core` | Shared functional helpers and type support | Peer dependency |
+| Service               | Purpose                                               | Integration Method  |
+| --------------------- | ----------------------------------------------------- | ------------------- |
+| `@accelint/core`      | Shared functional helpers and type support            | Peer dependency     |
 | `@accelint/constants` | Optional shared constants for some predicate families | Optional dependency |
 
 ## 6. Deployment & Infrastructure
@@ -134,7 +134,7 @@ This package has no server, database, or hosted runtime. It is a published utili
 
 > Testing patterns and standards are defined in [../../openspec/config.yaml](../../openspec/config.yaml); this section covers local setup and commands.
 
-**Local Setup:** Use Node.js 22+ and pnpm 10+. Install from the repo root, then run repo-wide verification or package-local scripts from `packages/predicates`.
+**Local Setup:** Develop on Node.js 24+ (`.nvmrc`); published packages support Node 22+. Use pnpm 10+. Install from the repo root, then run repo-wide verification or package-local scripts from `packages/predicates`.
 
 **Testing Frameworks:** Vitest with the shared no-DOM base config, fast-check for property-oriented coverage, and worker-oriented tests where relevant.
 
@@ -157,9 +157,9 @@ This package has no server, database, or hosted runtime. It is a published utili
 
 ## 11. Glossary / Acronyms
 
-| Term | Definition |
-|------|-----------|
-| Predicate | Function that returns a boolean result about a supplied value |
-| fast-check | Property-based testing library used to exercise predicate behavior across many generated inputs |
-| Worker predicate | Validation helper that checks worker-like browser/runtime objects |
-| Geospatial predicate | Validation helper for coordinate or bounding-box-like values |
+| Term                 | Definition                                                                                      |
+| -------------------- | ----------------------------------------------------------------------------------------------- |
+| Predicate            | Function that returns a boolean result about a supplied value                                   |
+| fast-check           | Property-based testing library used to exercise predicate behavior across many generated inputs |
+| Worker predicate     | Validation helper that checks worker-like browser/runtime objects                               |
+| Geospatial predicate | Validation helper for coordinate or bounding-box-like values                                    |

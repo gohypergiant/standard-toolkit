@@ -111,9 +111,9 @@ This package has no server, database, or hosted runtime. It is a foundational ut
 
 ## 5. External Integrations / APIs
 
-| Service | Purpose | Integration Method |
-|---------|---------|-------------------|
-| `uuid` | UUID generation and related helper support | Peer dependency |
+| Service | Purpose                                    | Integration Method |
+| ------- | ------------------------------------------ | ------------------ |
+| `uuid`  | UUID generation and related helper support | Peer dependency    |
 
 ## 6. Deployment & Infrastructure
 
@@ -139,7 +139,7 @@ This package has no server, database, or hosted runtime. It is a foundational ut
 
 > Testing patterns and standards are defined in [../../openspec/config.yaml](../../openspec/config.yaml); this section covers local setup and commands.
 
-**Local Setup:** Use Node.js 22+ and pnpm 10+. Install from the repo root, then use the repo verification gate or package-local scripts inside `packages/core`.
+**Local Setup:** Develop on Node.js 24+ (`.nvmrc`); published packages support Node 22+. Use pnpm 10+. Install from the repo root, then use the repo verification gate or package-local scripts inside `packages/core`.
 
 **Testing Frameworks:** Vitest with the shared no-DOM base config. Tests are predominantly small pure-function unit tests, with focused law-style coverage for helpers such as lenses.
 
@@ -162,9 +162,9 @@ This package has no server, database, or hosted runtime. It is a foundational ut
 
 ## 11. Glossary / Acronyms
 
-| Term | Definition |
-|------|-----------|
-| Lens | Functional accessor/update pattern for nested immutable data |
-| Safe enum | Pattern for enum-like values without using TypeScript `enum` |
-| Curry | Function transformation that turns multi-argument functions into chained single-argument calls |
-| Compose / pipe | Functional patterns for chaining operations |
+| Term           | Definition                                                                                     |
+| -------------- | ---------------------------------------------------------------------------------------------- |
+| Lens           | Functional accessor/update pattern for nested immutable data                                   |
+| Safe enum      | Pattern for enum-like values without using TypeScript `enum`                                   |
+| Curry          | Function transformation that turns multi-argument functions into chained single-argument calls |
+| Compose / pipe | Functional patterns for chaining operations                                                    |

@@ -109,12 +109,12 @@ This package has no server, database, or hosted runtime. It is a published brows
 
 ## 5. External Integrations / APIs
 
-| Service | Purpose | Integration Method |
-|---------|---------|-------------------|
-| Browser keyboard events | Underlying keydown/keyup input source | Native platform API |
-| `zustand` / `immer` | Internal hotkey state management | Runtime dependencies |
-| `react` | Optional hook-based consumer integration | Optional dependency |
-| `@accelint/core` | Shared functional helpers and types | Peer dependency |
+| Service                 | Purpose                                  | Integration Method   |
+| ----------------------- | ---------------------------------------- | -------------------- |
+| Browser keyboard events | Underlying keydown/keyup input source    | Native platform API  |
+| `zustand` / `immer`     | Internal hotkey state management         | Runtime dependencies |
+| `react`                 | Optional hook-based consumer integration | Optional dependency  |
+| `@accelint/core`        | Shared functional helpers and types      | Peer dependency      |
 
 ## 6. Deployment & Infrastructure
 
@@ -140,7 +140,7 @@ This package has no server, database, or hosted runtime. It is a published brows
 
 > Testing patterns and standards are defined in [../../openspec/config.yaml](../../openspec/config.yaml); this section covers local setup and commands.
 
-**Local Setup:** Use Node.js 22+ and pnpm 10+. Install from the repo root, then run repo-wide verification or package-local scripts from `packages/hotkey-manager`.
+**Local Setup:** Develop on Node.js 24+ (`.nvmrc`); published packages support Node 22+. Use pnpm 10+. Install from the repo root, then run repo-wide verification or package-local scripts from `packages/hotkey-manager`.
 
 **Testing Frameworks:** Vitest with `happy-dom`, React Testing Library where needed, and shared test helpers for registering hotkeys and resetting store state.
 
@@ -163,9 +163,9 @@ This package has no server, database, or hosted runtime. It is a published brows
 
 ## 11. Glossary / Acronyms
 
-| Term | Definition |
-|------|-----------|
+| Term              | Definition                                                     |
+| ----------------- | -------------------------------------------------------------- |
 | Hotkey activation | The runtime record that a registered key combination has fired |
-| Global bind | The package-level attachment of window keyboard listeners |
-| Held key tracking | Logic for managing repeated or sustained keypress behavior |
-| happy-dom | Lightweight DOM-like test environment used for package tests |
+| Global bind       | The package-level attachment of window keyboard listeners      |
+| Held key tracking | Logic for managing repeated or sustained keypress behavior     |
+| happy-dom         | Lightweight DOM-like test environment used for package tests   |

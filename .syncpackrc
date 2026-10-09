@@ -86,8 +86,8 @@
     },
     {
       "dependencies": ["@types/node"],
-      "label": "Ensure node types match engine version",
-      "pinVersion": "^22"
+      "label": "Node types follow the development toolchain version in .nvmrc",
+      "pinVersion": "^24"
     }
   ]
 }

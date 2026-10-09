@@ -103,11 +103,11 @@ This package has no server, database, or hosted runtime. It is a published build
 
 ## 5. External Integrations / APIs
 
-| Service | Purpose | Integration Method |
-|---------|---------|-------------------|
-| PostCSS | Plugin host runtime | Peer dependency |
-| `postcss-selector-parser` | Selector AST rewriting | Peer dependency |
-| Tailwind CSS build flows | Primary consumer use case for selector rewriting | Optional integration |
+| Service                   | Purpose                                          | Integration Method   |
+| ------------------------- | ------------------------------------------------ | -------------------- |
+| PostCSS                   | Plugin host runtime                              | Peer dependency      |
+| `postcss-selector-parser` | Selector AST rewriting                           | Peer dependency      |
+| Tailwind CSS build flows  | Primary consumer use case for selector rewriting | Optional integration |
 
 ## 6. Deployment & Infrastructure
 
@@ -133,7 +133,7 @@ This package has no server, database, or hosted runtime. It is a published build
 
 > Testing patterns and standards are defined in [../../openspec/config.yaml](../../openspec/config.yaml); this section covers local setup and commands.
 
-**Local Setup:** Use Node.js 22+ and pnpm 10+. Install from the repo root, then run repo-wide verification or package-local scripts from `packages/postcss-tailwind-css-modules`.
+**Local Setup:** Develop on Node.js 24+ (`.nvmrc`); published packages support Node 22+. Use pnpm 10+. Install from the repo root, then run repo-wide verification or package-local scripts from `packages/postcss-tailwind-css-modules`.
 
 **Testing Frameworks:** Vitest with the shared no-DOM base config. Tests execute the plugin through PostCSS and verify selector transformations with inline snapshots.
 
@@ -156,9 +156,9 @@ This package has no server, database, or hosted runtime. It is a published build
 
 ## 11. Glossary / Acronyms
 
-| Term | Definition |
-|------|-----------|
-| CSS Modules | Scoped CSS system that rewrites class names to avoid collisions |
+| Term                | Definition                                                                 |
+| ------------------- | -------------------------------------------------------------------------- |
+| CSS Modules         | Scoped CSS system that rewrites class names to avoid collisions            |
 | group/peer selector | Tailwind stateful selector pattern that references parent or sibling state |
-| PostCSS AST | Parsed CSS node tree used for programmatic transformation |
-| Dual-format package | Package emitted in both ESM and CommonJS formats |
+| PostCSS AST         | Parsed CSS node tree used for programmatic transformation                  |
+| Dual-format package | Package emitted in both ESM and CommonJS formats                           |

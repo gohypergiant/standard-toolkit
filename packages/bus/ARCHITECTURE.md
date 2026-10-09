@@ -113,11 +113,11 @@ This package has no server, database, or hosted deployment of its own. It is a p
 
 ## 5. External Integrations / APIs
 
-| Service | Purpose | Integration Method |
-|---------|---------|-------------------|
-| BroadcastChannel API | Cross-context event transport between tabs, workers, and app contexts | Native platform API |
-| `@accelint/core` | UUID generation and validation for instance IDs and targeted delivery | Workspace peer dependency |
-| React | Optional hooks-based integration surface | Optional dependency / subpath export |
+| Service              | Purpose                                                               | Integration Method                   |
+| -------------------- | --------------------------------------------------------------------- | ------------------------------------ |
+| BroadcastChannel API | Cross-context event transport between tabs, workers, and app contexts | Native platform API                  |
+| `@accelint/core`     | UUID generation and validation for instance IDs and targeted delivery | Workspace peer dependency            |
+| React                | Optional hooks-based integration surface                              | Optional dependency / subpath export |
 
 ## 6. Deployment & Infrastructure
 
@@ -143,7 +143,7 @@ This package has no server, database, or hosted deployment of its own. It is a p
 
 > Testing patterns and standards are defined in [../../openspec/config.yaml](../../openspec/config.yaml); this section covers local setup and commands.
 
-**Local Setup:** Use Node.js 22+ and pnpm 10+. Install dependencies from the repo root with `pnpm install`, then use the repo verification gate (`pnpm run build`, `pnpm run test`, `pnpm run lint`, `pnpm run format`) or package-local commands inside `packages/bus` such as `pnpm build` and `pnpm test`.
+**Local Setup:** Develop on Node.js 24+ (`.nvmrc`); published packages support Node 22+. Use pnpm 10+. Install dependencies from the repo root with `pnpm install`, then use the repo verification gate (`pnpm run build`, `pnpm run test`, `pnpm run lint`, `pnpm run format`) or package-local commands inside `packages/bus` such as `pnpm build` and `pnpm test`.
 
 **Testing Frameworks:** Vitest with the shared `@accelint/vitest-config/dom` base, jsdom test environment, `@testing-library/react`, `@testing-library/dom`, and `@testing-library/jest-dom`.
 
@@ -166,10 +166,10 @@ This package has no server, database, or hosted deployment of its own. It is a p
 
 ## 11. Glossary / Acronyms
 
-| Term | Definition |
-|------|-----------|
-| BroadcastChannel | Browser/runtime API used to send messages across tabs, workers, or other same-origin contexts |
-| Self-targeting | The package default where emitted events are delivered only within the current bus instance unless configured otherwise |
-| Connected instance | Another active bus instance that has responded on the shared channel and whose UUID is tracked in memory |
-| Ponyfill | A compatibility implementation that provides `useEffectEvent` behavior without requiring native React support |
-| Emit target | Delivery scope for an event: `self`, `others`, `all`, or a specific instance UUID |
+| Term               | Definition                                                                                                              |
+| ------------------ | ----------------------------------------------------------------------------------------------------------------------- |
+| BroadcastChannel   | Browser/runtime API used to send messages across tabs, workers, or other same-origin contexts                           |
+| Self-targeting     | The package default where emitted events are delivered only within the current bus instance unless configured otherwise |
+| Connected instance | Another active bus instance that has responded on the shared channel and whose UUID is tracked in memory                |
+| Ponyfill           | A compatibility implementation that provides `useEffectEvent` behavior without requiring native React support           |
+| Emit target        | Delivery scope for an event: `self`, `others`, `all`, or a specific instance UUID                                       |
