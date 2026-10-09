@@ -121,6 +121,10 @@ describe('Table Sorted Visual Regression', () => {
                 enableRowActions={scenario.enableRowActions}
               />
             </div>
+            <div
+              data-testid={`${testIdValue}-pointer-rest`}
+              style={{ height: 16 }}
+            />
           </ThemeProvider>,
         );
 
