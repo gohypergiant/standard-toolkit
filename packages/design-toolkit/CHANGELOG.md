@@ -1,5 +1,14 @@
 # @accelint/design-toolkit
 
+## 12.0.0
+### Patch Changes
+
+- Updated dependencies [663abd1]
+  - @accelint/geo@0.8.0
+  - @accelint/converters@2.0.0
+  - @accelint/design-foundation@3.2.2
+  - @accelint/predicates@0.5.3
+
 ## 11.2.0
 ### Minor Changes
 
