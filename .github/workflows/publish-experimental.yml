@@ -42,6 +42,17 @@ jobs:
           echo "- **Feature:** \`$FEATURE_NAME\`" >> $GITHUB_STEP_SUMMARY
           echo "- **npm tag:** \`@$FEATURE_NAME\`" >> $GITHUB_STEP_SUMMARY
 
+      # Changesets v3 makes `changeset version` exit 1 when there is nothing to
+      # version, so fail here with a clear message instead of after the build.
+      - name: Verify changesets exist
+        run: |
+          if ! find .changeset -maxdepth 1 -name '*.md' ! -name README.md | grep -q .; then
+            echo "Error: no changesets found in .changeset/"
+            echo "Run 'pnpm changeset' and commit the result before publishing a snapshot"
+            exit 1
+          fi
+          echo "✓ Changesets found"
+
       - uses: actions/cache@v4
         with:
           path: .turbo

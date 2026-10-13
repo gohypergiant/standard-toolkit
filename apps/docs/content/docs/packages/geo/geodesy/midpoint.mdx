@@ -1,0 +1,114 @@
+---
+title: "midpoint"
+description: Computes the great-circle midpoint between two coordinates along the shortest path.
+source: packages/geo/src/geodesy/midpoint.ts
+source_sha: 6dc6cc21da5f10c845eb73b1a70dbbcb13f3cc39
+doc_sha: ad3f38127b8bd62fafaa4af2ce0ec2669b71f478
+deprecated: false
+updated: 2026-10-07
+---
+
+## Usage
+
+```typescript
+import { midpoint } from '@accelint/geo/geodesy';
+
+midpoint([0, 0], [0, 10]);
+// [0, 5] — halfway along a meridian
+
+midpoint([0, 0], [10, 0]);
+// [5, 0] — halfway along the equator
+
+midpoint([179, 0], [-179, 0]);
+// [180, 0] — crosses the antimeridian rather than the prime meridian
+```
+
+## Reference
+
+```typescript
+function midpoint(origin: LonLatTuple, destination: LonLatTuple): [number, number]
+```
+
+### Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `origin` | `LonLatTuple` | Starting coordinate as `[longitude, latitude]` in decimal degrees. |
+| `destination` | `LonLatTuple` | Ending coordinate as `[longitude, latitude]` in decimal degrees. |
+
+### Returns
+
+Returns the midpoint as `[longitude, latitude]` in decimal degrees. The point lies on the shortest great-circle path and is equidistant from both endpoints. Longitude is normalized to `[-180, 180]` by the underlying `geodesy` library. When `origin` and `destination` are identical, returns the point itself.
+
+### Throws
+
+- `RangeError` when any coordinate component is not a finite number. The message names the function: `midpoint requires finite [longitude, latitude] coordinates.`
+
+## Examples
+
+### Example: Midpoint between two cities
+
+```typescript
+import { midpoint } from '@accelint/geo/geodesy';
+
+const london = [-0.1278, 51.5074] as const;
+const paris = [2.3522, 48.8566] as const;
+
+midpoint(london, paris);
+// [~1.15, ~50.19]
+```
+
+### Example: Normalizing wrapped-map longitudes
+
+```typescript
+import { midpoint } from '@accelint/geo/geodesy';
+
+// Inputs beyond ±180 are accepted; the result is normalized to [-180, 180]
+midpoint([190, 0], [200, 0]);
+// [-165, 0]
+```
+
+### Example: Antipodal points
+
+```typescript
+import { midpoint } from '@accelint/geo/geodesy';
+
+// No unique midpoint exists; the result is on the equator, 90° of longitude
+// from the origin, in the direction of (destination - origin)
+midpoint([0, 0], [180, 0]);
+// [90, 0]
+
+midpoint([10, 45], [-170, -45]);
+// [-80, 0]
+
+// Pole to pole along one meridian keeps the origin longitude
+midpoint([0, 90], [0, -90]);
+// [0, 0]
+```
+
+### Example: Identical points
+
+```typescript
+import { midpoint } from '@accelint/geo/geodesy';
+
+midpoint([10, 20], [10, 20]);
+// [10, 20]
+```
+
+### Example: Rejecting non-finite input
+
+```typescript
+import { midpoint } from '@accelint/geo/geodesy';
+
+midpoint([Number.NaN, 0], [1, 1]);
+// throws RangeError: midpoint requires finite [longitude, latitude] coordinates.
+```
+
+> **Good to know:** For antipodal pairs every great circle through the two points is a candidate path, so the midpoint is not unique. The formula degrades to `atan2(≈0, 0)` and the library returns an equatorial point 90° of longitude from `origin`. Pairs that are merely close to antipodal are ill-conditioned; the package's property tests stay 1 km clear of that limit when asserting equidistance.
+
+## Related
+
+- [bearing](./bearing.md) - Initial great-circle bearing
+- [distance](./distance.md) - Great-circle distance in meters
+- [greatCirclePoints](./great-circle-points.md) - Sample vertices along the great-circle path
+- [toSphericalPoints](./to-spherical-points.md) - Shared validation and conversion step

@@ -693,6 +693,19 @@ describe('RbzHandler', () => {
   });
 
   describe('startListening / stopListening', () => {
+    it('ignores key-repeat Shift keydowns so a held Shift cannot re-arm the handler', () => {
+      const { map } = makeMap();
+      const handler = new RbzHandler(map as never);
+      handler.startListening();
+
+      window.dispatchEvent(
+        new KeyboardEvent('keydown', { key: 'Shift', repeat: true }),
+      );
+
+      expect(handler.isEnabled()).toBe(false);
+      handler.destroy();
+    });
+
     it('should enable the handler and disable dragPan on Shift keydown after startListening', () => {
       const { map, dragPan } = makeMap();
       const handler = new RbzHandler(map as never);
@@ -759,6 +772,32 @@ describe('RbzHandler', () => {
       handler.stopListening();
 
       expect(handler.isEnabled()).toBe(false);
+
+      handler.destroy();
+    });
+
+    it('should re-enable dragPan when stopListening is called while armed', () => {
+      const { map, dragPan } = makeMap();
+      const handler = new RbzHandler(map as never);
+      handler.startListening();
+      dispatchKey('keydown', 'Shift');
+      expect(dragPan.disable).toHaveBeenCalledOnce();
+
+      handler.stopListening();
+
+      expect(dragPan.enable).toHaveBeenCalledOnce();
+
+      handler.destroy();
+    });
+
+    it('should leave dragPan alone when stopListening is called while not armed', () => {
+      const { map, dragPan } = makeMap();
+      const handler = new RbzHandler(map as never);
+      handler.startListening();
+
+      handler.stopListening();
+
+      expect(dragPan.enable).not.toHaveBeenCalled();
 
       handler.destroy();
     });

@@ -14,6 +14,7 @@ import { type UniqueId, uuid } from '@accelint/core';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import * as cameraStore from '../camera/store';
 import * as cursorCoordinatesStore from '../cursor-coordinates/store';
+import { measurementStore } from '../deckgl/measurement-layer/store';
 import * as displayShapeStore from '../deckgl/shapes/display-shape-layer/store';
 import * as drawShapeStore from '../deckgl/shapes/draw-shape-layer/store';
 import * as editShapeStore from '../deckgl/shapes/edit-shape-layer/store';
@@ -45,14 +46,17 @@ describe('clearAllMapStores', () => {
     const clearCursorSpy = vi.spyOn(mapCursorStore, 'clearCursorState');
     const clearMapModeSpy = vi.spyOn(mapModeStore, 'clearMapModeState');
     const clearViewportSpy = vi.spyOn(viewportStore, 'clearViewportState');
+    const clearMeasurementSpy = vi.spyOn(measurementStore, 'clear');
 
     // Arrange: Initialize stores to create state
     cameraStore.cameraStore.get(testId);
     mapModeStore.modeStore.get(testId);
+    measurementStore.get(testId);
 
     // Verify state exists
     expect(cameraStore.cameraStore.exists(testId)).toBe(true);
     expect(mapModeStore.modeStore.exists(testId)).toBe(true);
+    expect(measurementStore.exists(testId)).toBe(true);
 
     // Act: Clear all stores
     clearAllMapStores(testId);
@@ -60,6 +64,7 @@ describe('clearAllMapStores', () => {
     // Assert: State is actually cleared
     expect(cameraStore.cameraStore.exists(testId)).toBe(false);
     expect(mapModeStore.modeStore.exists(testId)).toBe(false);
+    expect(measurementStore.exists(testId)).toBe(false);
 
     // Verify all cleanup functions were called with correct mapId
     expect(clearCameraSpy).toHaveBeenCalledWith(testId);
@@ -70,6 +75,7 @@ describe('clearAllMapStores', () => {
     expect(clearCursorSpy).toHaveBeenCalledWith(testId);
     expect(clearMapModeSpy).toHaveBeenCalledWith(testId);
     expect(clearViewportSpy).toHaveBeenCalledWith(testId);
+    expect(clearMeasurementSpy).toHaveBeenCalledWith(testId);
 
     // Verify each was called exactly once
     expect(clearCameraSpy).toHaveBeenCalledTimes(1);
@@ -80,6 +86,7 @@ describe('clearAllMapStores', () => {
     expect(clearCursorSpy).toHaveBeenCalledTimes(1);
     expect(clearMapModeSpy).toHaveBeenCalledTimes(1);
     expect(clearViewportSpy).toHaveBeenCalledTimes(1);
+    expect(clearMeasurementSpy).toHaveBeenCalledTimes(1);
   });
 
   it('stops cleanup if a store cleanup throws', () => {

@@ -1,0 +1,194 @@
+/*
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
+ * This file is licensed to you under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License. You may obtain a copy
+ * of the License at https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under
+ * the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS
+ * OF ANY KIND, either express or implied. See the License for the specific language
+ * governing permissions and limitations under the License.
+ */
+
+'use client';
+
+import 'client-only';
+import {
+  bearing as geoBearing,
+  distance as geoDistance,
+} from '@accelint/geo/geodesy';
+import { useContext, useEffect } from 'react';
+import { MapContext } from '@/deckgl/base-map/provider';
+import { toLonLat } from '@/shared/coordinates';
+import { useShiftZoomDisable } from '@/deckgl/shapes/shared/hooks/use-shift-zoom-disable';
+import { measurementStore } from './store';
+import type { UniqueId } from '@accelint/core';
+import type { RequiresModifier } from './types';
+
+/**
+ * Return value of `useMeasurement`.
+ */
+export type UseMeasurementReturn = {
+  /** Whether a measurement drag is currently in progress */
+  isMeasuring: boolean;
+  /** Origin coordinate `[longitude, latitude]`, or `null` when not measuring */
+  pointA: [number, number] | null;
+  /** Destination coordinate `[longitude, latitude]`, or `null` before the first drag move */
+  pointB: [number, number] | null;
+  /** Great-circle distance in meters, or `0` until both points are finite. Format with `formatDistance` from `@accelint/formatters/bearing`. */
+  distanceMeters: number;
+  /** Initial bearing from pointA to pointB in degrees (0–360), or `0` until both points are finite */
+  bearingDeg: number;
+  /**
+   * Imperatively start (or restart) a measurement from a coordinate.
+   * Useful for programmatic activation (e.g., context menu "Measure from here").
+   * Behaves like a drag start: emits `measurement:start`, suppresses map pan,
+   * and claims the `measure` map mode. No-op while another tool owns the map
+   * mode.
+   *
+   * @param pointA - The origin coordinate as `[longitude, latitude]`
+   */
+  start: (pointA: [number, number]) => void;
+  /** Clear the current measurement and reset to idle state */
+  clear: () => void;
+};
+
+/** Derives distance and bearing; zeros until both points are finite tuples. */
+function deriveMeasurement(
+  pointA: [number, number] | null,
+  pointB: [number, number] | null,
+): { distanceMeters: number; bearingDeg: number } {
+  const origin = toLonLat(pointA);
+  const destination = toLonLat(pointB);
+
+  if (!(origin && destination)) {
+    return { distanceMeters: 0, bearingDeg: 0 };
+  }
+
+  return {
+    distanceMeters: geoDistance(origin, destination),
+    bearingDeg: geoBearing(origin, destination),
+  };
+}
+
+/**
+ * Hook that exposes per-map bearing-range measurement state and actions.
+ *
+ * @param mapId - Optional map instance ID. Falls back to `MapContext` when omitted.
+ *   Required when used outside of a `MapProvider` (i.e., outside BaseMap children).
+ * @param requiresModifier - If set, measurement only activates when this modifier key is
+ *   held during the drag. Pass it from the hook that configures the tool; hooks that
+ *   omit it inherit the map's current value.
+ * @returns Measurement state (`distanceMeters` / `bearingDeg` are `0` until both points are finite) and imperative actions. `start(pointA)` behaves like a drag
+ *   start: it emits `measurement:start` and suppresses pan until `complete` or `clear`.
+ * @throws {Error} If no `mapId` is provided and hook is used outside of a `MapProvider`
+ *
+ * @remarks
+ * The drag subscription lives in `measurementStore`, once per map: the first
+ * hook to mount starts it and the last to unmount tears it down (finishing an
+ * in-flight measurement so pan is restored). Lifecycle events therefore fire
+ * once per map no matter how many hooks are mounted.
+ *
+ * An optional `requiresModifier` restricts measurement to drags holding that
+ * key, so plain drag keeps panning. It is per-map state owned by the hook that
+ * passes it: pass it where you configure the tool (typically one hook or
+ * `MeasurementTool`), omit it from readout hooks so they inherit the map's
+ * value, and it is cleared when the configuring hook unmounts. Releasing the
+ * modifier mid-drag completes the measurement at the last captured coordinate.
+ * With `'shift'`, BaseMap's Shift+drag zoom is suppressed while Shift is held;
+ * see {@link RequiresModifier} for how each key interacts with BaseMap's
+ * gestures.
+ *
+ * Measurement takes part in the map mode system: a drag only measures while
+ * the map is in the default mode, the store holds the `measure` mode
+ * (`MEASUREMENT_MODE`) for the drag, and releases it when the measurement
+ * completes or is cleared. Drags made while a shape is being drawn or edited
+ * are left to that tool.
+ *
+ * Uses per-mapId store isolation so multiple map instances can measure independently.
+ *
+ * @example
+ * ```tsx
+ * // Inside BaseMap (uses MapContext automatically)
+ * function MeasurementOverlay() {
+ *   const { isMeasuring, pointA, pointB, distanceMeters, bearingDeg } =
+ *     useMeasurement();
+ *
+ *   return isMeasuring && pointA && pointB
+ *     ? <MeasurementLayer pointA={pointA} pointB={pointB} />
+ *     : null;
+ * }
+ * ```
+ *
+ * @example
+ * ```tsx
+ * // Outside BaseMap — pass mapId explicitly
+ * import { formatBearing, formatDistance } from '@accelint/formatters/bearing';
+ *
+ * function MeasurementPanel({ mapId }: { mapId: string }) {
+ *   const { distanceMeters, bearingDeg, clear } = useMeasurement(mapId);
+ *
+ *   return (
+ *     <div>
+ *       <p>
+ *         {formatDistance(distanceMeters, 'kilometers')} / {formatBearing(bearingDeg)}
+ *       </p>
+ *       <button onClick={clear}>Clear</button>
+ *     </div>
+ *   );
+ * }
+ * ```
+ *
+ * @example
+ * ```tsx
+ * // Modifier key required — Alt+drag to measure, plain drag to pan
+ * function MeasurementTool({ mapId }: { mapId: string }) {
+ *   const { isMeasuring } = useMeasurement(mapId, 'alt');
+ *   return isMeasuring ? <ActiveIndicator /> : null;
+ * }
+ * ```
+ */
+export function useMeasurement(
+  mapId?: UniqueId,
+  requiresModifier?: RequiresModifier,
+): UseMeasurementReturn {
+  const contextId = useContext(MapContext);
+  const actualId = mapId ?? contextId;
+
+  if (!actualId) {
+    throw new Error(
+      'useMeasurement requires either a mapId parameter or to be used within a MapProvider',
+    );
+  }
+
+  const { state, start, clear, setRequiresModifier } =
+    measurementStore.use(actualId);
+
+  // Only a hook given a modifier owns the per-map value: readout hooks that
+  // omit it inherit whatever the configuring hook set, and the configuring
+  // hook clears it on unmount.
+  useEffect(() => {
+    if (requiresModifier === undefined) {
+      return;
+    }
+
+    setRequiresModifier(requiresModifier);
+
+    return () => setRequiresModifier(undefined);
+  }, [requiresModifier, setRequiresModifier]);
+
+  // Shift also drives BaseMap's box zoom / rubber-band zoom; suppress zoom
+  // while it is held so a Shift+drag measures instead of zooming on release.
+  useShiftZoomDisable(actualId, requiresModifier === 'shift');
+
+  const { pointA, pointB, isMeasuring } = state;
+
+  return {
+    isMeasuring,
+    pointA,
+    pointB,
+    ...deriveMeasurement(pointA, pointB),
+    start,
+    clear,
+  };
+}
