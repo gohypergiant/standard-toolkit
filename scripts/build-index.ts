@@ -19,7 +19,7 @@ import {
   type ModuleExportName,
   parseSync,
 } from 'oxc-parser';
-import { $, argv, chalk, echo, fs, glob, path, spinner, YAML } from 'zx';
+import { $, argv, chalk, echo, fs, glob, path, spinner } from 'zx';
 import { getFormattedHeader } from './license.js';
 
 const INDEX_REGEX = /[\\/]index\.[tj]sx?$/;
@@ -76,20 +76,6 @@ function compareNames(left: string, right: string): number {
   }
 
   return 0;
-}
-
-/** Reads the workspace globs from pnpm-workspace.yaml as a single glob prefix */
-async function getWorkspaceGlob(root: string): Promise<string> {
-  const workspaceFile = await fs.readFile(
-    path.join(root, 'pnpm-workspace.yaml'),
-    'utf-8',
-  );
-  const { packages } = YAML.parse(workspaceFile) as { packages: string[] };
-  const workspaces = packages.map((pattern) => pattern.replace('/*', ''));
-
-  return workspaces.length > 1
-    ? `{${workspaces.join(',')}}/**`
-    : `${workspaces[0]}/**`;
 }
 
 /**
@@ -276,16 +262,15 @@ function aggregateExports(children: TreeNode[], packageRoot: string): string[] {
 }
 
 /** Get a list of *code* files */
-async function getCodeFiles(
+function getCodeFiles(
   root: string,
-  workspace: string | undefined,
+  workspace: string,
   ignores: string | undefined,
 ): Promise<string[]> {
   const ignoreList = ignores
     ? ignores.split(',').map((pattern) => `**/${pattern.trim()}`)
     : [];
-  const workspaceGlob = workspace || (await getWorkspaceGlob(root));
-  const globPattern = `${workspaceGlob}/src/**/*.{ts,tsx,js,jsx}`;
+  const globPattern = `${workspace}/src/**/*.{ts,tsx,js,jsx}`;
 
   return glob(globPattern, {
     ignore: [...IGNORE_LIST, ...ignoreList],
@@ -294,12 +279,8 @@ async function getCodeFiles(
 }
 
 /** Get a list of *barrel* files */
-async function getBarrelFiles(
-  root: string,
-  workspace: string | undefined,
-): Promise<string[]> {
-  const workspaceGlob = workspace || (await getWorkspaceGlob(root));
-  const globPattern = `${workspaceGlob}/src/**/index.{ts,tsx,js,jsx}`;
+function getBarrelFiles(root: string, workspace: string): Promise<string[]> {
+  const globPattern = `${workspace}/src/**/index.{ts,tsx,js,jsx}`;
 
   return glob(globPattern, { ignore: IGNORE_LIST, cwd: root });
 }
@@ -355,9 +336,9 @@ async function writeIndexFile(
 }
 
 function outputHelp(): void {
-  console.log(`build-index [workspace] [ignores]
+  console.log(`build-index <workspace> [ignores]
 
-  If the workspace is not provided then the script will index every workspace listed in pnpm-workspace.yaml.
+  The workspace is the package folder to index, relative to the repo root (e.g. packages/core).
 
   The ignore list should be a comma separated list of files to ignore. They are split and then added to Glob's ignore list. ("**/<file>, **/<file>, ...")
 
@@ -382,6 +363,13 @@ await spinner(chalk.green('Generating index file...'), async () => {
     string | undefined,
     string | undefined,
   ];
+
+  if (!workspace) {
+    process.exitCode = 1;
+
+    return outputHelp();
+  }
+
   const ext = argv.js ? '.js' : '.ts';
 
   const files = argv.barrels

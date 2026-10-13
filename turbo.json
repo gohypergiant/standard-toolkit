@@ -4,6 +4,7 @@
   "agentGuidance": false,
   "tasks": {
     "index": {
+      "cache": false,
       "outputs": ["src/index.ts"]
     },
     "pre-build": {
