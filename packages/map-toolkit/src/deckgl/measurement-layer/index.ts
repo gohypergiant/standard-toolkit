@@ -11,22 +11,22 @@
  */
 
 export { MEASUREMENT_LAYER_ID, MEASUREMENT_MODE } from './constants';
+export { MeasurementEvents, MeasurementEventsNamespace } from './events';
 export { MeasurementLayer } from './measurement-layer';
 export { MeasurementTool } from './measurement-tool';
 export { measurementStore } from './store';
 export { useMeasurement } from './use-measurement';
-export { MeasurementEvents, MeasurementEventsNamespace } from './events';
-export type { MeasurementLayerProps, RequiresModifier } from './types';
-export type { MeasurementToolProps } from './measurement-tool';
-export type { MeasurementState, MeasurementActions } from './store';
-export type { UseMeasurementReturn } from './use-measurement';
 export type {
+  MeasurementClearEvent,
+  MeasurementClearPayload,
+  MeasurementCompleteEvent,
+  MeasurementCompletePayload,
+  MeasurementEventType,
   MeasurementPayload,
   MeasurementStartEvent,
   MeasurementUpdateEvent,
-  MeasurementCompletePayload,
-  MeasurementCompleteEvent,
-  MeasurementClearPayload,
-  MeasurementClearEvent,
-  MeasurementEventType,
 } from './events';
+export type { MeasurementToolProps } from './measurement-tool';
+export type { MeasurementActions, MeasurementState } from './store';
+export type { MeasurementLayerProps, RequiresModifier } from './types';
+export type { UseMeasurementReturn } from './use-measurement';

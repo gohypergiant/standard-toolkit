@@ -17,12 +17,11 @@ import type {
 } from 'react-aria-components/ComboBox';
 import type { InputProps } from 'react-aria-components/Input';
 import type { LabelProps } from 'react-aria-components/Label';
+import type { PopoverProps } from 'react-aria-components/Popover';
 import type {
   ListLayoutOptions,
   VirtualizerProps,
 } from 'react-aria-components/Virtualizer';
-import type { PopoverProps } from 'react-aria-components/Popover';
-
 import type { ButtonProps } from '../button/types';
 import type { OptionsDataItem, OptionsProps } from '../options/types';
 

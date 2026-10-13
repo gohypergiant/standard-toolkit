@@ -17,8 +17,8 @@ import { Keycode } from '@/enums/keycode';
 import { hotkeyStore } from '@/stores/hotkey-store';
 import { unregisterHotkey } from '.';
 import type { HotkeyConfig } from '@/types/hotkey-config';
-import type { HotkeyManager } from '@/types/hotkey-manager';
 import type { HotkeyId } from '@/types/hotkey-id';
+import type { HotkeyManager } from '@/types/hotkey-manager';
 
 describe('unregisterHotkey', () => {
   let mockHotkeyId: HotkeyId;

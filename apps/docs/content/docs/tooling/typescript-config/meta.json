@@ -1,7 +1,4 @@
 {
   "title": "@accelint/typescript-config",
-  "pages": [
-    "index",
-    "..."
-  ]
+  "pages": ["index", "..."]
 }

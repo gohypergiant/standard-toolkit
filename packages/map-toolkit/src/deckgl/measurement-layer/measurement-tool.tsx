@@ -13,8 +13,8 @@
 'use client';
 
 import 'client-only';
-import type { ReactNode } from 'react';
 import type { UniqueId } from '@accelint/core';
+import type { ReactNode } from 'react';
 import type { MeasurementLayerProps, RequiresModifier } from './types';
 import './fiber';
 import { useMeasurement } from './use-measurement';

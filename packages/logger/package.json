@@ -68,11 +68,12 @@
   "scripts": {
     "bench": "pnpm vitest bench --run --dir src",
     "build": "pnpm tsdown",
+    "check": "pnpm biome check --write .",
     "constellation-tracker": "pnpm exec constellation-tracker",
     "dev": "pnpm tsc --watch",
     "format": "pnpm biome format . --write --verbose",
     "format:check": "pnpm biome format . --verbose",
-    "index": "pnpm zx ../../scripts/indexer.mjs packages/logger",
+    "index": "pnpm zx ../../scripts/build-index.ts packages/logger",
     "license": "pnpm zx ../../scripts/license.mjs",
     "lint": "pnpm biome lint . --verbose",
     "lint:package": "pnpm publint",

@@ -10,10 +10,10 @@
  * governing permissions and limitations under the License.
  */
 
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import type { Viewport } from '@deck.gl/core';
-import { getViewportBounds } from './viewport-utils';
 import { Bounds, Unit } from '@ngageoint/grid-js';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { getViewportBounds } from './viewport-utils';
+import type { Viewport } from '@deck.gl/core';
 
 vi.mock('@ngageoint/grid-js', () => ({
   Bounds: {

@@ -10,10 +10,10 @@
  * governing permissions and limitations under the License.
  */
 
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { GarsLayer } from './';
 import { Broadcast } from '@accelint/bus';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { type GridCellEvent, GridCellEvents } from '../core/types';
+import { GarsLayer } from './';
 import type { Layer } from '@deck.gl/core';
 import type { PathLayer } from '@deck.gl/layers';
 

@@ -75,7 +75,7 @@ async function triggerState(
       // Find the actual focusable element within the container
       const focusTarget = findFocusableElement(element);
       if (focusTarget) {
-        // @ts-ignore -- focusVisible is a valid option https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/focus
+        // @ts-expect-error -- focusVisible is a valid option https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/focus
         focusTarget.focus({ focusVisible: true });
       } else {
         logger.warn(
@@ -176,8 +176,41 @@ function defaultScreenshotName(
 }
 
 /**
+ * Find the element to interact with. Portal-based components (e.g. menus
+ * rendered via Popover) mount their content outside the wrapper, so fall back
+ * to polling the whole document before giving up on the wrapper itself.
+ */
+async function resolveInteractionElement(
+  element: Element,
+  interactionTarget: string,
+): Promise<Element> {
+  const found = element.querySelector(interactionTarget);
+
+  if (found) {
+    return found;
+  }
+
+  const doc = element.ownerDocument;
+
+  for (let i = 0; i < 40; i++) {
+    const portalElement = doc.querySelector(interactionTarget);
+
+    if (portalElement) {
+      return portalElement;
+    }
+
+    await new Promise((resolve) => setTimeout(resolve, 50));
+  }
+
+  logger.warn(`Portal element not found for "${interactionTarget}"`);
+
+  return element;
+}
+
+/**
  * Run a single state test
  */
+
 async function runStateTest<TProps>(
   ctx: StateTestContext<TProps>,
 ): Promise<void> {
@@ -219,24 +252,10 @@ async function runStateTest<TProps>(
   let interactionElement: Element = element;
 
   if (ctx.interactionTarget) {
-    const found = element.querySelector(ctx.interactionTarget);
-    if (found) {
-      interactionElement = found;
-    } else {
-      // Portal elements live outside the wrapper but in the same document.
-      const doc = element.ownerDocument;
-      for (let i = 0; i < 40; i++) {
-        const portalEl = doc.querySelector(ctx.interactionTarget);
-        if (portalEl) {
-          interactionElement = portalEl;
-          break;
-        }
-        await new Promise((r) => setTimeout(r, 50));
-      }
-      if (interactionElement === element) {
-        logger.warn(`Portal element not found for "${ctx.interactionTarget}"`);
-      }
-    }
+    interactionElement = await resolveInteractionElement(
+      element,
+      ctx.interactionTarget,
+    );
   }
 
   await triggerState(interactionElement, ctx.state);

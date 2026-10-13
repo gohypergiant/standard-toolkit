@@ -276,7 +276,7 @@ export class Stream<T = unknown> extends Removable {
     };
 
     const action: StreamUpdateAction =
-      partial.data !== undefined ? 'data' : 'status';
+      partial.data === undefined ? 'status' : 'data';
     if (action === 'data') {
       newState.data = replaceEqualDeep<T | null>(
         this.state.data,

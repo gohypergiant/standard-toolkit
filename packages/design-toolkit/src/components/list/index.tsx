@@ -13,8 +13,8 @@
 
 import 'client-only';
 import { clsx } from '@accelint/design-foundation/lib/utils';
-import { GridList } from 'react-aria-components/GridList';
 import { composeRenderProps } from 'react-aria-components/composeRenderProps';
+import { GridList } from 'react-aria-components/GridList';
 import { useContextProps } from 'react-aria-components/slots';
 import { IconProvider } from '../icon/context';
 import { ListContext } from './context';

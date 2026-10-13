@@ -14,8 +14,8 @@
  * Shared constants for grid layers
  */
 
-import type { Color } from '@deck.gl/core';
 import { designTokens } from '@accelint/design-foundation/tokens';
+import type { Color } from '@deck.gl/core';
 
 export const DEFAULT_LINE_COLOR: Color =
   designTokens.dark.outline.interactive.base;

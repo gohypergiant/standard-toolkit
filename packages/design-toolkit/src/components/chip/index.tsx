@@ -14,13 +14,13 @@
 import 'client-only';
 import { clsx } from '@accelint/design-foundation/lib/utils';
 import { useContext } from 'react';
+import { useContextProps } from 'react-aria-components/slots';
 import { Tag as AriaTag } from 'react-aria-components/TagGroup';
 import { IconProvider } from '../icon/context';
 import { ChipContext } from './context';
 import { ChipListRenderingContext } from './list';
 import styles from './styles.module.css';
 import type { ChipProps } from './types';
-import { useContextProps } from 'react-aria-components/slots';
 
 /**
  * Chip - A compact element for displaying tags, filters, or selectable items

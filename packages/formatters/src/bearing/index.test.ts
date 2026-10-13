@@ -10,10 +10,10 @@
  * governing permissions and limitations under the License.
  */
 
-import type { DistanceUnit } from '@accelint/constants/units';
 import fc from 'fast-check';
 import { describe, expect, it } from 'vitest';
 import { formatBearing, formatDistance } from './index';
+import type { DistanceUnit } from '@accelint/constants/units';
 
 const DISTANCE_UNITS: DistanceUnit[] = [
   'kilometers',
@@ -120,9 +120,12 @@ describe('formatDistance', () => {
       [42300, ['kilometers', 'nauticalmiles'], '42.3 km / 22.8 NM'],
       [0, ['kilometers', 'nauticalmiles'], '0.0 km / 0.0 NM'],
       [1609.344, ['miles', 'feet'], '1.0 mi / 5280.0 ft'],
-    ] as const)('formats %d meters in %j as "%s"', (meters, units, expected) => {
-      expect(formatDistance(meters, [...units])).toBe(expected);
-    });
+    ] as const)(
+      'formats %d meters in %j as "%s"',
+      (meters, units, expected) => {
+        expect(formatDistance(meters, [...units])).toBe(expected);
+      },
+    );
   });
 
   describe('validation', () => {

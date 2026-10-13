@@ -59,12 +59,15 @@ describe('midpoint', () => {
     it.each([
       ['eastward', [179, 0], [-179, 0]],
       ['westward', [-179, 0], [179, 0]],
-    ] as const)('crosses the antimeridian rather than the prime meridian when travelling %s', (_direction, origin, destination) => {
-      const [longitude, latitude] = midpoint(origin, destination);
+    ] as const)(
+      'crosses the antimeridian rather than the prime meridian when travelling %s',
+      (_direction, origin, destination) => {
+        const [longitude, latitude] = midpoint(origin, destination);
 
-      expect(Math.abs(longitude)).toBeCloseTo(180, 10);
-      expect(latitude).toBeCloseTo(0, 10);
-    });
+        expect(Math.abs(longitude)).toBeCloseTo(180, 10);
+        expect(latitude).toBeCloseTo(0, 10);
+      },
+    );
 
     it('normalizes a wrapped-map longitude beyond 180 into [-180, 180]', () => {
       const [longitude, latitude] = midpoint([190, 0], [200, 0]);

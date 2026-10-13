@@ -13,9 +13,9 @@
 
 import 'client-only';
 import { clsx } from '@accelint/design-foundation/lib/utils';
-import { TextContext } from 'react-aria-components/Text';
-import { Provider } from 'react-aria-components/slots';
 import { HeadingContext } from 'react-aria-components/Heading';
+import { Provider } from 'react-aria-components/slots';
+import { TextContext } from 'react-aria-components/Text';
 import { AvatarContext } from '../avatar/context';
 import { IconContext } from '../icon/context';
 import styles from './styles.module.css';

@@ -45,15 +45,18 @@ describe('toSphericalPoints', () => {
         [Number.NEGATIVE_INFINITY, 1],
       ],
       ['-Infinity destination latitude', [0, 0], [1, Number.NEGATIVE_INFINITY]],
-    ] as const)('throws RangeError naming the caller for %s', (_description, origin, destination) => {
-      expect(() =>
-        toSphericalPoints(origin, destination, 'someFunction'),
-      ).toThrow(RangeError);
-      expect(() =>
-        toSphericalPoints(origin, destination, 'someFunction'),
-      ).toThrow(
-        'someFunction requires finite [longitude, latitude] coordinates.',
-      );
-    });
+    ] as const)(
+      'throws RangeError naming the caller for %s',
+      (_description, origin, destination) => {
+        expect(() =>
+          toSphericalPoints(origin, destination, 'someFunction'),
+        ).toThrow(RangeError);
+        expect(() =>
+          toSphericalPoints(origin, destination, 'someFunction'),
+        ).toThrow(
+          'someFunction requires finite [longitude, latitude] coordinates.',
+        );
+      },
+    );
   });
 });

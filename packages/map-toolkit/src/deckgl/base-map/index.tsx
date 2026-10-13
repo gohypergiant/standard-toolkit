@@ -32,6 +32,7 @@ import {
 } from 'react-map-gl/maplibre';
 import { RbzHandler } from '@/maplibre';
 import { isActiveMap, setActiveMap } from '@/maplibre/active-map-store';
+import { toLonLat } from '@/shared/coordinates';
 import { useMapCamera } from '../../camera';
 import { CameraEventTypes } from '../../camera/events';
 import { cameraStore, MAX_PITCH } from '../../camera/store';
@@ -50,14 +51,13 @@ import {
   tiltCommandFor,
 } from './tilt-gesture';
 import { LOCKED_MAP_LIBRE_OPTION_KEYS } from './types';
-import { toLonLat } from '@/shared/coordinates';
+import type { UniqueId } from '@accelint/core';
 import type {
   IControl,
   MapOptions,
   WebGLContextAttributesWithType,
 } from 'maplibre-gl';
 import type { MjolnirGestureEvent, MjolnirPointerEvent } from 'mjolnir.js';
-import type { UniqueId } from '@accelint/core';
 import type { CameraSetViewEvent } from '../../camera/types';
 import type {
   BaseMapProps,

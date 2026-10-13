@@ -32,9 +32,9 @@
  */
 
 import { Broadcast } from '@accelint/bus';
+import { toLonLat } from '@/shared/coordinates';
 import { MapEvents } from '../deckgl/base-map/events';
 import { createMapStore } from '../shared/create-map-store';
-import { toLonLat } from '@/shared/coordinates';
 import type { UniqueId } from '@accelint/core';
 import type { MapEventType, MapHoverEvent } from '../deckgl/base-map/types';
 import type { CoordinateFormatTypes, CursorCoordinateState } from './types';

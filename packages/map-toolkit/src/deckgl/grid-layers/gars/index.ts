@@ -11,7 +11,7 @@
  */
 
 import { BaseGridLayer } from '../core/base-grid-layer';
-import { garsDefinition, GARS_GRID_TYPES } from './definition';
+import { GARS_GRID_TYPES, garsDefinition } from './definition';
 import type { GARSLayerProps } from './types';
 
 /**

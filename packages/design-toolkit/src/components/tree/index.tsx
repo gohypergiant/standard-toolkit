@@ -14,6 +14,7 @@
 import { Cache, type CacheTreeNode } from '@/hooks/use-tree/actions/cache';
 import type { Key, Selection } from '@react-types/shared';
 import 'client-only';
+import { noop } from '@accelint/core';
 import { clsx } from '@accelint/design-foundation/lib/utils';
 import { useCallback, useMemo } from 'react';
 import { composeRenderProps } from 'react-aria-components/composeRenderProps';
@@ -25,7 +26,6 @@ import {
 import { TreeContext } from './context';
 import styles from './styles.module.css';
 import type { TreeProps } from './types';
-import { noop } from '@accelint/core';
 
 const defaultRenderDropIndicator = (target: DropTarget) => {
   const isBetweenItems =
