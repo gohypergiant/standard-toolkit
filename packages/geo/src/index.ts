@@ -83,3 +83,8 @@ export {
   toUtmParts,
 } from './coordinates/utm/parts';
 export type { GridPartsResult, UtmParts } from './coordinates/utm/parts';
+export { bearing } from './geodesy/bearing';
+export { distance } from './geodesy/distance';
+export { greatCirclePoints } from './geodesy/great-circle-points';
+export { midpoint } from './geodesy/midpoint';
+export { toSphericalPoints } from './geodesy/to-spherical-points';

@@ -1,0 +1,58 @@
+---
+title: "Geodesy"
+description: Great-circle bearing, distance, midpoint, and path sampling between two [longitude, latitude] points on a spherical Earth.
+source: packages/geo/src/geodesy/index.ts
+source_sha: 7a20cbcd58daf004ce11c7e3ac4c9e2394c44b38
+doc_sha: ea95a1db1efcbaaa187ace400d60add41e175df9
+deprecated: false
+updated: 2026-10-07
+---
+
+## Installation
+
+```bash
+pnpm add @accelint/geo
+```
+
+## Usage
+
+```typescript
+// Import from the geodesy sub-module
+import { bearing, distance, greatCirclePoints, midpoint } from '@accelint/geo/geodesy';
+
+// Or from the package root
+import { bearing, distance, greatCirclePoints, midpoint } from '@accelint/geo';
+
+// London to Paris
+const london = [-0.1278, 51.5074] as const;
+const paris = [2.3522, 48.8566] as const;
+
+bearing(london, paris);  // ~148.1 — degrees clockwise from true north
+distance(london, paris); // ~343556 — meters
+midpoint(london, paris); // [~1.15, ~50.19]
+greatCirclePoints(london, paris, 8).length; // 9 vertices along the route
+```
+
+## Coordinate Order
+
+Every function takes `LonLatTuple` values: `[longitude, latitude]` in decimal degrees (GeoJSON order). This is the reverse of the `[latitude, longitude]` order that `createCoordinate` and the standalone formatters accept, so check the order when passing coordinates between the two APIs.
+
+Longitude and latitude are not range-checked. Map libraries such as deck.gl hand these functions longitudes beyond ±180 when the map wraps, and the spherical math is periodic, so out-of-range values still produce correct results. Every function throws a `RangeError` when any coordinate component is `NaN` or infinite.
+
+## Available Exports
+
+| Export Path | Description |
+|-------------|-------------|
+| [bearing](./bearing.md) | Initial great-circle bearing in degrees clockwise from true north, `[0, 360)` |
+| [distance](./distance.md) | Great-circle distance in meters, clamped to half the Earth's circumference for near-antipodal pairs |
+| [midpoint](./midpoint.md) | Great-circle midpoint along the shortest path, longitude normalized to `[-180, 180]` |
+| [greatCirclePoints](./great-circle-points.md) | `segments + 1` evenly spaced vertices along the geodesic, with unwrapped longitudes for drawing |
+| [toSphericalPoints](./to-spherical-points.md) | Shared validation step that converts both tuples to `LatLonSpherical` points; not part of the `@accelint/geo/geodesy` barrel |
+
+All functions use the spherical Earth model from the `geodesy` library with a mean radius of 6371 km.
+
+## Related
+
+- [@accelint/geo](../index.md) - Package overview
+- [createCoordinate](../coordinates/coordinate.md) - Parse, validate, convert, and format coordinates
+- [@accelint/formatters](../../formatters/bearing.md) - `formatBearing` and `formatDistance` for display

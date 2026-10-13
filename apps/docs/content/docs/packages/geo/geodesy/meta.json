@@ -1,0 +1,11 @@
+{
+  "title": "Geodesy",
+  "pages": [
+    "index",
+    "bearing",
+    "distance",
+    "great-circle-points",
+    "midpoint",
+    "to-spherical-points"
+  ]
+}

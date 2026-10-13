@@ -1,6 +1,6 @@
 {
   "version": "1.0",
-  "generated": "2026-07-14T20:37:58.3NZ",
+  "generated": "2026-10-07T00:00:00.000Z",
   "entries": [
     {
       "source": "packages/bus/src/broadcast/index.ts",
@@ -88,11 +88,12 @@
       "doc": "apps/docs/content/docs/packages/constants/units.mdx",
       "entities": [
         "DISTANCE_UNIT_SYMBOLS",
-        "DISTANCE_UNIT_BY_SYMBOL"
+        "DISTANCE_UNIT_BY_SYMBOL",
+        "METERS_PER_UNIT"
       ],
-      "source_sha": "2eb2aeec378a8df693295660d015c4968dd924a5",
-      "doc_sha": "e97a752c0c0110c3956293da24fcf4cdc80b46e1",
-      "updated": "2026-07-14T20:01:26.000Z"
+      "source_sha": "089683ca5bb88f661597ec33d98ca98e465e8c81",
+      "doc_sha": "469f22e6f98f1c27298c3d700791bf25e78fcf86",
+      "updated": "2026-10-07T00:00:00.000Z"
     },
     {
       "source": "packages/converters/src/boolean-to-number/index.ts",
@@ -616,6 +617,17 @@
       "updated": "2026-05-28T00:00:00Z"
     },
     {
+      "source": "packages/formatters/src/bearing/index.ts",
+      "doc": "apps/docs/content/docs/packages/formatters/bearing.mdx",
+      "entities": [
+        "formatBearing",
+        "formatDistance"
+      ],
+      "source_sha": "f119e0d8381db2bb56fe97a555ca27352bed1c74",
+      "doc_sha": "6d8efc0da26297f61a43598f20641d20be54e5f8",
+      "updated": "2026-10-07T00:00:00.000Z"
+    },
+    {
       "source": "packages/formatters/src/iff/index.ts",
       "doc": "apps/docs/content/docs/packages/formatters/iff.mdx",
       "entities": [
@@ -639,9 +651,9 @@
         "formatM4",
         "formatM5"
       ],
-      "source_sha": "7c23c79457c772768b2077efeefb86ba8df3f0c6",
-      "doc_sha": "43b1a1ed76987aa6685b6d129c658897c4f3455a",
-      "updated": "2026-07-14T20:30:00.000Z"
+      "source_sha": "345d829840f0b51addd65827a72e715e62fe0327",
+      "doc_sha": "e74b4467f64d75c31ee6ecc751c8e88452a6afac",
+      "updated": "2026-10-07T00:00:00.000Z"
     },
     {
       "source": "packages/geo/src/coordinates/coordinate.ts",
@@ -735,6 +747,69 @@
       "updated": "2026-07-13T00:00:00.000Z"
     },
     {
+      "source": "packages/geo/src/geodesy/bearing.ts",
+      "doc": "apps/docs/content/docs/packages/geo/geodesy/bearing.mdx",
+      "entities": [
+        "bearing"
+      ],
+      "source_sha": "e45b558d713f57be8b2b8b39910c483096e8a261",
+      "doc_sha": "c17fef3ec6a1a93488fbec1257159aab1ef7fb03",
+      "updated": "2026-10-07T00:00:00.000Z"
+    },
+    {
+      "source": "packages/geo/src/geodesy/distance.ts",
+      "doc": "apps/docs/content/docs/packages/geo/geodesy/distance.mdx",
+      "entities": [
+        "distance"
+      ],
+      "source_sha": "04e8f89769329d984afd7aab91c9ce01f918a053",
+      "doc_sha": "b25723d5b4b72e5d464d65776f4d2c35a2c55433",
+      "updated": "2026-10-07T00:00:00.000Z"
+    },
+    {
+      "source": "packages/geo/src/geodesy/great-circle-points.ts",
+      "doc": "apps/docs/content/docs/packages/geo/geodesy/great-circle-points.mdx",
+      "entities": [
+        "greatCirclePoints"
+      ],
+      "source_sha": "4e80856eef9258da7a321a7030c744e98683a6ca",
+      "doc_sha": "90f42590b4eed491555cad1d1d0c148742abaccf",
+      "updated": "2026-10-07T00:00:00.000Z"
+    },
+    {
+      "source": "packages/geo/src/geodesy/index.ts",
+      "doc": "apps/docs/content/docs/packages/geo/geodesy/index.mdx",
+      "entities": [
+        "bearing",
+        "distance",
+        "greatCirclePoints",
+        "midpoint"
+      ],
+      "source_sha": "7a20cbcd58daf004ce11c7e3ac4c9e2394c44b38",
+      "doc_sha": "ea95a1db1efcbaaa187ace400d60add41e175df9",
+      "updated": "2026-10-07T00:00:00.000Z"
+    },
+    {
+      "source": "packages/geo/src/geodesy/midpoint.ts",
+      "doc": "apps/docs/content/docs/packages/geo/geodesy/midpoint.mdx",
+      "entities": [
+        "midpoint"
+      ],
+      "source_sha": "6dc6cc21da5f10c845eb73b1a70dbbcb13f3cc39",
+      "doc_sha": "ad3f38127b8bd62fafaa4af2ce0ec2669b71f478",
+      "updated": "2026-10-07T00:00:00.000Z"
+    },
+    {
+      "source": "packages/geo/src/geodesy/to-spherical-points.ts",
+      "doc": "apps/docs/content/docs/packages/geo/geodesy/to-spherical-points.mdx",
+      "entities": [
+        "toSphericalPoints"
+      ],
+      "source_sha": "b8d4bd373fdb5fbc220ae992d7c38249cd6fb706",
+      "doc_sha": "220e1d459bed5d12f5d4452faaa6de237027b190",
+      "updated": "2026-10-07T00:00:00.000Z"
+    },
+    {
       "source": "packages/geo/src/index.ts",
       "doc": "apps/docs/content/docs/packages/geo/index.mdx",
       "entities": [
@@ -750,8 +825,8 @@
         "parseUTM"
       ],
       "source_sha": "5886f7407bc66cfef28a4e4b589b2d08e60fadba",
-      "doc_sha": "4f1c75b0e4f53f1e535e5250d6fbaa7a3e500e3f",
-      "updated": "2026-07-14T13:34:24.000Z"
+      "doc_sha": "b19483664aff0203b038b90ea4dc6c6018f629ac",
+      "updated": "2026-10-07T00:00:00.000Z"
     },
     {
       "source": "packages/hotkey-manager/src/index.ts",
@@ -1131,14 +1206,39 @@
     },
     {
       "source": "packages/map-toolkit/src/deckgl/base-map/index.tsx",
-      "doc": "apps/docs/content/toolkits/map-toolkit/deckgl/base-map/index.mdx",
+      "doc": "apps/docs/content/docs/toolkits/map-toolkit/deckgl/base-map.mdx",
       "entities": [
-        "BaseMap",
-        "MapEvents"
+        "BaseMap"
       ],
-      "source_sha": "5449737bbb4f30acbd8cb71d09ebaf8a87387a86",
-      "doc_sha": "81e93a81ca8b4c32480ed4d62c343a755840375f",
-      "updated": "2026-07-13T00:00:00.000Z"
+      "source_sha": "3f28b26aed5ecdcac16bb7bbd2e05baa4d0b6a07",
+      "doc_sha": "abd4c07ad706756d80127511b55b7e3c540c4f63",
+      "updated": "2026-10-07T00:00:00.000Z"
+    },
+    {
+      "source": "packages/map-toolkit/src/deckgl/index.ts",
+      "doc": "apps/docs/content/docs/toolkits/map-toolkit/deckgl/index.mdx",
+      "entities": [],
+      "source_sha": "36799d731b35c7371f59f7a788b19d495bea3cfe",
+      "doc_sha": "bb4e44026b83522bab76477e888284c60c152d1c",
+      "updated": "2026-10-07T00:00:00.000Z"
+    },
+    {
+      "source": "packages/map-toolkit/src/deckgl/measurement-layer/index.ts",
+      "doc": "apps/docs/content/docs/toolkits/map-toolkit/deckgl/measurement-layer.mdx",
+      "entities": [
+        "MeasurementTool",
+        "useMeasurement",
+        "MeasurementLayer",
+        "measurementStore",
+        "MeasurementEvents",
+        "MeasurementEventsNamespace",
+        "RequiresModifier",
+        "MEASUREMENT_MODE",
+        "MEASUREMENT_LAYER_ID"
+      ],
+      "source_sha": "5a3230886d91d3b4d292716e626f2e19a79e9965",
+      "doc_sha": "009d400cd4cb62a2d28079da290b25a02767d4fb",
+      "updated": "2026-10-07T00:00:00.000Z"
     },
     {
       "source": "packages/map-toolkit/src/map-cursor/index.ts",
@@ -1167,6 +1267,16 @@
       "source_sha": "b0d871531800e241bb51ecff20542ce612bf74a8",
       "doc_sha": "23c244a1b62c06e39db06214117aec6c41c832c2",
       "updated": "2026-07-13T00:00:00.000Z"
+    },
+    {
+      "source": "packages/map-toolkit/src/shared/coordinates.ts",
+      "doc": "apps/docs/content/docs/toolkits/map-toolkit/coordinates.mdx",
+      "entities": [
+        "toLonLat"
+      ],
+      "source_sha": "6bef2be533ae8b2f4bb6ba6fb5095946d7532243",
+      "doc_sha": "67e8731f174cfccbe9c815ebb154f13f549f17e5",
+      "updated": "2026-10-07T00:00:00.000Z"
     },
     {
       "source": "packages/math/src/clamp/index.ts",

@@ -37,6 +37,11 @@ export const MapEventsNamespace = 'map';
  *   console.log('Viewport changed:', event.payload.bounds);
  * });
  *
+ * // Listen for drag events
+ * bus.on(MapEvents.dragStart, (event) => {
+ *   console.log('Drag started at:', event.payload.coordinate);
+ * });
+ *
  * // Emit control events
  * bus.emit(MapEvents.disablePan, { id: mapId });
  * bus.emit(MapEvents.enableZoom, { id: mapId });
@@ -46,6 +51,10 @@ export const MapEvents = {
   click: `${MapEventsNamespace}:click`,
   hover: `${MapEventsNamespace}:hover`,
   viewport: `${MapEventsNamespace}:viewport`,
+  // Drag events
+  dragStart: `${MapEventsNamespace}:dragStart`,
+  drag: `${MapEventsNamespace}:drag`,
+  dragEnd: `${MapEventsNamespace}:dragEnd`,
   // Control events
   enablePan: `${MapEventsNamespace}:enablePan`,
   disablePan: `${MapEventsNamespace}:disablePan`,

@@ -1,0 +1,10 @@
+{
+  "title": "DeckGL",
+  "pages": [
+    "index",
+    "base-map",
+    "measurement-layer",
+    "saved-viewports",
+    "..."
+  ]
+}

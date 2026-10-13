@@ -74,11 +74,19 @@ export type MapLibreOptions = Omit<
 
 /**
  * Props for the BaseMap component.
- * Extends all Deck.gl props and adds additional map-specific properties.
+ * Extends all Deck.gl props (with BaseMap's own `onLoad`) and adds additional
+ * map-specific properties.
  */
-export type BaseMapProps = DeckglProps & {
+export type BaseMapProps = Omit<DeckglProps, 'onLoad'> & {
   /** Optional CSS class name to apply to the map container element */
   className?: string;
+  /**
+   * Fires once when the MapLibre map has loaded, after BaseMap applies the
+   * projection and finishes its own load work. This is not forwarded to the
+   * deck overlay: deck may not be initialized yet when it fires, so do not call
+   * deck viewport methods from it.
+   */
+  onLoad?: () => void;
   /**
    * Whether to enable listening for map control events (pan/zoom enable/disable).
    * When true, the map will respond to control events emitted via the event bus.
@@ -290,10 +298,68 @@ export type MapDisableZoomEvent = Payload<
   MapControlPayload
 >;
 
+/**
+ * Payload for map drag events emitted through the event bus.
+ * Contains the unprojected coordinate at the drag position and modifier key state.
+ */
+export type MapDragPayload = {
+  /** The map instance the event occurred within */
+  id: UniqueId;
+  /** Unprojected [longitude, latitude] coordinate at the drag position */
+  coordinate: [number, number];
+  /** Whether the Shift key was held during the drag event */
+  shiftKey: boolean;
+  /**
+   * Whether the Ctrl key was held during the drag event. Ctrl + left-drag and
+   * Ctrl + right-drag are consumed by BaseMap as tilt gestures and never
+   * emitted, so this flag is only true for other button combinations.
+   */
+  ctrlKey: boolean;
+  /** Whether the Alt key was held during the drag event */
+  altKey: boolean;
+};
+
+/**
+ * Type for map dragStart events in the event bus.
+ * Combines the event name with the drag payload.
+ */
+export type MapDragStartEvent = Payload<
+  typeof MapEvents.dragStart,
+  MapDragPayload
+>;
+
+/**
+ * Type for map drag events in the event bus.
+ * Combines the event name with the drag payload.
+ */
+export type MapDragEvent = Payload<typeof MapEvents.drag, MapDragPayload>;
+
+/**
+ * Payload for `map:dragEnd`. Unlike `map:dragStart` / `map:drag`, the end of a
+ * drag is always emitted (it is the gesture's terminator), so `coordinate` is
+ * `null` when the release position does not unproject to finite coordinates.
+ */
+export type MapDragEndPayload = Omit<MapDragPayload, 'coordinate'> & {
+  /** Unprojected [longitude, latitude] at release, or `null` when unavailable */
+  coordinate: [number, number] | null;
+};
+
+/**
+ * Type for map dragEnd events in the event bus.
+ * Combines the event name with the drag-end payload.
+ */
+export type MapDragEndEvent = Payload<
+  typeof MapEvents.dragEnd,
+  MapDragEndPayload
+>;
+
 export type MapEventType =
   | MapClickEvent
   | MapHoverEvent
   | MapViewportEvent
+  | MapDragStartEvent
+  | MapDragEvent
+  | MapDragEndEvent
   | MapEnablePanEvent
   | MapDisablePanEvent
   | MapEnableZoomEvent
