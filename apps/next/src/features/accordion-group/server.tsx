@@ -61,9 +61,5 @@ function PropCombos() {
 }
 
 export function AccordionGroupExampleServer() {
-  return (
-    <>
-      <PropCombos />
-    </>
-  );
+  return <PropCombos />;
 }

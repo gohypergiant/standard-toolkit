@@ -38,34 +38,34 @@ import {
 
 export function FormsExampleClient() {
   return (
-    <div className="mx-auto max-w-6xl p-xl">
-      <div className="mb-8">
-        <div className="flex gap-xs">
+    <div className='mx-auto max-w-6xl p-xl'>
+      <div className='mb-8'>
+        <div className='flex gap-xs'>
           <div>
             <TextField
-              label="TextField"
+              label='TextField'
               inputProps={{
                 placeholder: 'Placeholder text',
                 type: 'text',
                 isClearable: true,
               }}
-              description="Helper text"
+              description='Helper text'
             />
           </div>
           <div>
             <SelectField
-              label="SelectField"
-              placeholder="Select option..."
-              description="Helper text"
+              label='SelectField'
+              placeholder='Select option...'
+              description='Helper text'
             >
               <OptionsSection>
-                <OptionsItem textValue="Option 1">
+                <OptionsItem textValue='Option 1'>
                   <OptionsItemLabel>Option 1</OptionsItemLabel>
                 </OptionsItem>
-                <OptionsItem textValue="Option 2">
+                <OptionsItem textValue='Option 2'>
                   <OptionsItemLabel>Option 2</OptionsItemLabel>
                 </OptionsItem>
-                <OptionsItem textValue="Option 3">
+                <OptionsItem textValue='Option 3'>
                   <OptionsItemLabel>Option 3</OptionsItemLabel>
                 </OptionsItem>
               </OptionsSection>
@@ -74,44 +74,37 @@ export function FormsExampleClient() {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-m">
-
+      <div className='grid grid-cols-1 md:grid-cols-2 gap-m'>
         {/* ComboBoxField */}
         <ComboBoxField
-          label="Label"
+          label='Label'
           inputProps={{
             placeholder: 'Search or select...',
           }}
-          description="Helper text"
+          description='Helper text'
         >
           <OptionsSection>
-            <OptionsItem textValue="Item 1">
+            <OptionsItem textValue='Item 1'>
               <OptionsItemLabel>Item 1</OptionsItemLabel>
             </OptionsItem>
-            <OptionsItem textValue="Item 2">
+            <OptionsItem textValue='Item 2'>
               <OptionsItemLabel>Item 2</OptionsItemLabel>
             </OptionsItem>
-            <OptionsItem textValue="Item 3">
+            <OptionsItem textValue='Item 3'>
               <OptionsItemLabel>Item 3</OptionsItemLabel>
             </OptionsItem>
           </OptionsSection>
         </ComboBoxField>
 
         {/* DateField */}
-        <DateField
-          label="Label"
-          description="Helper text"
-        />
+        <DateField label='Label' description='Helper text' />
 
         {/* CoordinateField */}
-        <CoordinateField
-          label="Label"
-          description="Helper text"
-        />
+        <CoordinateField label='Label' description='Helper text' />
 
         {/* ColorPicker */}
         <ColorPicker
-          label="Label"
+          label='Label'
           items={[
             '#ECECE6',
             '#898989',
@@ -123,43 +116,41 @@ export function FormsExampleClient() {
         />
 
         {/* TextAreaField */}
-        <div className="md:col-span-2">
+        <div className='md:col-span-2'>
           <TextAreaField
-            label="Label"
+            label='Label'
             inputProps={{
               placeholder: 'Enter text here...',
               rows: 3,
             }}
-            description="Helper text"
+            description='Helper text'
           />
         </div>
 
         {/* RadioGroup */}
-        <RadioGroup label="Label">
-          <Radio value="option1">Option 1</Radio>
-          <Radio value="option2">Option 2</Radio>
-          <Radio value="option3">Option 3</Radio>
+        <RadioGroup label='Label'>
+          <Radio value='option1'>Option 1</Radio>
+          <Radio value='option2'>Option 2</Radio>
+          <Radio value='option3'>Option 3</Radio>
         </RadioGroup>
 
         {/* CheckboxGroup */}
-        <CheckboxGroup label="Label">
-          <Checkbox value="item1">Item 1</Checkbox>
-          <Checkbox value="item2">Item 2</Checkbox>
-          <Checkbox value="item3">Item 3</Checkbox>
+        <CheckboxGroup label='Label'>
+          <Checkbox value='item1'>Item 1</Checkbox>
+          <Checkbox value='item2'>Item 2</Checkbox>
+          <Checkbox value='item3'>Item 3</Checkbox>
         </CheckboxGroup>
 
         {/* Slider */}
-        <Slider
-          label="Label"
-        />
+        <Slider label='Label' />
 
         {/* Switch */}
-        <div className="flex items-center gap-3 py-2">
+        <div className='flex items-center gap-3 py-2'>
           <Switch>Label text</Switch>
         </div>
 
         {/* Accordion */}
-        <div className="md:col-span-2">
+        <div className='md:col-span-2'>
           <Accordion>
             <AccordionTrigger>Accordion Label</AccordionTrigger>
             <AccordionPanel>
@@ -169,13 +160,11 @@ export function FormsExampleClient() {
         </div>
 
         {/* Buttons */}
-        <div className="md:col-span-2 flex gap-3">
-          <Button variant="filled" color="accent">
+        <div className='md:col-span-2 flex gap-3'>
+          <Button variant='filled' color='accent'>
             Button
           </Button>
-          <ToggleButton variant="outline">
-            Toggle Button
-          </ToggleButton>
+          <ToggleButton variant='outline'>Toggle Button</ToggleButton>
         </div>
       </div>
     </div>

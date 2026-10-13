@@ -1,7 +1,4 @@
 {
   "title": "@accelint/converters",
-  "pages": [
-    "index",
-    "..."
-  ]
+  "pages": ["index", "..."]
 }

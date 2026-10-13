@@ -10,9 +10,9 @@
  * governing permissions and limitations under the License.
  */
 
+import { DEFAULT_STYLES } from '../shared/constants';
 import { createMGRSRenderer } from './renderer';
 import type { GridDefinition, GridZoomRange } from '../core/types';
-import { DEFAULT_STYLES } from '../shared/constants';
 
 /**
  * MGRS grid types representing different precision levels.

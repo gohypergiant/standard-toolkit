@@ -23,8 +23,8 @@ import { MeasurementTool } from './measurement-tool';
 import { useMeasurement } from './use-measurement';
 import type { DistanceUnit } from '@accelint/constants/units';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import type { RequiresModifier } from './types';
 import type { ReactNode } from 'react';
+import type { RequiresModifier } from './types';
 
 const meta: Meta = {
   title: 'DeckGL/Measurement Layer',

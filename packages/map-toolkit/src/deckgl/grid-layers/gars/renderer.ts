@@ -10,6 +10,8 @@
  * governing permissions and limitations under the License.
  */
 
+import { Grids, GridType } from '@ngageoint/gars-js';
+import { logger } from '../shared/utils';
 import type {
   CellBounds,
   Coordinate,
@@ -20,8 +22,6 @@ import type {
   RenderContext,
   RenderResult,
 } from '../core/types';
-import { Grids, GridType } from '@ngageoint/gars-js';
-import { logger } from '../shared/utils';
 
 /**
  * Map our grid type strings to the library's GridType enum

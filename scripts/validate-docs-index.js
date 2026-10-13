@@ -21,6 +21,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const INDEX_PATH = path.join(__dirname, '../apps/docs/.index.json');
 const ROOT_DIR = path.join(__dirname, '..');
 
+// biome-ignore lint/complexity/noExcessiveCognitiveComplexity: <explanation>
 function main() {
   // Read index
   if (!fs.existsSync(INDEX_PATH)) {
@@ -56,7 +57,9 @@ function main() {
   const docsDir = path.join(ROOT_DIR, 'apps/docs/content');
   if (fs.existsSync(docsDir)) {
     const allDocs = findAllDocs(docsDir);
-    const indexedDocs = new Set(index.entries.map(e => path.normalize(e.doc)));
+    const indexedDocs = new Set(
+      index.entries.map((e) => path.normalize(e.doc)),
+    );
 
     for (const doc of allDocs) {
       const relativePath = path.relative(ROOT_DIR, doc);

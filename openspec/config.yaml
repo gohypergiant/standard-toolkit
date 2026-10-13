@@ -16,10 +16,12 @@ context: |
   Monorepo: pnpm workspaces (apps/*, packages/*, tooling/*) — 1 app
   (apps/next demo), 22 packages, 8 tooling packages.
   Build orchestration: Turbo (turbo.json; build dependsOn ^index, ^build).
-  Package manager: pnpm 10.25 (Node >=22); public npm registry.
+  Package manager: pnpm 10.25; develop on Node >=24 (.nvmrc), published
+  packages support Node >=22; public npm registry.
 
   ## Tech Stack
-  - Runtime:            Node.js 22+ (ESM-only, "type": "module")
+  - Runtime:            Node.js 22+ for consumers, 24+ for development
+                        (ESM-only, "type": "module")
   - Language:           TypeScript strict + noUncheckedIndexedAccess,
                         noImplicitOverride, verbatimModuleSyntax,
                         isolatedModules; exactOptionalPropertyTypes NOT set.

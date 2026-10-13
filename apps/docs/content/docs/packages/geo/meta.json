@@ -1,9 +1,4 @@
 {
   "title": "@accelint/geo",
-  "pages": [
-    "index",
-    "coordinates",
-    "geodesy",
-    "..."
-  ]
+  "pages": ["index", "coordinates", "geodesy", "..."]
 }

@@ -294,6 +294,7 @@
   },
   "scripts": {
     "build": "pnpm generate:icons && pnpm tsdown && pnpm run license && pnpm run format",
+    "check": "pnpm biome check --write .",
     "constellation-tracker": "pnpm exec constellation-tracker",
     "format": "pnpm biome format . --write --verbose",
     "format:check": "pnpm biome format . --verbose",

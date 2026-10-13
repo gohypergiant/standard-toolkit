@@ -12,8 +12,8 @@
 
 import {
   DISTANCE_UNIT_SYMBOLS,
-  METERS_PER_UNIT,
   type DistanceUnit,
+  METERS_PER_UNIT,
 } from '@accelint/constants/units';
 import { round } from '@accelint/math/round';
 import { wrap } from '@accelint/math/wrap';

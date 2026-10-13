@@ -174,14 +174,17 @@ describe('useMeasurement', () => {
     it.each([
       ['shift', { shiftKey: true }],
       ['alt', { altKey: true }],
-    ] as const)('starts measuring when requiresModifier=%s and that key is held', (modifier, modifiers) => {
-      const { result } = renderHook(() => useMeasurement(mapId, modifier));
+    ] as const)(
+      'starts measuring when requiresModifier=%s and that key is held',
+      (modifier, modifiers) => {
+        const { result } = renderHook(() => useMeasurement(mapId, modifier));
 
-      emitDrag(MapEvents.dragStart, [10, 20], modifiers);
+        emitDrag(MapEvents.dragStart, [10, 20], modifiers);
 
-      expect(result.current.isMeasuring).toBe(true);
-      expect(result.current.pointA).toEqual([10, 20]);
-    });
+        expect(result.current.isMeasuring).toBe(true);
+        expect(result.current.pointA).toEqual([10, 20]);
+      },
+    );
 
     it('rejects ctrl as a modifier at the type level', () => {
       // Ctrl+drag is BaseMap's tilt gesture and emits no drag events, so

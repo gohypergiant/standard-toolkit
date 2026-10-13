@@ -10,7 +10,6 @@
  * governing permissions and limitations under the License.
  */
 
-import Placeholder from '@accelint/icons/placeholder';
 import {
   ComboBoxField,
   Icon,
@@ -21,6 +20,7 @@ import {
   OptionsSection,
   ThemeProvider,
 } from '@accelint/design-toolkit';
+import Placeholder from '@accelint/icons/placeholder';
 import { dash } from 'radashi';
 import { describe, expect, test } from 'vitest';
 import { page } from 'vitest/browser';
@@ -83,7 +83,7 @@ const items: ItemData[] = [
 ];
 
 const itemsWithDisabled: ItemData[] = items.map((item) =>
-  item.id === 2 ? { ...item, isDisabled: true } : item
+  item.id === 2 ? { ...item, isDisabled: true } : item,
 );
 
 const sectionItems: ItemData[] = [
@@ -214,9 +214,7 @@ describe('ComboBoxField Open States', () => {
         fixVirtualizerItemWidths(page.getByRole('listbox').element());
 
         const cleanup = constrainBodyToContent({ width: 460 });
-        await expect
-          .element(page.getByRole('option').first())
-          .toBeVisible();
+        await expect.element(page.getByRole('option').first()).toBeVisible();
 
         await expect.element(document.body).toMatchScreenshot(filename);
         cleanup();

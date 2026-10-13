@@ -14,11 +14,19 @@ import 'client-only';
 import { clsx } from '@accelint/design-foundation/lib/utils';
 import ChevronDown from '@accelint/icons/chevron-down';
 import { useCallback, useRef } from 'react';
+import { Button } from 'react-aria-components/Button';
 import {
   ComboBox,
   type ComboBoxProps,
   FieldError,
 } from 'react-aria-components/ComboBox';
+import { composeRenderProps } from 'react-aria-components/composeRenderProps';
+import { Input } from 'react-aria-components/Input';
+import { Popover } from 'react-aria-components/Popover';
+import { useContextProps } from 'react-aria-components/slots';
+import { Text } from 'react-aria-components/Text';
+import { ListLayout, Virtualizer } from 'react-aria-components/Virtualizer';
+import { useControlledState } from 'react-stately/useControlledState';
 import { ClearButton } from '../button/__internal__/clear';
 import { Icon } from '../icon';
 import { Label } from '../label';
@@ -27,14 +35,6 @@ import { ComboBoxFieldContext } from './context';
 import styles from './styles.module.css';
 import type { OptionsDataItem } from '../options/types';
 import type { ComboBoxFieldProps } from './types';
-import { useControlledState } from 'react-stately/useControlledState';
-import { composeRenderProps } from 'react-aria-components/composeRenderProps';
-import { useContextProps } from 'react-aria-components/slots';
-import { Input } from 'react-aria-components/Input';
-import { Button } from 'react-aria-components/Button';
-import { Text } from 'react-aria-components/Text';
-import { Popover } from 'react-aria-components/Popover';
-import { Virtualizer, ListLayout } from 'react-aria-components/Virtualizer';
 
 /**
  * ComboBoxField - Accessible searchable combobox with dropdown options

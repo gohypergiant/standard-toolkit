@@ -14,8 +14,6 @@
  * THIS IS A GENERATED FILE. DO NOT ALTER DIRECTLY.
  */
 
-// biome-ignore-all assist/source/organizeImports: This comment is used to prevent the biome tool from altering the import statements in this file.
-
 export { booleanToNumber } from './boolean-to-number';
 export {
   cssRgbaObjectToRgba255Tuple,
@@ -25,10 +23,10 @@ export {
   rgba255TupleToCssRgbaString,
   rgba255TupleToCssRgbaTuple,
 } from './css-rgba';
-export type { CssRgbaTuple } from './css-rgba';
 export { glslToRgba255Tuple, rgba255TupleToGlsl } from './glsl';
-export type { GlslRgbaTuple } from './glsl';
 export { hexToRgba255Tuple, rgba255TupleToHex } from './hex';
 export { toBoolean } from './to-boolean';
 export { zxyToBbox } from './zxy-to-bbox';
+export type { CssRgbaTuple } from './css-rgba';
+export type { GlslRgbaTuple } from './glsl';
 export type { BoundingBoxTuple, ZxyTuple } from './zxy-to-bbox';

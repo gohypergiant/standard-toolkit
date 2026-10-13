@@ -11,16 +11,16 @@
  */
 
 import { Broadcast } from '@accelint/bus';
-import type { UniqueId } from '@accelint/core';
 import { uuid } from '@accelint/core';
 import { act, renderHook, waitFor } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { MapEvents } from '../deckgl/base-map/events';
-import type { MapEventType, MapHoverPayload } from '../deckgl/base-map/types';
 import { DEFAULT_MGRS_UTM_COORDS } from './constants';
 import { clearCursorCoordinateState } from './store';
-import type { CoordinateFormatter } from './types';
 import { useCursorCoordinates } from './use-cursor-coordinates';
+import type { UniqueId } from '@accelint/core';
+import type { MapEventType, MapHoverPayload } from '../deckgl/base-map/types';
+import type { CoordinateFormatter } from './types';
 
 describe('useCursorCoordinates', () => {
   let id: UniqueId;

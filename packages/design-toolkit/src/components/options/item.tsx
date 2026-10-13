@@ -13,8 +13,8 @@
 
 import 'client-only';
 import { clsx } from '@accelint/design-foundation/lib/utils';
-import { ListBoxItem } from 'react-aria-components/ListBox';
 import { composeRenderProps } from 'react-aria-components/composeRenderProps';
+import { ListBoxItem } from 'react-aria-components/ListBox';
 import { IconProvider } from '../icon/context';
 import { OptionsItemLabel } from './item-label';
 import styles from './styles.module.css';

@@ -13,8 +13,8 @@
 
 import 'client-only';
 import { clsx } from '@accelint/design-foundation/lib/utils';
-import { Radio as AriaRadio } from 'react-aria-components/RadioGroup';
 import { composeRenderProps } from 'react-aria-components/composeRenderProps';
+import { Radio as AriaRadio } from 'react-aria-components/RadioGroup';
 import { useContextProps } from 'react-aria-components/slots';
 import { RadioContext } from './context';
 import styles from './styles.module.css';

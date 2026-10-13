@@ -12,10 +12,10 @@
  */
 
 import { clsx } from '@accelint/design-foundation/lib/utils';
-import { type MouseEvent } from 'react';
 import { TableCell } from './cell';
 import styles from './styles.module.css';
 import type { RowData } from '@tanstack/react-table';
+import type { MouseEvent } from 'react';
 import type { TableRowProps } from './types';
 
 /**

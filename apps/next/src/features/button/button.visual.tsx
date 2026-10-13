@@ -24,7 +24,7 @@ const standardButtonVariants = generateVariantMatrix<ButtonProps>({
   dimensions: {
     variant: ['filled', 'outline', 'flat'],
     color: ['mono-muted', 'mono-bold', 'accent', 'serious', 'critical'],
-    size: ['xsmall','small', 'medium', 'large'], // Test one size for states, sizes covered in static tests
+    size: ['xsmall', 'small', 'medium', 'large'], // Test one size for states, sizes covered in static tests
   },
 });
 
@@ -33,7 +33,7 @@ const iconButtonVariants = generateVariantMatrix<ButtonProps>({
   dimensions: {
     variant: ['icon'],
     color: ['mono-muted', 'mono-bold', 'accent', 'serious', 'critical'],
-    size: ['xsmall','small', 'medium', 'large'],
+    size: ['xsmall', 'small', 'medium', 'large'],
   },
 });
 

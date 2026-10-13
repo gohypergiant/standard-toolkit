@@ -11,6 +11,7 @@
  */
 
 import { Grids, GridType, GridZones } from '@ngageoint/mgrs-js';
+import { logger } from '../shared/utils';
 import type {
   Coordinate,
   GridRenderer,
@@ -20,7 +21,6 @@ import type {
   RenderContext,
   RenderResult,
 } from '../core/types';
-import { logger } from '../shared/utils';
 
 /**
  * Maps internal grid type strings to @ngageoint/mgrs-js GridType enum values.
