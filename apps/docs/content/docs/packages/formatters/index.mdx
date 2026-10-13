@@ -2,10 +2,10 @@
 title: "Overview"
 description: A set of useful formatting functions for enhancing readability and consistency in your applications.
 source: packages/formatters/src/index.ts
-source_sha: 7c23c79457c772768b2077efeefb86ba8df3f0c6
-doc_sha: 43b1a1ed76987aa6685b6d129c658897c4f3455a
+source_sha: 345d829840f0b51addd65827a72e715e62fe0327
+doc_sha: e74b4467f64d75c31ee6ecc751c8e88452a6afac
 deprecated: false
-updated: 2026-07-14
+updated: 2026-10-07
 ---
 
 ## Installation
@@ -18,9 +18,10 @@ pnpm add @accelint/formatters
 
 ```typescript
 // Import from root (all exports)
-import { formatM1, formatM2, formatM3A, formatM4, formatM5 } from '@accelint/formatters';
+import { formatBearing, formatDistance, formatM3A } from '@accelint/formatters';
 
 // Import from sub-modules
+import { formatBearing, formatDistance } from '@accelint/formatters/bearing';
 import { formatM1 } from '@accelint/formatters/iff';
 ```
 
@@ -28,6 +29,7 @@ import { formatM1 } from '@accelint/formatters/iff';
 
 | Export Path | Description |
 |-------------|-------------|
+| [bearing](./bearing.md) | Format tactical bearing readouts as zero-padded degrees and distances in meters with SI unit symbols |
 | [iff](./iff/index.md) | Format IFF (Identification Friend or Foe) transponder mode codes with proper zero-padding |
 
 ## Related

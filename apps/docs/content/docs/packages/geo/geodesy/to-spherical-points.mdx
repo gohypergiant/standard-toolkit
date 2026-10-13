@@ -1,0 +1,99 @@
+---
+title: "toSphericalPoints"
+description: Validates a pair of [longitude, latitude] tuples and converts them to LatLonSpherical points for the geodesy library.
+source: packages/geo/src/geodesy/to-spherical-points.ts
+source_sha: b8d4bd373fdb5fbc220ae992d7c38249cd6fb706
+doc_sha: 220e1d459bed5d12f5d4452faaa6de237027b190
+deprecated: false
+updated: 2026-10-07
+---
+
+## Usage
+
+```typescript
+import { toSphericalPoints } from '@accelint/geo/geodesy/to-spherical-points';
+// or: import { toSphericalPoints } from '@accelint/geo';
+
+const [originPoint, destinationPoint] = toSphericalPoints([0, 0], [0, 1], 'bearing');
+
+originPoint.initialBearingTo(destinationPoint);
+// 0
+```
+
+`toSphericalPoints` is exported from the package root and from its own sub-path. It is not part of the `@accelint/geo/geodesy` barrel.
+
+## Reference
+
+```typescript
+function toSphericalPoints(
+  origin: LonLatTuple,
+  destination: LonLatTuple,
+  caller: string,
+): [LatLonSpherical, LatLonSpherical]
+```
+
+### Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `origin` | `LonLatTuple` | Starting coordinate as `[longitude, latitude]` in decimal degrees. |
+| `destination` | `LonLatTuple` | Ending coordinate as `[longitude, latitude]` in decimal degrees. |
+| `caller` | `string` | Name of the calling function, used in the thrown error message. |
+
+### Returns
+
+Returns the origin and destination as `LatLonSpherical` points from the `geodesy` library, in that order. Each point exposes the input as `.lat` and `.lon`.
+
+### Throws
+
+- `RangeError` when any of the four coordinate components is `NaN`, `Infinity`, or `-Infinity`. The message is `${caller} requires finite [longitude, latitude] coordinates.`
+
+## Examples
+
+### Example: Calling other LatLonSpherical methods on validated input
+
+```typescript
+import { toSphericalPoints } from '@accelint/geo/geodesy/to-spherical-points';
+
+const [originPoint, destinationPoint] = toSphericalPoints(
+  [-0.1278, 51.5074],
+  [2.3522, 48.8566],
+  'finalBearing',
+);
+
+// Methods that @accelint/geo does not wrap directly
+originPoint.finalBearingTo(destinationPoint);
+originPoint.destinationPoint(1000, 90);
+```
+
+### Example: Reading the converted points
+
+```typescript
+import { toSphericalPoints } from '@accelint/geo/geodesy/to-spherical-points';
+
+const [originPoint, destinationPoint] = toSphericalPoints([10, 20], [30, 40], 'caller');
+
+[originPoint.lat, originPoint.lon];           // [20, 10]
+[destinationPoint.lat, destinationPoint.lon]; // [40, 30]
+```
+
+### Example: Naming the caller in the error
+
+```typescript
+import { toSphericalPoints } from '@accelint/geo/geodesy/to-spherical-points';
+
+toSphericalPoints([Number.NaN, 0], [1, 1], 'someFunction');
+// throws RangeError: someFunction requires finite [longitude, latitude] coordinates.
+
+toSphericalPoints([0, 0], [1, Number.POSITIVE_INFINITY], 'someFunction');
+// throws RangeError: someFunction requires finite [longitude, latitude] coordinates.
+```
+
+> **Good to know:** This is the shared preamble behind `bearing`, `distance`, `midpoint`, and `greatCirclePoints`. Longitude and latitude are not range-checked, only checked for finiteness, so longitudes beyond ±180 from a wrapped map pass through unchanged.
+
+## Related
+
+- [bearing](./bearing.md) - Initial great-circle bearing
+- [distance](./distance.md) - Great-circle distance in meters
+- [midpoint](./midpoint.md) - Great-circle midpoint between two points
+- [greatCirclePoints](./great-circle-points.md) - Sample vertices along the great-circle path

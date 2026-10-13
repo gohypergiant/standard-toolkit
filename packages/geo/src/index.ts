@@ -66,6 +66,11 @@ export {
   isWithinGridBand,
   toUtmParts,
 } from './coordinates/utm/parts';
+export { bearing } from './geodesy/bearing';
+export { distance } from './geodesy/distance';
+export { greatCirclePoints } from './geodesy/great-circle-points';
+export { midpoint } from './geodesy/midpoint';
+export { toSphericalPoints } from './geodesy/to-spherical-points';
 export type { DecimalDegreesParts } from './coordinates/latlon/decimal-degrees/formatter';
 export type { DdmParts } from './coordinates/latlon/degrees-decimal-minutes/formatter';
 export type { DmsParts } from './coordinates/latlon/degrees-minutes-seconds/formatter';

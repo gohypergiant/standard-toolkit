@@ -121,6 +121,10 @@ describe('Table Sorted Visual Regression', () => {
                 enableRowActions={scenario.enableRowActions}
               />
             </div>
+            <div
+              data-testid={`${testIdValue}-pointer-rest`}
+              style={{ height: 16 }}
+            />
           </ThemeProvider>,
         );
 
@@ -144,6 +148,10 @@ describe('Table Sorted Visual Regression', () => {
 
         // Wait for sort to apply and menu to close
         await new Promise((resolve) => setTimeout(resolve, 300));
+
+        // The pointer is still where the menu item was, which now sits over a
+        // row and would bake its hover state into the baseline
+        await userEvent.hover(page.getByTestId(`${testIdValue}-pointer-rest`));
 
         const target = page.getByTestId(testIdValue);
         await expect.element(target).toMatchScreenshot(filename);

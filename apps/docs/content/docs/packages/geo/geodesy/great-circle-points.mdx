@@ -1,0 +1,111 @@
+---
+title: "greatCirclePoints"
+description: Samples the great-circle path between two points into evenly spaced vertices with unwrapped longitudes for drawing as a single polyline.
+source: packages/geo/src/geodesy/great-circle-points.ts
+source_sha: 4e80856eef9258da7a321a7030c744e98683a6ca
+doc_sha: 90f42590b4eed491555cad1d1d0c148742abaccf
+deprecated: false
+updated: 2026-10-07
+---
+
+## Usage
+
+```typescript
+import { greatCirclePoints } from '@accelint/geo/geodesy';
+
+// Four segments across the antimeridian: longitudes stay monotonic
+greatCirclePoints([179, 0], [-179, 0], 4);
+// [[179, 0], [179.5, 0], [180, 0], [180.5, 0], [181, 0]]
+
+// Default of 64 segments yields 65 vertices
+greatCirclePoints([-74, 40.7], [139.7, 35.7]).length;
+// 65
+```
+
+## Reference
+
+```typescript
+function greatCirclePoints(
+  origin: LonLatTuple,
+  destination: LonLatTuple,
+  segments?: number,
+): [number, number][]
+```
+
+### Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `origin` | `LonLatTuple` | Starting point as `[longitude, latitude]` in decimal degrees. |
+| `destination` | `LonLatTuple` | Ending point as `[longitude, latitude]` in decimal degrees. |
+| `segments` | `number` | Number of segments to divide the path into. Must be a positive integer. Defaults to `64`. |
+
+### Returns
+
+Returns `segments + 1` vertices as `[longitude, latitude]` tuples, evenly spaced along the geodesic. The first vertex is `origin` exactly as given and the last is `destination`. Each longitude is shifted by whole turns of 360° so it sits within 180° of the previous vertex, so a path that crosses the antimeridian runs 179 → 181 rather than 179 → -179. When `origin` and `destination` are identical, returns the two endpoints as given regardless of `segments`.
+
+### Throws
+
+- `RangeError` when `segments` is not a positive integer (zero, negative, or fractional): `greatCirclePoints requires a positive integer segment count.`
+- `RangeError` when any coordinate component is not a finite number: `greatCirclePoints requires finite [longitude, latitude] coordinates.`
+
+## Examples
+
+### Example: Drawing a route as one polyline
+
+```typescript
+import { PathLayer } from '@deck.gl/layers';
+import { greatCirclePoints } from '@accelint/geo/geodesy';
+
+// New York to Tokyo
+const points = greatCirclePoints([-74, 40.7], [139.7, 35.7], 8);
+
+points.length; // 9
+points[0];     // [-74, 40.7]
+points[8];     // [-220.3, 35.7] — 139.7 - 360, since the route runs west over the Pacific
+
+// Feed directly to a path layer; no split at the antimeridian is needed
+new PathLayer({ data: [{ path: points }], getPath: (route) => route.path });
+```
+
+### Example: The middle vertex is the geodesic midpoint
+
+```typescript
+import { greatCirclePoints, midpoint } from '@accelint/geo/geodesy';
+
+const origin = [-74, 40.7] as const;
+const destination = [139.7, 35.7] as const;
+
+const points = greatCirclePoints(origin, destination, 8);
+const [longitude, latitude] = midpoint(origin, destination);
+
+points[4]; // [~longitude, ~latitude]
+```
+
+### Example: Identical points
+
+```typescript
+import { greatCirclePoints } from '@accelint/geo/geodesy';
+
+greatCirclePoints([10, 20], [10, 20], 4);
+// [[10, 20], [10, 20]]
+```
+
+### Example: Rejecting an invalid segment count
+
+```typescript
+import { greatCirclePoints } from '@accelint/geo/geodesy';
+
+greatCirclePoints([0, 0], [1, 1], 0);   // throws RangeError
+greatCirclePoints([0, 0], [1, 1], -2);  // throws RangeError
+greatCirclePoints([0, 0], [1, 1], 2.5); // throws RangeError
+```
+
+> **Good to know:** Longitude and latitude are not range-checked, matching `bearing` and `distance`. Returned longitudes are unwrapped, not normalized, so they can fall outside `[-180, 180]`; normalize them yourself if a consumer requires that range. Antipodal pairs have no unique great circle, so their vertices are not meaningful; see `midpoint` for how that case resolves.
+
+## Related
+
+- [distance](./distance.md) - The great-circle length this function samples
+- [midpoint](./midpoint.md) - Great-circle midpoint between two points
+- [bearing](./bearing.md) - Initial great-circle bearing
+- [toSphericalPoints](./to-spherical-points.md) - Shared validation and conversion step

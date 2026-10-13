@@ -14,4 +14,5 @@
  * THIS IS A GENERATED FILE. DO NOT ALTER DIRECTLY.
  */
 
+export { formatBearing, formatDistance } from './bearing';
 export { formatM1, formatM2, formatM3A, formatM4, formatM5 } from './iff';

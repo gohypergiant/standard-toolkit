@@ -22,6 +22,7 @@ import { Table } from './index';
 import { TableRow } from './row';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import type {
+  ColumnOrderState,
   RowPinningState,
   RowSelectionState,
   SortingState,
@@ -552,6 +553,45 @@ export const ControlledRowPinning: Story = {
           </Button>
           <p>
             <strong>Pinning state:</strong> {JSON.stringify(pinning)}
+          </p>
+        </div>
+      </div>
+    );
+  },
+};
+
+export const ControlledColumnOrder: Story = {
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'The `columnOrder` prop is the controlled column order value: pair it with `onColumnOrderChange`, which always receives the plain next `ColumnOrderState` (`string[]`), never an updater function. The story starts with `age` first and the name columns swapped, so the controlled value visibly differs from the `columns` definition order. Reorder columns via the header kebab menu (Move Column Left / Right), or use the "Reset order" button to restore that starting order from outside the table without a remount. The current order is rendered below the table as JSON.',
+      },
+    },
+  },
+  render: (args) => {
+    const startingOrder: ColumnOrderState = [
+      'age',
+      'lastName',
+      'firstName',
+      'visits',
+      'status',
+      'progress',
+    ];
+    const [order, setOrder] = useState<ColumnOrderState>(startingOrder);
+
+    return (
+      <div>
+        <Table
+          {...dataArgs(args)}
+          columnOrder={order}
+          onColumnOrderChange={setOrder}
+          key={JSON.stringify(args)}
+        />
+        <div style={{ marginTop: '1rem' }}>
+          <Button onPress={() => setOrder(startingOrder)}>Reset order</Button>
+          <p>
+            <strong>Column order:</strong> {JSON.stringify(order)}
           </p>
         </div>
       </div>

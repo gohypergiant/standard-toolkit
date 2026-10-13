@@ -3,9 +3,9 @@ title: "Overview"
 description: A collection of JavaScript functions for working with coordinates and geospatial data.
 source: packages/geo/src/index.ts
 source_sha: 5886f7407bc66cfef28a4e4b589b2d08e60fadba
-doc_sha: 4f1c75b0e4f53f1e535e5250d6fbaa7a3e500e3f
+doc_sha: b19483664aff0203b038b90ea4dc6c6018f629ac
 deprecated: false
-updated: 2026-07-14
+updated: 2026-10-07
 ---
 
 ## Installation
@@ -23,6 +23,9 @@ import { createCoordinate, coordinateSystems } from '@accelint/geo';
 // Import formatters and parsers
 import { formatDecimalDegrees, parseDecimalDegrees } from '@accelint/geo';
 import { parseMGRS, parseUTM } from '@accelint/geo';
+
+// Import geodesy functions
+import { bearing, distance, greatCirclePoints, midpoint } from '@accelint/geo/geodesy';
 ```
 
 ## Available Exports
@@ -35,6 +38,17 @@ import { parseMGRS, parseUTM } from '@accelint/geo';
 | [coordinates/latlon/degrees-minutes-seconds](./coordinates/latlon/degrees-minutes-seconds/) | Format and parse coordinates in degrees minutes seconds notation |
 | [coordinates/mgrs/parser](./coordinates/mgrs/parser.md) | Parse Military Grid Reference System (MGRS) coordinate strings |
 | [coordinates/utm/parser](./coordinates/utm/parser.md) | Parse Universal Transverse Mercator (UTM) coordinate strings |
+| [geodesy](./geodesy/) | Great-circle bearing, distance, midpoint, and path sampling between two `[longitude, latitude]` points |
+
+## Geodesy
+
+Compute great-circle relationships between two `[longitude, latitude]` points on a spherical Earth. All geodesy functions take `LonLatTuple` values (GeoJSON order), which is the reverse of the `[latitude, longitude]` order used by `createCoordinate`.
+
+- [bearing](./geodesy/bearing.md) - Initial bearing in degrees clockwise from true north, `[0, 360)`
+- [distance](./geodesy/distance.md) - Distance in meters
+- [midpoint](./geodesy/midpoint.md) - Midpoint along the shortest great-circle path
+- [greatCirclePoints](./geodesy/great-circle-points.md) - Evenly spaced vertices along the path, with unwrapped longitudes for drawing
+- [toSphericalPoints](./geodesy/to-spherical-points.md) - Shared validation step that returns `LatLonSpherical` points
 
 ## Related
 
