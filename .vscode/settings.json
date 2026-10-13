@@ -63,5 +63,5 @@
     "source.organizeImports.biome": "explicit"
   },
   "yaml.format.singleQuote": true,
-  "js/ts.tsdk.path": "apps/next/node_modules/typescript/lib"
+  "js/ts.tsdk.path": "node_modules/typescript/lib"
 }

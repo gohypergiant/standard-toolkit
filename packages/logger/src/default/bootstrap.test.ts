@@ -33,10 +33,7 @@ vi.mock('loglayer', () => ({
   ),
   StructuredTransport: vi.fn(
     class {
-      declare readonly type: 'structured';
-      constructor() {
-        this.type = 'structured';
-      }
+      readonly type = 'structured' as const;
     },
   ),
   LogLevel: {
