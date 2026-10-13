@@ -7,7 +7,7 @@
   "devDependencies": {
     "@accelint/biome-config": "workspace:*",
     "@accelint/typescript-config": "workspace:*",
-    "@types/node": "^22",
+    "@types/node": "^24",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "react": "^19",
