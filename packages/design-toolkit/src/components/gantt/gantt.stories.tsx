@@ -13,26 +13,26 @@
 import Placeholder from '@accelint/icons/placeholder';
 import { useMemo } from 'react';
 import { Icon } from '../icon';
-import { Gantt } from './gantt';
-import { GanttContentContainer } from './components/containers/external/gantt-content-container';
-import { GanttPanelContainer } from './components/containers/external/gantt-panel-container';
-import { GanttContentRow } from './components/content-row';
-import { GanttPanelRow } from './components/panel-row';
-import { GanttBlock } from './components/content-row/block';
-import { GanttSpacer } from './components/content-row/spacer';
-import { GanttMarker } from './components/content-row/marker';
-import { GanttIconMarker } from './components/content-row/icon-marker';
-import {
-  GanttBracketOpen,
-  GanttBracketClose,
-} from './components/content-row/bracket';
 import {
   CURRENT_TIME_MS,
   DATASET_JAN25_TO_JAN28,
   DATASET_JAN27_TO_JAN30,
   DATASET_JAN29_TO_FEB1,
 } from './__fixtures__';
+import { GanttContentContainer } from './components/containers/external/gantt-content-container';
+import { GanttPanelContainer } from './components/containers/external/gantt-panel-container';
+import { GanttContentRow } from './components/content-row';
+import { GanttBlock } from './components/content-row/block';
+import {
+  GanttBracketClose,
+  GanttBracketOpen,
+} from './components/content-row/bracket';
+import { GanttIconMarker } from './components/content-row/icon-marker';
+import { GanttMarker } from './components/content-row/marker';
+import { GanttSpacer } from './components/content-row/spacer';
+import { GanttPanelRow } from './components/panel-row';
 import { TIMESCALE_OPTIONS } from './constants';
+import { Gantt } from './gantt';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import type { GanttTimescale } from './public-types';
 

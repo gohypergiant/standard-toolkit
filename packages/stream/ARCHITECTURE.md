@@ -111,12 +111,12 @@ This package has no server, database, or hosted runtime of its own. It is a publ
 
 ## 5. External Integrations / APIs
 
-| Service | Purpose | Integration Method |
-|---------|---------|-------------------|
-| EventSource API | SSE transport support | Native platform API |
-| WebSocket API | WebSocket transport support | Native platform API |
-| `@tanstack/query-core` | Shared cache/observer design foundation | Runtime dependency |
-| React | Optional hooks and provider layer | Peer dependency |
+| Service                | Purpose                                 | Integration Method  |
+| ---------------------- | --------------------------------------- | ------------------- |
+| EventSource API        | SSE transport support                   | Native platform API |
+| WebSocket API          | WebSocket transport support             | Native platform API |
+| `@tanstack/query-core` | Shared cache/observer design foundation | Runtime dependency  |
+| React                  | Optional hooks and provider layer       | Peer dependency     |
 
 ## 6. Deployment & Infrastructure
 
@@ -142,7 +142,7 @@ This package has no server, database, or hosted runtime of its own. It is a publ
 
 > Testing patterns and standards are defined in [../../openspec/config.yaml](../../openspec/config.yaml); this section covers local setup and commands.
 
-**Local Setup:** Use Node.js 22+ and pnpm 10+. Install from the repo root. React is optional for core-only use, and local development includes package-local test flows with mocked EventSource and WebSocket behavior.
+**Local Setup:** Develop on Node.js 24+ (`.nvmrc`); published packages support Node 22+. Use pnpm 10+. Install from the repo root. React is optional for core-only use, and local development includes package-local test flows with mocked EventSource and WebSocket behavior.
 
 **Testing Frameworks:** Vitest with jsdom, React Testing Library for hook/provider flows, and shared transport mocks installed by package-local test setup.
 
@@ -165,9 +165,9 @@ This package has no server, database, or hosted runtime of its own. It is a publ
 
 ## 11. Glossary / Acronyms
 
-| Term | Definition |
-|------|-----------|
-| Stream key | Logical identity used to deduplicate and share a stream connection |
-| SSE | Server-Sent Events transport supported by the package |
-| Observer | Runtime subscriber that reacts to stream state and message updates |
+| Term            | Definition                                                           |
+| --------------- | -------------------------------------------------------------------- |
+| Stream key      | Logical identity used to deduplicate and share a stream connection   |
+| SSE             | Server-Sent Events transport supported by the package                |
+| Observer        | Runtime subscriber that reacts to stream state and message updates   |
 | Message history | Optional retained buffer of past messages for inspection or devtools |

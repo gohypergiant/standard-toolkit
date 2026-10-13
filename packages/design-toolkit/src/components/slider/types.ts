@@ -10,8 +10,8 @@
  * governing permissions and limitations under the License.
  */
 import type {
-  LabelProps,
   SliderProps as AriaSliderProps,
+  LabelProps,
   SliderThumbProps,
   SliderTrackProps,
 } from 'react-aria-components/Slider';

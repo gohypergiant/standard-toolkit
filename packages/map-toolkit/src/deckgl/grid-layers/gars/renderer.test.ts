@@ -10,11 +10,11 @@
  * governing permissions and limitations under the License.
  */
 
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { Grids } from '@ngageoint/gars-js';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { createGARSRenderer } from './renderer';
 import type { Bounds } from '@ngageoint/grid-js';
 import type { RenderContext } from '../core/types';
-import { createGARSRenderer } from './renderer';
-import { Grids } from '@ngageoint/gars-js';
 
 vi.mock('@ngageoint/gars-js', () => ({
   GridType: {

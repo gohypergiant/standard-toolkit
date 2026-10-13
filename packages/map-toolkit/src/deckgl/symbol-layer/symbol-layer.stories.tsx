@@ -16,10 +16,10 @@ import { useCallback, useId, useState } from 'react';
 import { BaseMap } from '@/deckgl/base-map';
 import { withDeckGL } from '@/decorators/deckgl';
 import { CoffinCornerExtension } from '../extensions';
-import type { EntityId } from '../extensions/coffin-corner';
 import type { Rgba255Tuple } from '@accelint/predicates';
 import type { PickingInfo } from '@deck.gl/core';
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import type { EntityId } from '../extensions/coffin-corner';
 
 const MOCK_DATA = [
   {

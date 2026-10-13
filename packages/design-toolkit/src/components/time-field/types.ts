@@ -11,11 +11,11 @@
  */
 
 import type {
+  TimeFieldProps as AriaTimeFieldProps,
   DateInputProps,
   DateSegmentProps,
   FieldErrorProps,
   LabelProps,
-  TimeFieldProps as AriaTimeFieldProps,
   TimeValue,
 } from 'react-aria-components/TimeField';
 

@@ -105,9 +105,9 @@ This package has no server, database, or hosted runtime. It is a published utili
 
 ## 5. External Integrations / APIs
 
-| Service | Purpose | Integration Method |
-|---------|---------|-------------------|
-| None | The package is self-contained and exports static values only | N/A |
+| Service | Purpose                                                      | Integration Method |
+| ------- | ------------------------------------------------------------ | ------------------ |
+| None    | The package is self-contained and exports static values only | N/A                |
 
 ## 6. Deployment & Infrastructure
 
@@ -133,7 +133,7 @@ This package has no server, database, or hosted runtime. It is a published utili
 
 > Testing patterns and standards are defined in [../../openspec/config.yaml](../../openspec/config.yaml); this section covers local setup and commands.
 
-**Local Setup:** Use Node.js 22+ and pnpm 10+. Install dependencies from the repo root with `pnpm install`, then use the repo verification gate or run package-local commands from `packages/constants`.
+**Local Setup:** Develop on Node.js 24+ (`.nvmrc`); published packages support Node 22+. Use pnpm 10+. Install dependencies from the repo root with `pnpm install`, then use the repo verification gate or run package-local commands from `packages/constants`.
 
 **Testing Frameworks:** Vitest configuration is present through the shared DOM base config. This package is primarily static exports and currently has little or no package-local runtime test surface.
 
@@ -156,8 +156,8 @@ This package has no server, database, or hosted runtime. It is a published utili
 
 ## 11. Glossary / Acronyms
 
-| Term | Definition |
-|------|-----------|
-| HEX_REGEX | Shared regular expression constant for validating hex color strings |
-| DEFAULT_COORDINATE | Shared default coordinate value reused across geospatial packages |
-| Unit symbol map | Constant mapping between unit identifiers and their human-readable symbols |
+| Term               | Definition                                                                 |
+| ------------------ | -------------------------------------------------------------------------- |
+| HEX_REGEX          | Shared regular expression constant for validating hex color strings        |
+| DEFAULT_COORDINATE | Shared default coordinate value reused across geospatial packages          |
+| Unit symbol map    | Constant mapping between unit identifiers and their human-readable symbols |

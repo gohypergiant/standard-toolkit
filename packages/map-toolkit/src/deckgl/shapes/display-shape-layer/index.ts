@@ -397,7 +397,7 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
    */
   private getShapeById(shapeId: ShapeId): Shape | undefined {
     const index = this.featuresCache?.shapeIdToIndex.get(shapeId);
-    return index !== undefined ? this.props.data[index] : undefined;
+    return index === undefined ? undefined : this.props.data[index];
   }
 
   /**
@@ -514,7 +514,7 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
       this.featuresCache?.shapeIdToIndex.get(selectedShapeId);
 
     const selectedFeature =
-      featureIndex !== undefined ? features[featureIndex] : undefined;
+      featureIndex === undefined ? undefined : features[featureIndex];
 
     if (!selectedFeature) {
       return [];
@@ -579,9 +579,9 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
     // Resolve hovered entity ID for coffin corner extension on point sublayers.
     // Geometry check kept to avoid unnecessary attribute invalidation on non-point hovers.
     const hoveredFeature =
-      this.state?.hoverIndex !== undefined
-        ? features[this.state.hoverIndex]
-        : undefined;
+      this.state?.hoverIndex === undefined
+        ? undefined
+        : features[this.state.hoverIndex];
     const hoveredEntityId =
       hoveredFeature?.geometry.type === 'Point'
         ? (hoveredFeature.properties?.shapeId as ShapeId)
@@ -786,7 +786,7 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
     const { data, unit, showLabels, labelOptions } = this.props;
     const hoverIndex = this.state?.hoverIndex;
     const hoveredShape =
-      hoverIndex !== undefined ? data[hoverIndex] : undefined;
+      hoverIndex === undefined ? undefined : data[hoverIndex];
     const radiusText =
       hoveredShape && isCircleShape(hoveredShape)
         ? getRadiusLabelText(hoveredShape, unit)
@@ -1046,7 +1046,7 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
     accessor: (feature: Shape['feature']) => Rgba255Tuple,
   ): Rgba255Tuple | undefined {
     const idx = this.featuresCache?.shapeIdToIndex.get(shapeId);
-    const originalFeature = idx !== undefined ? features[idx] : undefined;
+    const originalFeature = idx === undefined ? undefined : features[idx];
     return originalFeature ? accessor(originalFeature) : undefined;
   }
 

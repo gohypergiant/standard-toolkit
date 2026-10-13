@@ -35,20 +35,20 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v5
+        uses: actions/checkout@v7
         with:
           ref: ${{ github.event.pull_request.base.sha }}
           fetch-depth: 2
 
       - name: Setup pnpm
-        uses: pnpm/action-setup@v4
+        uses: pnpm/action-setup@v6
         with:
           run_install: false
 
       - name: Setup Node.js
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@v7
         with:
-          node-version-file: 'package.json'
+          node-version-file: '.nvmrc'
           cache: 'pnpm'
 
       - name: Install dependencies
@@ -65,7 +65,7 @@ jobs:
         run: node ./.github/scripts/generate-summary.mjs base-
 
       - name: Upload coverage summary artifact (main)
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: base-coverage-summary
           path: coverage/base-coverage-summary.json
@@ -76,20 +76,20 @@ jobs:
     needs: coverage-main
     steps:
       - name: Checkout code
-        uses: actions/checkout@v5
+        uses: actions/checkout@v7
         with:
           fetch-depth: 2
 
       - name: Setup pnpm
-        uses: pnpm/action-setup@v4
+        uses: pnpm/action-setup@v6
         with:
           run_install: false
 
       - name: Setup Node.js
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@v7
         with:
           cache: 'pnpm'
-          node-version-file: 'package.json'
+          node-version-file: '.nvmrc'
 
       - name: Install dependencies
         run: pnpm install
@@ -106,7 +106,7 @@ jobs:
         run: node ./.github/scripts/generate-summary.mjs ""
 
       - name: Download base coverage summary artifact
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v7
         with:
           name: base-coverage-summary
           path: coverage/

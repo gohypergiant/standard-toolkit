@@ -108,10 +108,10 @@ This package has no server, database, or hosted runtime. It is a published tacti
 
 ## 5. External Integrations / APIs
 
-| Service | Purpose | Integration Method |
-|---------|---------|-------------------|
-| React | Runtime rendering of symbol components | Peer dependency |
-| `smeegl` | Spritesheet generation during build workflows | Build tooling |
+| Service                            | Purpose                                             | Integration Method       |
+| ---------------------------------- | --------------------------------------------------- | ------------------------ |
+| React                              | Runtime rendering of symbol components              | Peer dependency          |
+| `smeegl`                           | Spritesheet generation during build workflows       | Build tooling            |
 | deck.gl icon-layer style consumers | Primary downstream use case for spritesheet outputs | Static asset integration |
 
 ## 6. Deployment & Infrastructure
@@ -138,7 +138,7 @@ This package has no server, database, or hosted runtime. It is a published tacti
 
 > Testing patterns and standards are defined in [../../openspec/config.yaml](../../openspec/config.yaml); this section covers local setup and commands.
 
-**Local Setup:** Use Node.js 22+ and pnpm 10+. Install from the repo root, then use package or repo build flows to regenerate and package symbol outputs.
+**Local Setup:** Develop on Node.js 24+ (`.nvmrc`); published packages support Node 22+. Use pnpm 10+. Install from the repo root, then use package or repo build flows to regenerate and package symbol outputs.
 
 **Testing Frameworks:** This package does not expose a notable package-local runtime test suite. Validation is primarily through generation, build, and downstream consumption.
 
@@ -161,9 +161,9 @@ This package has no server, database, or hosted runtime. It is a published tacti
 
 ## 11. Glossary / Acronyms
 
-| Term | Definition |
-|------|-----------|
-| NTDS | Naval Tactical Data System symbology family used by the package |
-| Spritesheet | Packed image atlas plus metadata used for efficient symbol rendering |
-| Masked icon | Source symbol variant intended for spritesheet-oriented rendering |
+| Term              | Definition                                                                |
+| ----------------- | ------------------------------------------------------------------------- |
+| NTDS              | Naval Tactical Data System symbology family used by the package           |
+| Spritesheet       | Packed image atlas plus metadata used for efficient symbol rendering      |
+| Masked icon       | Source symbol variant intended for spritesheet-oriented rendering         |
 | Affiliation color | Color token representing tactical affiliation such as friendly or hostile |

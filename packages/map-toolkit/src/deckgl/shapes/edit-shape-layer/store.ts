@@ -39,7 +39,6 @@ import { Broadcast } from '@accelint/bus';
 import { createMapStore } from '@/shared/create-map-store';
 import { createLoggerDomain } from '@/shared/logger';
 import { MapEvents } from '../../base-map/events';
-import type { DistanceUnit } from '@accelint/constants/units';
 import {
   isCircleShape,
   isEllipseShape,
@@ -63,6 +62,7 @@ import {
   EDIT_SHAPE_MODE,
 } from './constants';
 import { EditShapeEvents } from './events';
+import type { DistanceUnit } from '@accelint/constants/units';
 import type { UniqueId } from '@accelint/core';
 import type { Feature } from 'geojson';
 import type { MapEventType } from '../../base-map/types';

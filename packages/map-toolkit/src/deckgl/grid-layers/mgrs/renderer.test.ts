@@ -10,10 +10,10 @@
  * governing permissions and limitations under the License.
  */
 
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { createMGRSRenderer } from './renderer';
 import type { Bounds } from '@ngageoint/grid-js';
 import type { RenderContext } from '../core/types';
-import { createMGRSRenderer } from './renderer';
 
 // Mock the MGRS library
 vi.mock('@ngageoint/mgrs-js', () => ({

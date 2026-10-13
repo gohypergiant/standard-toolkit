@@ -108,12 +108,12 @@ This package has no server, database, or hosted runtime. It is a published loggi
 
 ## 5. External Integrations / APIs
 
-| Service | Purpose | Integration Method |
-|---------|---------|-------------------|
-| `loglayer` | Core logger abstraction | Peer dependency |
+| Service                | Purpose                                  | Integration Method   |
+| ---------------------- | ---------------------------------------- | -------------------- |
+| `loglayer`             | Core logger abstraction                  | Peer dependency      |
 | `@loglayer/*` packages | Plugin, log-level, and transport support | Runtime dependencies |
-| `serialize-error` | Error normalization for output | Runtime dependency |
-| `callsites` | Callsite metadata enrichment | Runtime dependency |
+| `serialize-error`      | Error normalization for output           | Runtime dependency   |
+| `callsites`            | Callsite metadata enrichment             | Runtime dependency   |
 
 ## 6. Deployment & Infrastructure
 
@@ -139,7 +139,7 @@ This package has no server, database, or hosted runtime. It is a published loggi
 
 > Testing patterns and standards are defined in [../../openspec/config.yaml](../../openspec/config.yaml); this section covers local setup and commands.
 
-**Local Setup:** Use Node.js 22+ and pnpm 10+. Install from the repo root, then run repo-wide verification or package-local scripts from `packages/logger`.
+**Local Setup:** Develop on Node.js 24+ (`.nvmrc`); published packages support Node 22+. Use pnpm 10+. Install from the repo root, then run repo-wide verification or package-local scripts from `packages/logger`.
 
 **Testing Frameworks:** Vitest with jsdom and shared jest-dom setup. Tests use mocks extensively to isolate transport and plugin behavior.
 
@@ -162,9 +162,9 @@ This package has no server, database, or hosted runtime. It is a published loggi
 
 ## 11. Glossary / Acronyms
 
-| Term | Definition |
-|------|-----------|
-| LogLayer | The underlying logging abstraction this package builds on |
-| Structured transport | Output path that emits machine-friendly log records |
-| Callsite plugin | Logger plugin that enriches messages with source-location metadata |
-| Pretty transport | Human-readable logging output intended for local or terminal use |
+| Term                 | Definition                                                         |
+| -------------------- | ------------------------------------------------------------------ |
+| LogLayer             | The underlying logging abstraction this package builds on          |
+| Structured transport | Output path that emits machine-friendly log records                |
+| Callsite plugin      | Logger plugin that enriches messages with source-location metadata |
+| Pretty transport     | Human-readable logging output intended for local or terminal use   |

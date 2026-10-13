@@ -14,8 +14,6 @@
  * THIS IS A GENERATED FILE. DO NOT ALTER DIRECTLY.
  */
 
-// biome-ignore-all assist/source/organizeImports: This comment is used to prevent the biome tool from altering the import statements in this file.
-
 export { doesEndWith } from './does-end-with';
 export { doesNotEndWith } from './does-not-end-with';
 export { doesNotStartWith } from './does-not-start-with';
@@ -23,7 +21,6 @@ export { doesStartWith } from './does-start-with';
 export { isBbox } from './is-bbox';
 export { isBetween } from './is-between';
 export { isCssRgbaObject } from './is-css-rgba-object';
-export type { CssRgbaObject } from './is-css-rgba-object';
 export { isCssRgbaString } from './is-css-rgba-string';
 export { isEqual } from './is-equal';
 export { isGreater } from './is-greater';
@@ -57,8 +54,9 @@ export {
   isNumeric,
 } from './is-number';
 export { isRgba255Tuple } from './is-rgba-255-tuple';
-export type { Rgba255Tuple } from './is-rgba-255-tuple';
 export { isSomething } from './is-something';
 export { isString } from './is-string';
 export { isValid255Channel } from './is-valid-255-channel';
 export { isSharedWorker, isWorker } from './is-worker';
+export type { CssRgbaObject } from './is-css-rgba-object';
+export type { Rgba255Tuple } from './is-rgba-255-tuple';

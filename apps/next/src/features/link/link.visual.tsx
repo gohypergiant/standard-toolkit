@@ -10,12 +10,12 @@
  * governing permissions and limitations under the License.
  */
 
-import type { LinkProps } from '@accelint/design-toolkit';
 import { Link } from '@accelint/design-toolkit';
 import {
   createInteractiveVisualTests,
   generateVariantMatrix,
 } from '~/visual-regression/vitest';
+import type { LinkProps } from '@accelint/design-toolkit';
 
 const linkVariants = generateVariantMatrix<LinkProps>({
   dimensions: {

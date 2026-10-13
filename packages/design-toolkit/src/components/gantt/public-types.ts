@@ -10,14 +10,14 @@
  * governing permissions and limitations under the License.
  */
 
-import type {
-  GanttTimescale as _GanttTimescale,
-  GanttThreshold as _GanttThreshold,
-  GanttMetThresholdData as _GanttMetThresholdData,
-  GanttThresholdProps as _GanttThresholdProps,
-  GanttRowElementColorProp as _GanttRowElementColorProp,
-} from './types';
 import type { GanttProviderProps as _GanttProviderProps } from './context';
+import type {
+  GanttMetThresholdData as _GanttMetThresholdData,
+  GanttRowElementColorProp as _GanttRowElementColorProp,
+  GanttThreshold as _GanttThreshold,
+  GanttThresholdProps as _GanttThresholdProps,
+  GanttTimescale as _GanttTimescale,
+} from './types';
 
 /**
  * Public type exports for the Gantt component.

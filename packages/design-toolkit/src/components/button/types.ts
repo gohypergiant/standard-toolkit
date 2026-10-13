@@ -11,8 +11,8 @@
  */
 
 import type { ButtonProps as AriaButtonProps } from 'react-aria-components/Button';
-import type { ToggleButtonProps as AriaToggleButtonProps } from 'react-aria-components/ToggleButton';
 import type { LinkProps } from 'react-aria-components/Link';
+import type { ToggleButtonProps as AriaToggleButtonProps } from 'react-aria-components/ToggleButton';
 import type { AriaAttributesWithRef } from '@/lib/types';
 
 type Variants = 'filled' | 'flat' | 'icon' | 'outline';

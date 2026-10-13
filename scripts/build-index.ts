@@ -24,17 +24,11 @@ import { getFormattedHeader } from './license.js';
 
 const INDEX_REGEX = /[\\/]index\.[tj]sx?$/;
 const EXT_REGEX = /\.[tj]sx?$/;
-const PRIVATE_REGEX = /^\/\/ __private-exports\n/;
 // A package's own root barrel is the output of this script, never an input
 const PACKAGE_INDEX_REGEX = /^[^/]+\/[^/]+\/src\/index\.[tj]sx?$/;
 const CLIENT_DIRECTIVE = `'use client';\n`;
 
 const HEADER_MSG = `${getFormattedHeader('.ts')}\n\n/**\n * THIS IS A GENERATED FILE. DO NOT ALTER DIRECTLY.\n */\n`;
-
-// Biome's assist would regroup the statements by source and move type exports
-// below value exports, so sorting stays the responsibility of this script.
-const BIOME_IGNORE =
-  '\n// biome-ignore-all assist/source/organizeImports: This comment is used to prevent the biome tool from altering the import statements in this file.\n\n';
 
 const IGNORE_LIST = [
   '**/node_modules',
@@ -107,7 +101,7 @@ async function getNamedExports(
 ): Promise<ExportNamedDeclaration[]> {
   const contents = await fs.readFile(filePath, 'utf-8');
 
-  if (PRIVATE_REGEX.test(contents)) {
+  if (contents.startsWith('// __private-exports\n')) {
     return [];
   }
 
@@ -353,7 +347,7 @@ async function writeIndexFile(
   echo(chalk.green(`Writing ${exports.length} exports in ${newFile}...`));
 
   const body = (isClient ? [CLIENT_DIRECTIVE] : [])
-    .concat([HEADER_MSG, BIOME_IGNORE, ...exports])
+    .concat([HEADER_MSG, ...exports])
     .join('\n');
 
   await fs.writeFile(newFile, body, 'utf-8');

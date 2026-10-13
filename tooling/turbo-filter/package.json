@@ -10,7 +10,7 @@
   "devDependencies": {
     "@types/prompts": "^2.4.9",
     "prompts": "^2.4.2",
-    "turbo": "^2.6.3",
+    "turbo": "^2.11.5",
     "yaml": "^2.8.1",
     "zx": "^8.8.5"
   },
@@ -29,6 +29,7 @@
     "url": "https://github.com/gohypergiant/standard-toolkit"
   },
   "scripts": {
+    "check": "pnpm biome check --write .",
     "constellation-tracker": "pnpm exec constellation-tracker",
     "format": "pnpm biome format . --write --verbose",
     "format:check": "pnpm biome format . --verbose",

@@ -12,10 +12,6 @@
 'use client';
 
 import 'client-only';
-import { useFocusable } from 'react-aria/useFocusable';
-import { mergeProps } from 'react-aria/mergeProps';
-import { useObjectRef } from 'react-aria/useObjectRef';
-import { mergeRefs } from 'react-aria/mergeRefs';
 import {
   Children,
   cloneElement,
@@ -24,8 +20,12 @@ import {
   type ReactNode,
   version,
 } from 'react';
-import { TooltipTrigger as AriaTooltipTrigger } from 'react-aria-components/Tooltip';
+import { mergeProps } from 'react-aria/mergeProps';
+import { mergeRefs } from 'react-aria/mergeRefs';
+import { useFocusable } from 'react-aria/useFocusable';
+import { useObjectRef } from 'react-aria/useObjectRef';
 import { useContextProps } from 'react-aria-components/slots';
+import { TooltipTrigger as AriaTooltipTrigger } from 'react-aria-components/Tooltip';
 import { TooltipContext } from './context';
 import type { FocusableElement } from '@react-types/shared';
 import type { TooltipFocusableProps, TooltipTriggerProps } from './types';

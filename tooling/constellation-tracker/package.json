@@ -20,7 +20,7 @@
   "devDependencies": {
     "@accelint/typescript-config": "workspace:*",
     "@accelint/vitest-config": "workspace:*",
-    "@types/node": "^22",
+    "@types/node": "^24",
     "tsdown": "^0.18.0",
     "vitest": "^4.0.15"
   },
@@ -63,6 +63,7 @@
     "url": "https://github.com/gohypergiant/standard-toolkit"
   },
   "scripts": {
+    "check": "pnpm biome check --write .",
     "constellation-tracker": "node ./dist/main.mjs",
     "format": "pnpm biome format . --write --verbose",
     "format:check": "pnpm biome format . --verbose",
