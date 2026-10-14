@@ -1,5 +1,19 @@
 # @accelint/design-toolkit
 
+## 11.2.1
+
+### Patch Changes
+
+- ab93ee0: Rebuilt with the Node 24 toolchain and Biome 2.5. No functional changes. Supported Node range unchanged.
+- Updated dependencies [663abd1]
+- Updated dependencies [ab93ee0]
+  - @accelint/geo@0.8.0
+  - @accelint/icons@3.0.1
+  - @accelint/temporal@0.1.6
+  - @accelint/design-foundation@3.2.2
+  - @accelint/converters@1.0.3
+  - @accelint/predicates@0.5.3
+
 ## 11.2.0
 ### Minor Changes
 
