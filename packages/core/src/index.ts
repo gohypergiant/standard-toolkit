@@ -14,8 +14,6 @@
  * THIS IS A GENERATED FILE. DO NOT ALTER DIRECTLY.
  */
 
-// biome-ignore-all assist/source/organizeImports: This comment is used to prevent the biome tool from altering the import statements in this file.
-
 export { concat } from './array/concat';
 export { every } from './array/every';
 export { filter } from './array/filter';
@@ -43,7 +41,6 @@ export { identity } from './combinators/identity';
 export { inverseConstant } from './combinators/inverse-constant';
 export { compose } from './composition/compose';
 export { autoCurry } from './composition/curry';
-export type { Curried } from './composition/curry';
 export { pipe } from './composition/pipe';
 export { createIterable } from './iterable/create-iterable';
 export { range } from './iterable/range';
@@ -69,7 +66,6 @@ export {
   lensProp,
   set,
 } from './object/lens';
-export type { Lens } from './object/lens';
 export {
   optionalProp,
   optionalProperty,
@@ -77,6 +73,13 @@ export {
   property,
 } from './object/property';
 export { getSafeEnumValues } from './safe-enum/get-safe-enum-values';
+export { lookup } from './utility/lookup';
+export { noop } from './utility/noop';
+export { once } from './utility/once';
+export { tap } from './utility/tap';
+export { isUUID, uuid } from './utility/uuid';
+export type { Curried } from './composition/curry';
+export type { Lens } from './object/lens';
 export type { IsLiteralEnum } from './safe-enum/is-literal-enum';
 export type { SafeEnum } from './safe-enum/safe-enum';
 export type { ValidEnumStructures } from './safe-enum/valid-enum-structures';
@@ -88,9 +91,4 @@ export type {
   Predicate,
   UnaryFunction,
 } from './types';
-export { lookup } from './utility/lookup';
-export { noop } from './utility/noop';
-export { once } from './utility/once';
-export { tap } from './utility/tap';
-export { isUUID, uuid } from './utility/uuid';
 export type { UniqueId, UniqueIdOptions } from './utility/uuid';

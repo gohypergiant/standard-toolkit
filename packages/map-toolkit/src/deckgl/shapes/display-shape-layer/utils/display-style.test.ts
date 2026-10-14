@@ -150,18 +150,16 @@ describe('Display Style Utilities', () => {
       expect(result).toBe(2);
     });
 
-    it.each([
-      { width: 1 },
-      { width: 2 },
-      { width: 4 },
-      { width: 8 },
-    ])('returns $width from style properties', ({ width }) => {
-      const feature = createStyledFeature({ lineWidth: width });
+    it.each([{ width: 1 }, { width: 2 }, { width: 4 }, { width: 8 }])(
+      'returns $width from style properties',
+      ({ width }) => {
+        const feature = createStyledFeature({ lineWidth: width });
 
-      const result = getLineWidth(feature);
+        const result = getLineWidth(feature);
 
-      expect(result).toBe(width);
-    });
+        expect(result).toBe(width);
+      },
+    );
   });
 
   describe('getDashArray', () => {
@@ -200,19 +198,15 @@ describe('Display Style Utilities', () => {
   });
 
   describe('getHoverLineWidth', () => {
-    it.each([
-      { width: 1 },
-      { width: 2 },
-      { width: 4 },
-      { width: 8 },
-    ])('returns $width + 2 when hovered with base width $width', ({
-      width,
-    }) => {
-      const feature = createStyledFeature({ lineWidth: width });
+    it.each([{ width: 1 }, { width: 2 }, { width: 4 }, { width: 8 }])(
+      'returns $width + 2 when hovered with base width $width',
+      ({ width }) => {
+        const feature = createStyledFeature({ lineWidth: width });
 
-      expect(getHoverLineWidth(feature, true)).toBe(width + 2);
-      expect(getHoverLineWidth(feature, false)).toBe(width);
-    });
+        expect(getHoverLineWidth(feature, true)).toBe(width + 2);
+        expect(getHoverLineWidth(feature, false)).toBe(width);
+      },
+    );
   });
 
   describe('getHighlightLineWidth', () => {

@@ -1,7 +1,4 @@
 {
   "title": "@accelint/ntds",
-  "pages": [
-    "index",
-    "..."
-  ]
+  "pages": ["index", "..."]
 }

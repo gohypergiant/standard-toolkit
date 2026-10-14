@@ -12,11 +12,11 @@
 
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { parseColor } from 'react-aria-components';
 import { describe, expect, it, vi } from 'vitest';
 import { ColorPicker } from './';
 import { CustomColorPicker } from './custom-color-picker';
 import { NoColorButton } from './no-color-button';
-import { parseColor } from 'react-aria-components';
 import type { Rgba255Tuple } from '@accelint/predicates/is-rgba-255-tuple';
 import type { ColorPickerProps } from './types';
 

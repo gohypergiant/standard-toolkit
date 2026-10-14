@@ -1,7 +1,4 @@
 {
   "title": "@accelint/math",
-  "pages": [
-    "index",
-    "..."
-  ]
+  "pages": ["index", "..."]
 }

@@ -104,9 +104,9 @@ This package has no server, database, or hosted runtime. It is a published utili
 
 ## 5. External Integrations / APIs
 
-| Service | Purpose | Integration Method |
-|---------|---------|-------------------|
-| None | The package is self-contained and operates on local numeric values only | N/A |
+| Service | Purpose                                                                 | Integration Method |
+| ------- | ----------------------------------------------------------------------- | ------------------ |
+| None    | The package is self-contained and operates on local numeric values only | N/A                |
 
 ## 6. Deployment & Infrastructure
 
@@ -132,7 +132,7 @@ This package has no server, database, or hosted runtime. It is a published utili
 
 > Testing patterns and standards are defined in [../../openspec/config.yaml](../../openspec/config.yaml); this section covers local setup and commands.
 
-**Local Setup:** Use Node.js 22+ and pnpm 10+. Install from the repo root, then use repo or package-local scripts.
+**Local Setup:** Develop on Node.js 24+ (`.nvmrc`); published packages support Node 22+. Use pnpm 10+. Install from the repo root, then use repo or package-local scripts.
 
 **Testing Frameworks:** Vitest with the shared no-DOM base config. Tests use parameterized cases to cover numeric edge conditions and error boundaries.
 
@@ -155,8 +155,8 @@ This package has no server, database, or hosted runtime. It is a published utili
 
 ## 11. Glossary / Acronyms
 
-| Term | Definition |
-|------|-----------|
-| Clamp | Restricting a number to a minimum/maximum range |
-| Precision rounding | Rounding a number to a specified decimal precision |
-| randomInt | Helper for integer-oriented random number generation |
+| Term               | Definition                                           |
+| ------------------ | ---------------------------------------------------- |
+| Clamp              | Restricting a number to a minimum/maximum range      |
+| Precision rounding | Rounding a number to a specified decimal precision   |
+| randomInt          | Helper for integer-oriented random number generation |

@@ -1,7 +1,4 @@
 {
   "title": "@accelint/biome-config",
-  "pages": [
-    "index",
-    "..."
-  ]
+  "pages": ["index", "..."]
 }

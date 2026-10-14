@@ -106,9 +106,9 @@ This package has no server, database, or hosted runtime. It is a published utili
 
 ## 5. External Integrations / APIs
 
-| Service | Purpose | Integration Method |
-|---------|---------|-------------------|
-| None | The package is self-contained and formats local values only | N/A |
+| Service | Purpose                                                     | Integration Method |
+| ------- | ----------------------------------------------------------- | ------------------ |
+| None    | The package is self-contained and formats local values only | N/A                |
 
 ## 6. Deployment & Infrastructure
 
@@ -134,7 +134,7 @@ This package has no server, database, or hosted runtime. It is a published utili
 
 > Testing patterns and standards are defined in [../../openspec/config.yaml](../../openspec/config.yaml); this section covers local setup and commands.
 
-**Local Setup:** Use Node.js 22+ and pnpm 10+. Install from the repo root, then use repo or package-local scripts.
+**Local Setup:** Develop on Node.js 24+ (`.nvmrc`); published packages support Node 22+. Use pnpm 10+. Install from the repo root, then use repo or package-local scripts.
 
 **Testing Frameworks:** Vitest with the shared no-DOM base config. Existing tests focus on positive, negative, and edge-case formatter outputs.
 
@@ -157,8 +157,8 @@ This package has no server, database, or hosted runtime. It is a published utili
 
 ## 11. Glossary / Acronyms
 
-| Term | Definition |
-|------|-----------|
-| IFF | Identification Friend or Foe; a tactical/aviation identification concept reflected in current formatter coverage |
-| Formatter | Function that converts raw values into human-readable display strings |
-| Subpath export | Package entry such as `@accelint/formatters/iff` for narrower imports |
+| Term           | Definition                                                                                                       |
+| -------------- | ---------------------------------------------------------------------------------------------------------------- |
+| IFF            | Identification Friend or Foe; a tactical/aviation identification concept reflected in current formatter coverage |
+| Formatter      | Function that converts raw values into human-readable display strings                                            |
+| Subpath export | Package entry such as `@accelint/formatters/iff` for narrower imports                                            |

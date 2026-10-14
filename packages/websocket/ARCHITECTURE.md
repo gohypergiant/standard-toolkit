@@ -100,8 +100,8 @@ This package currently has no meaningful implemented runtime behavior beyond pub
 
 ## 5. External Integrations / APIs
 
-| Service | Purpose | Integration Method |
-|---------|---------|-------------------|
+| Service                | Purpose                | Integration Method     |
+| ---------------------- | ---------------------- | ---------------------- |
 | <!-- TODO: fill in --> | <!-- TODO: fill in --> | <!-- TODO: fill in --> |
 
 ## 6. Deployment & Infrastructure
@@ -128,7 +128,7 @@ This package currently has no meaningful implemented runtime behavior beyond pub
 
 > Testing patterns and standards are defined in [../../openspec/config.yaml](../../openspec/config.yaml); this section covers local setup and commands.
 
-**Local Setup:** Use Node.js 22+ and pnpm 10+. Install from the repo root. The README currently marks the package as under construction.
+**Local Setup:** Develop on Node.js 24+ (`.nvmrc`); published packages support Node 22+. Use pnpm 10+. Install from the repo root. The README currently marks the package as under construction.
 
 **Testing Frameworks:** Vitest configuration is present through the shared DOM base config, but the package currently lacks a meaningful implementation-specific test surface.
 
@@ -151,8 +151,8 @@ This package currently has no meaningful implemented runtime behavior beyond pub
 
 ## 11. Glossary / Acronyms
 
-| Term | Definition |
-|------|-----------|
+| Term                | Definition                                                                                    |
+| ------------------- | --------------------------------------------------------------------------------------------- |
 | Placeholder package | Package intentionally published with minimal implementation while reserving API/package space |
-| WebSocket | Persistent bidirectional network connection protocol expected to shape future package scope |
-| Scaffold | Minimal metadata and build structure prepared for future implementation work |
+| WebSocket           | Persistent bidirectional network connection protocol expected to shape future package scope   |
+| Scaffold            | Minimal metadata and build structure prepared for future implementation work                  |

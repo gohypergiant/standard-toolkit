@@ -12,7 +12,6 @@
 
 import { Broadcast } from '@accelint/bus/broadcast';
 import { uuid } from '@accelint/core';
-import type { UniqueId } from '@accelint/core';
 import { act, render, screen } from '@testing-library/react';
 import { useLayoutEffect, useRef } from 'react';
 import {
@@ -29,6 +28,7 @@ import { cameraStore, clearCameraState, MAX_PITCH } from '../../camera/store';
 import { MapEvents } from './events';
 import { BaseMap, stripLockedMapLibreOptions } from './index';
 import { LOCKED_MAP_LIBRE_OPTION_KEYS } from './types';
+import type { UniqueId } from '@accelint/core';
 import type { MapOptions } from 'maplibre-gl';
 import type { MjolnirGestureEvent } from 'mjolnir.js';
 import type { CameraEvent, ViewType } from '../../camera/types';
@@ -400,35 +400,35 @@ describe('BaseMap', () => {
     it.each([
       { isInitialized: false, expectedCalls: 0 },
       { isInitialized: true, expectedCalls: 1 },
-    ])('syncs viewport state $expectedCalls time(s) on map load when deck isInitialized is $isInitialized', ({
-      isInitialized,
-      expectedCalls,
-    }) => {
-      const viewport: FakeViewport = {
-        id: 'main',
-        latitude: 1,
-        longitude: 2,
-        zoom: 3,
-        width: 10,
-        height: 10,
-        getBounds: () => [0, 0, 1, 1],
-      };
-      fakeDeck = {
-        isInitialized,
-        getViewports: () => [viewport],
-        // biome-ignore lint/style/useNamingConvention: deck.gl private API name
-        _getViewState: () => ({}),
-      };
-      const onViewStateChange = vi.fn();
-      useFakeMap(createFakeMap());
-      render(<BaseMap id={uuid()} onViewStateChange={onViewStateChange} />);
+    ])(
+      'syncs viewport state $expectedCalls time(s) on map load when deck isInitialized is $isInitialized',
+      ({ isInitialized, expectedCalls }) => {
+        const viewport: FakeViewport = {
+          id: 'main',
+          latitude: 1,
+          longitude: 2,
+          zoom: 3,
+          width: 10,
+          height: 10,
+          getBounds: () => [0, 0, 1, 1],
+        };
+        fakeDeck = {
+          isInitialized,
+          getViewports: () => [viewport],
+          // biome-ignore lint/style/useNamingConvention: deck.gl private API name
+          _getViewState: () => ({}),
+        };
+        const onViewStateChange = vi.fn();
+        useFakeMap(createFakeMap());
+        render(<BaseMap id={uuid()} onViewStateChange={onViewStateChange} />);
 
-      act(() => {
-        fireMapLoad();
-      });
+        act(() => {
+          fireMapLoad();
+        });
 
-      expect(onViewStateChange).toHaveBeenCalledTimes(expectedCalls);
-    });
+        expect(onViewStateChange).toHaveBeenCalledTimes(expectedCalls);
+      },
+    );
   });
 
   describe('drag event bus emission', () => {
@@ -491,27 +491,25 @@ describe('BaseMap', () => {
         coordinate: [5.5, 52.3],
         modifiers: { shiftKey: false, ctrlKey: false, altKey: true },
       },
-    ] as const)('emits $event on the bus with coordinate and modifier keys', ({
-      handler,
-      event,
-      coordinate,
-      modifiers,
-    }) => {
-      const id = uuid();
-      useFakeMap(createFakeMap());
-      const listener = listenTo(event);
-      render(<BaseMap id={id} />);
+    ] as const)(
+      'emits $event on the bus with coordinate and modifier keys',
+      ({ handler, event, coordinate, modifiers }) => {
+        const id = uuid();
+        useFakeMap(createFakeMap());
+        const listener = listenTo(event);
+        render(<BaseMap id={id} />);
 
-      act(() => {
-        capturedDragHandlers[handler]?.({ coordinate }, dragEvent(modifiers));
-      });
+        act(() => {
+          capturedDragHandlers[handler]?.({ coordinate }, dragEvent(modifiers));
+        });
 
-      expect(listener).toHaveBeenCalledExactlyOnceWith(
-        expect.objectContaining({
-          payload: { id, coordinate, ...modifiers },
-        }),
-      );
-    });
+        expect(listener).toHaveBeenCalledExactlyOnceWith(
+          expect.objectContaining({
+            payload: { id, coordinate, ...modifiers },
+          }),
+        );
+      },
+    );
 
     it('emits dragEnd with a null coordinate when info has none', () => {
       const id = uuid();
@@ -540,80 +538,83 @@ describe('BaseMap', () => {
       { handler: 'onDragStart', event: MapEvents.dragStart },
       { handler: 'onDrag', event: MapEvents.drag },
       { handler: 'onDragEnd', event: MapEvents.dragEnd },
-    ] as const)('emits $event with a 2-element coordinate when deck picks a 3-element one', ({
-      handler,
-      event,
-    }) => {
-      const id = uuid();
-      useFakeMap(createFakeMap());
-      const listener = listenTo(event);
-      render(<BaseMap id={id} />);
+    ] as const)(
+      'emits $event with a 2-element coordinate when deck picks a 3-element one',
+      ({ handler, event }) => {
+        const id = uuid();
+        useFakeMap(createFakeMap());
+        const listener = listenTo(event);
+        render(<BaseMap id={id} />);
 
-      act(() => {
-        capturedDragHandlers[handler]?.(
-          { coordinate: [10, 20, 300] },
-          dragEvent(),
+        act(() => {
+          capturedDragHandlers[handler]?.(
+            { coordinate: [10, 20, 300] },
+            dragEvent(),
+          );
+        });
+
+        expect(listener).toHaveBeenCalledExactlyOnceWith(
+          expect.objectContaining({
+            payload: expect.objectContaining({ id, coordinate: [10, 20] }),
+          }),
         );
-      });
-
-      expect(listener).toHaveBeenCalledExactlyOnceWith(
-        expect.objectContaining({
-          payload: expect.objectContaining({ id, coordinate: [10, 20] }),
-        }),
-      );
-    });
+      },
+    );
 
     it.each([
       ['right-button', { rightButton: true }],
       ['ctrl + left-button', { ctrlKey: true }],
-    ])('does not emit drag events for a %s tilt gesture', (_label, overrides) => {
-      const id = uuid();
-      useFakeMap(createFakeMap());
-      const listeners = [
-        listenTo(MapEvents.dragStart),
-        listenTo(MapEvents.drag),
-        listenTo(MapEvents.dragEnd),
-      ];
-      render(<BaseMap id={id} />);
+    ])(
+      'does not emit drag events for a %s tilt gesture',
+      (_label, overrides) => {
+        const id = uuid();
+        useFakeMap(createFakeMap());
+        const listeners = [
+          listenTo(MapEvents.dragStart),
+          listenTo(MapEvents.drag),
+          listenTo(MapEvents.dragEnd),
+        ];
+        render(<BaseMap id={id} />);
 
-      act(() => {
-        capturedDragHandlers.onDragStart?.(
-          { coordinate: [10, 20] },
-          dragEvent(overrides),
-        );
-        capturedDragHandlers.onDrag?.(
-          { coordinate: [11, 21] },
-          dragEvent(overrides),
-        );
-        capturedDragHandlers.onDragEnd?.(
-          { coordinate: [11, 21] },
-          dragEvent(overrides),
-        );
-      });
+        act(() => {
+          capturedDragHandlers.onDragStart?.(
+            { coordinate: [10, 20] },
+            dragEvent(overrides),
+          );
+          capturedDragHandlers.onDrag?.(
+            { coordinate: [11, 21] },
+            dragEvent(overrides),
+          );
+          capturedDragHandlers.onDragEnd?.(
+            { coordinate: [11, 21] },
+            dragEvent(overrides),
+          );
+        });
 
-      for (const listener of listeners) {
-        expect(listener).not.toHaveBeenCalled();
-      }
-    });
+        for (const listener of listeners) {
+          expect(listener).not.toHaveBeenCalled();
+        }
+      },
+    );
 
     it.each([
       { handler: 'onDragStart', event: MapEvents.dragStart },
       { handler: 'onDrag', event: MapEvents.drag },
-    ] as const)('does not emit $event when coordinate is missing from info', ({
-      handler,
-      event,
-    }) => {
-      const id = uuid();
-      useFakeMap(createFakeMap());
-      const listener = listenTo(event);
-      render(<BaseMap id={id} />);
+    ] as const)(
+      'does not emit $event when coordinate is missing from info',
+      ({ handler, event }) => {
+        const id = uuid();
+        useFakeMap(createFakeMap());
+        const listener = listenTo(event);
+        render(<BaseMap id={id} />);
 
-      act(() => {
-        capturedDragHandlers[handler]?.({}, dragEvent());
-      });
+        act(() => {
+          capturedDragHandlers[handler]?.({}, dragEvent());
+        });
 
-      expect(listener).not.toHaveBeenCalled();
-    });
+        expect(listener).not.toHaveBeenCalled();
+      },
+    );
   });
 
   describe('MapLibre handler and maxPitch invariants', () => {
@@ -628,21 +629,20 @@ describe('BaseMap', () => {
       });
     }
 
-    it.each([
-      '2D',
-      '2.5D',
-      '3D',
-    ] as const)('keeps MapLibre rotate/pitch off and a constant maxPitch in the %s view', (view) => {
-      useFakeMap(createFakeMap());
+    it.each(['2D', '2.5D', '3D'] as const)(
+      'keeps MapLibre rotate/pitch off and a constant maxPitch in the %s view',
+      (view) => {
+        useFakeMap(createFakeMap());
 
-      render(<BaseMap id={uuid()} defaultView={view} />);
+        render(<BaseMap id={uuid()} defaultView={view} />);
 
-      expect(capturedMapProps).toMatchObject({
-        dragRotate: false,
-        pitchWithRotate: false,
-        maxPitch: MAX_PITCH,
-      });
-    });
+        expect(capturedMapProps).toMatchObject({
+          dragRotate: false,
+          pitchWithRotate: false,
+          maxPitch: MAX_PITCH,
+        });
+      },
+    );
 
     it('keeps a 2D view flat when MapLibre reports a tilted camera through onMove', () => {
       // With a constant ceiling, MapLibre no longer clamps a touch or keyboard
@@ -762,16 +762,17 @@ describe('stripLockedMapLibreOptions', () => {
     expect(result).toEqual(input);
   });
 
-  it.each(
-    LOCKED_MAP_LIBRE_OPTION_KEYS,
-  )('should strip locked key %s', (lockedKey) => {
-    const unsafe: UnsafeInput = { [lockedKey]: 'arbitrary' };
-    const input = unsafe as unknown as MapLibreOptions;
+  it.each(LOCKED_MAP_LIBRE_OPTION_KEYS)(
+    'should strip locked key %s',
+    (lockedKey) => {
+      const unsafe: UnsafeInput = { [lockedKey]: 'arbitrary' };
+      const input = unsafe as unknown as MapLibreOptions;
 
-    const result = stripLockedMapLibreOptions(input);
+      const result = stripLockedMapLibreOptions(input);
 
-    expect(result).toEqual({});
-  });
+      expect(result).toEqual({});
+    },
+  );
 
   it('should preserve reference equality for passthrough values', () => {
     const transformRequest: NonNullable<MapOptions['transformRequest']> = (

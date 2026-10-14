@@ -32,10 +32,10 @@ export {
 export type {
   CellBounds,
   GridCellClickEvent,
-  GridClickPayload,
-  GridDefinition,
   GridCellEvent,
   GridCellHoverEvent,
+  GridClickPayload,
+  GridDefinition,
   GridHoverPayload,
   GridRenderer,
   GridStyleConfig,

@@ -111,7 +111,7 @@ createInteractiveVisualTests({
     <ChipList
       items={[{ id: 'chip-1', label: 'Deletable' }]}
       size={size}
-      onRemove={() => {}}
+      onRemove={() => null}
       disabledKeys={isDisabled ? ['chip-1'] : undefined}
     >
       {({ id, label }) => <DeletableChip id={id}>{label}</DeletableChip>}

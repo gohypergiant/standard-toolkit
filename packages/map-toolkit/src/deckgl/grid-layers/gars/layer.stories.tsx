@@ -16,13 +16,13 @@ import { uuid } from '@accelint/core';
 import { useState } from 'react';
 import { BaseMap } from '@/deckgl/base-map';
 import { withDeckGL } from '@/decorators/deckgl';
+import { DEFAULT_VIEW_STATE } from '../../../shared/constants';
 import {
   type GridCellClickEvent,
   GridCellEvents,
   type GridCellHoverEvent,
 } from '../core/types';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { DEFAULT_VIEW_STATE } from '../../../shared/constants';
 
 const meta: Meta = {
   title: 'DeckGL/Grid Layers/GARS Layer',

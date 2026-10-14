@@ -10,15 +10,15 @@
  * governing permissions and limitations under the License.
  */
 
-import { CompositeLayer } from '@deck.gl/core';
-import { PathLayer, ScatterplotLayer, TextLayer } from '@deck.gl/layers';
-import { PathStyleExtension } from '@deck.gl/extensions';
+import { formatBearing, formatDistance } from '@accelint/formatters/bearing';
 import {
   bearing as geoBearing,
   distance as geoDistance,
   greatCirclePoints,
 } from '@accelint/geo/geodesy';
-import { formatBearing, formatDistance } from '@accelint/formatters/bearing';
+import { CompositeLayer } from '@deck.gl/core';
+import { PathStyleExtension } from '@deck.gl/extensions';
+import { PathLayer, ScatterplotLayer, TextLayer } from '@deck.gl/layers';
 import { toLonLat } from '@/shared/coordinates';
 import {
   DASH_ARRAYS,
@@ -27,8 +27,8 @@ import {
   DEFAULT_EDIT_HANDLE_RADIUS,
   TOOLTIP_SUBLAYER_PROPS,
 } from '../shapes/shared/constants';
-import type { Color, DefaultProps, Layer } from '@deck.gl/core';
 import type { DistanceUnit } from '@accelint/constants/units';
+import type { Color, DefaultProps, Layer } from '@deck.gl/core';
 import type { MeasurementLayerProps } from './types';
 
 /** Default RGBA color for the measurement line (white, 78% opacity) */

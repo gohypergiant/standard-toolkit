@@ -137,11 +137,14 @@ describe('duplicateShape', () => {
     ['Rectangle', rectangleShape],
     ['LineString', lineStringShape],
     ['Point', pointShape],
-  ] as const)('should preserve the shape type discriminant for %s', (expectedType, shape) => {
-    const clone = duplicateShape(shape as Shape);
+  ] as const)(
+    'should preserve the shape type discriminant for %s',
+    (expectedType, shape) => {
+      const clone = duplicateShape(shape as Shape);
 
-    expect(clone.shape).toBe(expectedType);
-  });
+      expect(clone.shape).toBe(expectedType);
+    },
+  );
 
   it('should deep-clone geometry (not share references)', () => {
     const clone = duplicateShape(polygonShape);

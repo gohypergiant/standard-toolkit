@@ -22,8 +22,8 @@ import { useCallback } from 'react';
 import { Button } from '../button';
 import { Icon } from '../icon';
 import { useMediaControlsDisabled } from './context';
-import type { FullscreenButtonProps } from './types';
 import type { MediaState } from 'media-chrome/react/media-store';
+import type { FullscreenButtonProps } from './types';
 
 const selectIsFullscreen = (state: MediaState) => state.mediaIsFullscreen;
 

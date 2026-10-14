@@ -10,8 +10,8 @@
  * governing permissions and limitations under the License.
  */
 
-import type { Color, CompositeLayerProps } from '@deck.gl/core';
 import type { DistanceUnit } from '@accelint/constants/units';
+import type { Color, CompositeLayerProps } from '@deck.gl/core';
 
 /**
  * Modifier key that must be held for a drag to count as a measurement.

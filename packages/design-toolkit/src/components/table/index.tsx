@@ -309,7 +309,7 @@ export function Table<T extends { id: Key }>({
 
   const pagination = useMemo(
     () =>
-      pageSize != null ? { pageIndex: currentPage - 1, pageSize } : undefined,
+      pageSize == null ? undefined : { pageIndex: currentPage - 1, pageSize },
     [currentPage, pageSize],
   );
 

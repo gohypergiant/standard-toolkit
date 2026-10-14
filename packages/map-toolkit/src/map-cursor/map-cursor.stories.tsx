@@ -588,7 +588,17 @@ export const IntegrationWithModeAuth: Story = {
             (auth) => auth.requestingOwner === requestingOwner,
           );
 
-          if (existingIndex !== -1) {
+          if (existingIndex === -1) {
+            setPendingAuths((prev) => [
+              ...prev,
+              {
+                authId,
+                desiredMode,
+                requestingOwner,
+                id,
+              },
+            ]);
+          } else {
             addLog(`Replacing pending request from ${requestingOwner}`);
             setPendingAuths((prev) => {
               const updated = [...prev];
@@ -600,16 +610,6 @@ export const IntegrationWithModeAuth: Story = {
               };
               return updated;
             });
-          } else {
-            setPendingAuths((prev) => [
-              ...prev,
-              {
-                authId,
-                desiredMode,
-                requestingOwner,
-                id,
-              },
-            ]);
           }
         },
         [pendingAuths, addLog],

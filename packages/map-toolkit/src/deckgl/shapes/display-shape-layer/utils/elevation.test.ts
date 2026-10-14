@@ -119,15 +119,12 @@ describe('Elevation Utilities', () => {
         expected: 3000,
         label: 'double-nested coordinate array',
       },
-    ])('returns $expected for $label', ({
-      input,
-      expected,
-    }: {
-      input: unknown;
-      expected: number;
-    }) => {
-      expect(getElevationFromCoordinates(input)).toBe(expected);
-    });
+    ])(
+      'returns $expected for $label',
+      ({ input, expected }: { input: unknown; expected: number }) => {
+        expect(getElevationFromCoordinates(input)).toBe(expected);
+      },
+    );
 
     it('returns 0 for non-array input', () => {
       expect(getElevationFromCoordinates(null)).toBe(0);

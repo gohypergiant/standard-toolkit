@@ -15,7 +15,7 @@ jobs:
       pull-requests: write # to post issue comments (changesets/action)
       issues: write # to create pull request (changesets/action)
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 2
 
@@ -39,21 +39,21 @@ jobs:
           echo "- **Mode:** \`$MODE\`" >> $GITHUB_STEP_SUMMARY
           echo "- **Tag:** \`$TAG\`" >> $GITHUB_STEP_SUMMARY
 
-      - uses: actions/cache@v4
+      - uses: actions/cache@v6
         with:
           path: .turbo
           key: ${{ runner.os }}-turbo-${{ github.sha }}
           restore-keys: |
             ${{ runner.os }}-turbo-
 
-      - uses: pnpm/action-setup@v4
+      - uses: pnpm/action-setup@v6
         with:
           run_install: false
 
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@v7
         with:
           registry-url: 'https://registry.npmjs.org'
-          node-version-file: 'package.json'
+          node-version-file: '.nvmrc'
           cache: 'pnpm'
 
       - run: pnpm install
@@ -76,14 +76,14 @@ jobs:
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
-      - uses: changesets/action@v1
+      - uses: changesets/action@v2
         id: changesets
         with:
           # Call changeset command directly (skips constellation-tracker for beta)
-          version: pnpm changeset version
-          publish: changeset:release-beta
-          commit: 'build: version beta packages'
-          title: 'Changeset Action: Version Beta Packages + Publish'
+          version-script: pnpm changeset version
+          publish-script: pnpm run changeset:release-beta
+          commit-message: 'build: version beta packages'
+          pr-title: 'Changeset Action: Version Beta Packages + Publish'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
@@ -93,10 +93,11 @@ jobs:
         if: steps.changesets.outputs.published == 'true'
         run: |
           echo "✓ Beta packages published successfully"
-          echo "Published packages: ${{ steps.changesets.outputs.publishedPackages }}"
+          echo "Published packages: ${{ steps.changesets.outputs.published-packages }}"
 
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "## ✅ Published Successfully" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "**Packages published to npm with \`@beta\` tag:**" >> $GITHUB_STEP_SUMMARY
-          echo "${{ steps.changesets.outputs.publishedPackages }}" >> $GITHUB_STEP_SUMMARY
+          echo "${{ steps.changesets.outputs.published-packages }}" >> $GITHUB_STEP_SUMMARY
+

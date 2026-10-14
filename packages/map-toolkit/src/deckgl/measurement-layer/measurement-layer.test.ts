@@ -10,15 +10,15 @@
  * governing permissions and limitations under the License.
  */
 
+import { midpoint } from '@accelint/geo/geodesy';
+import { PathLayer, ScatterplotLayer, TextLayer } from '@deck.gl/layers';
+import { describe, expect, it, vi } from 'vitest';
+import { DASH_ARRAYS } from '@/deckgl/shapes/shared/constants';
+import { MeasurementLayer } from './measurement-layer';
 import type {
   PathStyleExtension,
   PathStyleExtensionProps,
 } from '@deck.gl/extensions';
-import { PathLayer, ScatterplotLayer, TextLayer } from '@deck.gl/layers';
-import { midpoint } from '@accelint/geo/geodesy';
-import { describe, expect, it, vi } from 'vitest';
-import { DASH_ARRAYS } from '@/deckgl/shapes/shared/constants';
-import { MeasurementLayer } from './measurement-layer';
 import type { MeasurementLayerProps } from './types';
 
 const POINT_A: [number, number] = [-97.0, 32.7];
@@ -179,31 +179,37 @@ describe('MeasurementLayer', () => {
     it.each([
       ['an empty array', []],
       ['a three-entry array', ['kilometers', 'nauticalmiles', 'miles']],
-    ] as const)('should fall back to the default dual label when units is %s', (_case, units) => {
-      const layer = makeLayer({ units: [...units] });
+    ] as const)(
+      'should fall back to the default dual label when units is %s',
+      (_case, units) => {
+        const layer = makeLayer({ units: [...units] });
 
-      const labelLayer = layer.renderLayers()[2] as TextLayer<{
-        text: string;
-      }>;
-      const labelData = labelLayer.props.data as { text: string }[];
+        const labelLayer = layer.renderLayers()[2] as TextLayer<{
+          text: string;
+        }>;
+        const labelData = labelLayer.props.data as { text: string }[];
 
-      expect(labelData[0]?.text).toMatch(DEFAULT_LABEL_PATTERN);
-    });
+        expect(labelData[0]?.text).toMatch(DEFAULT_LABEL_PATTERN);
+      },
+    );
 
     it.each([
       ['omitted', {}],
       ['an empty array', { units: [] }],
-    ])('should pass the default kilometers and nautical miles pair to getLabel when units is %s', (_case, props) => {
-      const getLabel = vi.fn(() => 'label');
-      const layer = makeLayer({ getLabel, ...props });
+    ])(
+      'should pass the default kilometers and nautical miles pair to getLabel when units is %s',
+      (_case, props) => {
+        const getLabel = vi.fn(() => 'label');
+        const layer = makeLayer({ getLabel, ...props });
 
-      layer.renderLayers();
+        layer.renderLayers();
 
-      expect(getLabel).toHaveBeenCalledExactlyOnceWith(POINT_A, POINT_B, [
-        'kilometers',
-        'nauticalmiles',
-      ]);
-    });
+        expect(getLabel).toHaveBeenCalledExactlyOnceWith(POINT_A, POINT_B, [
+          'kilometers',
+          'nauticalmiles',
+        ]);
+      },
+    );
 
     it('should use the provided lineColor', () => {
       const lineColor: [number, number, number, number] = [0, 200, 255, 180];

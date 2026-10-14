@@ -11,10 +11,10 @@ jobs:
     permissions:
       pull-requests: write # to create/update PR comments
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v7
 
       - name: Track experimental PR ages
-        uses: actions/github-script@v7
+        uses: actions/github-script@v9
         with:
           script: |
             // Find all open PRs from experimental/* branches

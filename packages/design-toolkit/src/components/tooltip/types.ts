@@ -9,13 +9,14 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
+
+import type { FocusableElement } from '@react-types/shared';
 import type { ComponentPropsWithRef, ReactNode, RefAttributes } from 'react';
+import type { FocusableProps } from 'react-aria/Focusable';
 import type {
   TooltipProps as AriaTooltipProps,
   TooltipTriggerComponentProps,
 } from 'react-aria-components/Tooltip';
-import type { FocusableProps } from 'react-aria/Focusable';
-import type { FocusableElement } from '@react-types/shared';
 
 /**
  * Props for the TooltipTrigger component.

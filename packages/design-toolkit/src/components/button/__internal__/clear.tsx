@@ -20,9 +20,9 @@ import {
   type ButtonProps as AriaButtonProps,
   Button,
 } from 'react-aria-components/Button';
+import { composeRenderProps } from 'react-aria-components/composeRenderProps';
 import { Icon } from '../../icon';
 import styles from './styles.module.css';
-import { composeRenderProps } from 'react-aria-components/composeRenderProps';
 
 /**
  * ClearButton - Internal-only button for clearing input values

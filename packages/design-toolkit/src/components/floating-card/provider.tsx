@@ -24,12 +24,12 @@ import { Button } from '../button';
 import { Divider } from '../divider';
 import { Icon } from '../icon';
 import { FloatingCardContext, FloatingCardRegistryContext } from './context';
-import type { FloatingCardRegistryValue } from './context';
 import { useCardLayout } from './hooks/use-card-layout';
 import { FloatingCardPanel } from './panel';
 import styles from './styles.module.css';
 import { resolveMaybeFactory } from './utils';
 import type { UniqueId } from '@accelint/core/utility/uuid';
+import type { FloatingCardRegistryValue } from './context';
 import type {
   Bounds,
   Dimensions,

@@ -19,8 +19,8 @@ import {
 } from '@accelint/geo/geodesy';
 import { useContext, useEffect } from 'react';
 import { MapContext } from '@/deckgl/base-map/provider';
-import { toLonLat } from '@/shared/coordinates';
 import { useShiftZoomDisable } from '@/deckgl/shapes/shared/hooks/use-shift-zoom-disable';
+import { toLonLat } from '@/shared/coordinates';
 import { measurementStore } from './store';
 import type { UniqueId } from '@accelint/core';
 import type { RequiresModifier } from './types';
