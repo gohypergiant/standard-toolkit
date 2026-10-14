@@ -293,7 +293,7 @@
     "url": "https://github.com/gohypergiant/standard-toolkit"
   },
   "scripts": {
-    "build": "pnpm generate:icons && pnpm tsdown && pnpm run license && pnpm run format",
+    "build": "pnpm generate:icons && pnpm tsdown && pnpm run license && pnpm run check --linter-enabled=false",
     "check": "pnpm biome check --write .",
     "constellation-tracker": "pnpm exec constellation-tracker",
     "format": "pnpm biome format . --write --verbose",
