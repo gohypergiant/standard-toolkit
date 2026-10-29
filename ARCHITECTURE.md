@@ -213,7 +213,6 @@ Node version for all workflows comes from `.nvmrc`.
 - Known technical debt affecting the architecture:
   - `@accelint/websocket` is an empty stub; `@accelint/stream` covers WebSocket connections today.
   - `stream` and `stream-devtools` have no pages in `apps/docs`.
-  - `.agents/components.md` still describes `styles.ts`/Tailwind Variants; CSS Modules with `@layer` is the ground truth.
   - design-toolkit's `typecheck` script runs against the solution-style `tsconfig.json` and reports false-clean.
   - Storybook/docs hosting is undocumented in-repo (see §3.3, §6).
 
