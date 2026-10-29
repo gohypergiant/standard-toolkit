@@ -276,7 +276,7 @@ import { BaseMap } from '@accelint/map-toolkit/deckgl';
 
 The following keys are silently removed before being applied to MapLibre. They're either derived from BaseMap's camera/view state, required by Deck.gl picking/interaction, already exposed as dedicated BaseMap props, or unsupported by the underlying `react-map-gl` wrapper:
 
-- Camera/view state: `container`, `center`, `bounds`, `fitBoundsOptions`, `zoom`, `pitch`, `bearing`, `projection`, `maxPitch`
+- Camera/view state: `container`, `center`, `bounds`, `fitBoundsOptions`, `zoom`, `pitch`, `bearing`, `maxPitch`
 - Locked gestures (reserved for Deck.gl picking and the camera state machine): `doubleClickZoom`, `dragRotate`, `pitchWithRotate`, `rollEnabled`
 - Locked rendering config: `canvasContextAttributes`
 - Already a dedicated BaseMap prop: `boxZoom` (use the `boxZoom` prop), `style` (use `styleUrl`)
