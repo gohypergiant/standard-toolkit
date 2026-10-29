@@ -13,9 +13,11 @@ context: |
   standard-toolkit (@accelint/developer-toolkit) — Accelint's open-source
   monorepo of shared TypeScript/React packages for defense/C2 applications,
   published publicly to npm under the @accelint scope.
-  Monorepo: pnpm workspaces (apps/*, packages/*, tooling/*) — 1 app
-  (apps/next demo), 22 packages, 8 tooling packages.
-  Build orchestration: Turbo (turbo.json; build dependsOn ^index, ^build).
+  Monorepo: pnpm workspaces (apps/*, packages/*, tooling/*) — 2 apps
+  (apps/next demo + test harness, apps/docs Fumadocs API reference),
+  22 packages, 8 tooling packages.
+  Build orchestration: Turbo (turbo.json; build dependsOn index, ^index,
+  ^build).
   Package manager: pnpm 10.25; develop on Node >=24 (.nvmrc), published
   packages support Node >=22; public npm registry.
 
@@ -27,35 +29,48 @@ context: |
                         isolatedModules; exactOptionalPropertyTypes NOT set.
                         Shared presets in @accelint/typescript-config
                         (tsc/bundler × dom/no-dom × app/library variants)
-  - Frameworks:         React 19; Next.js 16 (apps/next)
-  - Key Libraries:      react-aria-components ~1.17 + react-aria ~3.48
-                        (design-toolkit); deck.gl ~9.2 + maplibre-gl ^5.7 +
-                        @vis.gl/react-maplibre (map-toolkit); Tailwind CSS v4;
+  - Frameworks:         React 19; Next.js 16 (apps/next, apps/docs);
+                        Fumadocs 16 (apps/docs)
+  - Key Libraries:      react-aria-components ~1.17 + react-aria ~3.48 +
+                        react-stately ~3.46 (design-toolkit); deck.gl ~9.2
+                        + maplibre-gl ^5.24 + react-map-gl ^8.1
+                        (map-toolkit — declared as optionalDependencies
+                        together with turf, milsymbol, and the NGA
+                        mgrs/gars/grid libs); Tailwind CSS v4;
                         @tanstack/query-core (stream); @tanstack/devtools +
-                        solid-js (stream-devtools); @tanstack/react-table,
-                        dockview-react, milsymbol, turf
+                        solid-js (stream-devtools); @tanstack/react-table v9,
+                        react-querybuilder, zod v4, media-chrome, dnd-kit
+                        (design-toolkit)
   - Data Layer:         No databases. Geospatial data formats: coordinates
                         (DD/DDM/DMS/MGRS), GeoJSON via turf, tile coords;
                         @accelint/dataset for type-safe geospatial config
   - Testing:            Vitest 4 via shared @accelint/vitest-config
                         (istanbul coverage; clearMocks/mockReset/restoreMocks
                         all true); @testing-library/react + user-event +
-                        jest-dom; fast-check (packages/predicates); Playwright
-                        integration + MemLab memory tests (apps/next)
-  - Linting/Formatting: Biome 2 (shared @accelint/biome-config); ls-lint
-                        (kebab-case files enforced); syncpack (dep
-                        consistency); publint (package.json correctness);
-                        lefthook pre-commit runs format + license + index
+                        jest-dom; fast-check (packages/predicates); in
+                        apps/next: Playwright Test for integration
+                        (*.integration.ts) and MemLab memory tests
+                        (*.memlab.ts), Vitest browser mode via
+                        @vitest/browser-playwright on Chromium for visual
+                        regression (*.visual.tsx)
+  - Linting/Formatting: Biome 2 (shared @accelint/biome-config); Prettier +
+                        prettier-plugin-tailwindcss for CSS in design-toolkit
+                        and design-foundation only; ls-lint (kebab-case
+                        files enforced); syncpack (dep consistency); publint
+                        (package.json correctness); lefthook pre-commit runs
+                        `check` (Biome + license headers + barrel index) and
+                        `format:deps`
   - Build Tools:        tsdown (ESM-only, dts, unbundle, treeshake) for
-                        libraries; next build for apps/next; generated barrel
-                        index.ts via `pnpm indexer` (turbo `index` task)
+                        libraries; next build for apps/next and apps/docs;
+                        generated barrel index.ts via `pnpm index` (turbo
+                        `index` task → scripts/build-index.ts on oxc-parser)
   - CI/CD:              GitHub Actions — ci.yml (build/format/lint/test),
                         release.yml (changesets action → npm), release-beta,
                         publish-experimental (snapshot builds),
                         experimental-age-tracker, visual-regression
-                        (Playwright/Chromium), memlab, coverage-comment,
-                        security (TruffleHog)
-  - Versioning:         Changesets (access public, baseBranch main);
+                        (Vitest browser mode/Chromium), memlab,
+                        coverage-comment, security (TruffleHog + Semgrep)
+  - Versioning:         Changesets CLI v3 (access public, baseBranch main);
                         beta prerelease mode via beta:start/beta:exit;
                         constellation-tracker updates catalog-info.yaml on
                         version (skipped for beta)
@@ -64,9 +79,20 @@ context: |
   - Organisation: package-per-concern monorepo. design-toolkit uses
     component-family directories (components/button/ with index.tsx, variant
     files, context.tsx, styles.module.css, types.ts, colocated tests/stories);
-    map-toolkit is feature/domain-based (deckgl/, camera/, map-mode/,
-    viewport/, cursor-coordinates/); utility packages are
-    function-per-directory (converters/src/hex/index.ts + index.test.ts)
+    map-toolkit is feature/domain-based (camera/, cursor-coordinates/,
+    deckgl/, map-cursor/, map-mode/, maplibre/, viewport/; deckgl/ holds
+    base-map, shapes display/draw/edit, symbol-layer, text-layer,
+    grid-layers gars/mgrs, measurement-layer, saved-viewports, widgets,
+    extensions; shared/ and decorators/ are support dirs); utility
+    packages are function-per-directory (converters/src/hex/index.ts +
+    index.test.ts)
+  - Package layering (runtime/peer deps): foundation packages (core,
+    constants, math, geo, logger, temporal, icons, ntds, worker, stream)
+    have no @accelint dependencies; design-foundation → design-toolkit is
+    the UI stack; map-toolkit depends on foundation, infra, geo, and
+    formatters packages only — design-toolkit/design-foundation are
+    Storybook devDependencies, not runtime peers; stream → stream-devtools
+    is independent of the rest
   - Shared code:  cross-package reuse happens via workspace packages
     (@accelint/core, constants, predicates…), not a shared/ directory
   - Path aliases: @/* → ./src/* in design-toolkit and map-toolkit;
@@ -88,17 +114,19 @@ context: |
     request/authorize/decision/changed event lifecycle (map-mode/store.ts);
     client components start with 'use client' + import 'client-only'
   - Authoritative docs: .agents/outline.md → ecosystem.md, react.md,
-    components.md define component-authoring rules (note: components.md
-    mentions styles.ts/Tailwind Variants — stale; styles.module.css with
-    @layer is ground truth)
+    components.md define component-authoring rules
 
   ## Domain Concepts
   - NTDS symbols: Naval Tactical Data System map glyphs as SVG React
     components keyed by platform × affiliation (SvgAirFriend,
     SvgSurfaceHostile) with affiliation color tokens (NTDS_COLOR_HOSTILE…)
   - Bearing/range: compass direction (degrees from north) and distance to a
-    point — tactical readout. Caution: in packages/geo, "bearing" means the
-    hemisphere letter (N/S/E/W) of a coordinate, not azimuth
+    point — tactical readout. Implemented as map-toolkit's measurement tool
+    (deckgl/measurement-layer: MeasurementLayer + useMeasurement, `measure`
+    map mode) over @accelint/geo/geodesy, formatted by
+    @accelint/formatters/bearing (formatBearing, formatDistance). Caution:
+    in packages/geo, "bearing" means the hemisphere letter (N/S/E/W) of a
+    coordinate, not azimuth
   - Coordinate systems: packages/geo parses/formats lat-lon in Decimal
     Degrees, Degrees-Decimal-Minutes, Degrees-Minutes-Seconds, MGRS, and UTM
     via composable RegExp patterning. Alongside the string formatters, geo
@@ -190,9 +218,10 @@ context: |
   - Density variants: one shared DensityVariant ('cozy' | 'compact' |
     'crammed') in design-toolkit src/lib/types.ts; components alias it under
     their own names (Tree full union; List/Menu/Accordion the cozy|compact
-    subset until align-collection-density-scale). Target padding ladder is
-    one spacing token per step: cozy p-m (12px), compact p-s (8px), crammed
-    p-xxs (2px) + whitespace-nowrap; Table is the first component on it.
+    subset until a follow-up change aligns the collection density scale).
+    Target padding ladder is one spacing token per step: cozy p-m (12px),
+    compact p-s (8px), crammed p-xxs (2px) + whitespace-nowrap; Table is the
+    first component on it.
     Plumbing is prop -> context -> clsx(styles.x, styles[variant]) with
     explicit &.cozy / &.compact / &.crammed blocks, never a data-density
     attribute
@@ -250,8 +279,9 @@ context: |
   - design-foundation vite/webpack/css lib helpers — @deprecated; use
     @accelint/postcss-tailwind-css-modules instead
   - tailwind-variants / cva for component styling — use CSS Modules @layer
-  - Depending on stub modules (formatters bearing/azimuth/altitude,
-    converters azimuth-to-cardinal are TODO placeholders)
+  - Depending on stub modules: formatters azimuth/altitude,
+    converters azimuth-to-cardinal, and the @accelint/websocket package are
+    `// TODO` placeholders (formatters/bearing is implemented — use it)
   - React: mutating props/children, relying on child order instead of keys,
     inline callbacks/objects to memoized children, controlled↔uncontrolled
     switches, syncing props to state, one context for unrelated values
@@ -277,8 +307,6 @@ context: |
   - Missing JSDoc on exported functions/types
   - Documenting HOW instead of WHAT/WHY
   - Vague markers (// TODO: fix this) — state the concrete action
-  - Trusting .agents/components.md on styling (styles.ts/Tailwind Variants
-    references are stale — CSS Modules is ground truth)
 
 # ═══════════════════════════════════════════════════════════════════════════
 # PER-ARTIFACT RULES
