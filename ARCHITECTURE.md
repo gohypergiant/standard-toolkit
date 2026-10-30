@@ -9,42 +9,51 @@ This document serves as a critical, living reference designed to equip agents an
 ```
 standard-toolkit/
 ├── apps/
-│   └── next/                    # Next.js 16 demo/testbed app (React Compiler); hosts Playwright integration + MemLab memory tests
-├── packages/                    # 20 published @accelint/* libraries
+│   ├── docs/                    # Fumadocs + Next.js 16 API reference site (standard-toolkit.accelint.io); .index.json tracks source→doc drift
+│   └── next/                    # Next.js 16 demo/testbed app; hosts Playwright integration, Vitest-browser visual regression, and MemLab memory tests
+├── packages/                    # 22 published @accelint/* libraries (each carries its own AGENTS.md + ARCHITECTURE.md)
 │   ├── design-foundation/       # Design tokens + Tailwind CSS v4 theme (base of the UX ecosystem)
-│   ├── design-toolkit/          # React component library built on react-aria-components, styled with CSS Modules
-│   ├── map-toolkit/             # Geospatial map components: deck.gl layers, MapLibre, camera/viewport/map-mode features
+│   ├── design-toolkit/          # React component library (59 component families) built on react-aria-components, styled with CSS Modules
+│   ├── map-toolkit/             # Geospatial map components: deck.gl layers, MapLibre via react-map-gl, camera/viewport/map-mode/map-cursor features
 │   ├── icons/                   # General-purpose SVG icon library
 │   ├── ntds/                    # NTDS-compliant tactical symbol SVG components + COP spritesheet
-│   ├── geo/                     # Coordinate parsing/formatting (DD, DDM, DMS, MGRS)
+│   ├── geo/                     # Coordinate parsing/formatting (DD, DDM, DMS, MGRS, UTM) + geodesy (bearing/range)
 │   ├── dataset/                 # Type-safe geospatial dataset configuration (lenses + runtime validation)
 │   ├── bus/                     # Typed event bus over BroadcastChannel (app-wide decoupling mechanism)
+│   ├── stream/                  # TanStack-Query-style cache for held-open SSE/WebSocket connections (+ React hooks at /react)
+│   ├── stream-devtools/         # TanStack Devtools "Streams" panel for @accelint/stream (Solid core, React adapter)
 │   ├── core/                    # Function composition and array/object/logic utilities
 │   ├── constants/               # Shared constant values
 │   ├── converters/              # Value conversions (colors, booleans, numbers, coordinates, tile coords)
-│   ├── formatters/              # Formatting functions for readability/consistency
+│   ├── formatters/              # Formatting functions for readability/consistency (incl. bearing)
 │   ├── predicates/              # Predicate functions (property-tested with fast-check)
 │   ├── math/                    # Basic math functions
 │   ├── temporal/                # Date/time parsing, formatting, timers
 │   ├── logger/                  # Logging with callsite tracking
-│   ├── web-worker/              # Web Worker helpers (@accelint/worker)
-│   ├── websocket/               # WebSocket helpers
+│   ├── web-worker/              # Web Worker helpers (published as @accelint/worker)
+│   ├── websocket/               # WebSocket helpers — currently an empty stub ("Under Construction")
 │   ├── hotkey-manager/          # Keyboard shortcut management
 │   └── postcss-tailwind-css-modules/  # PostCSS plugin fixing Tailwind + CSS Modules interop
 ├── tooling/                     # 8 shared config/tooling packages
-│   ├── typescript-config/       # Shared tsconfig presets (tsc/bundler × dom/no-dom × app/library)
+│   ├── typescript-config/       # Shared tsconfig presets (tsc/bundler × dom/no-dom × app/library/library-monorepo)
 │   ├── biome-config/            # Shared Biome lint/format config
-│   ├── vitest-config/           # Shared Vitest config + BroadcastChannel mock
-│   ├── eslint-config/           # Legacy shared ESLint config
-│   ├── prettier-config/         # Legacy shared Prettier config
+│   ├── vitest-config/           # Shared Vitest config (dom/no-dom) + BroadcastChannel mock
+│   ├── prettier-config/         # Shared Prettier config — still used for CSS in design-toolkit and design-foundation
+│   ├── eslint-config/           # Legacy shared ESLint config (no in-repo consumers)
 │   ├── constellation-tracker/   # Keeps catalog-info.yaml current for the Constellation catalog
 │   ├── smeegl/                  # Spreet-based spritesheet/texture packager for deck.gl
 │   └── turbo-filter/            # Turborepo task filtering utility
-├── .agents/                     # AI assistant guides (outline.md → ecosystem.md, react.md, components.md)
-├── .github/workflows/           # CI/CD (see Section 6)
-├── documentation/               # ADRs, getting-started, beta/experimental release guides
+├── .agents/                     # AI assistant guides (outline.md → ecosystem.md, react.md, components.md) + skills/, audit/
+├── .claude/ · .windsurf/ · .pi/ # Editor/agent skill and command definitions (OpenSpec workflows)
+├── .changeset/                  # Changesets entries + config.json
+├── .github/                     # CI/CD workflows (see Section 6), CODEOWNERS, SECURITY.md, PR template, coverage scripts
+├── documentation/               # ADRs, getting-started, workflows, beta/experimental release guides, prompts
 ├── openspec/                    # OpenSpec config + spec-driven change artifacts
-├── scripts/                     # Repo maintenance (barrel indexer, license header injector)
+├── patches/                     # pnpm patches (geodesy)
+├── scripts/                     # Repo maintenance: build-index.ts (barrel indexer, oxc-parser), license.mjs, audit-docblocks.mjs, rac-deps.mjs, validate-docs-index.js
+├── assets/                      # README banner images
+├── catalog-info.yaml            # Constellation (Backstage) catalog entry, regenerated by constellation-tracker on version
+├── turbo.json · lefthook.yml · biome.json · .ls-lint.yml · .syncpackrc   # Build orchestration + quality config
 ├── AGENTS.md                    # Agent behavior rules and verification gate (CLAUDE.md points here)
 ├── README.md                    # Project overview
 └── ARCHITECTURE.md              # This document
@@ -59,97 +68,128 @@ standard-toolkit/
                 │  Consumer applications (Accelint C2 family) │
                 └────────▲───────────────────────▲────────────┘
                          │ npm install           │ browse docs
-              ┌──────────┴──────────┐   ┌────────┴─────────────────┐
-              │ public npm registry │   │ Storybook sites          │
-              │ (@accelint scope)   │   │ design-/map-toolkit      │
-              └──────────▲──────────┘   │ .accelint.io             │
-                         │ changesets    └────────▲────────────────┘
-                         │ release CI             │ PaaS auto-deploy
+              ┌──────────┴──────────┐   ┌────────┴─────────────────────┐
+              │ public npm registry │   │ Storybooks                   │
+              │ (@accelint scope)   │   │  design-toolkit.accelint.io  │
+              └──────────▲──────────┘   │  map-toolkit.accelint.io     │
+                         │ changesets    │ API docs (apps/docs)         │
+                         │ release CI    │  standard-toolkit.accelint.io│
+                         │               └────────▲─────────────────────┘
+                         │                        │ hosting: see §6
 ┌────────────────────────┴────────────────────────┴────────────────┐
 │ standard-toolkit monorepo (pnpm workspaces + Turbo)              │
 │                                                                  │
 │  UI:          design-foundation ──▶ design-toolkit    icons/ntds │
-│               map-toolkit (deck.gl + MapLibre)                   │
-│  Geospatial:  geo · dataset · converters · formatters            │
-│  Infra utils: bus (BroadcastChannel) · worker · websocket ·      │
+│  Geospatial:  map-toolkit (deck.gl + MapLibre) · geo · dataset   │
+│               converters · formatters                            │
+│  Streaming:   stream (SSE/WebSocket cache) ──▶ stream-devtools   │
+│  Infra utils: bus (BroadcastChannel) · worker · websocket(stub)  │
 │               logger · hotkey-manager · temporal                 │
 │  Foundation:  core · constants · math · predicates               │
-│  Tooling:     shared ts/biome/vitest configs · smeegl · trackers │
+│  Tooling:     shared ts/biome/vitest/prettier configs · smeegl   │
 │                                                                  │
-│  apps/next: demo + integration/memory test harness               │
+│  apps/next: demo + integration/visual/memory test harness        │
+│  apps/docs: Fumadocs API reference                               │
 └──────────────────────────────────────────────────────────────────┘
 ```
 
 There is no server, database, or hosted runtime: the product of this repository is the set of published npm packages. Cross-package decoupling at runtime (inside consumer apps) happens via the `@accelint/bus` event bus with namespaced events (`"map-mode:change:request"`).
 
+Package layering (runtime/peer dependencies only): foundation packages have no `@accelint` dependencies; `design-foundation` → `design-toolkit` form the UI stack; `map-toolkit` depends on foundation, infra, and `geo`/`formatters` packages but **not** on `design-toolkit` (that is a Storybook-only devDependency); `stream` → `stream-devtools` is an independent island. map-toolkit declares deck.gl, maplibre-gl, react-map-gl, milsymbol, turf, and the NGA grid libraries as `optionalDependencies`.
+
 ## 3. Core Components
 
 ### 3.1. Published Packages (`packages/*`)
 
-**UI ecosystem** — `design-foundation` (tokens + Tailwind v4 theme) → `design-toolkit` (react-aria-components-based components, CSS Modules styling) and `icons`/`ntds` (SVG icon sets, including NTDS tactical symbols keyed by platform × affiliation).
+**UI ecosystem** — `design-foundation` (tokens + Tailwind v4 theme) → `design-toolkit` (59 react-aria-components-based component families including table, tree, gantt, kanban, carousel, query-builder, audio/video; CSS Modules styling) and `icons`/`ntds` (SVG icon sets, including NTDS tactical symbols keyed by platform × affiliation).
 
-**Geospatial ecosystem** — `map-toolkit` (deck.gl ~9.2 + maplibre-gl ^5.7 layers/hooks, feature-organized: deckgl/, camera/, map-mode/, viewport/, cursor-coordinates/), `geo` (DD/DDM/DMS/MGRS coordinate parsing via composable RegExp), `dataset` (type-safe geospatial config), plus `converters`/`formatters` for per-frame hot-path utilities.
+**Geospatial ecosystem** — `map-toolkit` (deck.gl ~9.2 + maplibre-gl ^5.24 via react-map-gl 8; feature-organized: `deckgl/` [base-map, shapes display/draw/edit, symbol-layer, text-layer, grid-layers gars/mgrs, measurement-layer, saved-viewports, widgets, extensions], `camera/`, `map-mode/`, `map-cursor/`, `maplibre/`, `viewport/`, `cursor-coordinates/`), `geo` (DD/DDM/DMS/MGRS/UTM coordinate parsing via composable RegExp, plus geodesy bearing/range), `dataset` (type-safe geospatial config), plus `converters`/`formatters` for per-frame hot-path utilities.
 
-**Infrastructure utilities** — `bus` (typed BroadcastChannel singleton with `useOn`/`useEmit` React hooks), `worker`, `websocket`, `logger`, `hotkey-manager`, `temporal`.
+**Streaming** — `stream` (TanStack-Query-style cache that shares held-open `EventSource`/`WebSocket` connections by `streamKey`, with reconnect backoff; framework-agnostic core plus `@accelint/stream/react` hooks and provider) and `stream-devtools` (a "Streams" panel for TanStack Devtools showing status, observers, message log, and lifecycle timeline; SolidJS core bundled into the package, React adapter at `/react`).
+
+**Infrastructure utilities** — `bus` (typed BroadcastChannel singleton with `useOn`/`useEmit` React hooks), `worker` (typed Web Worker messaging), `websocket` (empty stub), `logger`, `hotkey-manager`, `temporal`.
 
 **Foundation utilities** — `core`, `constants`, `math`, `predicates`.
 
-**Technologies:** TypeScript strict (ESM-only, `"type": "module"`), React 19, built with tsdown (unbundled, tree-shakeable, dts).
+**Technologies:** TypeScript strict (ESM-only, `"type": "module"`), React 19, built with tsdown (unbundled, tree-shakeable, dts). Some packages prefix a code-generation step (design-foundation `generate`, icons/ntds icon generation).
 
 **Deployment:** Published to the public npm registry under `@accelint` via Changesets.
 
 ### 3.2. Demo / Test Application (`apps/next`)
 
-**Description:** Next.js 16 app (React Compiler enabled) consuming the packages; the harness for Playwright integration tests, visual regression, and MemLab memory-leak tests. Not deployed as a product.
+**Description:** Next.js 16 app (`cacheComponents: true`; React Compiler **disabled**) consuming the packages; the harness for Playwright integration tests (`*.integration.ts`), Vitest browser-mode visual regression (`*.visual.tsx` on Chromium), and MemLab memory-leak tests (`*.memlab.ts`). Not deployed as a product.
 
 ### 3.3. Documentation Sites
 
-**Description:** Storybooks for design-toolkit and map-toolkit, published at design-toolkit.accelint.io and map-toolkit.accelint.io.
+**Storybooks:** design-toolkit and map-toolkit each have a `.storybook/` and `build-storybook` script, published at design-toolkit.accelint.io and map-toolkit.accelint.io.
 
-**Deployment:** PaaS auto-deploy (Vercel/Netlify-style, connected to the repo outside GitHub Actions).
+**API reference (`apps/docs`):** private Fumadocs + Next.js 16 site at standard-toolkit.accelint.io. Content lives in `apps/docs/content/docs/{packages,toolkits,tooling}`; `apps/docs/.index.json` maps package source files to doc pages for drift tracking; `proxy.ts` serves markdown variants of pages for agents. The `stream` and `stream-devtools` packages do not yet have pages here.
+
+**Deployment:** <!-- TODO: fill in — no deploy config, workflow, or hosting reference exists in this repo or the gohypergiant infra repos; likely managed outside this public repo -->
 
 ### 3.4. Shared Tooling (`tooling/*`)
 
-Internal-facing packages standardizing the toolchain across Accelint projects: `typescript-config`, `biome-config`, `vitest-config`, `eslint-config`, `prettier-config`, `constellation-tracker`, `smeegl`, `turbo-filter`.
+Internal-facing packages standardizing the toolchain across Accelint projects: `typescript-config`, `biome-config`, `vitest-config`, `prettier-config` (still consumed for CSS formatting), `eslint-config` (legacy, unused in-repo), `constellation-tracker`, `smeegl`, `turbo-filter`.
 
 ## 4. Data Stores
 
-None. This is a library monorepo with no databases, caches, or queues. Data handled by the libraries is in-memory geospatial data: coordinates (DD/DDM/DMS/MGRS), GeoJSON (via turf), and map tile coordinates. The `bus` package uses the browser `BroadcastChannel` API for cross-context messaging inside consumer apps.
+None. This is a library monorepo with no databases, caches, or queues. Data handled by the libraries is in-memory geospatial data: coordinates (DD/DDM/DMS/MGRS/UTM), GeoJSON (via turf), and map tile coordinates.
+
+Runtime transports wrapped by published packages (all inside consumer apps):
+
+| Package               | Browser API                      | Purpose                                                    |
+| --------------------- | -------------------------------- | ---------------------------------------------------------- |
+| `@accelint/bus`       | `BroadcastChannel`               | Typed event bus; same-instance by default, cross-tab opt-in |
+| `@accelint/stream`    | `EventSource` (SSE), `WebSocket` | Shared, cached long-lived connections with reconnect backoff |
+| `@accelint/worker`    | `Worker` / `postMessage`         | Typed Web Worker messaging                                  |
+| `@accelint/websocket` | —                                | Stub; nothing implemented yet                               |
+
+The only persisted browser state is design-toolkit's audio/video volume and mute preference in `localStorage` (opt-out via `noVolumePref` / `noMutedPref`).
 
 ## 5. External Integrations / APIs
 
-| Service                   | Purpose                                             | Integration Method                                                   |
-| ------------------------- | --------------------------------------------------- | -------------------------------------------------------------------- |
-| npm registry (public)     | Package publishing under `@accelint`                | Changesets release via GitHub Actions                                |
-| Vercel/Netlify-style PaaS | Storybook hosting (design-/map-toolkit.accelint.io) | Repo-connected auto-deploy                                           |
-| Constellation (catalog)   | Service catalog registration                        | `catalog-info.yaml` maintained by `constellation-tracker` on version |
-| TruffleHog                | Secret scanning                                     | `security.yml` GitHub Actions workflow                               |
+| Service                     | Purpose                                                            | Integration Method                                                                      |
+| --------------------------- | ------------------------------------------------------------------ | --------------------------------------------------------------------------------------- |
+| npm registry (public)       | Package publishing under `@accelint` (latest, beta, experimental)  | Changesets release via GitHub Actions, `NPM_TOKEN` secret                               |
+| CARTO basemaps              | Default map styles for map-toolkit (dark-matter, voyager)          | Style JSON URLs (`tiles.basemaps.cartocdn.com`) fetched by consumer browsers at runtime |
+| Constellation (catalog)     | Service catalog registration                                       | `catalog-info.yaml` maintained by `constellation-tracker` on version                    |
+| TruffleHog                  | Secret scanning                                                    | `security.yml` (`--only-verified`); optional docker pre-commit hook                     |
+| Semgrep OSS                 | Static analysis (SAST)                                             | `security.yml`, `semgrep scan --config auto`                                            |
+| detect-secrets (Yelp)       | Local secret scanning                                              | `.pre-commit-config.yaml` + `.secrets.baseline`                                         |
+| GitHub API                  | PR coverage comments                                               | In-house `.github/scripts/*.mjs` via octokit (`coverage-comment.yml`)                   |
+| Storybook / docs hosting    | Serves the three accelint.io sites                                 | <!-- TODO: fill in — not discoverable from this repo -->                                |
 
 ## 6. Deployment & Infrastructure
 
-**Cloud Provider:** None owned by this repo — deliverables are npm packages; Storybooks on a repo-connected PaaS.
+**Cloud Provider:** None owned by this repo — deliverables are npm packages. Hosting for the Storybooks and docs site: <!-- TODO: fill in -->
 
-**Key Services Used:** GitHub Actions, public npm registry, PaaS for Storybook hosting
+**Key Services Used:** GitHub Actions, public npm registry
 
 **CI/CD Pipeline:** GitHub Actions (`.github/workflows/`):
 
-- `ci.yml` — build, format, lint, test on PRs
-- `release.yml` — Changesets action → npm publish (baseBranch `main`)
-- `release-beta.yml` / `publish-experimental.yml` / `experimental-age-tracker.yml` — beta and experimental release channels
-- `visual-regression.yml` / `visual-regression-update.yml` — Playwright/Chromium visual tests
-- `memlab.yml` — memory-leak detection against apps/next
+- `ci.yml` — on PRs and pushes to `main`: pre-build, build, format:check, lint, lint:fs (ls-lint), lint:deps (syncpack), lint:rac, lint:package (publint), typecheck:scripts, test
+- `release.yml` — Changesets action v2 → `changeset:version` (also regenerates `catalog-info.yaml`) → npm publish (baseBranch `main`)
+- `release-beta.yml` — on push to `beta/**`; publishes with `--tag beta`, skips constellation-tracker
+- `publish-experimental.yml` — manual snapshot publish under a feature tag (guards for missing changesets, required by Changesets CLI v3)
+- `experimental-age-tracker.yml` — daily cron reporting stale experimental releases
+- `visual-regression.yml` / `visual-regression-update.yml` — Vitest browser-mode visual tests on Chromium; update workflow is manual
+- `memlab.yml` — memory-leak detection against apps/next (paths: design-toolkit, design-foundation, apps/next)
 - `coverage-comment.yml` — PR coverage reporting
-- `security.yml` — TruffleHog secret scanning
+- `security.yml` — TruffleHog secret scanning + Semgrep OSS
 
-**Build orchestration:** Turbo (`turbo.json`); `build` depends on `^index` (generated barrels) and `^build`. Pre-commit via lefthook runs format + license headers + index.
+Node version for all workflows comes from `.nvmrc`.
 
-**Monitoring & Logging:** Not applicable (no hosted runtime).
+**Build orchestration:** Turbo (`turbo.json`); `build` depends on `index`, `^index` (generated barrels), and `^build`; `check`/`format`/`format:check` depend on `license`. Git hooks via lefthook: pre-commit runs `pnpm run check && pnpm run format:deps` (Biome check, license headers, barrel index, syncpack format; fixes are auto-staged); pre-push runs a non-blocking JSDoc audit (`audit:docblocks || true`).
+
+**Monitoring & Logging:** Not applicable (no hosted runtime). No telemetry SDKs in any package.
 
 ## 7. Security Considerations
 
 **Authentication / Authorization:** Not applicable — no hosted services or user auth in this repo.
 
-**Supply-chain / repo security:** TruffleHog secret scanning in CI; syncpack dependency-consistency linting; publint package.json validation; Apache-2.0 license headers enforced on every source file (turbo `license` task); packages published with public access under the `@accelint` scope.
+**Supply-chain / repo security:** TruffleHog (`--only-verified`, full history) and Semgrep OSS SAST in CI on every PR and push to `main`; optional local pre-commit framework (`.pre-commit-config.yaml`) with detect-secrets, TruffleHog, and YAML checks (installation is per-developer, not enforced); syncpack dependency-consistency linting; publint package.json validation; Apache-2.0 license headers enforced on every source file (turbo `license` task); packages published with public access under the `@accelint` scope. npm publishing authenticates with a long-lived `NPM_TOKEN` secret; no npm provenance attestation is configured. No Dependabot/Renovate config in the repo (Dependabot may be enabled in GitHub settings; `security.yml` skips Semgrep for `dependabot[bot]`).
+
+**Vulnerability reporting:** Follow [.github/SECURITY.md](./.github/SECURITY.md) — email infosec@hypergiant.com, never public issues.
 
 ## 8. Development & Testing Environment
 
@@ -157,17 +197,24 @@ None. This is a library monorepo with no databases, caches, or queues. Data hand
 
 **Local Setup:** Node ≥24 for development (`.nvmrc`; published packages support ≥22) + pnpm 10.25 (see `packageManager`); `pnpm install`, then `pnpm build`. See [CONTRIBUTING.md](./CONTRIBUTING.md) and [documentation/getting-started.md](./documentation/getting-started.md).
 
-**Verification Gate (run after every change):** `pnpm run build` → `pnpm run test` → `pnpm run lint` → `pnpm run format`.
+**Verification Gate (run after every change):** `pnpm run build` → `pnpm tsc --noEmit -p tsconfig.dist.json` (in design-toolkit and map-toolkit) → `pnpm run test` → `pnpm run lint` → `pnpm run format`. CI additionally runs `pre-build`, `format:check`, `lint:fs`, `lint:deps`, `lint:rac`, `lint:package`, and `typecheck:scripts`.
 
-**Testing Frameworks:** Vitest 4 (shared `@accelint/vitest-config`, istanbul coverage), @testing-library/react + user-event + jest-dom, fast-check (property-based, predicates), Playwright (integration + visual regression), MemLab (memory), vitest bench.
+**Testing Frameworks:** Vitest 4 (shared `@accelint/vitest-config` dom/no-dom, istanbul coverage, BroadcastChannel mock), @testing-library/react + user-event + jest-dom, fast-check (property-based, predicates), Playwright Test (apps/next integration tests and MemLab driver), Vitest browser mode via `@vitest/browser-playwright` on Chromium (visual regression, `*.visual.tsx`), MemLab (memory), vitest bench (`*.bench.ts`, predicates).
 
-**Code Quality Tools:** Biome 2 (shared config), ls-lint (kebab-case filenames), syncpack, publint, lefthook pre-commit hooks.
+**Code Quality Tools:** Biome 2 (shared config) for TS/JS; Prettier + `prettier-plugin-tailwindcss` for CSS in design-toolkit and design-foundation only; ls-lint (kebab-case filenames); syncpack; publint; lefthook git hooks; `scripts/audit-docblocks.mjs` JSDoc audit (pre-push, non-blocking).
 
-**Type-checking caveat:** `design-toolkit` and `map-toolkit` use solution-style tsconfigs — run `tsc` against `tsconfig.dist.json`/`tsconfig.dev.json`, never `tsconfig.json`; `pnpm run build` is authoritative.
+**Generated code:** package root `src/index.ts` barrels are generated by `scripts/build-index.ts` (oxc-parser) via `pnpm index`; never hand-edit them.
+
+**Type-checking caveat:** `pnpm run build` uses tsdown, which strips types and exits 0 on type errors, so it is **not** a type gate for `design-toolkit` and `map-toolkit`. Their `tsconfig.json` is solution-style (`files: []` + references) and reports false-clean — run `pnpm tsc --noEmit -p tsconfig.dist.json` (shipped source) or `tsconfig.dev.json` (tests/Storybook). Other packages have a single `tsconfig.json` and `pnpm tsc --noEmit` works as expected.
 
 ## 9. Future Considerations / Roadmap
 
-- <!-- TODO: fill in planned architectural changes or known technical debt -->
+- <!-- TODO: fill in planned architectural changes -->
+- Known technical debt affecting the architecture:
+  - `@accelint/websocket` is an empty stub; `@accelint/stream` covers WebSocket connections today.
+  - `stream` and `stream-devtools` have no pages in `apps/docs`.
+  - design-toolkit's `typecheck` script runs against the solution-style `tsconfig.json` and reports false-clean.
+  - Storybook/docs hosting is undocumented in-repo (see §3.3, §6).
 
 ## 10. Project Identification
 
@@ -175,9 +222,9 @@ None. This is a library monorepo with no databases, caches, or queues. Data hand
 
 **Repository URL:** https://github.com/gohypergiant/standard-toolkit
 
-**Primary Contact / Team:** Accelint / Hypergiant
+**Primary Contact / Team:** Accelint / Hypergiant — see [.github/CODEOWNERS](./.github/CODEOWNERS) for current reviewers and `catalog-info.yaml` (`owner: group:default/hypergiant`) for the catalog owner
 
-**Date of Last Update:** 2026-09-09
+**Date of Last Update:** 2026-10-29
 
 ## 11. Glossary / Acronyms
 
@@ -189,7 +236,10 @@ None. This is a library monorepo with no databases, caches, or queues. Data hand
 | C2                          | Command and Control — the class of defense applications these packages serve                                                    |
 | RAC                         | react-aria-components — the accessibility-first primitive library design-toolkit wraps                                          |
 | Bearing (in `packages/geo`) | The hemisphere letter (N/S/E/W) of a coordinate — **not** azimuth; elsewhere "bearing/range" means compass direction + distance |
-| DD / DDM / DMS / MGRS       | Coordinate formats: Decimal Degrees, Degrees-Decimal-Minutes, Degrees-Minutes-Seconds, Military Grid Reference System           |
+| DD / DDM / DMS / MGRS / UTM | Coordinate formats: Decimal Degrees, Degrees-Decimal-Minutes, Degrees-Minutes-Seconds, Military Grid Reference System, Universal Transverse Mercator |
 | Constellation               | Accelint's service catalog (Backstage-style), fed by `catalog-info.yaml`                                                        |
 | Bus                         | `@accelint/bus` — typed BroadcastChannel event bus with `namespace:action` events                                               |
+| Stream / stream key         | `@accelint/stream` — a cached SSE or WebSocket connection; consumers sharing a `streamKey` share one connection                 |
+| SSE                         | Server-Sent Events — one-way server→browser stream over `EventSource`, one of the two transports `@accelint/stream` wraps       |
+| VRT                         | Visual Regression Testing — Vitest browser-mode screenshot tests (`*.visual.tsx`) in apps/next                                  |
 | Barrel index                | Generated `src/index.ts` export files (`pnpm index`) — never hand-edited                                                        |

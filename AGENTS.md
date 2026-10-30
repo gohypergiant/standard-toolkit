@@ -44,38 +44,38 @@
 - Use applicable repository skills before falling back to training data. This is mandatory when a matching skill exists.
 - When documenting code, check `apps/docs/.index.json` before creating or moving docs, and do not create parallel documentation trees. Use the `accelint-api-docs` skill when API docs are involved.
 - Use Context7 for library/API documentation when available. If it is unavailable, use current docs or ask rather than assuming your training data is current.
-- For any non-trivial change, start with `/opsx:propose` or `accelint-qrspi-propose` when available. Treat “non-trivial” as multi-file work, new public API, new component/layer, or work that needs scoping before implementation. Trivial fixes and docs can skip this.
-- For bug fixes, reproduce the issue with a failing test before touching production code. If the root cause is not obvious, investigate first with `/opsx:explore` when available.
+- For any non-trivial change, start with `accelint-qrspi-propose` (it drives the underlying `openspec-propose` skill). Treat “non-trivial” as multi-file work, new public API, new component/layer, or work that needs scoping before implementation. Trivial fixes and docs can skip this.
+- For bug fixes, reproduce the issue with a failing test before touching production code. If the root cause is not obvious, investigate first with `openspec-explore`.
 - If the requested change is large, risky, or unclear, state your approach before implementing and keep scope tight unless broader changes are explicitly approved.
 
 ### While making changes
 
 - Prefer the simplest approach that fits existing patterns. Avoid over-engineering and avoid changing unrelated code.
 - Use root or package `package.json` scripts through `pnpm` instead of ad hoc commands when a repo entry point already exists.
-- Do not hand-edit generated root `src/index.ts` barrels. Run `pnpm index` instead.
+- Do not hand-edit generated root `src/index.ts` barrels. Run `pnpm indexer` at the repo root (or `pnpm index` inside a package) instead.
 - Use subagents for focused research, exploration, and parallel analysis only when they materially help. Do not duplicate work across subagents.
-- When implementing an approved QRSPI/OpenSpec change, use `/opsx:apply` or `accelint-qrspi-apply` when available.
+- When implementing an approved QRSPI/OpenSpec change, use `accelint-qrspi-apply` (it drives `openspec-apply-change`).
 - Preserve existing accessibility semantics, public entrypoints, and performance-sensitive behavior unless the change explicitly intends to modify them.
 
 ### Before completing the task
 
 - Run the verification gate in this order and do not declare work complete until it passes: `pnpm run build`, `pnpm tsc --noEmit -p tsconfig.dist.json` (in `packages/design-toolkit` and `packages/map-toolkit`), `pnpm run test`, `pnpm run lint`, `pnpm run format`.
 - Remember that CI also checks `pnpm run pre-build`, `pnpm run format:check`, `pnpm run lint:fs`, `pnpm run lint:deps`, `pnpm run lint:rac`, `pnpm run lint:package`, and `pnpm run typecheck:scripts`. Run or account for those when your change touches the relevant areas or when you are preparing work for review.
-- `pnpm run build` does NOT typecheck `packages/design-toolkit` or `packages/map-toolkit`: it runs tsdown (esbuild-based), which strips types and exits `0` even with real type errors, so a green build is not a green typecheck. Their `tsconfig.json` is also solution-style (`files: []` + project references) and reports false-clean. The authoritative type gate there is `pnpm tsc --noEmit -p tsconfig.dist.json` (source that ships); `tsconfig.dev.json` covers tests and Storybook. Other packages have a single `tsconfig.json` and `pnpm tsc --noEmit` works as expected.
+- `pnpm run build` is not a type gate for `packages/design-toolkit` or `packages/map-toolkit`: tsdown strips types and exits `0` on type errors, and their solution-style `tsconfig.json` reports false-clean. The type gate there is `pnpm tsc --noEmit -p tsconfig.dist.json` (shipped source); use `tsconfig.dev.json` for tests and Storybook. Other packages: `pnpm tsc --noEmit`. Background is in `ARCHITECTURE.md` §8.
 - Test-file type errors are low-priority. Mismatches under `tsconfig.dev.json`, especially in `*.test.ts(x)`, often come from awkward third-party generics (e.g. deck.gl accessors) while the test passes at runtime and never ships. Fix one when it is your own regression or a quick win; otherwise note it and move on. Do not block completion on it.
 - If source code changed, create or mention a changeset. Docs-only, tests-only, Storybook-only, and comment-only changes do not need one.
 - Confirm the change stayed within scope, no secrets or credentials were introduced, and any generated files were intentionally updated.
 - Report verification evidence, not just the conclusion. Include remaining gaps if something could not be run.
-- When archiving an approved QRSPI/OpenSpec change, use `/opsx:archive` or `accelint-qrspi-archive` when available.
+- When archiving an approved QRSPI/OpenSpec change, use `accelint-qrspi-archive` (it drives `openspec-archive-change` and keeps the spec indices current).
 
 ## Repository-specific commands and entry points
 
-- **Build / setup:** Use `pnpm install` for setup. Use `pnpm run pre-build` when you need CI parity for generated executables. Use `pnpm run build` as the authoritative build and type-check entry point.
+- **Build / setup:** Use `pnpm install` for setup. Use `pnpm run pre-build` when you need CI parity for generated executables. Use `pnpm run build` as the build entry point; it is not a type gate for design-toolkit or map-toolkit (see **Before completing the task**).
 - **Test:** Use `pnpm run test` for the repo-wide test suite. For faster local feedback, use package-scoped commands such as `pnpm --filter=@accelint/<package> test -- --watch` when appropriate.
 - **Lint / format:** Use `pnpm run lint`, `pnpm run format`, and `pnpm run format:check`. Use `pnpm run lint:fs`, `pnpm run lint:deps`, `pnpm run lint:rac`, and `pnpm run lint:package` when working in areas those checks cover.
-- **Task runner / scripts:** Use root `package.json` scripts through `pnpm`. For spec-driven work, use `/opsx:propose`, `/opsx:apply`, and `/opsx:archive` or the corresponding QRSPI skills when available. Use `pnpm changeset` for versioning notes when source changed.
+- **Task runner / scripts:** Use root `package.json` scripts through `pnpm`. For spec-driven work, use `accelint-qrspi-propose`, `accelint-qrspi-apply`, and `accelint-qrspi-archive`; use `openspec-explore` for investigation, and fall back to the other `openspec-*` skills only when the QRSPI wrappers are unavailable. Use `pnpm changeset` for versioning notes when source changed.
 - **Path or location conventions:** Read the nearest package-level `AGENTS.md` before editing a workspace package. Check `apps/docs/.index.json` before adding docs. Treat root `src/index.ts` barrels as generated output.
-- **Tool preferences that are easy to get wrong:** Use `pnpm` only; never `npm` or `yarn`. `pnpm run build` is the authoritative type gate. `pnpm run format` and `pnpm run format:check` can regenerate license headers and barrel indexes through Turbo. `pnpm run lint:package` uses `publint`, while dependency consistency is checked by `pnpm run lint:deps`. For CSS-heavy packages, use the repo/package scripts rather than running Prettier directly.
+- **Tool preferences that are easy to get wrong:** Use `pnpm` only; never `npm` or `yarn`. `pnpm run build` does not typecheck design-toolkit or map-toolkit; run `pnpm tsc --noEmit -p tsconfig.dist.json` there. `pnpm run format` and `pnpm run format:check` can regenerate license headers and barrel indexes through Turbo. `pnpm run lint:package` uses `publint`, while dependency consistency is checked by `pnpm run lint:deps`. For CSS-heavy packages, use the repo/package scripts rather than running Prettier directly.
 
 ## Decision Heuristics
 
@@ -148,7 +148,7 @@ If performance work is requested but no source identifies the affected path, met
 
 A change is not done until it meets the repository’s quality bar and you report the required evidence.
 
-- **Required checks to run:** Run `pnpm run build`, `pnpm run test`, `pnpm run lint`, and `pnpm run format` after every code change. Also account for `pnpm run format:check`, `pnpm run lint:fs`, `pnpm run lint:deps`, `pnpm run lint:rac`, and `pnpm run lint:package` when your change affects those surfaces or when you are preparing work for review.
+- **Required checks to run:** Run the verification gate listed under **Before completing the task** (build, `tsc` on the two solution-style packages, test, lint, format) after every code change. Also account for `pnpm run format:check`, `pnpm run lint:fs`, `pnpm run lint:deps`, `pnpm run lint:rac`, `pnpm run lint:package`, and `pnpm run typecheck:scripts` when your change affects those surfaces or when you are preparing work for review.
 - **Required evidence to report:** List the commands you ran, what passed or failed, whether build or format regenerated tracked files, whether a changeset was added or intentionally skipped, and any remaining gaps you could not verify. For UI changes, also mention Storybook, visual-regression, docs, or screenshot-related follow-up when relevant.
 - **Review or handoff expectations:** Non-trivial work should go through proposal/design review before implementation. For PR-ready work, follow `.github/PULL_REQUEST_TEMPLATE.md`: link the issue, include test instructions, add relevant unit tests/Storybook/visual regression/docs updates, call out breaking changes with migration guidance, apply the `ai` or `human` label, and include a changeset when source changed. If asked to draft a commit message, follow Conventional Commits using the types and formatting in `.github/.gitmessage`.
 

@@ -45,7 +45,7 @@ button/
   link.tsx            ← LinkButton
   toggle.tsx          ← ToggleButton
   context.tsx         ← Contexts
-  styles.ts           ← Shared styles
+  styles.module.css   ← Shared styles (CSS Modules)
   types.ts            ← Shared types
 
 menu/
@@ -131,7 +131,7 @@ export function MenuItem({ children, ...rest }: MenuItemProps) {
 1. Create directory: `components/avatar/`
 2. Create main: `avatar/index.tsx` → `export function Avatar()`
 3. Create types: `avatar/types.ts`
-4. Create styles: `avatar/styles.ts` (Tailwind Variants)
+4. Create styles: `avatar/styles.module.css` with `@reference '@accelint/design-foundation/styles'` and `@layer components.l1`; apply classes with `clsx(styles.avatar, styles[variant])`
 5. Export: Add to `src/index.ts`: `export { Avatar } from './components/avatar'`
 6. Create tests: `avatar/avatar.test.tsx`
 7. Create stories: `avatar/avatar.stories.tsx`
@@ -141,7 +141,7 @@ export function MenuItem({ children, ...rest }: MenuItemProps) {
 2. Function name: `export function LinkButton()`
 3. Extend props: `interface LinkButtonProps extends AriaLinkProps`
 4. Add context: Include in `button/context.tsx`
-5. Reuse styles: Import from `button/styles.ts`
+5. Reuse styles: `import styles from './styles.module.css'` and compose with `clsx`
 6. Export: Add to `src/index.ts`: `export { LinkButton } from './components/button/link'`
 
 #### Sub-component (e.g., MenuItem)
