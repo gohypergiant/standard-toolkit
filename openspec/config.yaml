@@ -318,39 +318,57 @@ rules:
     - State the requirement or ticket driving this change
     - Define scope boundaries — explicitly list what is OUT of scope
     - Keep under 100 lines (tight and focused)
-    - Flag any breaking change to a published package's public API and its semver implication
-    - List every workspace package touched and known downstream dependents within the monorepo
-    - State the expected changeset bump (major/minor/patch) or why no changeset is needed (docs/tests/storybook-only changes need none)
+    - Flag any breaking change to a published package's public API and its
+      semver implication
+    - List every workspace package touched and known downstream dependents
+      within the monorepo
+    - State the expected changeset bump (major/minor/patch) or why no changeset
+      is needed (docs/tests/storybook-only changes need none)
 
   design:
     # QRSPI: The "brain surgery" checkpoint — reviewed before any code is written.
-    - 'Start with "Current State": what the code does today, key files, entry points, relevant data flows'
+    - 'Start with "Current State": what the code does today, key files, entry
+      points, relevant data flows'
     - '"Desired End State": what changes after this work, what stays the same'
-    - '"Patterns to Follow": ONLY if specific files/functions to reference exist for this change''s domain'
+    - '"Patterns to Follow": ONLY if specific files/functions to reference exist
+      for this change''s domain'
     - '"Patterns to Avoid": ONLY if specific anti-patterns apply to this change'
-    - '"Open Questions": genuine uncertainties requiring human input. If none, state explicitly "No unresolved questions."'
-    - '"Resolved Decisions": numbered (Decision 1, Decision 2…) with Choice, Rationale, Alternatives Considered'
+    - '"Open Questions": genuine uncertainties requiring human input. If none,
+      state explicitly "No unresolved questions."'
+    - '"Resolved Decisions": numbered (Decision 1, Decision 2…) with Choice,
+      Rationale, Alternatives Considered'
     - Use ASCII diagrams for data flows, state machines, architecture
-    - Designs touching design-toolkit must address accessibility (react-aria patterns, keyboard, screen reader)
-    - Designs touching map-toolkit hot paths must include a performance implications section with frame-budget analysis
-    - Component designs must state which Storybook stories will demonstrate the change
+    - Designs touching design-toolkit must address accessibility (react-aria
+      patterns, keyboard, screen reader)
+    - Designs touching map-toolkit hot paths must include a performance
+      implications section with frame-budget analysis
+    - Component designs must state which Storybook stories will demonstrate the
+      change
     - Keep under 250 lines total
 
   tasks:
     # QRSPI: Vertical slicing for early failure detection.
     - Order as vertical slices — each task delivers a testable end-to-end path
-    - Do NOT group by architectural layer unless explicitly justified in the task description
-    - 'Each task MUST include an explicit "Test:" line describing what to verify before proceeding to the next task'
+    - Do NOT group by architectural layer unless explicitly justified in the
+      task description
+    - 'Each task MUST include an explicit "Test:" line describing what to verify
+      before proceeding to the next task'
     - Prefer 3–5 major slices; more than 5 suggests scope is too large
     - Max 2 hours per task; break larger work into subtasks
-    - 'Tag each task with the affected package as [PKG:name], e.g. [PKG:map-toolkit]'
+    - 'Tag each task with the affected package as [PKG:name], e.g.
+      [PKG:map-toolkit]'
     - Call out inter-task dependencies explicitly
-    - Final task of every change must run the verification gate (pnpm build, test, lint, format) and create the changeset if source changed
+    - Final task of every change must run the verification gate (pnpm build,
+      test, lint, format) and create the changeset if source changed
 
   specs:
     - Use Given/When/Then for behaviour specifications
-    - Include concrete example data relevant to the domain (coordinates, bearings, NTDS affiliations, bus event payloads)
-    - Document edge cases explicitly (invalid coordinates, zero values, antimeridian/pole crossings where relevant)
+    - Include concrete example data relevant to the domain (coordinates,
+      bearings, NTDS affiliations, bus event payloads)
+    - Document edge cases explicitly (invalid coordinates, zero values,
+      antimeridian/pole crossings where relevant)
+githubCopilot:
+  cloudAgent: true
 
 # ═══════════════════════════════════════════════════════════════════════════
 # RELATED DOCUMENTATION
