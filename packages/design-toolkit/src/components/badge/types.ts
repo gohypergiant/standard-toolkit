@@ -10,8 +10,10 @@
  * governing permissions and limitations under the License.
  */
 
-import type { Axis } from '@react-types/overlays';
 import type { ComponentPropsWithRef } from 'react';
+
+/** Side of the anchor a badge can be placed on. */
+type Axis = 'top' | 'bottom' | 'left' | 'right';
 
 /**
  * Props for the Badge component.

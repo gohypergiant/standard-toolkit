@@ -40,7 +40,6 @@ export const LOCKED_MAP_LIBRE_OPTION_KEYS = [
   'zoom',
   'pitch',
   'bearing',
-  'projection',
   'maxPitch',
   'canvasContextAttributes',
   'doubleClickZoom',

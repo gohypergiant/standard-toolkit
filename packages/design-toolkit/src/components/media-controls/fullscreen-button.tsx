@@ -25,7 +25,8 @@ import { useMediaControlsDisabled } from './context';
 import type { MediaState } from 'media-chrome/react/media-store';
 import type { FullscreenButtonProps } from './types';
 
-const selectIsFullscreen = (state: MediaState) => state.mediaIsFullscreen;
+const selectIsFullscreen = (state: Partial<MediaState>) =>
+  state.mediaIsFullscreen;
 
 /**
  * A media control button for entering/exiting fullscreen.

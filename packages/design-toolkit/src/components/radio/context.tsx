@@ -29,5 +29,9 @@ export const RadioGroupContext =
  *
  * Provides context for Radio component to share configuration from RadioGroup
  */
+/**
+ * Props are partial because `RadioGroup` provides defaults (e.g. `labelPosition`)
+ * without a `value`, which `RadioProps` otherwise requires.
+ */
 export const RadioContext =
-  createContext<ContextValue<RadioProps, HTMLLabelElement>>(null);
+  createContext<ContextValue<Partial<RadioProps>, HTMLLabelElement>>(null);
