@@ -39,8 +39,8 @@ import type { VideoProps } from './types';
 
 const logger = createLoggerDomain('[Video]');
 
-const selectMediaLoading = (state: MediaState) => state.mediaLoading;
-const selectMediaDuration = (state: MediaState) => state.mediaDuration;
+const selectMediaLoading = (state: Partial<MediaState>) => state.mediaLoading;
+const selectMediaDuration = (state: Partial<MediaState>) => state.mediaDuration;
 
 /**
  * Internal component that renders within MediaProvider context.

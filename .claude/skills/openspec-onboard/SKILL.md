@@ -39,7 +39,7 @@ openspec --version 2>&1 || echo "CLI_NOT_INSTALLED"
 ```
 
 **If CLI not installed:**
-> OpenSpec CLI is not installed. Install it first, then come back to `/opsx:onboard`.
+> OpenSpec CLI is not installed. Install it first, then come back to `/openspec-onboard`.
 
 Stop here if not installed.
 
@@ -166,7 +166,7 @@ Spend 1-2 minutes investigating the relevant code:
 │   [Optional: ASCII diagram if helpful]  │
 └─────────────────────────────────────────┘
 
-Explore mode (`/opsx:explore`) is for this kind of thinking—investigating before implementing. You can use it anytime you need to think through a problem.
+Explore mode (`/openspec-explore`) is for this kind of thinking—investigating before implementing. You can use it anytime you need to think through a problem.
 
 Now let's create a change to hold our work.
 ```
@@ -514,7 +514,7 @@ This same rhythm works for any size change—a small fix or a major feature.
 
 ## What's Next?
 
-Try `/opsx:propose` on something you actually want to build. You've got the rhythm now!
+Try `/openspec-propose` on something you actually want to build. You've got the rhythm now!
 ```
 
 ---
