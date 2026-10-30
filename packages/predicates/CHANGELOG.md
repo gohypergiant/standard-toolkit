@@ -1,5 +1,9 @@
 # @accelint/predicates
 
+## 0.5.3
+
+No changes in this release.
+
 ## 0.5.2
 
 ## 0.5.1
