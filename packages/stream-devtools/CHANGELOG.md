@@ -1,5 +1,13 @@
 # @accelint/stream-devtools
 
+## 2.0.1
+
+### Patch Changes
+
+- ab93ee0: Rebuilt with the Node 24 toolchain and Biome 2.5. No functional changes. Supported Node range unchanged.
+- Updated dependencies [ab93ee0]
+  - @accelint/stream@0.3.1
+
 ## 2.0.0
 
 ### Major Changes
