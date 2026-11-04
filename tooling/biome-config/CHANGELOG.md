@@ -1,5 +1,11 @@
 # @accelint/biome-config
 
+## 1.1.1
+
+### Patch Changes
+
+- ab93ee0: Rebuilt with the Node 24 toolchain and Biome 2.5. No functional changes. Supported Node range unchanged.
+
 ## 1.1.0
 
 ### Minor Changes

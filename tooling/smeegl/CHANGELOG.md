@@ -1,5 +1,11 @@
 # @accelint/smeegl
 
+## 0.3.6
+
+### Patch Changes
+
+- ab93ee0: Rebuilt with the Node 24 toolchain and Biome 2.5. No functional changes. Supported Node range unchanged.
+
 ## 0.3.5
 
 ### Patch Changes

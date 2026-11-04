@@ -1,5 +1,15 @@
 # @accelint/icons
 
+## 3.1.0
+
+### Minor Changes
+
+- 285fdb6: Adds land and defense platform icons: aegis-ashore, artillery, comms, convoy, humvee, jltv, m198, m777, mobile-radar, mrap, patriot, sam-launcher, shorad, sm2, sm3, sm6, tbm-launcher, thaad.
+
+### Patch Changes
+
+- ab93ee0: Rebuilt with the Node 24 toolchain and Biome 2.5. No functional changes. Supported Node range unchanged.
+
 ## 3.0.0
 
 ### Major Changes
