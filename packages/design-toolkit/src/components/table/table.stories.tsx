@@ -219,6 +219,7 @@ const meta = {
     enableRowActions: true,
     fullWidth: false,
     variant: 'cozy',
+    hiddenKebabMenuIds: ['firstName', 'lastName', 'age'],
   },
   argTypes: {
     variant: {
@@ -230,6 +231,9 @@ const meta = {
         type: 'radio',
         options: ['left', 'right'],
       },
+    },
+    hiddenKebabMenuIds: {
+      control: 'object',
     },
   },
   tags: ['autodocs'],
@@ -487,6 +491,10 @@ export const InitialRowSelection: Story = {
 };
 
 export const ControlledRowSelection: Story = {
+  args: {
+    hiddenKebabMenuIds: ['firstName', 'lastName'],
+  },
+
   parameters: {
     docs: {
       description: {
@@ -495,6 +503,7 @@ export const ControlledRowSelection: Story = {
       },
     },
   },
+
   render: (args) => {
     const [selection, setSelection] = useState<RowSelectionState>({
       tanner: true,

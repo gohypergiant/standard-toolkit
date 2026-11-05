@@ -1440,3 +1440,60 @@ describe('Table column order', () => {
     },
   );
 });
+
+describe('Table configOptions', () => {
+  const people: Person[] = [
+    { id: 'a', name: 'alpha' },
+    { id: 'b', name: 'bravo' },
+  ];
+
+  it('should size a column without a size from defaultColumn', () => {
+    render(
+      <Table
+        columns={personColumns}
+        data={people}
+        configOptions={{ defaultColumn: { size: 200 } }}
+      />,
+    );
+
+    expect(screen.getByRole('columnheader', { name: /Name/ })).toHaveStyle({
+      width: '200px',
+    });
+    expect(screen.getByText('alpha').closest('td')).toHaveStyle({
+      width: '200px',
+    });
+  });
+
+  it('should seed an unowned slice from initialState', () => {
+    render(
+      <Table
+        columns={personColumns}
+        data={people}
+        configOptions={{ initialState: { columnSizing: { name: 240 } } }}
+      />,
+    );
+
+    expect(screen.getByRole('columnheader', { name: /Name/ })).toHaveStyle({
+      width: '240px',
+    });
+  });
+
+  it('should let configOptions override the default getRowId', async () => {
+    const onRowSelectionChange = vi.fn();
+    const user = userEvent.setup();
+
+    render(
+      <Table
+        columns={personColumns}
+        data={people}
+        showCheckbox
+        onRowSelectionChange={onRowSelectionChange}
+        configOptions={{ getRowId: (row) => `person-${row.id}` }}
+      />,
+    );
+
+    await user.click(screen.getAllByRole('checkbox')[1] as HTMLElement);
+
+    expect(onRowSelectionChange).toHaveBeenCalledWith({ 'person-a': true });
+  });
+});
