@@ -161,7 +161,7 @@ function HeaderCellMenu<T extends RowData>({
  * @param props.children - Custom children content.
  * @param props.className - CSS class for the th element.
  * @param props.header - TanStack table header object.
- * @param props.hiddenKebabMenuIds - Whether to hide the kebab menu on this header cell.
+ * @param props.hiddenKebabMenuIds - an array of IDs for which the header kebab menu should be hidden.
  * @returns The rendered TableHeaderCell component.
  */
 export function TableHeaderCell<T extends RowData>({

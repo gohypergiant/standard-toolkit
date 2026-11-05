@@ -491,10 +491,6 @@ export const InitialRowSelection: Story = {
 };
 
 export const ControlledRowSelection: Story = {
-  args: {
-    hiddenKebabMenuIds: ['firstName', 'lastName'],
-  },
-
   parameters: {
     docs: {
       description: {
