@@ -22,6 +22,7 @@ import type {
   RowPinningState,
   RowSelectionState,
   SortingState,
+  TableOptions,
 } from '@tanstack/react-table';
 import type {
   ComponentPropsWithRef,
@@ -286,6 +287,27 @@ type ExtendedTableProps<T extends { id: Key }> = {
    * Callback when the page changes.
    */
   onPageChange?: (page: number) => void;
+
+  /**
+   * Array of kebab menu IDs that should be hidden.
+   */
+  hiddenKebabMenuIds?: string[];
+
+  /**
+   * Any TanStack table option, spread into `useTable`. Options the Table sets
+   * from its own props (`data`, `columns`, `features`, `state`, `enableSorting`,
+   * `manualSorting`, `manualPagination` and the `on*Change` handlers for
+   * sorting, selection, pinning, row ordering and pagination) are applied
+   * after this and take precedence. Callbacks for slices the Table does not
+   * own (e.g. `onColumnSizingChange`) receive TanStack updaters, not plain
+   * values.
+   *
+   * @example
+   * ```tsx
+   * <Table configOptions={{ defaultColumn: { size: 200 } }} ... />
+   * ```
+   */
+  configOptions?: Partial<TableOptions<TableFeatures, T>>;
 };
 
 /**
@@ -374,6 +396,7 @@ export type TableCellProps<T extends RowData> = ComponentPropsWithRef<'td'> & {
 export type TableHeaderCellProps<T extends RowData> =
   ComponentPropsWithRef<'th'> & {
     header?: Header<TableFeatures, T, unknown>;
+    hiddenKebabMenuIds?: string[];
   };
 
 /**
@@ -394,6 +417,7 @@ export type TableHeaderProps<T extends RowData> =
      * The currently selected column ID
      */
     columnSelection?: string | null;
+    hiddenKebabMenuIds?: string[];
   };
 
 /**
@@ -419,4 +443,5 @@ export type TableContextValue = {
   handleColumnReordering?: (index: number) => void;
   /** Active density, applied by header cells and body cells as a module class. */
   variant: DensityVariant;
+  hiddenKebabMenuIds: string[];
 };

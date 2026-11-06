@@ -40,6 +40,7 @@ export function TableHeader<T extends RowData>({
   className,
   headerGroups,
   columnSelection,
+  hiddenKebabMenuIds,
   ...rest
 }: TableHeaderProps<T>) {
   return (
@@ -48,7 +49,11 @@ export function TableHeader<T extends RowData>({
         headerGroups?.map((headerGroup) => (
           <tr key={headerGroup.id}>
             {headerGroup.headers.map((header) => (
-              <TableHeaderCell key={header.id} header={header} />
+              <TableHeaderCell
+                key={header.id}
+                header={header}
+                hiddenKebabMenuIds={hiddenKebabMenuIds}
+              />
             ))}
           </tr>
         ))}

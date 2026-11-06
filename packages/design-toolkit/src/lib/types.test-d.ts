@@ -11,9 +11,11 @@
  */
 
 import { describe, expectTypeOf, it } from 'vitest';
+import type { TableOptions } from '@tanstack/react-table';
 import type { AccordionStyleVariants } from '../components/accordion/types';
 import type { ListItemVariant } from '../components/list/types';
 import type { MenuProps } from '../components/menu/types';
+import type { TableFeatures } from '../components/table/features';
 import type { TableContextValue, TableProps } from '../components/table/types';
 import type { TreeStyleVariant } from '../components/tree/types';
 import type { DensityVariant } from './types';
@@ -79,5 +81,30 @@ describe('Table variant', () => {
     expectTypeOf<
       Omit<TableContextValue, 'variant'>
     >().not.toExtend<TableContextValue>();
+  });
+});
+
+type TrackOptions = TableOptions<TableFeatures, Track>;
+
+describe('Table configOptions', () => {
+  it('should accept TanStack options on the data branch', () => {
+    expectTypeOf<
+      NonNullable<DataTableProps['configOptions']>['defaultColumn']
+    >().toEqualTypeOf<TrackOptions['defaultColumn']>();
+    expectTypeOf<
+      NonNullable<DataTableProps['configOptions']>['initialState']
+    >().toEqualTypeOf<TrackOptions['initialState']>();
+  });
+
+  it('should accept every key of the registered features', () => {
+    expectTypeOf<keyof TrackOptions>().toExtend<
+      keyof NonNullable<DataTableProps['configOptions']>
+    >();
+  });
+
+  it('should not accept configOptions in children mode', () => {
+    expectTypeOf<
+      ChildrenTableProps['configOptions']
+    >().toEqualTypeOf<undefined>();
   });
 });
