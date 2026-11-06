@@ -29,7 +29,7 @@ import type { TableHeaderProps } from './types';
  * @param props - {@link TableHeaderProps}
  * @param props.ref - Ref to the thead element.
  * @param props.children - Custom children content.
- * @param props.className - CSS class for the thead element.
+ * @param props.classNames - CSS class names.
  * @param props.headerGroups - Array of TanStack header groups.
  * @param props.columnSelection - Currently selected column ID.
  * @returns The rendered TableHeader component.
@@ -37,13 +37,13 @@ import type { TableHeaderProps } from './types';
 export function TableHeader<T extends RowData>({
   ref,
   children,
-  className,
+  classNames,
   headerGroups,
   columnSelection,
   ...rest
 }: TableHeaderProps<T>) {
   return (
-    <thead {...rest} ref={ref} className={className}>
+    <thead {...rest} ref={ref} className={classNames?.header}>
       {children ||
         headerGroups?.map((headerGroup) => (
           <tr key={headerGroup.id}>

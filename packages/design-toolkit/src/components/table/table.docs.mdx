@@ -318,6 +318,7 @@ Only data mode (`columns` + `data`) accepts `variant`. Custom-children mode
 | `page` | `number` | - | Controlled current page (1-indexed) |
 | `defaultPage` | `number` | `1` | Uncontrolled default page (1-indexed) |
 | `onPageChange` | `(page: number) => void` | - | Callback when page changes |
+| `classNames` | object | {} | Default custom classes  |
 
 ## Subcomponents
 
@@ -330,6 +331,16 @@ For static tables, use these subcomponents:
 | `TableBody` | Renders `<tbody>` section |
 | `TableRow` | Table row `<tr>` |
 | `TableCell` | Data cell `<td>` |
+
+## classNames
+
+| Key | Description |
+| ----|-------------|
+| `table` | Table styles |
+| `header` | Table header styles |
+| `body` | Table body styles |
+| `row` | Table row styles |
+| `cell` | Table cell styles |
 
 ## Accessibility
 
