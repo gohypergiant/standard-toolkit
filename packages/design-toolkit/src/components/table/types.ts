@@ -35,7 +35,9 @@ import type { TableFeatures } from './features';
 type BaseTableProps = Omit<
   ComponentPropsWithRef<'table'>,
   'children' | 'className'
->;
+> & {
+  classNames?: ClassNames;
+};
 
 type ClassNames = {
   table?: string;

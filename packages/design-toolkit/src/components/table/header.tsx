@@ -43,12 +43,16 @@ export function TableHeader<T extends RowData>({
   ...rest
 }: TableHeaderProps<T>) {
   return (
-    <thead {...rest} ref={ref} className={classNames?.header}>
+    <thead {...rest} ref={ref}>
       {children ||
         headerGroups?.map((headerGroup) => (
           <tr key={headerGroup.id}>
             {headerGroup.headers.map((header) => (
-              <TableHeaderCell key={header.id} header={header} />
+              <TableHeaderCell
+                key={header.id}
+                header={header}
+                className={classNames?.header}
+              />
             ))}
           </tr>
         ))}
