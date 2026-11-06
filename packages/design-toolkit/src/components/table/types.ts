@@ -32,7 +32,20 @@ import type {
 import type { DensityVariant } from '@/lib/types';
 import type { TableFeatures } from './features';
 
-type BaseTableProps = Omit<ComponentPropsWithRef<'table'>, 'children'>;
+type BaseTableProps = Omit<
+  ComponentPropsWithRef<'table'>,
+  'children' | 'className'
+> & {
+  classNames?: ClassNames;
+};
+
+type ClassNames = {
+  table?: string;
+  header?: string;
+  body?: string;
+  row?: string;
+  cell?: string;
+};
 
 type ExtendedTableProps<T extends { id: Key }> = {
   /**
@@ -286,6 +299,11 @@ type ExtendedTableProps<T extends { id: Key }> = {
    * Callback when the page changes.
    */
   onPageChange?: (page: number) => void;
+
+  /**
+   * Custom CSS class names for table elements.
+   */
+  classNames?: ClassNames;
 };
 
 /**
@@ -329,10 +347,13 @@ export type TableProps<T extends { id: Key }> = BaseTableProps &
  * @see {@link HTMLAttributes}
  * @see {@link RefAttributes}
  */
-export type TableBodyProps<T extends RowData> =
-  ComponentPropsWithRef<'tbody'> & {
-    rows?: Row<TableFeatures, T>[];
-  };
+export type TableBodyProps<T extends RowData> = Omit<
+  ComponentPropsWithRef<'tbody'>,
+  'className'
+> & {
+  classNames?: ClassNames;
+  rows?: Row<TableFeatures, T>[];
+};
 
 /**
  * Props for a table row (`<tr>`) component.
@@ -343,7 +364,11 @@ export type TableBodyProps<T extends RowData> =
  * @see {@link HTMLAttributes}
  * @see {@link RefAttributes}
  */
-export type TableRowProps<T extends RowData> = ComponentPropsWithRef<'tr'> & {
+export type TableRowProps<T extends RowData> = Omit<
+  ComponentPropsWithRef<'tr'>,
+  'className'
+> & {
+  classNames?: ClassNames;
   row?: Row<TableFeatures, T>;
 };
 
@@ -384,17 +409,20 @@ export type TableHeaderCellProps<T extends RowData> =
  * @see {@link HTMLAttributes}
  * @see {@link RefAttributes}
  */
-export type TableHeaderProps<T extends RowData> =
-  ComponentPropsWithRef<'thead'> & {
-    /**
-     * Array of header groups of the table
-     */
-    headerGroups?: HeaderGroup<TableFeatures, T>[];
-    /**
-     * The currently selected column ID
-     */
-    columnSelection?: string | null;
-  };
+export type TableHeaderProps<T extends RowData> = Omit<
+  ComponentPropsWithRef<'thead'>,
+  'className'
+> & {
+  classNames?: ClassNames;
+  /**
+   * Array of header groups of the table
+   */
+  headerGroups?: HeaderGroup<TableFeatures, T>[];
+  /**
+   * The currently selected column ID
+   */
+  columnSelection?: string | null;
+};
 
 /**
  * Context value for table configuration and state.

@@ -29,21 +29,28 @@ import type { TableBodyProps } from './types';
  *
  * @param props - {@link TableBodyProps}
  * @param props.children - Custom children content.
- * @param props.className - CSS class for the tbody element.
+ * @param props.classNames - CSS class names for the tbody, rows, and cells.
  * @param props.ref - Ref to the tbody element.
  * @param props.rows - Array of TanStack table rows to render.
  * @returns The rendered TableBody component.
  */
 export function TableBody<T extends RowData>({
   children,
-  className,
+  classNames,
   ref,
   rows,
   ...rest
 }: TableBodyProps<T>) {
   return (
-    <tbody {...rest} ref={ref} className={clsx('group/tbody', className)}>
-      {children || rows?.map((row) => <TableRow key={row.id} row={row} />)}
+    <tbody
+      {...rest}
+      ref={ref}
+      className={clsx('group/tbody', classNames?.body)}
+    >
+      {children ||
+        rows?.map((row) => (
+          <TableRow key={row.id} row={row} classNames={classNames} />
+        ))}
     </tbody>
   );
 }

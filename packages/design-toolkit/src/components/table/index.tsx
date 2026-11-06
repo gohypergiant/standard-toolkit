@@ -162,6 +162,7 @@ function RowActionsMenu<T extends RowData>({ row }: RowActionsMenuProps<T>) {
  * @param props.page - Controlled current page (1-indexed).
  * @param props.defaultPage - Initial page (1-indexed) for uncontrolled use.
  * @param props.onPageChange - Callback receiving the plain next page number.
+ * @param props.classNames - Custom CSS class names for table elements.
  * @returns The rendered Table component.
  *
  * @example
@@ -210,6 +211,7 @@ export function Table<T extends { id: Key }>({
   page: pageProp,
   defaultPage = 1,
   onPageChange,
+  classNames,
   ...rest
 }: TableProps<T>) {
   // Only the manual row order is state (owned by the table's
@@ -478,7 +480,7 @@ export function Table<T extends { id: Key }>({
   const className = clsx(
     styles.table,
     fullWidth && 'w-full table-fixed',
-    rest.className,
+    classNames?.table,
   );
 
   if (children) {
@@ -513,9 +515,11 @@ export function Table<T extends { id: Key }>({
         <TableHeader
           headerGroups={getHeaderGroups()}
           columnSelection={columnSelection}
+          classNames={classNames}
         />
         <TableBody
           rows={[...getTopRows(), ...getCenterRows(), ...getBottomRows()]}
+          classNames={classNames}
         />
       </table>
     </TableContext.Provider>
