@@ -25,7 +25,7 @@ import { DrawerPanel } from './panel';
 import { DrawerTrigger } from './trigger';
 import { DrawerView } from './view';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import type { ComponentProps } from 'react';
+import type { ComponentProps, CSSProperties } from 'react';
 import type { DrawerMenuProps } from './types';
 
 type DrawerStoryArgs = ComponentProps<typeof Drawer> &
@@ -215,6 +215,49 @@ export const OpenCloseTrigger: Story = {
                 </DrawerHeader>
                 <DrawerContent>Content A</DrawerContent>
                 <DrawerFooter>Footer A</DrawerFooter>
+              </DrawerView>
+            </DrawerPanel>
+          </Drawer>
+        </DrawerLayout>
+      </div>
+    );
+  },
+};
+
+export const ConfiguredTrack: Story = {
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'A left Drawer using a browser-resolved custom-property track. Its semantic `size` remains available as the fallback when the `tracks.left` configuration is omitted.',
+      },
+    },
+  },
+  render: ({ position, toggle }) => {
+    return (
+      <div
+        className='fg-primary-bold h-screen bg-surface-muted'
+        style={{ '--operator-panel-width': '18rem' } as CSSProperties}
+      >
+        <DrawerLayout tracks={{ left: 'var(--operator-panel-width)' }}>
+          <Drawer
+            id={ids.drawer}
+            placement='left'
+            size='small'
+            defaultView={ids.a}
+          >
+            <DrawerMenu position={position}>
+              <DrawerMenuItem toggle={toggle} for={ids.a} textValue='Menu A'>
+                A
+              </DrawerMenuItem>
+            </DrawerMenu>
+            <DrawerPanel>
+              <DrawerView id={ids.a}>
+                <DrawerHeader title='Configured left track' />
+                <DrawerContent>
+                  This drawer uses var(--operator-panel-width) instead of its
+                  small semantic size while open.
+                </DrawerContent>
               </DrawerView>
             </DrawerPanel>
           </Drawer>

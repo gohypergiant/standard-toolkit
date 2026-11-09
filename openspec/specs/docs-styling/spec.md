@@ -4,7 +4,7 @@
 
 Visual styling system for the documentation website that applies design-toolkit aesthetic (outlines, spacing, typography) to fumadocs UI components via CSS overrides.
 
-## ADDED Requirements
+## Requirements
 
 ### Requirement: Sidebar links SHALL use outline-based active state
 

@@ -498,6 +498,7 @@ export type {
   DrawerContextValue,
   DrawerEvent,
   DrawerLayoutProps,
+  DrawerLayoutTracks,
   DrawerMenuItemProps,
   DrawerMenuProps,
   DrawerOpenEvent,

@@ -53,6 +53,7 @@ const ids = {
   },
   left: {
     drawer: uuid(),
+    secondaryDrawer: uuid(),
     views: {
       a: uuid(),
       b: uuid(),
@@ -96,6 +97,11 @@ const meta: Meta<DrawerLayoutProps> = {
         defaultValue: { summary: 'undefined' },
       },
     },
+    tracks: {
+      control: 'object',
+      description:
+        'Optional browser-resolved CSS grid-track values keyed by placement. Omitted placements retain their Drawer semantic-size fallback.',
+    },
   },
   parameters: {
     layout: 'fullscreen',
@@ -106,13 +112,14 @@ export default meta;
 type Story = StoryObj<DrawerLayoutProps>;
 
 export const Default: Story = {
-  render: ({ extend, push }) => (
+  render: ({ extend, push, tracks }) => (
     <div className='h-screen w-full'>
       <DrawerLayout
         extend={extend}
         push={
           (push as unknown as string[])?.join(' ') as DrawerLayoutProps['push']
         }
+        tracks={tracks}
       >
         <DrawerLayoutMain>
           <div
@@ -274,6 +281,130 @@ export const Default: Story = {
                 <DrawerView id={id} key={id} />
               ))}
             </DrawerContent>
+          </DrawerPanel>
+        </Drawer>
+      </DrawerLayout>
+    </div>
+  ),
+};
+
+export const ConfiguredTracks: Story = {
+  ...Default,
+  args: {
+    extend: 'left right',
+    tracks: {
+      top: '72px',
+      right: '22rem',
+      bottom: 'minmax(8rem, 25vh)',
+      left: 'calc(12rem + 8px)',
+    },
+  },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'All four placements use independent configured CSS grid tracks while their Drawers are open.',
+      },
+    },
+  },
+};
+
+export const PartialConfigurationWithSemanticFallback: Story = {
+  ...Default,
+  args: {
+    extend: 'left right',
+    tracks: { left: '256px' },
+  },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'Only the left placement is configured. The top, right, and bottom Drawers retain their semantic size tracks.',
+      },
+    },
+  },
+};
+
+export const ConfiguredPush: Story = {
+  ...Default,
+  args: {
+    extend: 'left right',
+    push: ['right'] as unknown as DrawerLayoutProps['push'],
+    tracks: { right: '280px' },
+  },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'The configured right track reserves 280px because the right Drawer pushes the main content.',
+      },
+    },
+  },
+};
+
+export const ConfiguredOverlay: Story = {
+  ...Default,
+  args: {
+    extend: 'left right',
+    tracks: { right: '280px' },
+  },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'The configured right track still resolves to 280px, but the main content retains its overlay grid placement because `push` is omitted.',
+      },
+    },
+  },
+};
+
+export const SamePlacementConfiguredTrack: Story = {
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'Two open left Drawers share one configured 256px placement track; DrawerLayout does not aggregate tracks for the same placement.',
+      },
+    },
+  },
+  render: () => (
+    <div className='h-screen w-full'>
+      <DrawerLayout extend='left right' tracks={{ left: '256px' }}>
+        <DrawerLayoutMain>
+          <div className='flex h-full items-center justify-center bg-surface-overlay'>
+            <p>Both left Drawers occupy the same configured placement area.</p>
+          </div>
+        </DrawerLayoutMain>
+        <Drawer
+          id={ids.left.drawer}
+          className='bg-[#ffd90087]'
+          placement='left'
+          size='small'
+          defaultView={ids.left.views.a}
+        >
+          <DrawerPanel>
+            <DrawerView id={ids.left.views.a}>
+              <DrawerHeader title='Left drawer A' />
+              <DrawerContent>
+                Small semantic size, configured track.
+              </DrawerContent>
+            </DrawerView>
+          </DrawerPanel>
+        </Drawer>
+        <Drawer
+          id={ids.left.secondaryDrawer}
+          className='bg-[#ff990087]'
+          placement='left'
+          size='large'
+          defaultView={ids.left.views.b}
+        >
+          <DrawerPanel>
+            <DrawerView id={ids.left.views.b}>
+              <DrawerHeader title='Left drawer B' />
+              <DrawerContent>
+                Large semantic size, same configured track.
+              </DrawerContent>
+            </DrawerView>
           </DrawerPanel>
         </Drawer>
       </DrawerLayout>
