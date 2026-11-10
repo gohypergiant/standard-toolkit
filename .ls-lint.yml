@@ -37,4 +37,4 @@ ignore:
   - '**/dist'
   - '**/node_modules'
   - '**/.docusaurus'
-  - '**/openspec/changes/archive/SYNTHESIS-LOG'
+  - '**/SYNTHESIS-LOG.md'
