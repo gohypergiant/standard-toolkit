@@ -142,8 +142,16 @@ Both layers SHALL accept named style override props per precision level that par
 ### Requirement: Grid style configuration supports all deck.gl color formats
 The styling API SHALL accept colors as RGB/RGBA arrays, hex strings, or named colors.
 
+#### Scenario: A named color configures a grid style
+- **WHEN** a developer supplies a named color for a grid style property
+- **THEN** the layer applies that color when rendering the corresponding grid feature
+
 ### Requirement: Label styling includes font and background customization
 GridStyleConfig SHALL support fontFamily, fontWeight, textAnchor, alignmentBaseline, backgroundColor, and backgroundPadding for label rendering.
+
+#### Scenario: A label style customizes font and background
+- **WHEN** a developer supplies font and background properties in a label style configuration
+- **THEN** rendered grid labels use the configured font and background values
 
 ### Requirement: Grid layers emit hover events via event bus
 Both layers SHALL emit a `gridCell:hover` event through @accelint/bus when the cursor moves onto a new grid cell.
@@ -173,5 +181,13 @@ Both layers SHALL allow disabling event bus integration via the `enableInteracti
 ### Requirement: Grid layers support React Fiber rendering
 Both layers SHALL be registerable with React Fiber via fiber.ts, enabling `<garsLayer />` and `<mgrsLayer />` JSX syntax.
 
+#### Scenario: A grid layer is rendered through React Fiber
+- **WHEN** an application uses the registered `garsLayer` or `mgrsLayer` JSX element
+- **THEN** React Fiber creates the corresponding grid layer
+
 ### Requirement: Grid layers export TypeScript types and constants
 The following SHALL be exported for consumer use: `GARSLayerProps`, `MGRSLayerProps`, `GridStyleConfig`, `GridZoomRange`, `GridCellEvents`, `GridCellHoverEvent`, `GridCellClickEvent`, `GridCellEvent`, `GARS_ZOOM_RANGES`, `MGRS_ZOOM_RANGES`, `garsDefinition`, `mgrsDefinition`.
+
+#### Scenario: A consumer imports grid-layer public types and constants
+- **WHEN** a consumer imports a documented grid-layer public type or constant from the package entry point
+- **THEN** the import resolves to the corresponding exported symbol
