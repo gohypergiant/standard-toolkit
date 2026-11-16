@@ -72,6 +72,11 @@ const EMPTY_SORT: SortingState = [];
 // every render. An empty array means the `columns` definition order.
 const EMPTY_COLUMN_ORDER: ColumnOrderState = [];
 
+// Use the index as the row ID if no unique identifier is available
+function defaultGetRowId<T extends { id: Key }>(row: T, index: number) {
+  return row.id ? row.id.toString() : index.toString();
+}
+
 type RowActionsMenuProps<T extends RowData> = {
   row: Row<TableFeatures, T>;
 };
@@ -221,6 +226,11 @@ export function Table<T extends { id: Key }>({
   // prop so external updates (polling, refetch) flow through without remount.
   const [rowOrdering, setRowOrdering] = useState<RowOrderingState>([]);
 
+  // Saved row order holds TanStack row ids, so ranking data must resolve ids
+  // the same way the table does. Keep a custom getRowId referentially stable
+  // (module scope or useCallback); a new function each render recomputes this.
+  const getRowId = configOptions?.getRowId ?? defaultGetRowId;
+
   const data = useMemo(() => {
     const items = dataProp ?? [];
 
@@ -238,8 +248,8 @@ export function Table<T extends { id: Key }>({
     const slots = new Array<T | undefined>(rowOrdering.length);
     const unranked: T[] = [];
 
-    for (const item of items) {
-      const slot = rank.get(String(item.id));
+    items.forEach((item, index) => {
+      const slot = rank.get(getRowId(item, index));
 
       // duplicate ids fall through to unranked
       if (slot === undefined || slots[slot] !== undefined) {
@@ -247,7 +257,7 @@ export function Table<T extends { id: Key }>({
       } else {
         slots[slot] = item;
       }
-    }
+    });
 
     const ordered: T[] = [];
 
@@ -263,7 +273,7 @@ export function Table<T extends { id: Key }>({
     }
 
     return ordered;
-  }, [dataProp, rowOrdering]);
+  }, [dataProp, rowOrdering, getRowId]);
 
   const [rowSelection, setRowSelection] = useTableControlledState(
     rowSelectionProp,
@@ -421,11 +431,8 @@ export function Table<T extends { id: Key }>({
     // configOptions can never replace what the Table controls
     enableRowSelection: true,
     enableRowPinning: true,
-    getRowId: (row, index) => {
-      // Use the index as the row ID if no unique identifier is available
-      return row.id ? row.id.toString() : index.toString();
-    },
     ...configOptions,
+    getRowId,
     features: tableFeatures,
     data,
     columns,

@@ -1496,4 +1496,43 @@ describe('Table configOptions', () => {
 
     expect(onRowSelectionChange).toHaveBeenCalledWith({ 'person-a': true });
   });
+
+  it('should keep manual row order when configOptions overrides getRowId', async () => {
+    const data = [
+      { id: 'a', name: 'alpha' },
+      { id: 'b', name: 'bravo' },
+      { id: 'c', name: 'charlie' },
+    ];
+    const getRowId = (row: Person) => `person-${row.id}`;
+    const { rerender } = render(
+      <Table
+        columns={personColumns}
+        data={data}
+        enableSorting={false}
+        configOptions={{ getRowId }}
+      />,
+    );
+
+    await userEvent.click(
+      screen.getByRole('button', { name: 'row 1 actions' }),
+    );
+    await userEvent.click(screen.getByText('Move Down'));
+
+    expect(dataRowNames()).toEqual(['bravo', 'alpha', 'charlie']);
+
+    rerender(
+      <Table
+        columns={personColumns}
+        data={data.map((item) => ({ ...item, name: `${item.name}-updated` }))}
+        enableSorting={false}
+        configOptions={{ getRowId }}
+      />,
+    );
+
+    expect(dataRowNames()).toEqual([
+      'bravo-updated',
+      'alpha-updated',
+      'charlie-updated',
+    ]);
+  });
 });

@@ -300,14 +300,15 @@ type ExtendedTableProps<T extends { id: Key }> = {
    * sorting, selection, pinning, row ordering and pagination) are applied
    * after this and take precedence. Callbacks for slices the Table does not
    * own (e.g. `onColumnSizingChange`) receive TanStack updaters, not plain
-   * values.
+   * values. `mergeOptions` is excluded because it replaces TanStack's own
+   * option merging.
    *
    * @example
    * ```tsx
    * <Table configOptions={{ defaultColumn: { size: 200 } }} ... />
    * ```
    */
-  configOptions?: Partial<TableOptions<TableFeatures, T>>;
+  configOptions?: Partial<Omit<TableOptions<TableFeatures, T>, 'mergeOptions'>>;
 };
 
 /**
@@ -443,5 +444,5 @@ export type TableContextValue = {
   handleColumnReordering?: (index: number) => void;
   /** Active density, applied by header cells and body cells as a module class. */
   variant: DensityVariant;
-  hiddenKebabMenuIds: string[];
+  hiddenKebabMenuIds?: string[];
 };
