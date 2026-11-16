@@ -5,15 +5,20 @@ packages:
 
 enablePrePostScripts: true
 
-onlyBuiltDependencies:
-  - '@parcel/watcher'
-  - esbuild
-  - lefthook
-  - puppeteer
-  - sharp
-  - sleep
-
 # https://pnpm.io/settings#publichoistpattern
 publicHoistPattern:
-  - "*@vitest/coverage-istanbul*"
-  - "*prettier-plugin-tailwindcss*"
+  - '*@vitest/coverage-istanbul*'
+  - '*prettier-plugin-tailwindcss*'
+overrides:
+  '@internationalized/date': ~3.12.1
+patchedDependencies:
+  geodesy@2.4.0: patches/geodesy@2.4.0.patch
+linkWorkspacePackages: false
+nodeOptions: --max-old-space-size=16384
+allowBuilds:
+  '@parcel/watcher': true
+  esbuild: true
+  lefthook: true
+  puppeteer: true
+  sharp: true
+  sleep: true
