@@ -46,15 +46,12 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-turbo-
 
-      - uses: pnpm/action-setup@v6
+      - name: Setup PNPM
+        uses: pnpm/setup@v3
         with:
-          run_install: false
-
-      - uses: actions/setup-node@v7
-        with:
-          registry-url: 'https://registry.npmjs.org'
-          node-version-file: '.nvmrc'
-          cache: 'pnpm'
+          cache: true
+          save-cache: ${{ github.ref == 'refs/heads/main' }}
+          install: false
 
       - run: pnpm install
 
@@ -100,4 +97,3 @@ jobs:
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "**Packages published to npm with \`@beta\` tag:**" >> $GITHUB_STEP_SUMMARY
           echo "${{ steps.changesets.outputs.published-packages }}" >> $GITHUB_STEP_SUMMARY
-
