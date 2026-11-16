@@ -1,5 +1,5 @@
 ---
-"@accelint/design-toolkit": minor
+"@accelint/design-toolkit": major
 ---
 
-updates the classnames prop from a string to an object to allow for targeted style application
+breaking change: updates the classnames prop from a string to an object to allow for targeted style application

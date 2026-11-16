@@ -509,6 +509,9 @@ export const ControlledRowSelection: Story = {
           rowSelection={selection}
           onRowSelectionChange={setSelection}
           key={JSON.stringify(args)}
+          classNames={{
+            header: 'bg-[#FF69B4]',
+          }}
         />
         <div style={{ marginTop: '1rem' }}>
           <Button onPress={() => setSelection({})}>Clear selection</Button>

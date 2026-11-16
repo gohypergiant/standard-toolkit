@@ -32,10 +32,7 @@ import type {
 import type { DensityVariant } from '@/lib/types';
 import type { TableFeatures } from './features';
 
-type BaseTableProps = Omit<
-  ComponentPropsWithRef<'table'>,
-  'children' | 'className'
-> & {
+type BaseTableProps = Omit<ComponentPropsWithRef<'table'>, 'children'> & {
   classNames?: ClassNames;
 };
 
