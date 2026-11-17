@@ -1,11 +1,12 @@
 #!/usr/bin/env zx
 
+import { parseAllDocuments } from 'yaml';
 /*
  * This script will report packages under the react-spectrum (v3) umbrella which have multiple versions in a project repo
  * by looking at the pnpm-lock.yaml file. Any packages that are reported by this script should be
  * fixed to only have 1 imported version so that react-spectrum works correctly in the project repo.
  */
-import { fs, YAML } from 'zx';
+import { fs } from 'zx';
 
 const patterns = [
   // packages
@@ -23,15 +24,15 @@ const patterns = [
   '@spectrum-icons/',
 ];
 
-const versions = {};
-function addVersion(pkg, version) {
+const versions: Record<string, Set<string>> = {};
+function addVersion(pkg: string, version: string) {
   if (!versions[pkg]) {
     versions[pkg] = new Set();
   }
   versions[pkg].add(version);
 }
 
-function patternMatch(str) {
+function patternMatch(str: string) {
   return patterns.some((pattern) => {
     if (pattern.endsWith('/')) {
       return str.startsWith(pattern);
@@ -40,7 +41,7 @@ function patternMatch(str) {
   });
 }
 
-function printConflicts(file) {
+function printConflicts() {
   const title = '| RAC DEPS REPORT |';
   console.log('-'.repeat(title.length));
   console.log(title);
@@ -64,13 +65,15 @@ function printConflicts(file) {
   }
 
   Object.keys(versions)
-    .sort()
+    .sort((a, b) => a.localeCompare(b))
     .forEach((pkg) => {
       const pkgVersions = versions[pkg];
-      if (pkgVersions.size > 1) {
+      if (pkgVersions && pkgVersions.size > 1) {
         const label = `${pkg} (${pkgVersions.size})`;
         console.log(
-          `${label.padEnd(maxPkgLen + 5)} - ${Array.from(pkgVersions).sort().join(', ')}`,
+          `${label.padEnd(maxPkgLen + 5)} - ${Array.from(pkgVersions)
+            .sort((a, b) => a.localeCompare(b))
+            .join(', ')}`,
         );
       }
     });
@@ -83,13 +86,16 @@ function printConflicts(file) {
 //   @react-aria/button@3.9.1
 //   react-aria@3.31.0
 //   @react-aria/button@3.9.1(@types/react@18.0.0)
-function parsePackageKey(key) {
+function parsePackageKey(key: string) {
   // Handle scoped packages: @scope/name@version
   if (key.startsWith('@')) {
     const lastAtIndex = key.lastIndexOf('@');
     if (lastAtIndex > 0) {
       const pkg = key.slice(0, lastAtIndex);
       const version = key.slice(lastAtIndex + 1).split('(')[0]; // Remove peer dep suffix
+      if (!version) {
+        throw new Error(`Invalid package key: ${key}`);
+      }
       return { pkg, version };
     }
   } else {
@@ -98,6 +104,9 @@ function parsePackageKey(key) {
     if (atIndex > 0) {
       const pkg = key.slice(0, atIndex);
       const version = key.slice(atIndex + 1).split('(')[0]; // Remove peer dep suffix
+      if (!version) {
+        throw new Error(`Invalid package key: ${key}`);
+      }
       return { pkg, version };
     }
   }
@@ -107,33 +116,41 @@ function parsePackageKey(key) {
 
 async function checkPnpmLock() {
   const fileContents = await fs.promises.readFile('./pnpm-lock.yaml', 'utf8');
-  const lockfile = YAML.parse(fileContents);
+  const documents = parseAllDocuments(fileContents);
 
-  const packages = lockfile.packages || {};
-  const snapshots = lockfile.snapshots || {};
-
-  Object.keys(packages).forEach((key) => {
-    const parsed = parsePackageKey(key);
-    if (parsed && patternMatch(parsed.pkg)) {
-      addVersion(parsed.pkg, parsed.version);
+  for (const document of documents) {
+    if (document.errors.length > 0) {
+      throw document.errors[0];
     }
-  });
 
-  Object.keys(snapshots).forEach((key) => {
-    const parsed = parsePackageKey(key);
-    if (parsed && patternMatch(parsed.pkg)) {
-      addVersion(parsed.pkg, parsed.version);
-    }
-  });
+    const lockfile = document.toJSON();
+    const packages = lockfile?.packages || {};
+    const snapshots = lockfile?.snapshots || {};
 
-  printConflicts('pnpm-lock.yaml');
+    Object.keys(packages).forEach((key) => {
+      const parsed = parsePackageKey(key);
+      if (parsed && patternMatch(parsed.pkg)) {
+        addVersion(parsed.pkg, parsed.version);
+      }
+    });
+
+    Object.keys(snapshots).forEach((key) => {
+      const parsed = parsePackageKey(key);
+      if (parsed && patternMatch(parsed.pkg)) {
+        addVersion(parsed.pkg, parsed.version);
+      }
+    });
+  }
+
+  printConflicts();
 }
 
-(async function main() {
+async function main() {
   if (fs.existsSync('./pnpm-lock.yaml')) {
     await checkPnpmLock();
   } else {
     console.error('No pnpm-lock.yaml found in current directory.');
     process.exit(1);
   }
-})();
+}
+await main();

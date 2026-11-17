@@ -238,6 +238,9 @@ importers:
       typescript:
         specifier: ^5.9.3
         version: 5.9.3
+      yaml:
+        specifier: ^2.9.0
+        version: 2.9.0
       zx:
         specifier: ^8.8.5
         version: 8.8.5
@@ -349,7 +352,7 @@ importers:
         version: 9.2.10
       '@deckgl-fiber-renderer/dom':
         specifier: ^1.4.0
-        version: 1.4.0(@deck.gl/core@9.2.10)(@deck.gl/geo-layers@9.1.14(@deck.gl/core@9.2.10)(@deck.gl/extensions@9.2.9(@deck.gl/core@9.2.10)(@luma.gl/core@9.2.6))(@deck.gl/layers@9.2.9(@deck.gl/core@9.2.10)(@loaders.gl/core@4.3.4)(@luma.gl/core@9.2.6))(@deck.gl/mesh-layers@9.1.14(@deck.gl/core@9.2.10)(@loaders.gl/core@4.3.4)(@luma.gl/core@9.2.6))(@loaders.gl/core@4.3.4)(@luma.gl/core@9.2.6))(@deck.gl/layers@9.2.9(@deck.gl/core@9.2.10)(@loaders.gl/core@4.3.4)(@luma.gl/core@9.2.6))(@deck.gl/mapbox@9.1.14(@deck.gl/core@9.2.10)(@luma.gl/core@9.2.6))(@deck.gl/mesh-layers@9.1.14(@deck.gl/core@9.2.10)(@loaders.gl/core@4.3.4)(@luma.gl/core@9.2.6))(@types/react-dom@19.2.3(@types/react@19.2.7))(@types/react@19.2.7)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
+        version: 1.4.0(4e2ca28f11091d98be979c18085d850c)
       '@dnd-kit/core':
         specifier: ^6.3.1
         version: 6.3.1(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
@@ -488,10 +491,10 @@ importers:
         version: 19.2.3(@types/react@19.2.7)
       '@vitest/browser':
         specifier: ^4.0.16
-        version: 4.0.16(@vitest/browser-playwright@4.0.16)(jsdom@25.0.1)(vite@7.3.0(@types/node@24.19.0)(jiti@2.7.0)(lightningcss@1.32.0)(terser@5.44.1)(tsx@4.21.0)(yaml@2.9.0))(vitest@4.0.16)(yaml@2.9.0)
+        version: 4.0.16(@vitest/browser-playwright@4.0.16)(jsdom@25.0.1(supports-color@8.1.1))(vite@7.3.0(@types/node@24.19.0)(jiti@2.7.0)(lightningcss@1.32.0)(terser@5.44.1)(tsx@4.21.0)(yaml@2.9.0))(vitest@4.0.16)(yaml@2.9.0)
       '@vitest/browser-playwright':
         specifier: ^4.0.16
-        version: 4.0.16(jsdom@25.0.1)(playwright@1.61.1)(vite@7.3.0(@types/node@24.19.0)(jiti@2.7.0)(lightningcss@1.32.0)(terser@5.44.1)(tsx@4.21.0)(yaml@2.9.0))(vitest@4.0.16)(yaml@2.9.0)
+        version: 4.0.16(jsdom@25.0.1(supports-color@8.1.1))(playwright@1.61.1)(vite@7.3.0(@types/node@24.19.0)(jiti@2.7.0)(lightningcss@1.32.0)(terser@5.44.1)(tsx@4.21.0)(yaml@2.9.0))(vitest@4.0.16)(yaml@2.9.0)
       typescript:
         specifier: ^5.9.3
         version: 5.9.3
@@ -500,7 +503,7 @@ importers:
         version: 7.3.0(@types/node@24.19.0)(jiti@2.7.0)(lightningcss@1.32.0)(terser@5.44.1)(tsx@4.21.0)(yaml@2.9.0)
       vitest:
         specifier: ^4.0.15
-        version: 4.0.16(@types/node@24.19.0)(@vitest/browser-playwright@4.0.16)(happy-dom@20.0.11)(jiti@2.7.0)(jsdom@25.0.1)(lightningcss@1.32.0)(terser@5.44.1)(tsx@4.21.0)(vite@7.3.0(@types/node@24.19.0)(jiti@2.7.0)(lightningcss@1.32.0)(terser@5.44.1)(tsx@4.21.0)(yaml@2.9.0))(yaml@2.9.0)
+        version: 4.0.16(@types/node@24.19.0)(@vitest/browser-playwright@4.0.16)(happy-dom@20.0.11)(jiti@2.7.0)(jsdom@25.0.1(supports-color@8.1.1))(lightningcss@1.32.0)(terser@5.44.1)(tsx@4.21.0)(vite@7.3.0(@types/node@24.19.0)(jiti@2.7.0)(lightningcss@1.32.0)(terser@5.44.1)(tsx@4.21.0)(yaml@2.9.0))(yaml@2.9.0)
       vitest-browser-react:
         specifier: ^0.1.0
         version: 0.1.1(@types/react-dom@19.2.3(@types/react@19.2.7))(@types/react@19.2.7)(@vitest/browser-playwright@4.0.16)(@vitest/browser@4.0.16(@vitest/browser-playwright@4.0.16)(jsdom@25.0.1(supports-color@8.1.1))(vite@7.3.0(@types/node@24.19.0)(jiti@2.7.0)(lightningcss@1.32.0)(terser@5.44.1)(tsx@4.21.0)(yaml@2.9.0))(vitest@4.0.16)(yaml@2.9.0))(jsdom@25.0.1(supports-color@8.1.1))(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(vite@7.3.0(@types/node@24.19.0)(jiti@2.7.0)(lightningcss@1.32.0)(terser@5.44.1)(tsx@4.21.0)(yaml@2.9.0))(vitest@4.0.16)(yaml@2.9.0)
@@ -540,7 +543,7 @@ importers:
         version: 5.9.3
       vitest:
         specifier: ^4.0.15
-        version: 4.0.16(@types/node@24.19.0)(@vitest/browser-playwright@4.0.16)(happy-dom@20.0.11)(jiti@2.7.0)(jsdom@25.0.1)(lightningcss@1.32.0)(terser@5.44.1)(tsx@4.21.0)(vite@7.3.0(@types/node@24.19.0)(jiti@2.7.0)(lightningcss@1.32.0)(terser@5.44.1)(tsx@4.21.0)(yaml@2.9.0))(yaml@2.9.0)
+        version: 4.0.16(@types/node@24.19.0)(@vitest/browser-playwright@4.0.16)(happy-dom@20.0.11)(jiti@2.7.0)(jsdom@25.0.1(supports-color@8.1.1))(lightningcss@1.32.0)(terser@5.44.1)(tsx@4.21.0)(vite@7.3.0(@types/node@24.19.0)(jiti@2.7.0)(lightningcss@1.32.0)(terser@5.44.1)(tsx@4.21.0)(yaml@2.9.0))(yaml@2.9.0)
     optionalDependencies:
       react:
         specifier: ^19
@@ -562,7 +565,7 @@ importers:
         version: 5.9.3
       vitest:
         specifier: ^4.0.15
-        version: 4.0.16(@types/node@24.19.0)(@vitest/browser-playwright@4.0.16)(happy-dom@20.0.11)(jiti@2.7.0)(jsdom@25.0.1)(lightningcss@1.32.0)(terser@5.44.1)(tsx@4.21.0)(vite@7.3.0(@types/node@24.19.0)(jiti@2.7.0)(lightningcss@1.32.0)(terser@5.44.1)(tsx@4.21.0)(yaml@2.9.0))(yaml@2.9.0)
+        version: 4.0.16(@types/node@24.19.0)(@vitest/browser-playwright@4.0.16)(happy-dom@20.0.11)(jiti@2.7.0)(jsdom@25.0.1(supports-color@8.1.1))(lightningcss@1.32.0)(terser@5.44.1)(tsx@4.21.0)(vite@7.3.0(@types/node@24.19.0)(jiti@2.7.0)(lightningcss@1.32.0)(terser@5.44.1)(tsx@4.21.0)(yaml@2.9.0))(yaml@2.9.0)
 
   packages/converters:
     devDependencies:
@@ -580,7 +583,7 @@ importers:
         version: 5.9.3
       vitest:
         specifier: ^4.0.15
-        version: 4.0.16(@types/node@24.19.0)(@vitest/browser-playwright@4.0.16)(happy-dom@20.0.11)(jiti@2.7.0)(jsdom@25.0.1)(lightningcss@1.32.0)(terser@5.44.1)(tsx@4.21.0)(vite@7.3.0(@types/node@24.19.0)(jiti@2.7.0)(lightningcss@1.32.0)(terser@5.44.1)(tsx@4.21.0)(yaml@2.9.0))(yaml@2.9.0)
+        version: 4.0.16(@types/node@24.19.0)(@vitest/browser-playwright@4.0.16)(happy-dom@20.0.11)(jiti@2.7.0)(jsdom@25.0.1(supports-color@8.1.1))(lightningcss@1.32.0)(terser@5.44.1)(tsx@4.21.0)(vite@7.3.0(@types/node@24.19.0)(jiti@2.7.0)(lightningcss@1.32.0)(terser@5.44.1)(tsx@4.21.0)(yaml@2.9.0))(yaml@2.9.0)
     optionalDependencies:
       '@accelint/constants':
         specifier: workspace:*
@@ -614,7 +617,7 @@ importers:
         version: 11.1.0
       vitest:
         specifier: ^4.0.15
-        version: 4.0.16(@types/node@24.19.0)(@vitest/browser-playwright@4.0.16)(happy-dom@20.0.11)(jiti@2.7.0)(jsdom@25.0.1)(lightningcss@1.32.0)(terser@5.44.1)(tsx@4.21.0)(vite@7.3.0(@types/node@24.19.0)(jiti@2.7.0)(lightningcss@1.32.0)(terser@5.44.1)(tsx@4.21.0)(yaml@2.9.0))(yaml@2.9.0)
+        version: 4.0.16(@types/node@24.19.0)(@vitest/browser-playwright@4.0.16)(happy-dom@20.0.11)(jiti@2.7.0)(jsdom@25.0.1(supports-color@8.1.1))(lightningcss@1.32.0)(terser@5.44.1)(tsx@4.21.0)(vite@7.3.0(@types/node@24.19.0)(jiti@2.7.0)(lightningcss@1.32.0)(terser@5.44.1)(tsx@4.21.0)(yaml@2.9.0))(yaml@2.9.0)
 
   packages/dataset:
     devDependencies:
@@ -638,7 +641,7 @@ importers:
         version: 5.9.3
       vitest:
         specifier: ^4.0.15
-        version: 4.0.16(@types/node@24.19.0)(@vitest/browser-playwright@4.0.16)(happy-dom@20.0.11)(jiti@2.7.0)(jsdom@25.0.1)(lightningcss@1.32.0)(terser@5.44.1)(tsx@4.21.0)(vite@7.3.0(@types/node@24.19.0)(jiti@2.7.0)(lightningcss@1.32.0)(terser@5.44.1)(tsx@4.21.0)(yaml@2.9.0))(yaml@2.9.0)
+        version: 4.0.16(@types/node@24.19.0)(@vitest/browser-playwright@4.0.16)(happy-dom@20.0.11)(jiti@2.7.0)(jsdom@25.0.1(supports-color@8.1.1))(lightningcss@1.32.0)(terser@5.44.1)(tsx@4.21.0)(vite@7.3.0(@types/node@24.19.0)(jiti@2.7.0)(lightningcss@1.32.0)(terser@5.44.1)(tsx@4.21.0)(yaml@2.9.0))(yaml@2.9.0)
       zod:
         specifier: ^4.1.12
         version: 4.2.1
@@ -732,7 +735,7 @@ importers:
         version: 5.1.4(supports-color@8.1.1)(typescript@5.9.3)(vite@7.3.0(@types/node@24.19.0)(jiti@2.7.0)(lightningcss@1.32.0)(terser@5.44.1)(tsx@4.21.0)(yaml@2.9.0))
       vitest:
         specifier: ^4.0.15
-        version: 4.0.16(@types/node@24.19.0)(@vitest/browser-playwright@4.0.16)(happy-dom@20.0.11)(jiti@2.7.0)(jsdom@25.0.1)(lightningcss@1.32.0)(terser@5.44.1)(tsx@4.21.0)(vite@7.3.0(@types/node@24.19.0)(jiti@2.7.0)(lightningcss@1.32.0)(terser@5.44.1)(tsx@4.21.0)(yaml@2.9.0))(yaml@2.9.0)
+        version: 4.0.16(@types/node@24.19.0)(@vitest/browser-playwright@4.0.16)(happy-dom@20.0.11)(jiti@2.7.0)(jsdom@25.0.1(supports-color@8.1.1))(lightningcss@1.32.0)(terser@5.44.1)(tsx@4.21.0)(vite@7.3.0(@types/node@24.19.0)(jiti@2.7.0)(lightningcss@1.32.0)(terser@5.44.1)(tsx@4.21.0)(yaml@2.9.0))(yaml@2.9.0)
     optionalDependencies:
       vite:
         specifier: ^7.2.7
@@ -935,7 +938,7 @@ importers:
         version: 5.1.4(supports-color@8.1.1)(typescript@5.9.3)(vite@7.3.0(@types/node@24.19.0)(jiti@2.7.0)(lightningcss@1.32.0)(terser@5.44.1)(tsx@4.21.0)(yaml@2.9.0))
       vitest:
         specifier: ^4.0.15
-        version: 4.0.16(@types/node@24.19.0)(@vitest/browser-playwright@4.0.16)(happy-dom@20.0.11)(jiti@2.7.0)(jsdom@25.0.1)(lightningcss@1.32.0)(terser@5.44.1)(tsx@4.21.0)(vite@7.3.0(@types/node@24.19.0)(jiti@2.7.0)(lightningcss@1.32.0)(terser@5.44.1)(tsx@4.21.0)(yaml@2.9.0))(yaml@2.9.0)
+        version: 4.0.16(@types/node@24.19.0)(@vitest/browser-playwright@4.0.16)(happy-dom@20.0.11)(jiti@2.7.0)(jsdom@25.0.1(supports-color@8.1.1))(lightningcss@1.32.0)(terser@5.44.1)(tsx@4.21.0)(vite@7.3.0(@types/node@24.19.0)(jiti@2.7.0)(lightningcss@1.32.0)(terser@5.44.1)(tsx@4.21.0)(yaml@2.9.0))(yaml@2.9.0)
       zod:
         specifier: ^4.1.12
         version: 4.2.1
@@ -966,7 +969,7 @@ importers:
         version: 5.9.3
       vitest:
         specifier: ^4.0.15
-        version: 4.0.16(@types/node@24.19.0)(@vitest/browser-playwright@4.0.16)(happy-dom@20.0.11)(jiti@2.7.0)(jsdom@25.0.1)(lightningcss@1.32.0)(terser@5.44.1)(tsx@4.21.0)(vite@7.3.0(@types/node@24.19.0)(jiti@2.7.0)(lightningcss@1.32.0)(terser@5.44.1)(tsx@4.21.0)(yaml@2.9.0))(yaml@2.9.0)
+        version: 4.0.16(@types/node@24.19.0)(@vitest/browser-playwright@4.0.16)(happy-dom@20.0.11)(jiti@2.7.0)(jsdom@25.0.1(supports-color@8.1.1))(lightningcss@1.32.0)(terser@5.44.1)(tsx@4.21.0)(vite@7.3.0(@types/node@24.19.0)(jiti@2.7.0)(lightningcss@1.32.0)(terser@5.44.1)(tsx@4.21.0)(yaml@2.9.0))(yaml@2.9.0)
 
   packages/geo:
     dependencies:
@@ -994,7 +997,7 @@ importers:
         version: 5.9.3
       vitest:
         specifier: ^4.0.15
-        version: 4.0.16(@types/node@24.19.0)(@vitest/browser-playwright@4.0.16)(happy-dom@20.0.11)(jiti@2.7.0)(jsdom@25.0.1)(lightningcss@1.32.0)(terser@5.44.1)(tsx@4.21.0)(vite@7.3.0(@types/node@24.19.0)(jiti@2.7.0)(lightningcss@1.32.0)(terser@5.44.1)(tsx@4.21.0)(yaml@2.9.0))(yaml@2.9.0)
+        version: 4.0.16(@types/node@24.19.0)(@vitest/browser-playwright@4.0.16)(happy-dom@20.0.11)(jiti@2.7.0)(jsdom@25.0.1(supports-color@8.1.1))(lightningcss@1.32.0)(terser@5.44.1)(tsx@4.21.0)(vite@7.3.0(@types/node@24.19.0)(jiti@2.7.0)(lightningcss@1.32.0)(terser@5.44.1)(tsx@4.21.0)(yaml@2.9.0))(yaml@2.9.0)
 
   packages/hotkey-manager:
     dependencies:
@@ -1046,7 +1049,7 @@ importers:
         version: 5.9.3
       vitest:
         specifier: ^4.0.15
-        version: 4.0.16(@types/node@24.19.0)(@vitest/browser-playwright@4.0.16)(happy-dom@20.0.11)(jiti@2.7.0)(jsdom@25.0.1)(lightningcss@1.32.0)(terser@5.44.1)(tsx@4.21.0)(vite@7.3.0(@types/node@24.19.0)(jiti@2.7.0)(lightningcss@1.32.0)(terser@5.44.1)(tsx@4.21.0)(yaml@2.9.0))(yaml@2.9.0)
+        version: 4.0.16(@types/node@24.19.0)(@vitest/browser-playwright@4.0.16)(happy-dom@20.0.11)(jiti@2.7.0)(jsdom@25.0.1(supports-color@8.1.1))(lightningcss@1.32.0)(terser@5.44.1)(tsx@4.21.0)(vite@7.3.0(@types/node@24.19.0)(jiti@2.7.0)(lightningcss@1.32.0)(terser@5.44.1)(tsx@4.21.0)(yaml@2.9.0))(yaml@2.9.0)
     optionalDependencies:
       react:
         specifier: ^19
@@ -1136,7 +1139,7 @@ importers:
         version: 5.9.3
       vitest:
         specifier: ^4.0.15
-        version: 4.0.16(@types/node@24.19.0)(@vitest/browser-playwright@4.0.16)(happy-dom@20.0.11)(jiti@2.7.0)(jsdom@25.0.1)(lightningcss@1.32.0)(terser@5.44.1)(tsx@4.21.0)(vite@7.3.0(@types/node@24.19.0)(jiti@2.7.0)(lightningcss@1.32.0)(terser@5.44.1)(tsx@4.21.0)(yaml@2.9.0))(yaml@2.9.0)
+        version: 4.0.16(@types/node@24.19.0)(@vitest/browser-playwright@4.0.16)(happy-dom@20.0.11)(jiti@2.7.0)(jsdom@25.0.1(supports-color@8.1.1))(lightningcss@1.32.0)(terser@5.44.1)(tsx@4.21.0)(vite@7.3.0(@types/node@24.19.0)(jiti@2.7.0)(lightningcss@1.32.0)(terser@5.44.1)(tsx@4.21.0)(yaml@2.9.0))(yaml@2.9.0)
 
   packages/map-toolkit:
     devDependencies:
@@ -1262,11 +1265,11 @@ importers:
         version: 7.3.0(@types/node@24.19.0)(jiti@2.7.0)(lightningcss@1.32.0)(terser@5.44.1)(tsx@4.21.0)(yaml@2.9.0)
       vitest:
         specifier: ^4.0.15
-        version: 4.0.16(@types/node@24.19.0)(@vitest/browser-playwright@4.0.16)(happy-dom@20.0.11)(jiti@2.7.0)(jsdom@25.0.1)(lightningcss@1.32.0)(terser@5.44.1)(tsx@4.21.0)(vite@7.3.0(@types/node@24.19.0)(jiti@2.7.0)(lightningcss@1.32.0)(terser@5.44.1)(tsx@4.21.0)(yaml@2.9.0))(yaml@2.9.0)
+        version: 4.0.16(@types/node@24.19.0)(@vitest/browser-playwright@4.0.16)(happy-dom@20.0.11)(jiti@2.7.0)(jsdom@25.0.1(supports-color@8.1.1))(lightningcss@1.32.0)(terser@5.44.1)(tsx@4.21.0)(vite@7.3.0(@types/node@24.19.0)(jiti@2.7.0)(lightningcss@1.32.0)(terser@5.44.1)(tsx@4.21.0)(yaml@2.9.0))(yaml@2.9.0)
     optionalDependencies:
       '@deck.gl-community/editable-layers':
         specifier: ~9.2
-        version: 9.2.5(c09fbfd7521c0d4a95af012fb7787f43)
+        version: 9.2.5(6bc9ac31d6cee0d759292a3f49bc0646)
       '@deck.gl/core':
         specifier: ~9.2
         version: 9.2.10
@@ -1278,13 +1281,13 @@ importers:
         version: 9.2.9(@deck.gl/core@9.2.10)(@loaders.gl/core@4.3.4)(@luma.gl/core@9.2.6)(@luma.gl/engine@9.2.6(@luma.gl/core@9.2.6)(@luma.gl/shadertools@9.2.6(@luma.gl/core@9.2.6)))
       '@deckgl-fiber-renderer/dom':
         specifier: ^1.4.0
-        version: 1.4.0(f5b014b8855f994f89e1b2e2f8f45b27)
+        version: 1.4.0(@deck.gl/core@9.2.10)(@deck.gl/geo-layers@9.2.11(bfdfdb05dfbcdc7df65bebb76198823c))(@deck.gl/layers@9.2.9(@deck.gl/core@9.2.10)(@loaders.gl/core@4.3.4)(@luma.gl/core@9.2.6)(@luma.gl/engine@9.2.6(@luma.gl/core@9.2.6)(@luma.gl/shadertools@9.2.6(@luma.gl/core@9.2.6))))(@deck.gl/mapbox@9.1.14(@deck.gl/core@9.2.10)(@luma.gl/core@9.2.6))(@deck.gl/mesh-layers@9.2.11(@deck.gl/core@9.2.10)(@loaders.gl/core@4.3.4)(@luma.gl/core@9.2.6)(@luma.gl/engine@9.2.6(@luma.gl/core@9.2.6)(@luma.gl/shadertools@9.2.6(@luma.gl/core@9.2.6)))(@luma.gl/gltf@9.2.6(@luma.gl/constants@9.2.6)(@luma.gl/core@9.2.6)(@luma.gl/engine@9.2.6(@luma.gl/core@9.2.6)(@luma.gl/shadertools@9.2.6(@luma.gl/core@9.2.6)))(@luma.gl/shadertools@9.2.6(@luma.gl/core@9.2.6))(texture-compressor@1.0.2))(@luma.gl/shadertools@9.2.6(@luma.gl/core@9.2.6)))(@types/react-dom@19.2.3(@types/react@19.2.7))(@types/react@19.2.7)(immer@11.0.1)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(use-sync-external-store@1.6.0(react@19.2.3))
       '@deckgl-fiber-renderer/shared':
         specifier: ^1.4.0
         version: 1.4.0(@deck.gl/core@9.2.10)(@deck.gl/mapbox@9.1.14(@deck.gl/core@9.2.10)(@luma.gl/core@9.2.6))(@types/react@19.2.7)(immer@11.0.1)(react@19.2.3)(use-sync-external-store@1.6.0(react@19.2.3))
       '@deckgl-fiber-renderer/types':
         specifier: ^1.4.0
-        version: 1.4.0(ae960ece7843c1aeadf38de9efb1af46)
+        version: 1.4.0(@deck.gl/core@9.2.10)(@deck.gl/geo-layers@9.2.11(bfdfdb05dfbcdc7df65bebb76198823c))(@deck.gl/layers@9.2.9(@deck.gl/core@9.2.10)(@loaders.gl/core@4.3.4)(@luma.gl/core@9.2.6)(@luma.gl/engine@9.2.6(@luma.gl/core@9.2.6)(@luma.gl/shadertools@9.2.6(@luma.gl/core@9.2.6))))(@deck.gl/mapbox@9.1.14(@deck.gl/core@9.2.10)(@luma.gl/core@9.2.6))(@deck.gl/mesh-layers@9.2.11(@deck.gl/core@9.2.10)(@loaders.gl/core@4.3.4)(@luma.gl/core@9.2.6)(@luma.gl/engine@9.2.6(@luma.gl/core@9.2.6)(@luma.gl/shadertools@9.2.6(@luma.gl/core@9.2.6)))(@luma.gl/gltf@9.2.6(@luma.gl/constants@9.2.6)(@luma.gl/core@9.2.6)(@luma.gl/engine@9.2.6(@luma.gl/core@9.2.6)(@luma.gl/shadertools@9.2.6(@luma.gl/core@9.2.6)))(@luma.gl/shadertools@9.2.6(@luma.gl/core@9.2.6))(texture-compressor@1.0.2))(@luma.gl/shadertools@9.2.6(@luma.gl/core@9.2.6)))(@types/react-dom@19.2.3(@types/react@19.2.7))(@types/react@19.2.7)
       '@math.gl/web-mercator':
         specifier: ^4.1.0
         version: 4.1.0
@@ -1335,7 +1338,7 @@ importers:
         version: 5.9.3
       vitest:
         specifier: ^4.0.15
-        version: 4.0.16(@types/node@24.19.0)(@vitest/browser-playwright@4.0.16)(happy-dom@20.0.11)(jiti@2.7.0)(jsdom@25.0.1)(lightningcss@1.32.0)(terser@5.44.1)(tsx@4.21.0)(vite@7.3.0(@types/node@24.19.0)(jiti@2.7.0)(lightningcss@1.32.0)(terser@5.44.1)(tsx@4.21.0)(yaml@2.9.0))(yaml@2.9.0)
+        version: 4.0.16(@types/node@24.19.0)(@vitest/browser-playwright@4.0.16)(happy-dom@20.0.11)(jiti@2.7.0)(jsdom@25.0.1(supports-color@8.1.1))(lightningcss@1.32.0)(terser@5.44.1)(tsx@4.21.0)(vite@7.3.0(@types/node@24.19.0)(jiti@2.7.0)(lightningcss@1.32.0)(terser@5.44.1)(tsx@4.21.0)(yaml@2.9.0))(yaml@2.9.0)
 
   packages/ntds:
     devDependencies:
@@ -1392,7 +1395,7 @@ importers:
         version: 0.18.1(publint@0.3.16)(typescript@5.9.3)
       vitest:
         specifier: ^4.0.15
-        version: 4.0.16(@types/node@24.19.0)(@vitest/browser-playwright@4.0.16)(happy-dom@20.0.11)(jiti@2.7.0)(jsdom@25.0.1)(lightningcss@1.32.0)(terser@5.44.1)(tsx@4.21.0)(vite@7.3.0(@types/node@24.19.0)(jiti@2.7.0)(lightningcss@1.32.0)(terser@5.44.1)(tsx@4.21.0)(yaml@2.9.0))(yaml@2.9.0)
+        version: 4.0.16(@types/node@24.19.0)(@vitest/browser-playwright@4.0.16)(happy-dom@20.0.11)(jiti@2.7.0)(jsdom@25.0.1(supports-color@8.1.1))(lightningcss@1.32.0)(terser@5.44.1)(tsx@4.21.0)(vite@7.3.0(@types/node@24.19.0)(jiti@2.7.0)(lightningcss@1.32.0)(terser@5.44.1)(tsx@4.21.0)(yaml@2.9.0))(yaml@2.9.0)
     optionalDependencies:
       '@tailwindcss/postcss':
         specifier: ^4.1.17
@@ -1411,7 +1414,7 @@ importers:
         version: link:../../tooling/vitest-config
       '@vitest/web-worker':
         specifier: ^4.0.8
-        version: 4.0.16(@vitest/browser-playwright@4.0.16)(jsdom@25.0.1)(vite@7.3.0(@types/node@24.19.0)(jiti@2.7.0)(lightningcss@1.32.0)(terser@5.44.1)(tsx@4.21.0)(yaml@2.9.0))(vitest@4.0.16)(yaml@2.9.0)
+        version: 4.0.16(@vitest/browser-playwright@4.0.16)(jsdom@25.0.1(supports-color@8.1.1))(vitest@4.0.16)(yaml@2.9.0)
       fast-check:
         specifier: ^4.1.1
         version: 4.4.0
@@ -1423,7 +1426,7 @@ importers:
         version: 5.9.3
       vitest:
         specifier: ^4.0.15
-        version: 4.0.16(@types/node@24.19.0)(@vitest/browser-playwright@4.0.16)(happy-dom@20.0.11)(jiti@2.7.0)(jsdom@25.0.1)(lightningcss@1.32.0)(terser@5.44.1)(tsx@4.21.0)(vite@7.3.0(@types/node@24.19.0)(jiti@2.7.0)(lightningcss@1.32.0)(terser@5.44.1)(tsx@4.21.0)(yaml@2.9.0))(yaml@2.9.0)
+        version: 4.0.16(@types/node@24.19.0)(@vitest/browser-playwright@4.0.16)(happy-dom@20.0.11)(jiti@2.7.0)(jsdom@25.0.1(supports-color@8.1.1))(lightningcss@1.32.0)(terser@5.44.1)(tsx@4.21.0)(vite@7.3.0(@types/node@24.19.0)(jiti@2.7.0)(lightningcss@1.32.0)(terser@5.44.1)(tsx@4.21.0)(yaml@2.9.0))(yaml@2.9.0)
     optionalDependencies:
       '@accelint/constants':
         specifier: workspace:*
@@ -1467,7 +1470,7 @@ importers:
         version: 5.9.3
       vitest:
         specifier: ^4.0.15
-        version: 4.0.16(@types/node@24.19.0)(@vitest/browser-playwright@4.0.16)(happy-dom@20.0.11)(jiti@2.7.0)(jsdom@25.0.1)(lightningcss@1.32.0)(terser@5.44.1)(tsx@4.21.0)(vite@7.3.0(@types/node@24.19.0)(jiti@2.7.0)(lightningcss@1.32.0)(terser@5.44.1)(tsx@4.21.0)(yaml@2.9.0))(yaml@2.9.0)
+        version: 4.0.16(@types/node@24.19.0)(@vitest/browser-playwright@4.0.16)(happy-dom@20.0.11)(jiti@2.7.0)(jsdom@25.0.1(supports-color@8.1.1))(lightningcss@1.32.0)(terser@5.44.1)(tsx@4.21.0)(vite@7.3.0(@types/node@24.19.0)(jiti@2.7.0)(lightningcss@1.32.0)(terser@5.44.1)(tsx@4.21.0)(yaml@2.9.0))(yaml@2.9.0)
 
   packages/stream-devtools:
     devDependencies:
@@ -1527,7 +1530,7 @@ importers:
         version: 2.11.14(@testing-library/jest-dom@6.9.1)(solid-js@1.9.14)(supports-color@8.1.1)(vite@7.3.0(@types/node@24.19.0)(jiti@2.7.0)(lightningcss@1.32.0)(terser@5.44.1)(tsx@4.21.0)(yaml@2.9.0))
       vitest:
         specifier: ^4.0.15
-        version: 4.0.16(@types/node@24.19.0)(@vitest/browser-playwright@4.0.16)(happy-dom@20.0.11)(jiti@2.7.0)(jsdom@25.0.1)(lightningcss@1.32.0)(terser@5.44.1)(tsx@4.21.0)(vite@7.3.0(@types/node@24.19.0)(jiti@2.7.0)(lightningcss@1.32.0)(terser@5.44.1)(tsx@4.21.0)(yaml@2.9.0))(yaml@2.9.0)
+        version: 4.0.16(@types/node@24.19.0)(@vitest/browser-playwright@4.0.16)(happy-dom@20.0.11)(jiti@2.7.0)(jsdom@25.0.1(supports-color@8.1.1))(lightningcss@1.32.0)(terser@5.44.1)(tsx@4.21.0)(vite@7.3.0(@types/node@24.19.0)(jiti@2.7.0)(lightningcss@1.32.0)(terser@5.44.1)(tsx@4.21.0)(yaml@2.9.0))(yaml@2.9.0)
 
   packages/temporal:
     devDependencies:
@@ -1545,7 +1548,7 @@ importers:
         version: 5.9.3
       vitest:
         specifier: ^4.0.15
-        version: 4.0.16(@types/node@24.19.0)(@vitest/browser-playwright@4.0.16)(happy-dom@20.0.11)(jiti@2.7.0)(jsdom@25.0.1)(lightningcss@1.32.0)(terser@5.44.1)(tsx@4.21.0)(vite@7.3.0(@types/node@24.19.0)(jiti@2.7.0)(lightningcss@1.32.0)(terser@5.44.1)(tsx@4.21.0)(yaml@2.9.0))(yaml@2.9.0)
+        version: 4.0.16(@types/node@24.19.0)(@vitest/browser-playwright@4.0.16)(happy-dom@20.0.11)(jiti@2.7.0)(jsdom@25.0.1(supports-color@8.1.1))(lightningcss@1.32.0)(terser@5.44.1)(tsx@4.21.0)(vite@7.3.0(@types/node@24.19.0)(jiti@2.7.0)(lightningcss@1.32.0)(terser@5.44.1)(tsx@4.21.0)(yaml@2.9.0))(yaml@2.9.0)
 
   packages/web-worker:
     dependencies:
@@ -1567,7 +1570,7 @@ importers:
         version: 5.9.3
       vitest:
         specifier: ^4.0.15
-        version: 4.0.16(@types/node@24.19.0)(@vitest/browser-playwright@4.0.16)(happy-dom@20.0.11)(jiti@2.7.0)(jsdom@25.0.1)(lightningcss@1.32.0)(terser@5.44.1)(tsx@4.21.0)(vite@7.3.0(@types/node@24.19.0)(jiti@2.7.0)(lightningcss@1.32.0)(terser@5.44.1)(tsx@4.21.0)(yaml@2.9.0))(yaml@2.9.0)
+        version: 4.0.16(@types/node@24.19.0)(@vitest/browser-playwright@4.0.16)(happy-dom@20.0.11)(jiti@2.7.0)(jsdom@25.0.1(supports-color@8.1.1))(lightningcss@1.32.0)(terser@5.44.1)(tsx@4.21.0)(vite@7.3.0(@types/node@24.19.0)(jiti@2.7.0)(lightningcss@1.32.0)(terser@5.44.1)(tsx@4.21.0)(yaml@2.9.0))(yaml@2.9.0)
 
   packages/websocket:
     devDependencies:
@@ -1585,7 +1588,7 @@ importers:
         version: 5.9.3
       vitest:
         specifier: ^4.0.15
-        version: 4.0.16(@types/node@24.19.0)(@vitest/browser-playwright@4.0.16)(happy-dom@20.0.11)(jiti@2.7.0)(jsdom@25.0.1)(lightningcss@1.32.0)(terser@5.44.1)(tsx@4.21.0)(vite@7.3.0(@types/node@24.19.0)(jiti@2.7.0)(lightningcss@1.32.0)(terser@5.44.1)(tsx@4.21.0)(yaml@2.9.0))(yaml@2.9.0)
+        version: 4.0.16(@types/node@24.19.0)(@vitest/browser-playwright@4.0.16)(happy-dom@20.0.11)(jiti@2.7.0)(jsdom@25.0.1(supports-color@8.1.1))(lightningcss@1.32.0)(terser@5.44.1)(tsx@4.21.0)(vite@7.3.0(@types/node@24.19.0)(jiti@2.7.0)(lightningcss@1.32.0)(terser@5.44.1)(tsx@4.21.0)(yaml@2.9.0))(yaml@2.9.0)
 
   tooling/biome-config: {}
 
@@ -1630,7 +1633,7 @@ importers:
         version: 0.18.1(publint@0.3.16)(typescript@5.9.3)
       vitest:
         specifier: ^4.0.15
-        version: 4.0.16(@types/node@24.19.0)(@vitest/browser-playwright@4.0.16)(happy-dom@20.0.11)(jiti@2.7.0)(jsdom@25.0.1)(lightningcss@1.32.0)(terser@5.44.1)(tsx@4.21.0)(vite@7.3.0(@types/node@24.19.0)(jiti@2.7.0)(lightningcss@1.32.0)(terser@5.44.1)(tsx@4.21.0)(yaml@2.8.2))(yaml@2.8.2)
+        version: 4.0.16(@types/node@24.19.0)(@vitest/browser-playwright@4.0.16)(happy-dom@20.0.11)(jiti@2.7.0)(jsdom@25.0.1(supports-color@8.1.1))(lightningcss@1.32.0)(terser@5.44.1)(tsx@4.21.0)(yaml@2.8.2)
 
   tooling/eslint-config: {}
 
@@ -1687,7 +1690,7 @@ importers:
         version: 0.18.1(publint@0.3.16)(typescript@5.9.3)
       vitest:
         specifier: ^4.0.15
-        version: 4.0.16(@types/node@24.19.0)(@vitest/browser-playwright@4.0.16)(happy-dom@20.0.11)(jiti@2.7.0)(jsdom@25.0.1)(lightningcss@1.32.0)(terser@5.44.1)(tsx@4.21.0)(vite@7.3.0(@types/node@24.19.0)(jiti@2.7.0)(lightningcss@1.32.0)(terser@5.44.1)(tsx@4.21.0)(yaml@2.9.0))(yaml@2.9.0)
+        version: 4.0.16(@types/node@24.19.0)(@vitest/browser-playwright@4.0.16)(happy-dom@20.0.11)(jiti@2.7.0)(jsdom@25.0.1(supports-color@8.1.1))(lightningcss@1.32.0)(terser@5.44.1)(tsx@4.21.0)(vite@7.3.0(@types/node@24.19.0)(jiti@2.7.0)(lightningcss@1.32.0)(terser@5.44.1)(tsx@4.21.0)(yaml@2.9.0))(yaml@2.9.0)
 
   tooling/turbo-filter:
     devDependencies:
@@ -1722,7 +1725,7 @@ importers:
         version: 5.1.4(supports-color@8.1.1)(typescript@5.9.3)(vite@7.3.0(@types/node@24.19.0)(jiti@2.7.0)(lightningcss@1.32.0)(terser@5.44.1)(tsx@4.21.0)(yaml@2.9.0))
       vitest:
         specifier: ^4.0.15
-        version: 4.0.16(@types/node@24.19.0)(@vitest/browser-playwright@4.0.16)(happy-dom@20.0.11)(jiti@2.7.0)(jsdom@25.0.1)(lightningcss@1.32.0)(terser@5.44.1)(tsx@4.21.0)(vite@7.3.0(@types/node@24.19.0)(jiti@2.7.0)(lightningcss@1.32.0)(terser@5.44.1)(tsx@4.21.0)(yaml@2.9.0))(yaml@2.9.0)
+        version: 4.0.16(@types/node@24.19.0)(@vitest/browser-playwright@4.0.16)(happy-dom@20.0.11)(jiti@2.7.0)(jsdom@25.0.1(supports-color@8.1.1))(lightningcss@1.32.0)(terser@5.44.1)(tsx@4.21.0)(vite@7.3.0(@types/node@24.19.0)(jiti@2.7.0)(lightningcss@1.32.0)(terser@5.44.1)(tsx@4.21.0)(yaml@2.9.0))(yaml@2.9.0)
 
 packages:
 
@@ -9992,14 +9995,14 @@ snapshots:
 
   '@csstools/css-tokenizer@3.0.4': {}
 
-  '@deck.gl-community/editable-layers@9.2.5(c09fbfd7521c0d4a95af012fb7787f43)':
+  '@deck.gl-community/editable-layers@9.2.5(6bc9ac31d6cee0d759292a3f49bc0646)':
     dependencies:
-      '@deck.gl-community/layers': 9.4.10(d42db03b7a77d772bcb6fd7759b9451e)
+      '@deck.gl-community/layers': 9.4.10(0df7188a54de402707a8960faca1d1b0)
       '@deck.gl/core': 9.2.10
       '@deck.gl/extensions': 9.2.9(@deck.gl/core@9.2.10)(@luma.gl/core@9.2.6)(@luma.gl/engine@9.2.6(@luma.gl/core@9.2.6)(@luma.gl/shadertools@9.2.6(@luma.gl/core@9.2.6)))
-      '@deck.gl/geo-layers': 9.2.11(@deck.gl/core@9.2.10)(@deck.gl/extensions@9.2.9(@deck.gl/core@9.2.10)(@luma.gl/core@9.2.6)(@luma.gl/engine@9.2.6(@luma.gl/core@9.2.6)(@luma.gl/shadertools@9.2.6(@luma.gl/core@9.2.6))))(@deck.gl/layers@9.2.9(@deck.gl/core@9.2.10)(@loaders.gl/core@4.3.4)(@luma.gl/core@9.2.6)(@luma.gl/engine@9.2.6(@luma.gl/core@9.2.6)(@luma.gl/shadertools@9.2.6(@luma.gl/core@9.2.6))))(@deck.gl/mesh-layers@9.2.11(@deck.gl/core@9.2.10)(@loaders.gl/core@4.3.4)(@luma.gl/core@9.2.6)(@luma.gl/engine@9.2.6(@luma.gl/core@9.2.6)(@luma.gl/shadertools@9.2.6(@luma.gl/core@9.2.6)))(@luma.gl/gltf@9.2.6(@luma.gl/constants@9.2.6)(@luma.gl/core@9.2.6)(@luma.gl/engine@9.2.6(@luma.gl/core@9.2.6)(@luma.gl/shadertools@9.2.6(@luma.gl/core@9.2.6)))(@luma.gl/shadertools@9.2.6(@luma.gl/core@9.2.6)))(@luma.gl/shadertools@9.2.6(@luma.gl/core@9.2.6)))(@loaders.gl/core@4.3.4)(@luma.gl/constants@9.2.6)(@luma.gl/core@9.2.6)(@luma.gl/engine@9.2.6(@luma.gl/core@9.2.6)(@luma.gl/shadertools@9.2.6(@luma.gl/core@9.2.6)))
+      '@deck.gl/geo-layers': 9.2.11(bfdfdb05dfbcdc7df65bebb76198823c)
       '@deck.gl/layers': 9.2.9(@deck.gl/core@9.2.10)(@loaders.gl/core@4.3.4)(@luma.gl/core@9.2.6)(@luma.gl/engine@9.2.6(@luma.gl/core@9.2.6)(@luma.gl/shadertools@9.2.6(@luma.gl/core@9.2.6)))
-      '@deck.gl/mesh-layers': 9.2.11(@deck.gl/core@9.2.10)(@loaders.gl/core@4.3.4)(@luma.gl/core@9.2.6)(@luma.gl/engine@9.2.6(@luma.gl/core@9.2.6)(@luma.gl/shadertools@9.2.6(@luma.gl/core@9.2.6)))(@luma.gl/gltf@9.2.6(@luma.gl/constants@9.2.6)(@luma.gl/core@9.2.6)(@luma.gl/engine@9.2.6(@luma.gl/core@9.2.6)(@luma.gl/shadertools@9.2.6(@luma.gl/core@9.2.6)))(@luma.gl/shadertools@9.2.6(@luma.gl/core@9.2.6)))(@luma.gl/shadertools@9.2.6(@luma.gl/core@9.2.6))
+      '@deck.gl/mesh-layers': 9.2.11(@deck.gl/core@9.2.10)(@loaders.gl/core@4.3.4)(@luma.gl/core@9.2.6)(@luma.gl/engine@9.2.6(@luma.gl/core@9.2.6)(@luma.gl/shadertools@9.2.6(@luma.gl/core@9.2.6)))(@luma.gl/gltf@9.2.6(@luma.gl/constants@9.2.6)(@luma.gl/core@9.2.6)(@luma.gl/engine@9.2.6(@luma.gl/core@9.2.6)(@luma.gl/shadertools@9.2.6(@luma.gl/core@9.2.6)))(@luma.gl/shadertools@9.2.6(@luma.gl/core@9.2.6))(texture-compressor@1.0.2))(@luma.gl/shadertools@9.2.6(@luma.gl/core@9.2.6))
       '@luma.gl/constants': 9.2.6
       '@luma.gl/core': 9.2.6
       '@luma.gl/engine': 9.2.6(@luma.gl/core@9.2.6)(@luma.gl/shadertools@9.2.6(@luma.gl/core@9.2.6))
@@ -10047,13 +10050,13 @@ snapshots:
       uuid: 9.0.0
     optional: true
 
-  '@deck.gl-community/layers@9.4.10(d42db03b7a77d772bcb6fd7759b9451e)':
+  '@deck.gl-community/layers@9.4.10(0df7188a54de402707a8960faca1d1b0)':
     dependencies:
       '@deck.gl/core': 9.2.10
       '@deck.gl/extensions': 9.2.9(@deck.gl/core@9.2.10)(@luma.gl/core@9.2.6)(@luma.gl/engine@9.2.6(@luma.gl/core@9.2.6)(@luma.gl/shadertools@9.2.6(@luma.gl/core@9.2.6)))
-      '@deck.gl/geo-layers': 9.2.11(@deck.gl/core@9.2.10)(@deck.gl/extensions@9.2.9(@deck.gl/core@9.2.10)(@luma.gl/core@9.2.6)(@luma.gl/engine@9.2.6(@luma.gl/core@9.2.6)(@luma.gl/shadertools@9.2.6(@luma.gl/core@9.2.6))))(@deck.gl/layers@9.2.9(@deck.gl/core@9.2.10)(@loaders.gl/core@4.3.4)(@luma.gl/core@9.2.6)(@luma.gl/engine@9.2.6(@luma.gl/core@9.2.6)(@luma.gl/shadertools@9.2.6(@luma.gl/core@9.2.6))))(@deck.gl/mesh-layers@9.2.11(@deck.gl/core@9.2.10)(@loaders.gl/core@4.3.4)(@luma.gl/core@9.2.6)(@luma.gl/engine@9.2.6(@luma.gl/core@9.2.6)(@luma.gl/shadertools@9.2.6(@luma.gl/core@9.2.6)))(@luma.gl/gltf@9.2.6(@luma.gl/constants@9.2.6)(@luma.gl/core@9.2.6)(@luma.gl/engine@9.2.6(@luma.gl/core@9.2.6)(@luma.gl/shadertools@9.2.6(@luma.gl/core@9.2.6)))(@luma.gl/shadertools@9.2.6(@luma.gl/core@9.2.6)))(@luma.gl/shadertools@9.2.6(@luma.gl/core@9.2.6)))(@loaders.gl/core@4.3.4)(@luma.gl/constants@9.2.6)(@luma.gl/core@9.2.6)(@luma.gl/engine@9.2.6(@luma.gl/core@9.2.6)(@luma.gl/shadertools@9.2.6(@luma.gl/core@9.2.6)))
+      '@deck.gl/geo-layers': 9.2.11(bfdfdb05dfbcdc7df65bebb76198823c)
       '@deck.gl/layers': 9.2.9(@deck.gl/core@9.2.10)(@loaders.gl/core@4.3.4)(@luma.gl/core@9.2.6)(@luma.gl/engine@9.2.6(@luma.gl/core@9.2.6)(@luma.gl/shadertools@9.2.6(@luma.gl/core@9.2.6)))
-      '@deck.gl/mesh-layers': 9.2.11(@deck.gl/core@9.2.10)(@loaders.gl/core@4.3.4)(@luma.gl/core@9.2.6)(@luma.gl/engine@9.2.6(@luma.gl/core@9.2.6)(@luma.gl/shadertools@9.2.6(@luma.gl/core@9.2.6)))(@luma.gl/gltf@9.2.6(@luma.gl/constants@9.2.6)(@luma.gl/core@9.2.6)(@luma.gl/engine@9.2.6(@luma.gl/core@9.2.6)(@luma.gl/shadertools@9.2.6(@luma.gl/core@9.2.6)))(@luma.gl/shadertools@9.2.6(@luma.gl/core@9.2.6)))(@luma.gl/shadertools@9.2.6(@luma.gl/core@9.2.6))
+      '@deck.gl/mesh-layers': 9.2.11(@deck.gl/core@9.2.10)(@loaders.gl/core@4.3.4)(@luma.gl/core@9.2.6)(@luma.gl/engine@9.2.6(@luma.gl/core@9.2.6)(@luma.gl/shadertools@9.2.6(@luma.gl/core@9.2.6)))(@luma.gl/gltf@9.2.6(@luma.gl/constants@9.2.6)(@luma.gl/core@9.2.6)(@luma.gl/engine@9.2.6(@luma.gl/core@9.2.6)(@luma.gl/shadertools@9.2.6(@luma.gl/core@9.2.6)))(@luma.gl/shadertools@9.2.6(@luma.gl/core@9.2.6))(texture-compressor@1.0.2))(@luma.gl/shadertools@9.2.6(@luma.gl/core@9.2.6))
       '@loaders.gl/core': 4.3.4
       '@loaders.gl/textures': 4.5.4(@loaders.gl/core@4.3.4)(texture-compressor@1.0.2)
       '@luma.gl/constants': 9.4.2
@@ -10095,23 +10098,23 @@ snapshots:
       '@luma.gl/shadertools': 9.2.6(@luma.gl/core@9.2.6)
       '@math.gl/core': 4.1.0
 
-  '@deck.gl/geo-layers@9.1.14(@deck.gl/core@9.2.10)(@deck.gl/extensions@9.2.9(@deck.gl/core@9.2.10)(@luma.gl/core@9.2.6))(@deck.gl/layers@9.2.9(@deck.gl/core@9.2.10)(@loaders.gl/core@4.3.4)(@luma.gl/core@9.2.6))(@deck.gl/mesh-layers@9.1.14(@deck.gl/core@9.2.10)(@loaders.gl/core@4.3.4)(@luma.gl/core@9.2.6))(@loaders.gl/core@4.3.4)(@luma.gl/core@9.2.6)':
+  '@deck.gl/geo-layers@9.1.14(@deck.gl/core@9.2.10)(@deck.gl/extensions@9.2.9(@deck.gl/core@9.2.10)(@luma.gl/core@9.2.6)(@luma.gl/engine@9.2.6(@luma.gl/core@9.2.6)(@luma.gl/shadertools@9.2.6(@luma.gl/core@9.2.6))))(@deck.gl/layers@9.2.9(@deck.gl/core@9.2.10)(@loaders.gl/core@4.3.4)(@luma.gl/core@9.2.6)(@luma.gl/engine@9.2.6(@luma.gl/core@9.2.6)(@luma.gl/shadertools@9.2.6(@luma.gl/core@9.2.6))))(@deck.gl/mesh-layers@9.1.14(@deck.gl/core@9.2.10)(@loaders.gl/core@4.3.4)(@luma.gl/core@9.2.6)(texture-compressor@1.0.2))(@loaders.gl/core@4.3.4)(@luma.gl/core@9.2.6)(texture-compressor@1.0.2)':
     dependencies:
       '@deck.gl/core': 9.2.10
       '@deck.gl/extensions': 9.2.9(@deck.gl/core@9.2.10)(@luma.gl/core@9.2.6)(@luma.gl/engine@9.2.6(@luma.gl/core@9.2.6)(@luma.gl/shadertools@9.2.6(@luma.gl/core@9.2.6)))
       '@deck.gl/layers': 9.2.9(@deck.gl/core@9.2.10)(@loaders.gl/core@4.3.4)(@luma.gl/core@9.2.6)(@luma.gl/engine@9.2.6(@luma.gl/core@9.2.6)(@luma.gl/shadertools@9.2.6(@luma.gl/core@9.2.6)))
-      '@deck.gl/mesh-layers': 9.1.14(@deck.gl/core@9.2.10)(@loaders.gl/core@4.3.4)(@luma.gl/core@9.2.6)
+      '@deck.gl/mesh-layers': 9.1.14(@deck.gl/core@9.2.10)(@loaders.gl/core@4.3.4)(@luma.gl/core@9.2.6)(texture-compressor@1.0.2)
       '@loaders.gl/3d-tiles': 4.3.4(@loaders.gl/core@4.3.4)
       '@loaders.gl/core': 4.3.4
       '@loaders.gl/gis': 4.3.4(@loaders.gl/core@4.3.4)
-      '@loaders.gl/loader-utils': 4.3.4(@loaders.gl/core@4.3.4)
+      '@loaders.gl/loader-utils': 4.5.4(@loaders.gl/core@4.3.4)
       '@loaders.gl/mvt': 4.3.4(@loaders.gl/core@4.3.4)
-      '@loaders.gl/schema': 4.3.4(@loaders.gl/core@4.3.4)
+      '@loaders.gl/schema': 4.5.4
       '@loaders.gl/terrain': 4.3.4(@loaders.gl/core@4.3.4)
       '@loaders.gl/tiles': 4.3.4(@loaders.gl/core@4.3.4)
       '@loaders.gl/wms': 4.3.4(@loaders.gl/core@4.3.4)
       '@luma.gl/core': 9.2.6
-      '@luma.gl/gltf': 9.1.10(@luma.gl/core@9.2.6)(@luma.gl/shadertools@9.1.10(@luma.gl/core@9.2.6))
+      '@luma.gl/gltf': 9.1.10(@luma.gl/core@9.2.6)(@luma.gl/shadertools@9.1.10(@luma.gl/core@9.2.6))(texture-compressor@1.0.2)
       '@luma.gl/shadertools': 9.1.10(@luma.gl/core@9.2.6)
       '@math.gl/core': 4.1.0
       '@math.gl/culling': 4.1.0
@@ -10119,13 +10122,15 @@ snapshots:
       '@types/geojson': 7946.0.16
       h3-js: 4.4.0
       long: 3.2.0
+    transitivePeerDependencies:
+      - texture-compressor
 
-  '@deck.gl/geo-layers@9.2.11(@deck.gl/core@9.2.10)(@deck.gl/extensions@9.2.9(@deck.gl/core@9.2.10)(@luma.gl/core@9.2.6)(@luma.gl/engine@9.2.6(@luma.gl/core@9.2.6)(@luma.gl/shadertools@9.2.6(@luma.gl/core@9.2.6))))(@deck.gl/layers@9.2.9(@deck.gl/core@9.2.10)(@loaders.gl/core@4.3.4)(@luma.gl/core@9.2.6)(@luma.gl/engine@9.2.6(@luma.gl/core@9.2.6)(@luma.gl/shadertools@9.2.6(@luma.gl/core@9.2.6))))(@deck.gl/mesh-layers@9.2.11(@deck.gl/core@9.2.10)(@loaders.gl/core@4.3.4)(@luma.gl/core@9.2.6)(@luma.gl/engine@9.2.6(@luma.gl/core@9.2.6)(@luma.gl/shadertools@9.2.6(@luma.gl/core@9.2.6)))(@luma.gl/gltf@9.2.6(@luma.gl/constants@9.2.6)(@luma.gl/core@9.2.6)(@luma.gl/engine@9.2.6(@luma.gl/core@9.2.6)(@luma.gl/shadertools@9.2.6(@luma.gl/core@9.2.6)))(@luma.gl/shadertools@9.2.6(@luma.gl/core@9.2.6)))(@luma.gl/shadertools@9.2.6(@luma.gl/core@9.2.6)))(@loaders.gl/core@4.3.4)(@luma.gl/constants@9.2.6)(@luma.gl/core@9.2.6)(@luma.gl/engine@9.2.6(@luma.gl/core@9.2.6)(@luma.gl/shadertools@9.2.6(@luma.gl/core@9.2.6)))':
+  '@deck.gl/geo-layers@9.2.11(bfdfdb05dfbcdc7df65bebb76198823c)':
     dependencies:
       '@deck.gl/core': 9.2.10
       '@deck.gl/extensions': 9.2.9(@deck.gl/core@9.2.10)(@luma.gl/core@9.2.6)(@luma.gl/engine@9.2.6(@luma.gl/core@9.2.6)(@luma.gl/shadertools@9.2.6(@luma.gl/core@9.2.6)))
       '@deck.gl/layers': 9.2.9(@deck.gl/core@9.2.10)(@loaders.gl/core@4.3.4)(@luma.gl/core@9.2.6)(@luma.gl/engine@9.2.6(@luma.gl/core@9.2.6)(@luma.gl/shadertools@9.2.6(@luma.gl/core@9.2.6)))
-      '@deck.gl/mesh-layers': 9.2.11(@deck.gl/core@9.2.10)(@loaders.gl/core@4.3.4)(@luma.gl/core@9.2.6)(@luma.gl/engine@9.2.6(@luma.gl/core@9.2.6)(@luma.gl/shadertools@9.2.6(@luma.gl/core@9.2.6)))(@luma.gl/gltf@9.2.6(@luma.gl/constants@9.2.6)(@luma.gl/core@9.2.6)(@luma.gl/engine@9.2.6(@luma.gl/core@9.2.6)(@luma.gl/shadertools@9.2.6(@luma.gl/core@9.2.6)))(@luma.gl/shadertools@9.2.6(@luma.gl/core@9.2.6)))(@luma.gl/shadertools@9.2.6(@luma.gl/core@9.2.6))
+      '@deck.gl/mesh-layers': 9.2.11(@deck.gl/core@9.2.10)(@loaders.gl/core@4.3.4)(@luma.gl/core@9.2.6)(@luma.gl/engine@9.2.6(@luma.gl/core@9.2.6)(@luma.gl/shadertools@9.2.6(@luma.gl/core@9.2.6)))(@luma.gl/gltf@9.2.6(@luma.gl/constants@9.2.6)(@luma.gl/core@9.2.6)(@luma.gl/engine@9.2.6(@luma.gl/core@9.2.6)(@luma.gl/shadertools@9.2.6(@luma.gl/core@9.2.6)))(@luma.gl/shadertools@9.2.6(@luma.gl/core@9.2.6))(texture-compressor@1.0.2))(@luma.gl/shadertools@9.2.6(@luma.gl/core@9.2.6))
       '@loaders.gl/3d-tiles': 4.3.4(@loaders.gl/core@4.3.4)
       '@loaders.gl/core': 4.3.4
       '@loaders.gl/gis': 4.3.4(@loaders.gl/core@4.3.4)
@@ -10137,7 +10142,7 @@ snapshots:
       '@loaders.gl/wms': 4.3.4(@loaders.gl/core@4.3.4)
       '@luma.gl/core': 9.2.6
       '@luma.gl/engine': 9.2.6(@luma.gl/core@9.2.6)(@luma.gl/shadertools@9.2.6(@luma.gl/core@9.2.6))
-      '@luma.gl/gltf': 9.2.6(@luma.gl/constants@9.2.6)(@luma.gl/core@9.2.6)(@luma.gl/engine@9.2.6(@luma.gl/core@9.2.6)(@luma.gl/shadertools@9.2.6(@luma.gl/core@9.2.6)))(@luma.gl/shadertools@9.2.6(@luma.gl/core@9.2.6))
+      '@luma.gl/gltf': 9.2.6(@luma.gl/constants@9.2.6)(@luma.gl/core@9.2.6)(@luma.gl/engine@9.2.6(@luma.gl/core@9.2.6)(@luma.gl/shadertools@9.2.6(@luma.gl/core@9.2.6)))(@luma.gl/shadertools@9.2.6(@luma.gl/core@9.2.6))(texture-compressor@1.0.2)
       '@luma.gl/shadertools': 9.2.6(@luma.gl/core@9.2.6)
       '@math.gl/core': 4.1.0
       '@math.gl/culling': 4.1.0
@@ -10148,6 +10153,7 @@ snapshots:
       long: 3.2.0
     transitivePeerDependencies:
       - '@luma.gl/constants'
+      - texture-compressor
     optional: true
 
   '@deck.gl/layers@9.2.9(@deck.gl/core@9.2.10)(@loaders.gl/core@4.3.4)(@luma.gl/core@9.2.6)(@luma.gl/engine@9.2.6(@luma.gl/core@9.2.6)(@luma.gl/shadertools@9.2.6(@luma.gl/core@9.2.6)))':
@@ -10172,34 +10178,35 @@ snapshots:
       '@luma.gl/core': 9.2.6
       '@math.gl/web-mercator': 4.1.0
 
-  '@deck.gl/mesh-layers@9.1.14(@deck.gl/core@9.2.10)(@loaders.gl/core@4.3.4)(@luma.gl/core@9.2.6)':
+  '@deck.gl/mesh-layers@9.1.14(@deck.gl/core@9.2.10)(@loaders.gl/core@4.3.4)(@luma.gl/core@9.2.6)(texture-compressor@1.0.2)':
     dependencies:
       '@deck.gl/core': 9.2.10
       '@loaders.gl/gltf': 4.3.4(@loaders.gl/core@4.3.4)
       '@luma.gl/core': 9.2.6
-      '@luma.gl/gltf': 9.1.10(@luma.gl/core@9.2.6)(@luma.gl/shadertools@9.1.10(@luma.gl/core@9.2.6))
+      '@luma.gl/gltf': 9.1.10(@luma.gl/core@9.2.6)(@luma.gl/shadertools@9.1.10(@luma.gl/core@9.2.6))(texture-compressor@1.0.2)
       '@luma.gl/shadertools': 9.1.10(@luma.gl/core@9.2.6)
     transitivePeerDependencies:
       - '@loaders.gl/core'
+      - texture-compressor
 
-  '@deck.gl/mesh-layers@9.2.11(@deck.gl/core@9.2.10)(@loaders.gl/core@4.3.4)(@luma.gl/core@9.2.6)(@luma.gl/engine@9.2.6(@luma.gl/core@9.2.6)(@luma.gl/shadertools@9.2.6(@luma.gl/core@9.2.6)))(@luma.gl/gltf@9.2.6(@luma.gl/constants@9.2.6)(@luma.gl/core@9.2.6)(@luma.gl/engine@9.2.6(@luma.gl/core@9.2.6)(@luma.gl/shadertools@9.2.6(@luma.gl/core@9.2.6)))(@luma.gl/shadertools@9.2.6(@luma.gl/core@9.2.6)))(@luma.gl/shadertools@9.2.6(@luma.gl/core@9.2.6))':
+  '@deck.gl/mesh-layers@9.2.11(@deck.gl/core@9.2.10)(@loaders.gl/core@4.3.4)(@luma.gl/core@9.2.6)(@luma.gl/engine@9.2.6(@luma.gl/core@9.2.6)(@luma.gl/shadertools@9.2.6(@luma.gl/core@9.2.6)))(@luma.gl/gltf@9.2.6(@luma.gl/constants@9.2.6)(@luma.gl/core@9.2.6)(@luma.gl/engine@9.2.6(@luma.gl/core@9.2.6)(@luma.gl/shadertools@9.2.6(@luma.gl/core@9.2.6)))(@luma.gl/shadertools@9.2.6(@luma.gl/core@9.2.6))(texture-compressor@1.0.2))(@luma.gl/shadertools@9.2.6(@luma.gl/core@9.2.6))':
     dependencies:
       '@deck.gl/core': 9.2.10
       '@loaders.gl/gltf': 4.3.4(@loaders.gl/core@4.3.4)
       '@loaders.gl/schema': 4.3.4(@loaders.gl/core@4.3.4)
       '@luma.gl/core': 9.2.6
       '@luma.gl/engine': 9.2.6(@luma.gl/core@9.2.6)(@luma.gl/shadertools@9.2.6(@luma.gl/core@9.2.6))
-      '@luma.gl/gltf': 9.2.6(@luma.gl/constants@9.2.6)(@luma.gl/core@9.2.6)(@luma.gl/engine@9.2.6(@luma.gl/core@9.2.6)(@luma.gl/shadertools@9.2.6(@luma.gl/core@9.2.6)))(@luma.gl/shadertools@9.2.6(@luma.gl/core@9.2.6))
+      '@luma.gl/gltf': 9.2.6(@luma.gl/constants@9.2.6)(@luma.gl/core@9.2.6)(@luma.gl/engine@9.2.6(@luma.gl/core@9.2.6)(@luma.gl/shadertools@9.2.6(@luma.gl/core@9.2.6)))(@luma.gl/shadertools@9.2.6(@luma.gl/core@9.2.6))(texture-compressor@1.0.2)
       '@luma.gl/shadertools': 9.2.6(@luma.gl/core@9.2.6)
     transitivePeerDependencies:
       - '@loaders.gl/core'
     optional: true
 
-  '@deckgl-fiber-renderer/dom@1.4.0(@deck.gl/core@9.2.10)(@deck.gl/geo-layers@9.1.14(@deck.gl/core@9.2.10)(@deck.gl/extensions@9.2.9(@deck.gl/core@9.2.10)(@luma.gl/core@9.2.6))(@deck.gl/layers@9.2.9(@deck.gl/core@9.2.10)(@loaders.gl/core@4.3.4)(@luma.gl/core@9.2.6))(@deck.gl/mesh-layers@9.1.14(@deck.gl/core@9.2.10)(@loaders.gl/core@4.3.4)(@luma.gl/core@9.2.6))(@loaders.gl/core@4.3.4)(@luma.gl/core@9.2.6))(@deck.gl/layers@9.2.9(@deck.gl/core@9.2.10)(@loaders.gl/core@4.3.4)(@luma.gl/core@9.2.6))(@deck.gl/mapbox@9.1.14(@deck.gl/core@9.2.10)(@luma.gl/core@9.2.6))(@deck.gl/mesh-layers@9.1.14(@deck.gl/core@9.2.10)(@loaders.gl/core@4.3.4)(@luma.gl/core@9.2.6))(@types/react-dom@19.2.3(@types/react@19.2.7))(@types/react@19.2.7)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)':
+  '@deckgl-fiber-renderer/dom@1.4.0(4e2ca28f11091d98be979c18085d850c)':
     dependencies:
-      '@deckgl-fiber-renderer/reconciler': 1.4.0(@deck.gl/core@9.2.10)(@deck.gl/geo-layers@9.1.14(@deck.gl/core@9.2.10)(@deck.gl/extensions@9.2.9(@deck.gl/core@9.2.10)(@luma.gl/core@9.2.6))(@deck.gl/layers@9.2.9(@deck.gl/core@9.2.10)(@loaders.gl/core@4.3.4)(@luma.gl/core@9.2.6))(@deck.gl/mesh-layers@9.1.14(@deck.gl/core@9.2.10)(@loaders.gl/core@4.3.4)(@luma.gl/core@9.2.6))(@loaders.gl/core@4.3.4)(@luma.gl/core@9.2.6))(@deck.gl/layers@9.2.9(@deck.gl/core@9.2.10)(@loaders.gl/core@4.3.4)(@luma.gl/core@9.2.6))(@deck.gl/mapbox@9.1.14(@deck.gl/core@9.2.10)(@luma.gl/core@9.2.6))(@deck.gl/mesh-layers@9.1.14(@deck.gl/core@9.2.10)(@loaders.gl/core@4.3.4)(@luma.gl/core@9.2.6))(@types/react-dom@19.2.3(@types/react@19.2.7))(@types/react@19.2.7)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
+      '@deckgl-fiber-renderer/reconciler': 1.4.0(4e2ca28f11091d98be979c18085d850c)
       '@deckgl-fiber-renderer/shared': 1.4.0(@deck.gl/core@9.2.10)(@deck.gl/mapbox@9.1.14(@deck.gl/core@9.2.10)(@luma.gl/core@9.2.6))(@types/react@19.2.7)(immer@11.0.1)(react@19.2.3)(use-sync-external-store@1.6.0(react@19.2.3))
-      '@deckgl-fiber-renderer/types': 1.4.0(@deck.gl/core@9.2.10)(@deck.gl/geo-layers@9.1.14(@deck.gl/core@9.2.10)(@deck.gl/extensions@9.2.9(@deck.gl/core@9.2.10)(@luma.gl/core@9.2.6))(@deck.gl/layers@9.2.9(@deck.gl/core@9.2.10)(@loaders.gl/core@4.3.4)(@luma.gl/core@9.2.6))(@deck.gl/mesh-layers@9.1.14(@deck.gl/core@9.2.10)(@loaders.gl/core@4.3.4)(@luma.gl/core@9.2.6))(@loaders.gl/core@4.3.4)(@luma.gl/core@9.2.6))(@deck.gl/layers@9.2.9(@deck.gl/core@9.2.10)(@loaders.gl/core@4.3.4)(@luma.gl/core@9.2.6))(@deck.gl/mapbox@9.1.14(@deck.gl/core@9.2.10)(@luma.gl/core@9.2.6))(@deck.gl/mesh-layers@9.1.14(@deck.gl/core@9.2.10)(@loaders.gl/core@4.3.4)(@luma.gl/core@9.2.6))(@types/react-dom@19.2.3(@types/react@19.2.7))(@types/react@19.2.7)
+      '@deckgl-fiber-renderer/types': 1.4.0(c0765c09fb5240eca8d5744613349bc9)
       client-only: 0.0.1
       its-fine: 2.0.0(@types/react@19.2.7)(react@19.2.3)
       react: 19.2.3
@@ -10215,11 +10222,11 @@ snapshots:
       - immer
       - use-sync-external-store
 
-  '@deckgl-fiber-renderer/dom@1.4.0(f5b014b8855f994f89e1b2e2f8f45b27)':
+  '@deckgl-fiber-renderer/dom@1.4.0(@deck.gl/core@9.2.10)(@deck.gl/geo-layers@9.2.11(bfdfdb05dfbcdc7df65bebb76198823c))(@deck.gl/layers@9.2.9(@deck.gl/core@9.2.10)(@loaders.gl/core@4.3.4)(@luma.gl/core@9.2.6)(@luma.gl/engine@9.2.6(@luma.gl/core@9.2.6)(@luma.gl/shadertools@9.2.6(@luma.gl/core@9.2.6))))(@deck.gl/mapbox@9.1.14(@deck.gl/core@9.2.10)(@luma.gl/core@9.2.6))(@deck.gl/mesh-layers@9.2.11(@deck.gl/core@9.2.10)(@loaders.gl/core@4.3.4)(@luma.gl/core@9.2.6)(@luma.gl/engine@9.2.6(@luma.gl/core@9.2.6)(@luma.gl/shadertools@9.2.6(@luma.gl/core@9.2.6)))(@luma.gl/gltf@9.2.6(@luma.gl/constants@9.2.6)(@luma.gl/core@9.2.6)(@luma.gl/engine@9.2.6(@luma.gl/core@9.2.6)(@luma.gl/shadertools@9.2.6(@luma.gl/core@9.2.6)))(@luma.gl/shadertools@9.2.6(@luma.gl/core@9.2.6))(texture-compressor@1.0.2))(@luma.gl/shadertools@9.2.6(@luma.gl/core@9.2.6)))(@types/react-dom@19.2.3(@types/react@19.2.7))(@types/react@19.2.7)(immer@11.0.1)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(use-sync-external-store@1.6.0(react@19.2.3))':
     dependencies:
-      '@deckgl-fiber-renderer/reconciler': 1.4.0(f5b014b8855f994f89e1b2e2f8f45b27)
+      '@deckgl-fiber-renderer/reconciler': 1.4.0(@deck.gl/core@9.2.10)(@deck.gl/geo-layers@9.2.11(bfdfdb05dfbcdc7df65bebb76198823c))(@deck.gl/layers@9.2.9(@deck.gl/core@9.2.10)(@loaders.gl/core@4.3.4)(@luma.gl/core@9.2.6)(@luma.gl/engine@9.2.6(@luma.gl/core@9.2.6)(@luma.gl/shadertools@9.2.6(@luma.gl/core@9.2.6))))(@deck.gl/mapbox@9.1.14(@deck.gl/core@9.2.10)(@luma.gl/core@9.2.6))(@deck.gl/mesh-layers@9.2.11(@deck.gl/core@9.2.10)(@loaders.gl/core@4.3.4)(@luma.gl/core@9.2.6)(@luma.gl/engine@9.2.6(@luma.gl/core@9.2.6)(@luma.gl/shadertools@9.2.6(@luma.gl/core@9.2.6)))(@luma.gl/gltf@9.2.6(@luma.gl/constants@9.2.6)(@luma.gl/core@9.2.6)(@luma.gl/engine@9.2.6(@luma.gl/core@9.2.6)(@luma.gl/shadertools@9.2.6(@luma.gl/core@9.2.6)))(@luma.gl/shadertools@9.2.6(@luma.gl/core@9.2.6))(texture-compressor@1.0.2))(@luma.gl/shadertools@9.2.6(@luma.gl/core@9.2.6)))(@types/react-dom@19.2.3(@types/react@19.2.7))(@types/react@19.2.7)(immer@11.0.1)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(use-sync-external-store@1.6.0(react@19.2.3))
       '@deckgl-fiber-renderer/shared': 1.4.0(@deck.gl/core@9.2.10)(@deck.gl/mapbox@9.1.14(@deck.gl/core@9.2.10)(@luma.gl/core@9.2.6))(@types/react@19.2.7)(immer@11.0.1)(react@19.2.3)(use-sync-external-store@1.6.0(react@19.2.3))
-      '@deckgl-fiber-renderer/types': 1.4.0(ae960ece7843c1aeadf38de9efb1af46)
+      '@deckgl-fiber-renderer/types': 1.4.0(@deck.gl/core@9.2.10)(@deck.gl/geo-layers@9.2.11(bfdfdb05dfbcdc7df65bebb76198823c))(@deck.gl/layers@9.2.9(@deck.gl/core@9.2.10)(@loaders.gl/core@4.3.4)(@luma.gl/core@9.2.6)(@luma.gl/engine@9.2.6(@luma.gl/core@9.2.6)(@luma.gl/shadertools@9.2.6(@luma.gl/core@9.2.6))))(@deck.gl/mapbox@9.1.14(@deck.gl/core@9.2.10)(@luma.gl/core@9.2.6))(@deck.gl/mesh-layers@9.2.11(@deck.gl/core@9.2.10)(@loaders.gl/core@4.3.4)(@luma.gl/core@9.2.6)(@luma.gl/engine@9.2.6(@luma.gl/core@9.2.6)(@luma.gl/shadertools@9.2.6(@luma.gl/core@9.2.6)))(@luma.gl/gltf@9.2.6(@luma.gl/constants@9.2.6)(@luma.gl/core@9.2.6)(@luma.gl/engine@9.2.6(@luma.gl/core@9.2.6)(@luma.gl/shadertools@9.2.6(@luma.gl/core@9.2.6)))(@luma.gl/shadertools@9.2.6(@luma.gl/core@9.2.6))(texture-compressor@1.0.2))(@luma.gl/shadertools@9.2.6(@luma.gl/core@9.2.6)))(@types/react-dom@19.2.3(@types/react@19.2.7))(@types/react@19.2.7)
       client-only: 0.0.1
       its-fine: 2.0.0(@types/react@19.2.7)(react@19.2.3)
       react: 19.2.3
@@ -10236,15 +10243,15 @@ snapshots:
       - use-sync-external-store
     optional: true
 
-  '@deckgl-fiber-renderer/reconciler@1.4.0(@deck.gl/core@9.2.10)(@deck.gl/geo-layers@9.1.14(@deck.gl/core@9.2.10)(@deck.gl/extensions@9.2.9(@deck.gl/core@9.2.10)(@luma.gl/core@9.2.6))(@deck.gl/layers@9.2.9(@deck.gl/core@9.2.10)(@loaders.gl/core@4.3.4)(@luma.gl/core@9.2.6))(@deck.gl/mesh-layers@9.1.14(@deck.gl/core@9.2.10)(@loaders.gl/core@4.3.4)(@luma.gl/core@9.2.6))(@loaders.gl/core@4.3.4)(@luma.gl/core@9.2.6))(@deck.gl/layers@9.2.9(@deck.gl/core@9.2.10)(@loaders.gl/core@4.3.4)(@luma.gl/core@9.2.6))(@deck.gl/mapbox@9.1.14(@deck.gl/core@9.2.10)(@luma.gl/core@9.2.6))(@deck.gl/mesh-layers@9.1.14(@deck.gl/core@9.2.10)(@loaders.gl/core@4.3.4)(@luma.gl/core@9.2.6))(@types/react-dom@19.2.3(@types/react@19.2.7))(@types/react@19.2.7)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)':
+  '@deckgl-fiber-renderer/reconciler@1.4.0(4e2ca28f11091d98be979c18085d850c)':
     dependencies:
       '@deck.gl/core': 9.2.10
-      '@deck.gl/geo-layers': 9.1.14(@deck.gl/core@9.2.10)(@deck.gl/extensions@9.2.9(@deck.gl/core@9.2.10)(@luma.gl/core@9.2.6))(@deck.gl/layers@9.2.9(@deck.gl/core@9.2.10)(@loaders.gl/core@4.3.4)(@luma.gl/core@9.2.6))(@deck.gl/mesh-layers@9.1.14(@deck.gl/core@9.2.10)(@loaders.gl/core@4.3.4)(@luma.gl/core@9.2.6))(@loaders.gl/core@4.3.4)(@luma.gl/core@9.2.6)
+      '@deck.gl/geo-layers': 9.1.14(@deck.gl/core@9.2.10)(@deck.gl/extensions@9.2.9(@deck.gl/core@9.2.10)(@luma.gl/core@9.2.6)(@luma.gl/engine@9.2.6(@luma.gl/core@9.2.6)(@luma.gl/shadertools@9.2.6(@luma.gl/core@9.2.6))))(@deck.gl/layers@9.2.9(@deck.gl/core@9.2.10)(@loaders.gl/core@4.3.4)(@luma.gl/core@9.2.6)(@luma.gl/engine@9.2.6(@luma.gl/core@9.2.6)(@luma.gl/shadertools@9.2.6(@luma.gl/core@9.2.6))))(@deck.gl/mesh-layers@9.1.14(@deck.gl/core@9.2.10)(@loaders.gl/core@4.3.4)(@luma.gl/core@9.2.6)(texture-compressor@1.0.2))(@loaders.gl/core@4.3.4)(@luma.gl/core@9.2.6)(texture-compressor@1.0.2)
       '@deck.gl/layers': 9.2.9(@deck.gl/core@9.2.10)(@loaders.gl/core@4.3.4)(@luma.gl/core@9.2.6)(@luma.gl/engine@9.2.6(@luma.gl/core@9.2.6)(@luma.gl/shadertools@9.2.6(@luma.gl/core@9.2.6)))
       '@deck.gl/mapbox': 9.1.14(@deck.gl/core@9.2.10)(@luma.gl/core@9.2.6)
-      '@deck.gl/mesh-layers': 9.1.14(@deck.gl/core@9.2.10)(@loaders.gl/core@4.3.4)(@luma.gl/core@9.2.6)
+      '@deck.gl/mesh-layers': 9.1.14(@deck.gl/core@9.2.10)(@loaders.gl/core@4.3.4)(@luma.gl/core@9.2.6)(texture-compressor@1.0.2)
       '@deckgl-fiber-renderer/shared': 1.4.0(@deck.gl/core@9.2.10)(@deck.gl/mapbox@9.1.14(@deck.gl/core@9.2.10)(@luma.gl/core@9.2.6))(@types/react@19.2.7)(immer@11.0.1)(react@19.2.3)(use-sync-external-store@1.6.0(react@19.2.3))
-      '@deckgl-fiber-renderer/types': 1.4.0(@deck.gl/core@9.2.10)(@deck.gl/geo-layers@9.1.14(@deck.gl/core@9.2.10)(@deck.gl/extensions@9.2.9(@deck.gl/core@9.2.10)(@luma.gl/core@9.2.6))(@deck.gl/layers@9.2.9(@deck.gl/core@9.2.10)(@loaders.gl/core@4.3.4)(@luma.gl/core@9.2.6))(@deck.gl/mesh-layers@9.1.14(@deck.gl/core@9.2.10)(@loaders.gl/core@4.3.4)(@luma.gl/core@9.2.6))(@loaders.gl/core@4.3.4)(@luma.gl/core@9.2.6))(@deck.gl/layers@9.2.9(@deck.gl/core@9.2.10)(@loaders.gl/core@4.3.4)(@luma.gl/core@9.2.6))(@deck.gl/mapbox@9.1.14(@deck.gl/core@9.2.10)(@luma.gl/core@9.2.6))(@deck.gl/mesh-layers@9.1.14(@deck.gl/core@9.2.10)(@loaders.gl/core@4.3.4)(@luma.gl/core@9.2.6))(@types/react-dom@19.2.3(@types/react@19.2.7))(@types/react@19.2.7)
+      '@deckgl-fiber-renderer/types': 1.4.0(c0765c09fb5240eca8d5744613349bc9)
       react: 19.2.3
       react-dom: 19.2.3(react@19.2.3)
       react-reconciler: 0.31.0(react@19.2.3)
@@ -10254,15 +10261,15 @@ snapshots:
       - immer
       - use-sync-external-store
 
-  '@deckgl-fiber-renderer/reconciler@1.4.0(f5b014b8855f994f89e1b2e2f8f45b27)':
+  '@deckgl-fiber-renderer/reconciler@1.4.0(@deck.gl/core@9.2.10)(@deck.gl/geo-layers@9.2.11(bfdfdb05dfbcdc7df65bebb76198823c))(@deck.gl/layers@9.2.9(@deck.gl/core@9.2.10)(@loaders.gl/core@4.3.4)(@luma.gl/core@9.2.6)(@luma.gl/engine@9.2.6(@luma.gl/core@9.2.6)(@luma.gl/shadertools@9.2.6(@luma.gl/core@9.2.6))))(@deck.gl/mapbox@9.1.14(@deck.gl/core@9.2.10)(@luma.gl/core@9.2.6))(@deck.gl/mesh-layers@9.2.11(@deck.gl/core@9.2.10)(@loaders.gl/core@4.3.4)(@luma.gl/core@9.2.6)(@luma.gl/engine@9.2.6(@luma.gl/core@9.2.6)(@luma.gl/shadertools@9.2.6(@luma.gl/core@9.2.6)))(@luma.gl/gltf@9.2.6(@luma.gl/constants@9.2.6)(@luma.gl/core@9.2.6)(@luma.gl/engine@9.2.6(@luma.gl/core@9.2.6)(@luma.gl/shadertools@9.2.6(@luma.gl/core@9.2.6)))(@luma.gl/shadertools@9.2.6(@luma.gl/core@9.2.6))(texture-compressor@1.0.2))(@luma.gl/shadertools@9.2.6(@luma.gl/core@9.2.6)))(@types/react-dom@19.2.3(@types/react@19.2.7))(@types/react@19.2.7)(immer@11.0.1)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(use-sync-external-store@1.6.0(react@19.2.3))':
     dependencies:
       '@deck.gl/core': 9.2.10
-      '@deck.gl/geo-layers': 9.2.11(@deck.gl/core@9.2.10)(@deck.gl/extensions@9.2.9(@deck.gl/core@9.2.10)(@luma.gl/core@9.2.6)(@luma.gl/engine@9.2.6(@luma.gl/core@9.2.6)(@luma.gl/shadertools@9.2.6(@luma.gl/core@9.2.6))))(@deck.gl/layers@9.2.9(@deck.gl/core@9.2.10)(@loaders.gl/core@4.3.4)(@luma.gl/core@9.2.6)(@luma.gl/engine@9.2.6(@luma.gl/core@9.2.6)(@luma.gl/shadertools@9.2.6(@luma.gl/core@9.2.6))))(@deck.gl/mesh-layers@9.2.11(@deck.gl/core@9.2.10)(@loaders.gl/core@4.3.4)(@luma.gl/core@9.2.6)(@luma.gl/engine@9.2.6(@luma.gl/core@9.2.6)(@luma.gl/shadertools@9.2.6(@luma.gl/core@9.2.6)))(@luma.gl/gltf@9.2.6(@luma.gl/constants@9.2.6)(@luma.gl/core@9.2.6)(@luma.gl/engine@9.2.6(@luma.gl/core@9.2.6)(@luma.gl/shadertools@9.2.6(@luma.gl/core@9.2.6)))(@luma.gl/shadertools@9.2.6(@luma.gl/core@9.2.6)))(@luma.gl/shadertools@9.2.6(@luma.gl/core@9.2.6)))(@loaders.gl/core@4.3.4)(@luma.gl/constants@9.2.6)(@luma.gl/core@9.2.6)(@luma.gl/engine@9.2.6(@luma.gl/core@9.2.6)(@luma.gl/shadertools@9.2.6(@luma.gl/core@9.2.6)))
+      '@deck.gl/geo-layers': 9.2.11(bfdfdb05dfbcdc7df65bebb76198823c)
       '@deck.gl/layers': 9.2.9(@deck.gl/core@9.2.10)(@loaders.gl/core@4.3.4)(@luma.gl/core@9.2.6)(@luma.gl/engine@9.2.6(@luma.gl/core@9.2.6)(@luma.gl/shadertools@9.2.6(@luma.gl/core@9.2.6)))
       '@deck.gl/mapbox': 9.1.14(@deck.gl/core@9.2.10)(@luma.gl/core@9.2.6)
-      '@deck.gl/mesh-layers': 9.2.11(@deck.gl/core@9.2.10)(@loaders.gl/core@4.3.4)(@luma.gl/core@9.2.6)(@luma.gl/engine@9.2.6(@luma.gl/core@9.2.6)(@luma.gl/shadertools@9.2.6(@luma.gl/core@9.2.6)))(@luma.gl/gltf@9.2.6(@luma.gl/constants@9.2.6)(@luma.gl/core@9.2.6)(@luma.gl/engine@9.2.6(@luma.gl/core@9.2.6)(@luma.gl/shadertools@9.2.6(@luma.gl/core@9.2.6)))(@luma.gl/shadertools@9.2.6(@luma.gl/core@9.2.6)))(@luma.gl/shadertools@9.2.6(@luma.gl/core@9.2.6))
+      '@deck.gl/mesh-layers': 9.2.11(@deck.gl/core@9.2.10)(@loaders.gl/core@4.3.4)(@luma.gl/core@9.2.6)(@luma.gl/engine@9.2.6(@luma.gl/core@9.2.6)(@luma.gl/shadertools@9.2.6(@luma.gl/core@9.2.6)))(@luma.gl/gltf@9.2.6(@luma.gl/constants@9.2.6)(@luma.gl/core@9.2.6)(@luma.gl/engine@9.2.6(@luma.gl/core@9.2.6)(@luma.gl/shadertools@9.2.6(@luma.gl/core@9.2.6)))(@luma.gl/shadertools@9.2.6(@luma.gl/core@9.2.6))(texture-compressor@1.0.2))(@luma.gl/shadertools@9.2.6(@luma.gl/core@9.2.6))
       '@deckgl-fiber-renderer/shared': 1.4.0(@deck.gl/core@9.2.10)(@deck.gl/mapbox@9.1.14(@deck.gl/core@9.2.10)(@luma.gl/core@9.2.6))(@types/react@19.2.7)(immer@11.0.1)(react@19.2.3)(use-sync-external-store@1.6.0(react@19.2.3))
-      '@deckgl-fiber-renderer/types': 1.4.0(ae960ece7843c1aeadf38de9efb1af46)
+      '@deckgl-fiber-renderer/types': 1.4.0(@deck.gl/core@9.2.10)(@deck.gl/geo-layers@9.2.11(bfdfdb05dfbcdc7df65bebb76198823c))(@deck.gl/layers@9.2.9(@deck.gl/core@9.2.10)(@loaders.gl/core@4.3.4)(@luma.gl/core@9.2.6)(@luma.gl/engine@9.2.6(@luma.gl/core@9.2.6)(@luma.gl/shadertools@9.2.6(@luma.gl/core@9.2.6))))(@deck.gl/mapbox@9.1.14(@deck.gl/core@9.2.10)(@luma.gl/core@9.2.6))(@deck.gl/mesh-layers@9.2.11(@deck.gl/core@9.2.10)(@loaders.gl/core@4.3.4)(@luma.gl/core@9.2.6)(@luma.gl/engine@9.2.6(@luma.gl/core@9.2.6)(@luma.gl/shadertools@9.2.6(@luma.gl/core@9.2.6)))(@luma.gl/gltf@9.2.6(@luma.gl/constants@9.2.6)(@luma.gl/core@9.2.6)(@luma.gl/engine@9.2.6(@luma.gl/core@9.2.6)(@luma.gl/shadertools@9.2.6(@luma.gl/core@9.2.6)))(@luma.gl/shadertools@9.2.6(@luma.gl/core@9.2.6))(texture-compressor@1.0.2))(@luma.gl/shadertools@9.2.6(@luma.gl/core@9.2.6)))(@types/react-dom@19.2.3(@types/react@19.2.7))(@types/react@19.2.7)
       react: 19.2.3
       react-dom: 19.2.3(react@19.2.3)
       react-reconciler: 0.31.0(react@19.2.3)
@@ -10285,26 +10292,26 @@ snapshots:
       - react
       - use-sync-external-store
 
-  '@deckgl-fiber-renderer/types@1.4.0(@deck.gl/core@9.2.10)(@deck.gl/geo-layers@9.1.14(@deck.gl/core@9.2.10)(@deck.gl/extensions@9.2.9(@deck.gl/core@9.2.10)(@luma.gl/core@9.2.6))(@deck.gl/layers@9.2.9(@deck.gl/core@9.2.10)(@loaders.gl/core@4.3.4)(@luma.gl/core@9.2.6))(@deck.gl/mesh-layers@9.1.14(@deck.gl/core@9.2.10)(@loaders.gl/core@4.3.4)(@luma.gl/core@9.2.6))(@loaders.gl/core@4.3.4)(@luma.gl/core@9.2.6))(@deck.gl/layers@9.2.9(@deck.gl/core@9.2.10)(@loaders.gl/core@4.3.4)(@luma.gl/core@9.2.6))(@deck.gl/mapbox@9.1.14(@deck.gl/core@9.2.10)(@luma.gl/core@9.2.6))(@deck.gl/mesh-layers@9.1.14(@deck.gl/core@9.2.10)(@loaders.gl/core@4.3.4)(@luma.gl/core@9.2.6))(@types/react-dom@19.2.3(@types/react@19.2.7))(@types/react@19.2.7)':
+  '@deckgl-fiber-renderer/types@1.4.0(@deck.gl/core@9.2.10)(@deck.gl/geo-layers@9.2.11(bfdfdb05dfbcdc7df65bebb76198823c))(@deck.gl/layers@9.2.9(@deck.gl/core@9.2.10)(@loaders.gl/core@4.3.4)(@luma.gl/core@9.2.6)(@luma.gl/engine@9.2.6(@luma.gl/core@9.2.6)(@luma.gl/shadertools@9.2.6(@luma.gl/core@9.2.6))))(@deck.gl/mapbox@9.1.14(@deck.gl/core@9.2.10)(@luma.gl/core@9.2.6))(@deck.gl/mesh-layers@9.2.11(@deck.gl/core@9.2.10)(@loaders.gl/core@4.3.4)(@luma.gl/core@9.2.6)(@luma.gl/engine@9.2.6(@luma.gl/core@9.2.6)(@luma.gl/shadertools@9.2.6(@luma.gl/core@9.2.6)))(@luma.gl/gltf@9.2.6(@luma.gl/constants@9.2.6)(@luma.gl/core@9.2.6)(@luma.gl/engine@9.2.6(@luma.gl/core@9.2.6)(@luma.gl/shadertools@9.2.6(@luma.gl/core@9.2.6)))(@luma.gl/shadertools@9.2.6(@luma.gl/core@9.2.6))(texture-compressor@1.0.2))(@luma.gl/shadertools@9.2.6(@luma.gl/core@9.2.6)))(@types/react-dom@19.2.3(@types/react@19.2.7))(@types/react@19.2.7)':
     dependencies:
       '@deck.gl/core': 9.2.10
-      '@deck.gl/geo-layers': 9.1.14(@deck.gl/core@9.2.10)(@deck.gl/extensions@9.2.9(@deck.gl/core@9.2.10)(@luma.gl/core@9.2.6))(@deck.gl/layers@9.2.9(@deck.gl/core@9.2.10)(@loaders.gl/core@4.3.4)(@luma.gl/core@9.2.6))(@deck.gl/mesh-layers@9.1.14(@deck.gl/core@9.2.10)(@loaders.gl/core@4.3.4)(@luma.gl/core@9.2.6))(@loaders.gl/core@4.3.4)(@luma.gl/core@9.2.6)
+      '@deck.gl/geo-layers': 9.2.11(bfdfdb05dfbcdc7df65bebb76198823c)
       '@deck.gl/layers': 9.2.9(@deck.gl/core@9.2.10)(@loaders.gl/core@4.3.4)(@luma.gl/core@9.2.6)(@luma.gl/engine@9.2.6(@luma.gl/core@9.2.6)(@luma.gl/shadertools@9.2.6(@luma.gl/core@9.2.6)))
       '@deck.gl/mapbox': 9.1.14(@deck.gl/core@9.2.10)(@luma.gl/core@9.2.6)
-      '@deck.gl/mesh-layers': 9.1.14(@deck.gl/core@9.2.10)(@loaders.gl/core@4.3.4)(@luma.gl/core@9.2.6)
-      '@types/react': 19.2.7
-      '@types/react-dom': 19.2.3(@types/react@19.2.7)
-
-  '@deckgl-fiber-renderer/types@1.4.0(ae960ece7843c1aeadf38de9efb1af46)':
-    dependencies:
-      '@deck.gl/core': 9.2.10
-      '@deck.gl/geo-layers': 9.2.11(@deck.gl/core@9.2.10)(@deck.gl/extensions@9.2.9(@deck.gl/core@9.2.10)(@luma.gl/core@9.2.6)(@luma.gl/engine@9.2.6(@luma.gl/core@9.2.6)(@luma.gl/shadertools@9.2.6(@luma.gl/core@9.2.6))))(@deck.gl/layers@9.2.9(@deck.gl/core@9.2.10)(@loaders.gl/core@4.3.4)(@luma.gl/core@9.2.6)(@luma.gl/engine@9.2.6(@luma.gl/core@9.2.6)(@luma.gl/shadertools@9.2.6(@luma.gl/core@9.2.6))))(@deck.gl/mesh-layers@9.2.11(@deck.gl/core@9.2.10)(@loaders.gl/core@4.3.4)(@luma.gl/core@9.2.6)(@luma.gl/engine@9.2.6(@luma.gl/core@9.2.6)(@luma.gl/shadertools@9.2.6(@luma.gl/core@9.2.6)))(@luma.gl/gltf@9.2.6(@luma.gl/constants@9.2.6)(@luma.gl/core@9.2.6)(@luma.gl/engine@9.2.6(@luma.gl/core@9.2.6)(@luma.gl/shadertools@9.2.6(@luma.gl/core@9.2.6)))(@luma.gl/shadertools@9.2.6(@luma.gl/core@9.2.6)))(@luma.gl/shadertools@9.2.6(@luma.gl/core@9.2.6)))(@loaders.gl/core@4.3.4)(@luma.gl/constants@9.2.6)(@luma.gl/core@9.2.6)(@luma.gl/engine@9.2.6(@luma.gl/core@9.2.6)(@luma.gl/shadertools@9.2.6(@luma.gl/core@9.2.6)))
-      '@deck.gl/layers': 9.2.9(@deck.gl/core@9.2.10)(@loaders.gl/core@4.3.4)(@luma.gl/core@9.2.6)(@luma.gl/engine@9.2.6(@luma.gl/core@9.2.6)(@luma.gl/shadertools@9.2.6(@luma.gl/core@9.2.6)))
-      '@deck.gl/mapbox': 9.1.14(@deck.gl/core@9.2.10)(@luma.gl/core@9.2.6)
-      '@deck.gl/mesh-layers': 9.2.11(@deck.gl/core@9.2.10)(@loaders.gl/core@4.3.4)(@luma.gl/core@9.2.6)(@luma.gl/engine@9.2.6(@luma.gl/core@9.2.6)(@luma.gl/shadertools@9.2.6(@luma.gl/core@9.2.6)))(@luma.gl/gltf@9.2.6(@luma.gl/constants@9.2.6)(@luma.gl/core@9.2.6)(@luma.gl/engine@9.2.6(@luma.gl/core@9.2.6)(@luma.gl/shadertools@9.2.6(@luma.gl/core@9.2.6)))(@luma.gl/shadertools@9.2.6(@luma.gl/core@9.2.6)))(@luma.gl/shadertools@9.2.6(@luma.gl/core@9.2.6))
+      '@deck.gl/mesh-layers': 9.2.11(@deck.gl/core@9.2.10)(@loaders.gl/core@4.3.4)(@luma.gl/core@9.2.6)(@luma.gl/engine@9.2.6(@luma.gl/core@9.2.6)(@luma.gl/shadertools@9.2.6(@luma.gl/core@9.2.6)))(@luma.gl/gltf@9.2.6(@luma.gl/constants@9.2.6)(@luma.gl/core@9.2.6)(@luma.gl/engine@9.2.6(@luma.gl/core@9.2.6)(@luma.gl/shadertools@9.2.6(@luma.gl/core@9.2.6)))(@luma.gl/shadertools@9.2.6(@luma.gl/core@9.2.6))(texture-compressor@1.0.2))(@luma.gl/shadertools@9.2.6(@luma.gl/core@9.2.6))
       '@types/react': 19.2.7
       '@types/react-dom': 19.2.3(@types/react@19.2.7)
     optional: true
+
+  '@deckgl-fiber-renderer/types@1.4.0(c0765c09fb5240eca8d5744613349bc9)':
+    dependencies:
+      '@deck.gl/core': 9.2.10
+      '@deck.gl/geo-layers': 9.1.14(@deck.gl/core@9.2.10)(@deck.gl/extensions@9.2.9(@deck.gl/core@9.2.10)(@luma.gl/core@9.2.6)(@luma.gl/engine@9.2.6(@luma.gl/core@9.2.6)(@luma.gl/shadertools@9.2.6(@luma.gl/core@9.2.6))))(@deck.gl/layers@9.2.9(@deck.gl/core@9.2.10)(@loaders.gl/core@4.3.4)(@luma.gl/core@9.2.6)(@luma.gl/engine@9.2.6(@luma.gl/core@9.2.6)(@luma.gl/shadertools@9.2.6(@luma.gl/core@9.2.6))))(@deck.gl/mesh-layers@9.1.14(@deck.gl/core@9.2.10)(@loaders.gl/core@4.3.4)(@luma.gl/core@9.2.6)(texture-compressor@1.0.2))(@loaders.gl/core@4.3.4)(@luma.gl/core@9.2.6)(texture-compressor@1.0.2)
+      '@deck.gl/layers': 9.2.9(@deck.gl/core@9.2.10)(@loaders.gl/core@4.3.4)(@luma.gl/core@9.2.6)(@luma.gl/engine@9.2.6(@luma.gl/core@9.2.6)(@luma.gl/shadertools@9.2.6(@luma.gl/core@9.2.6)))
+      '@deck.gl/mapbox': 9.1.14(@deck.gl/core@9.2.10)(@luma.gl/core@9.2.6)
+      '@deck.gl/mesh-layers': 9.1.14(@deck.gl/core@9.2.10)(@loaders.gl/core@4.3.4)(@luma.gl/core@9.2.6)(texture-compressor@1.0.2)
+      '@types/react': 19.2.7
+      '@types/react-dom': 19.2.3(@types/react@19.2.7)
 
   '@discoveryjs/json-ext@0.5.7': {}
 
@@ -11012,7 +11019,6 @@ snapshots:
     dependencies:
       '@loaders.gl/core': 4.3.4
       '@loaders.gl/loader-utils': 4.5.4(@loaders.gl/core@4.3.4)
-    optional: true
 
   '@loaders.gl/loader-utils@4.3.4(@loaders.gl/core@4.3.4)':
     dependencies:
@@ -11030,7 +11036,6 @@ snapshots:
       '@probe.gl/stats': 4.1.1
     transitivePeerDependencies:
       - '@loaders.gl/core'
-    optional: true
 
   '@loaders.gl/math@4.3.4(@loaders.gl/core@4.3.4)':
     dependencies:
@@ -11059,7 +11064,6 @@ snapshots:
     dependencies:
       '@types/geojson': 7946.0.16
       apache-arrow: 21.2.0
-    optional: true
 
   '@loaders.gl/terrain@4.3.4(@loaders.gl/core@4.3.4)':
     dependencies:
@@ -11091,7 +11095,6 @@ snapshots:
       ktx-parse: 0.7.1
     optionalDependencies:
       texture-compressor: 1.0.2
-    optional: true
 
   '@loaders.gl/tiles@4.3.4(@loaders.gl/core@4.3.4)':
     dependencies:
@@ -11121,7 +11124,6 @@ snapshots:
   '@loaders.gl/worker-utils@4.5.4(@loaders.gl/core@4.3.4)':
     dependencies:
       '@loaders.gl/core': 4.3.4
-    optional: true
 
   '@loaders.gl/xml@4.3.4(@loaders.gl/core@4.3.4)':
     dependencies:
@@ -11208,24 +11210,28 @@ snapshots:
       '@probe.gl/log': 4.1.1
       '@probe.gl/stats': 4.1.1
 
-  '@luma.gl/gltf@9.1.10(@luma.gl/core@9.2.6)(@luma.gl/shadertools@9.1.10(@luma.gl/core@9.2.6))':
+  '@luma.gl/gltf@9.1.10(@luma.gl/core@9.2.6)(@luma.gl/shadertools@9.1.10(@luma.gl/core@9.2.6))(texture-compressor@1.0.2)':
     dependencies:
       '@loaders.gl/core': 4.3.4
-      '@loaders.gl/textures': 4.3.4(@loaders.gl/core@4.3.4)
+      '@loaders.gl/textures': 4.5.4(@loaders.gl/core@4.3.4)(texture-compressor@1.0.2)
       '@luma.gl/core': 9.2.6
       '@luma.gl/shadertools': 9.1.10(@luma.gl/core@9.2.6)
       '@math.gl/core': 4.1.0
+    transitivePeerDependencies:
+      - texture-compressor
 
-  '@luma.gl/gltf@9.2.6(@luma.gl/constants@9.2.6)(@luma.gl/core@9.2.6)(@luma.gl/engine@9.2.6(@luma.gl/core@9.2.6)(@luma.gl/shadertools@9.2.6(@luma.gl/core@9.2.6)))(@luma.gl/shadertools@9.2.6(@luma.gl/core@9.2.6))':
+  '@luma.gl/gltf@9.2.6(@luma.gl/constants@9.2.6)(@luma.gl/core@9.2.6)(@luma.gl/engine@9.2.6(@luma.gl/core@9.2.6)(@luma.gl/shadertools@9.2.6(@luma.gl/core@9.2.6)))(@luma.gl/shadertools@9.2.6(@luma.gl/core@9.2.6))(texture-compressor@1.0.2)':
     dependencies:
       '@loaders.gl/core': 4.3.4
       '@loaders.gl/gltf': 4.3.4(@loaders.gl/core@4.3.4)
-      '@loaders.gl/textures': 4.3.4(@loaders.gl/core@4.3.4)
+      '@loaders.gl/textures': 4.5.4(@loaders.gl/core@4.3.4)(texture-compressor@1.0.2)
       '@luma.gl/constants': 9.2.6
       '@luma.gl/core': 9.2.6
       '@luma.gl/engine': 9.2.6(@luma.gl/core@9.2.6)(@luma.gl/shadertools@9.2.6(@luma.gl/core@9.2.6))
       '@luma.gl/shadertools': 9.2.6(@luma.gl/core@9.2.6)
       '@math.gl/core': 4.1.0
+    transitivePeerDependencies:
+      - texture-compressor
     optional: true
 
   '@luma.gl/shadertools@9.1.10(@luma.gl/core@9.2.6)':
@@ -13935,7 +13941,6 @@ snapshots:
   '@types/node@25.9.9':
     dependencies:
       undici-types: 7.24.6
-    optional: true
 
   '@types/offscreencanvas@2019.7.3': {}
 
@@ -14002,13 +14007,28 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@vitest/browser-playwright@4.0.16(jsdom@25.0.1)(playwright@1.61.1)(vite@7.3.0(@types/node@24.19.0)(jiti@2.7.0)(lightningcss@1.32.0)(terser@5.44.1)(tsx@4.21.0)(yaml@2.8.2))(vitest@4.0.16)(yaml@2.8.2)':
+  '@vitest/browser-playwright@4.0.16(jsdom@25.0.1(supports-color@8.1.1))(playwright@1.61.1)(vite@7.3.0(@types/node@24.19.0)(jiti@2.7.0)(lightningcss@1.32.0)(terser@5.44.1)(tsx@4.21.0)(yaml@2.9.0))(vitest@4.0.16)(yaml@2.9.0)':
     dependencies:
-      '@vitest/browser': 4.0.16(@vitest/browser-playwright@4.0.16)(jsdom@25.0.1)(vite@7.3.0(@types/node@24.19.0)(jiti@2.7.0)(lightningcss@1.32.0)(terser@5.44.1)(tsx@4.21.0)(yaml@2.8.2))(vitest@4.0.16)(yaml@2.8.2)
-      '@vitest/mocker': 4.0.16(vite@7.3.0(@types/node@24.19.0)(jiti@2.7.0)(lightningcss@1.32.0)(terser@5.44.1)(tsx@4.21.0)(yaml@2.8.2))
+      '@vitest/browser': 4.0.16(@vitest/browser-playwright@4.0.16)(jsdom@25.0.1(supports-color@8.1.1))(vite@7.3.0(@types/node@24.19.0)(jiti@2.7.0)(lightningcss@1.32.0)(terser@5.44.1)(tsx@4.21.0)(yaml@2.9.0))(vitest@4.0.16)(yaml@2.9.0)
+      '@vitest/mocker': 4.0.16(vite@7.3.0(@types/node@24.19.0)(jiti@2.7.0)(lightningcss@1.32.0)(terser@5.44.1)(tsx@4.21.0)(yaml@2.9.0))
       playwright: 1.61.1
       tinyrainbow: 3.0.3
-      vitest: 4.0.16(@types/node@24.19.0)(@vitest/browser-playwright@4.0.16)(happy-dom@20.0.11)(jiti@2.7.0)(jsdom@25.0.1)(lightningcss@1.32.0)(terser@5.44.1)(tsx@4.21.0)(vite@7.3.0(@types/node@24.19.0)(jiti@2.7.0)(lightningcss@1.32.0)(terser@5.44.1)(tsx@4.21.0)(yaml@2.8.2))(yaml@2.8.2)
+      vitest: 4.0.16(@types/node@24.19.0)(@vitest/browser-playwright@4.0.16)(happy-dom@20.0.11)(jiti@2.7.0)(jsdom@25.0.1(supports-color@8.1.1))(lightningcss@1.32.0)(terser@5.44.1)(tsx@4.21.0)(vite@7.3.0(@types/node@24.19.0)(jiti@2.7.0)(lightningcss@1.32.0)(terser@5.44.1)(tsx@4.21.0)(yaml@2.9.0))(yaml@2.9.0)
+    transitivePeerDependencies:
+      - bufferutil
+      - jsdom
+      - msw
+      - utf-8-validate
+      - vite
+      - yaml
+
+  '@vitest/browser-playwright@4.0.16(jsdom@25.0.1(supports-color@8.1.1))(playwright@1.61.1)(vitest@4.0.16)(yaml@2.8.2)':
+    dependencies:
+      '@vitest/browser': 4.0.16(@vitest/browser-playwright@4.0.16)(jsdom@25.0.1(supports-color@8.1.1))(vitest@4.0.16)(yaml@2.8.2)
+      '@vitest/mocker': 4.0.16(vite@7.3.0(@types/node@24.19.0)(jiti@2.7.0)(lightningcss@1.32.0)(terser@5.44.1)(tsx@4.21.0)(yaml@2.9.0))
+      playwright: 1.61.1
+      tinyrainbow: 3.0.3
+      vitest: 4.0.16(@types/node@24.19.0)(@vitest/browser-playwright@4.0.16)(happy-dom@20.0.11)(jiti@2.7.0)(jsdom@25.0.1(supports-color@8.1.1))(lightningcss@1.32.0)(terser@5.44.1)(tsx@4.21.0)(yaml@2.8.2)
     transitivePeerDependencies:
       - bufferutil
       - jsdom
@@ -14018,14 +14038,19 @@ snapshots:
       - yaml
     optional: true
 
-  '@vitest/browser-playwright@4.0.16(jsdom@25.0.1)(playwright@1.61.1)(vite@7.3.0(@types/node@24.19.0)(jiti@2.7.0)(lightningcss@1.32.0)(terser@5.44.1)(tsx@4.21.0)(yaml@2.9.0))(vitest@4.0.16)(yaml@2.9.0)':
+  '@vitest/browser@4.0.16(@vitest/browser-playwright@4.0.16)(jsdom@25.0.1(supports-color@8.1.1))(vite@7.3.0(@types/node@24.19.0)(jiti@2.7.0)(lightningcss@1.32.0)(terser@5.44.1)(tsx@4.21.0)(yaml@2.9.0))(vitest@4.0.16)(yaml@2.9.0)':
     dependencies:
-      '@vitest/browser': 4.0.16(@vitest/browser-playwright@4.0.16)(jsdom@25.0.1)(vite@7.3.0(@types/node@24.19.0)(jiti@2.7.0)(lightningcss@1.32.0)(terser@5.44.1)(tsx@4.21.0)(yaml@2.9.0))(vitest@4.0.16)(yaml@2.9.0)
       '@vitest/mocker': 4.0.16(vite@7.3.0(@types/node@24.19.0)(jiti@2.7.0)(lightningcss@1.32.0)(terser@5.44.1)(tsx@4.21.0)(yaml@2.9.0))
-      playwright: 1.61.1
+      '@vitest/utils': 4.0.16
+      magic-string: 0.30.21
+      pixelmatch: 7.1.0
+      pngjs: 7.0.0
+      sirv: 3.0.2
       tinyrainbow: 3.0.3
-      vitest: 4.0.16(@types/node@24.19.0)(@vitest/browser-playwright@4.0.16)(happy-dom@20.0.11)(jiti@2.7.0)(jsdom@25.0.1)(lightningcss@1.32.0)(terser@5.44.1)(tsx@4.21.0)(vite@7.3.0(@types/node@24.19.0)(jiti@2.7.0)(lightningcss@1.32.0)(terser@5.44.1)(tsx@4.21.0)(yaml@2.9.0))(yaml@2.9.0)
+      vitest: 4.0.16(@types/node@24.19.0)(@vitest/browser-playwright@4.0.16)(happy-dom@20.0.11)(jiti@2.7.0)(jsdom@25.0.1(supports-color@8.1.1))(lightningcss@1.32.0)(terser@5.44.1)(tsx@4.21.0)(vite@7.3.0(@types/node@24.19.0)(jiti@2.7.0)(lightningcss@1.32.0)(terser@5.44.1)(tsx@4.21.0)(yaml@2.9.0))(yaml@2.9.0)
+      ws: 8.18.3
     transitivePeerDependencies:
+      - '@vitest/browser-playwright'
       - bufferutil
       - jsdom
       - msw
@@ -14033,16 +14058,16 @@ snapshots:
       - vite
       - yaml
 
-  '@vitest/browser@4.0.16(@vitest/browser-playwright@4.0.16)(jsdom@25.0.1)(vite@7.3.0(@types/node@24.19.0)(jiti@2.7.0)(lightningcss@1.32.0)(terser@5.44.1)(tsx@4.21.0)(yaml@2.8.2))(vitest@4.0.16)(yaml@2.8.2)':
+  '@vitest/browser@4.0.16(@vitest/browser-playwright@4.0.16)(jsdom@25.0.1(supports-color@8.1.1))(vitest@4.0.16)(yaml@2.8.2)':
     dependencies:
-      '@vitest/mocker': 4.0.16(vite@7.3.0(@types/node@24.19.0)(jiti@2.7.0)(lightningcss@1.32.0)(terser@5.44.1)(tsx@4.21.0)(yaml@2.8.2))
+      '@vitest/mocker': 4.0.16(vite@7.3.0(@types/node@24.19.0)(jiti@2.7.0)(lightningcss@1.32.0)(terser@5.44.1)(tsx@4.21.0)(yaml@2.9.0))
       '@vitest/utils': 4.0.16
       magic-string: 0.30.21
       pixelmatch: 7.1.0
       pngjs: 7.0.0
       sirv: 3.0.2
       tinyrainbow: 3.0.3
-      vitest: 4.0.16(@types/node@24.19.0)(@vitest/browser-playwright@4.0.16)(happy-dom@20.0.11)(jiti@2.7.0)(jsdom@25.0.1)(lightningcss@1.32.0)(terser@5.44.1)(tsx@4.21.0)(vite@7.3.0(@types/node@24.19.0)(jiti@2.7.0)(lightningcss@1.32.0)(terser@5.44.1)(tsx@4.21.0)(yaml@2.8.2))(yaml@2.8.2)
+      vitest: 4.0.16(@types/node@24.19.0)(@vitest/browser-playwright@4.0.16)(happy-dom@20.0.11)(jiti@2.7.0)(jsdom@25.0.1(supports-color@8.1.1))(lightningcss@1.32.0)(terser@5.44.1)(tsx@4.21.0)(yaml@2.8.2)
       ws: 8.18.3
     transitivePeerDependencies:
       - '@vitest/browser-playwright'
@@ -14053,26 +14078,6 @@ snapshots:
       - vite
       - yaml
     optional: true
-
-  '@vitest/browser@4.0.16(@vitest/browser-playwright@4.0.16)(jsdom@25.0.1)(vite@7.3.0(@types/node@24.19.0)(jiti@2.7.0)(lightningcss@1.32.0)(terser@5.44.1)(tsx@4.21.0)(yaml@2.9.0))(vitest@4.0.16)(yaml@2.9.0)':
-    dependencies:
-      '@vitest/mocker': 4.0.16(vite@7.3.0(@types/node@24.19.0)(jiti@2.7.0)(lightningcss@1.32.0)(terser@5.44.1)(tsx@4.21.0)(yaml@2.9.0))
-      '@vitest/utils': 4.0.16
-      magic-string: 0.30.21
-      pixelmatch: 7.1.0
-      pngjs: 7.0.0
-      sirv: 3.0.2
-      tinyrainbow: 3.0.3
-      vitest: 4.0.16(@types/node@24.19.0)(@vitest/browser-playwright@4.0.16)(happy-dom@20.0.11)(jiti@2.7.0)(jsdom@25.0.1)(lightningcss@1.32.0)(terser@5.44.1)(tsx@4.21.0)(vite@7.3.0(@types/node@24.19.0)(jiti@2.7.0)(lightningcss@1.32.0)(terser@5.44.1)(tsx@4.21.0)(yaml@2.9.0))(yaml@2.9.0)
-      ws: 8.18.3
-    transitivePeerDependencies:
-      - '@vitest/browser-playwright'
-      - bufferutil
-      - jsdom
-      - msw
-      - utf-8-validate
-      - vite
-      - yaml
 
   '@vitest/coverage-istanbul@4.0.16(@vitest/browser-playwright@4.0.16)(jsdom@25.0.1(supports-color@8.1.1))(supports-color@8.1.1)(vite@7.3.0(@types/node@24.19.0)(jiti@2.7.0)(lightningcss@1.32.0)(terser@5.44.1)(tsx@4.21.0)(yaml@2.9.0))(vitest@4.0.16)(yaml@2.9.0)':
     dependencies:
@@ -14087,7 +14092,7 @@ snapshots:
       magicast: 0.5.1
       obug: 2.1.1
       tinyrainbow: 3.0.3
-      vitest: 4.0.16(@types/node@24.19.0)(@vitest/browser-playwright@4.0.16)(happy-dom@20.0.11)(jiti@2.7.0)(jsdom@25.0.1)(lightningcss@1.32.0)(terser@5.44.1)(tsx@4.21.0)(vite@7.3.0(@types/node@24.19.0)(jiti@2.7.0)(lightningcss@1.32.0)(terser@5.44.1)(tsx@4.21.0)(yaml@2.9.0))(yaml@2.9.0)
+      vitest: 4.0.16(@types/node@24.19.0)(@vitest/browser-playwright@4.0.16)(happy-dom@20.0.11)(jiti@2.7.0)(jsdom@25.0.1(supports-color@8.1.1))(lightningcss@1.32.0)(terser@5.44.1)(tsx@4.21.0)(vite@7.3.0(@types/node@24.19.0)(jiti@2.7.0)(lightningcss@1.32.0)(terser@5.44.1)(tsx@4.21.0)(yaml@2.9.0))(yaml@2.9.0)
     transitivePeerDependencies:
       - '@vitest/browser-playwright'
       - jsdom
@@ -14172,14 +14177,13 @@ snapshots:
       '@vitest/pretty-format': 4.0.16
       tinyrainbow: 3.0.3
 
-  '@vitest/web-worker@4.0.16(@vitest/browser-playwright@4.0.16)(jsdom@25.0.1)(vite@7.3.0(@types/node@24.19.0)(jiti@2.7.0)(lightningcss@1.32.0)(terser@5.44.1)(tsx@4.21.0)(yaml@2.9.0))(vitest@4.0.16)(yaml@2.9.0)':
+  '@vitest/web-worker@4.0.16(@vitest/browser-playwright@4.0.16)(jsdom@25.0.1(supports-color@8.1.1))(vitest@4.0.16)(yaml@2.9.0)':
     dependencies:
       obug: 2.1.1
-      vitest: 4.0.16(@types/node@24.19.0)(@vitest/browser-playwright@4.0.16)(happy-dom@20.0.11)(jiti@2.7.0)(jsdom@25.0.1)(lightningcss@1.32.0)(terser@5.44.1)(tsx@4.21.0)(vite@7.3.0(@types/node@24.19.0)(jiti@2.7.0)(lightningcss@1.32.0)(terser@5.44.1)(tsx@4.21.0)(yaml@2.9.0))(yaml@2.9.0)
+      vitest: 4.0.16(@types/node@24.19.0)(@vitest/browser-playwright@4.0.16)(happy-dom@20.0.11)(jiti@2.7.0)(jsdom@25.0.1(supports-color@8.1.1))(lightningcss@1.32.0)(terser@5.44.1)(tsx@4.21.0)(vite@7.3.0(@types/node@24.19.0)(jiti@2.7.0)(lightningcss@1.32.0)(terser@5.44.1)(tsx@4.21.0)(yaml@2.9.0))(yaml@2.9.0)
     transitivePeerDependencies:
       - '@vitest/browser-playwright'
       - jsdom
-      - vite
       - yaml
 
   '@webassemblyjs/ast@1.14.1':
@@ -14377,7 +14381,6 @@ snapshots:
       flatbuffers: 25.9.23
       json-with-bigint: 3.5.12
       tslib: 2.8.1
-    optional: true
 
   argparse@1.0.10:
     dependencies:
@@ -15372,8 +15375,7 @@ snapshots:
       path-exists: 5.0.0
       unicorn-magic: 0.1.0
 
-  flatbuffers@25.9.23:
-    optional: true
+  flatbuffers@25.9.23: {}
 
   for-each@0.3.5:
     dependencies:
@@ -16149,8 +16151,7 @@ snapshots:
 
   json-stringify-pretty-compact@4.0.0: {}
 
-  json-with-bigint@3.5.12:
-    optional: true
+  json-with-bigint@3.5.12: {}
 
   json5@2.2.3: {}
 
@@ -17284,7 +17285,7 @@ snapshots:
 
   pnpm-workspace-yaml@1.4.3:
     dependencies:
-      yaml: 2.8.2
+      yaml: 2.9.0
 
   point-in-polygon-hao@1.2.4:
     dependencies:
@@ -18394,7 +18395,7 @@ snapshots:
       tinyexec: 1.0.2
       tinyglobby: 0.2.15
       unconfig: 7.4.2
-      yaml: 2.8.2
+      yaml: 2.9.0
 
   terser-webpack-plugin@5.3.16(esbuild@0.28.1)(webpack@5.104.1(esbuild@0.28.1)):
     dependencies:
@@ -18838,10 +18839,10 @@ snapshots:
 
   vitest-browser-react@0.1.1(@types/react-dom@19.2.3(@types/react@19.2.7))(@types/react@19.2.7)(@vitest/browser-playwright@4.0.16)(@vitest/browser@4.0.16(@vitest/browser-playwright@4.0.16)(jsdom@25.0.1(supports-color@8.1.1))(vite@7.3.0(@types/node@24.19.0)(jiti@2.7.0)(lightningcss@1.32.0)(terser@5.44.1)(tsx@4.21.0)(yaml@2.9.0))(vitest@4.0.16)(yaml@2.9.0))(jsdom@25.0.1(supports-color@8.1.1))(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(vite@7.3.0(@types/node@24.19.0)(jiti@2.7.0)(lightningcss@1.32.0)(terser@5.44.1)(tsx@4.21.0)(yaml@2.9.0))(vitest@4.0.16)(yaml@2.9.0):
     dependencies:
-      '@vitest/browser': 4.0.16(@vitest/browser-playwright@4.0.16)(jsdom@25.0.1)(vite@7.3.0(@types/node@24.19.0)(jiti@2.7.0)(lightningcss@1.32.0)(terser@5.44.1)(tsx@4.21.0)(yaml@2.9.0))(vitest@4.0.16)(yaml@2.9.0)
+      '@vitest/browser': 4.0.16(@vitest/browser-playwright@4.0.16)(jsdom@25.0.1(supports-color@8.1.1))(vite@7.3.0(@types/node@24.19.0)(jiti@2.7.0)(lightningcss@1.32.0)(terser@5.44.1)(tsx@4.21.0)(yaml@2.9.0))(vitest@4.0.16)(yaml@2.9.0)
       react: 19.2.3
       react-dom: 19.2.3(react@19.2.3)
-      vitest: 4.0.16(@types/node@24.19.0)(@vitest/browser-playwright@4.0.16)(happy-dom@20.0.11)(jiti@2.7.0)(jsdom@25.0.1)(lightningcss@1.32.0)(terser@5.44.1)(tsx@4.21.0)(vite@7.3.0(@types/node@24.19.0)(jiti@2.7.0)(lightningcss@1.32.0)(terser@5.44.1)(tsx@4.21.0)(yaml@2.9.0))(yaml@2.9.0)
+      vitest: 4.0.16(@types/node@24.19.0)(@vitest/browser-playwright@4.0.16)(happy-dom@20.0.11)(jiti@2.7.0)(jsdom@25.0.1(supports-color@8.1.1))(lightningcss@1.32.0)(terser@5.44.1)(tsx@4.21.0)(vite@7.3.0(@types/node@24.19.0)(jiti@2.7.0)(lightningcss@1.32.0)(terser@5.44.1)(tsx@4.21.0)(yaml@2.9.0))(yaml@2.9.0)
     optionalDependencies:
       '@types/react': 19.2.7
       '@types/react-dom': 19.2.3(@types/react@19.2.7)
@@ -18851,48 +18852,7 @@ snapshots:
       - vite
       - yaml
 
-  vitest@4.0.16(@types/node@24.19.0)(@vitest/browser-playwright@4.0.16)(happy-dom@20.0.11)(jiti@2.7.0)(jsdom@25.0.1)(lightningcss@1.32.0)(terser@5.44.1)(tsx@4.21.0)(vite@7.3.0(@types/node@24.19.0)(jiti@2.7.0)(lightningcss@1.32.0)(terser@5.44.1)(tsx@4.21.0)(yaml@2.8.2))(yaml@2.8.2):
-    dependencies:
-      '@vitest/expect': 4.0.16
-      '@vitest/mocker': 4.0.16(vite@7.3.0(@types/node@24.19.0)(jiti@2.7.0)(lightningcss@1.32.0)(terser@5.44.1)(tsx@4.21.0)(yaml@2.8.2))
-      '@vitest/pretty-format': 4.0.16
-      '@vitest/runner': 4.0.16
-      '@vitest/snapshot': 4.0.16
-      '@vitest/spy': 4.0.16
-      '@vitest/utils': 4.0.16
-      es-module-lexer: 1.7.0
-      expect-type: 1.3.0
-      magic-string: 0.30.21
-      obug: 2.1.1
-      pathe: 2.0.3
-      picomatch: 4.0.3
-      std-env: 3.10.0
-      tinybench: 2.9.0
-      tinyexec: 1.0.2
-      tinyglobby: 0.2.15
-      tinyrainbow: 3.0.3
-      vite: 7.3.0(@types/node@24.19.0)(jiti@2.7.0)(lightningcss@1.32.0)(terser@5.44.1)(tsx@4.21.0)(yaml@2.8.2)
-      why-is-node-running: 2.3.0
-    optionalDependencies:
-      '@types/node': 24.19.0
-      '@vitest/browser-playwright': 4.0.16(jsdom@25.0.1)(playwright@1.61.1)(vite@7.3.0(@types/node@24.19.0)(jiti@2.7.0)(lightningcss@1.32.0)(terser@5.44.1)(tsx@4.21.0)(yaml@2.8.2))(vitest@4.0.16)(yaml@2.8.2)
-      happy-dom: 20.0.11
-      jsdom: 25.0.1(supports-color@8.1.1)
-    transitivePeerDependencies:
-      - jiti
-      - less
-      - lightningcss
-      - msw
-      - sass
-      - sass-embedded
-      - stylus
-      - sugarss
-      - terser
-      - tsx
-      - vite
-      - yaml
-
-  vitest@4.0.16(@types/node@24.19.0)(@vitest/browser-playwright@4.0.16)(happy-dom@20.0.11)(jiti@2.7.0)(jsdom@25.0.1)(lightningcss@1.32.0)(terser@5.44.1)(tsx@4.21.0)(vite@7.3.0(@types/node@24.19.0)(jiti@2.7.0)(lightningcss@1.32.0)(terser@5.44.1)(tsx@4.21.0)(yaml@2.9.0))(yaml@2.9.0):
+  vitest@4.0.16(@types/node@24.19.0)(@vitest/browser-playwright@4.0.16)(happy-dom@20.0.11)(jiti@2.7.0)(jsdom@25.0.1(supports-color@8.1.1))(lightningcss@1.32.0)(terser@5.44.1)(tsx@4.21.0)(vite@7.3.0(@types/node@24.19.0)(jiti@2.7.0)(lightningcss@1.32.0)(terser@5.44.1)(tsx@4.21.0)(yaml@2.9.0))(yaml@2.9.0):
     dependencies:
       '@vitest/expect': 4.0.16
       '@vitest/mocker': 4.0.16(vite@7.3.0(@types/node@24.19.0)(jiti@2.7.0)(lightningcss@1.32.0)(terser@5.44.1)(tsx@4.21.0)(yaml@2.9.0))
@@ -18916,7 +18876,7 @@ snapshots:
       why-is-node-running: 2.3.0
     optionalDependencies:
       '@types/node': 24.19.0
-      '@vitest/browser-playwright': 4.0.16(jsdom@25.0.1)(playwright@1.61.1)(vite@7.3.0(@types/node@24.19.0)(jiti@2.7.0)(lightningcss@1.32.0)(terser@5.44.1)(tsx@4.21.0)(yaml@2.9.0))(vitest@4.0.16)(yaml@2.9.0)
+      '@vitest/browser-playwright': 4.0.16(jsdom@25.0.1(supports-color@8.1.1))(playwright@1.61.1)(vite@7.3.0(@types/node@24.19.0)(jiti@2.7.0)(lightningcss@1.32.0)(terser@5.44.1)(tsx@4.21.0)(yaml@2.9.0))(vitest@4.0.16)(yaml@2.9.0)
       happy-dom: 20.0.11
       jsdom: 25.0.1(supports-color@8.1.1)
     transitivePeerDependencies:
@@ -18931,6 +18891,46 @@ snapshots:
       - terser
       - tsx
       - vite
+      - yaml
+
+  vitest@4.0.16(@types/node@24.19.0)(@vitest/browser-playwright@4.0.16)(happy-dom@20.0.11)(jiti@2.7.0)(jsdom@25.0.1(supports-color@8.1.1))(lightningcss@1.32.0)(terser@5.44.1)(tsx@4.21.0)(yaml@2.8.2):
+    dependencies:
+      '@vitest/expect': 4.0.16
+      '@vitest/mocker': 4.0.16(vite@7.3.0(@types/node@24.19.0)(jiti@2.7.0)(lightningcss@1.32.0)(terser@5.44.1)(tsx@4.21.0)(yaml@2.8.2))
+      '@vitest/pretty-format': 4.0.16
+      '@vitest/runner': 4.0.16
+      '@vitest/snapshot': 4.0.16
+      '@vitest/spy': 4.0.16
+      '@vitest/utils': 4.0.16
+      es-module-lexer: 1.7.0
+      expect-type: 1.3.0
+      magic-string: 0.30.21
+      obug: 2.1.1
+      pathe: 2.0.3
+      picomatch: 4.0.3
+      std-env: 3.10.0
+      tinybench: 2.9.0
+      tinyexec: 1.0.2
+      tinyglobby: 0.2.15
+      tinyrainbow: 3.0.3
+      vite: 7.3.0(@types/node@24.19.0)(jiti@2.7.0)(lightningcss@1.32.0)(terser@5.44.1)(tsx@4.21.0)(yaml@2.8.2)
+      why-is-node-running: 2.3.0
+    optionalDependencies:
+      '@types/node': 24.19.0
+      '@vitest/browser-playwright': 4.0.16(jsdom@25.0.1(supports-color@8.1.1))(playwright@1.61.1)(vitest@4.0.16)(yaml@2.8.2)
+      happy-dom: 20.0.11
+      jsdom: 25.0.1(supports-color@8.1.1)
+    transitivePeerDependencies:
+      - jiti
+      - less
+      - lightningcss
+      - msw
+      - sass
+      - sass-embedded
+      - stylus
+      - sugarss
+      - terser
+      - tsx
       - yaml
 
   w3c-xmlserializer@5.0.0:
