@@ -167,6 +167,7 @@ function RowActionsMenu<T extends RowData>({ row }: RowActionsMenuProps<T>) {
  * @param props.page - Controlled current page (1-indexed).
  * @param props.defaultPage - Initial page (1-indexed) for uncontrolled use.
  * @param props.onPageChange - Callback receiving the plain next page number.
+ * @param props.classNames - Custom CSS class names for table elements.
  * @param props.hiddenKebabMenuIds - Array of column ids for which the row kebab menu should be hidden.
  * @param props.configOptions - Any TanStack table option, spread into `useTable`; options the Table sets from its own props are applied after and win.
  * @returns The rendered Table component.
@@ -219,6 +220,7 @@ export function Table<T extends { id: Key }>({
   page: pageProp,
   defaultPage = 1,
   onPageChange,
+  classNames,
   ...rest
 }: TableProps<T>) {
   // Only the manual row order is state (owned by the table's
@@ -492,7 +494,7 @@ export function Table<T extends { id: Key }>({
   const className = clsx(
     styles.table,
     fullWidth && 'w-full table-fixed',
-    rest.className,
+    classNames?.table,
   );
 
   if (children) {
@@ -528,10 +530,12 @@ export function Table<T extends { id: Key }>({
         <TableHeader
           headerGroups={getHeaderGroups()}
           columnSelection={columnSelection}
+          classNames={classNames}
           hiddenKebabMenuIds={hiddenKebabMenuIds}
         />
         <TableBody
           rows={[...getTopRows(), ...getCenterRows(), ...getBottomRows()]}
+          classNames={classNames}
         />
       </table>
     </TableContext.Provider>
