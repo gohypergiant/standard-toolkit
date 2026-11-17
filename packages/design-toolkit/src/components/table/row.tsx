@@ -37,14 +37,14 @@ import type { TableRowProps } from './types';
  * @param props - {@link TableRowProps}
  * @param props.ref - Ref to the tr element.
  * @param props.children - Custom children content.
- * @param props.className - CSS class for the tr element.
+ * @param props.classNames - Custom CSS class names for table elements.
  * @param props.row - TanStack table row object.
  * @returns The rendered TableRow component.
  */
 export function TableRow<T extends RowData>({
   ref,
   children,
-  className,
+  classNames,
   row,
   onClick,
   ...rest
@@ -65,13 +65,15 @@ export function TableRow<T extends RowData>({
     <tr
       {...rest}
       ref={ref}
-      className={clsx('group/row', styles.row, className)}
+      className={clsx('group/row', styles.row, classNames?.row)}
       data-pinned={row?.getIsPinned() || null}
       data-selected={row?.getIsSelected() || null}
       onClick={handleRowClick}
     >
       {children ||
-        cells?.map((cell) => <TableCell key={cell.id} cell={cell} />)}
+        cells?.map((cell) => (
+          <TableCell key={cell.id} cell={cell} className={classNames?.cell} />
+        ))}
     </tr>
   );
 }

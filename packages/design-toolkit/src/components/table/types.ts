@@ -22,6 +22,7 @@ import type {
   RowPinningState,
   RowSelectionState,
   SortingState,
+  TableOptions,
 } from '@tanstack/react-table';
 import type {
   ComponentPropsWithRef,
@@ -32,7 +33,17 @@ import type {
 import type { DensityVariant } from '@/lib/types';
 import type { TableFeatures } from './features';
 
-type BaseTableProps = Omit<ComponentPropsWithRef<'table'>, 'children'>;
+type BaseTableProps = Omit<ComponentPropsWithRef<'table'>, 'children'> & {
+  classNames?: ClassNames;
+};
+
+type ClassNames = {
+  table?: string;
+  header?: string;
+  body?: string;
+  row?: string;
+  cell?: string;
+};
 
 type ExtendedTableProps<T extends { id: Key }> = {
   /**
@@ -286,6 +297,28 @@ type ExtendedTableProps<T extends { id: Key }> = {
    * Callback when the page changes.
    */
   onPageChange?: (page: number) => void;
+
+  /**
+   * Array of kebab menu IDs that should be hidden.
+   */
+  hiddenKebabMenuIds?: string[];
+
+  /**
+   * Any TanStack table option, spread into `useTable`. Options the Table sets
+   * from its own props (`data`, `columns`, `features`, `state`, `enableSorting`,
+   * `manualSorting`, `manualPagination` and the `on*Change` handlers for
+   * sorting, selection, pinning, row ordering and pagination) are applied
+   * after this and take precedence. Callbacks for slices the Table does not
+   * own (e.g. `onColumnSizingChange`) receive TanStack updaters, not plain
+   * values. `mergeOptions` is excluded because it replaces TanStack's own
+   * option merging.
+   *
+   * @example
+   * ```tsx
+   * <Table configOptions={{ defaultColumn: { size: 200 } }} ... />
+   * ```
+   */
+  configOptions?: Partial<Omit<TableOptions<TableFeatures, T>, 'mergeOptions'>>;
 };
 
 /**
@@ -329,10 +362,13 @@ export type TableProps<T extends { id: Key }> = BaseTableProps &
  * @see {@link HTMLAttributes}
  * @see {@link RefAttributes}
  */
-export type TableBodyProps<T extends RowData> =
-  ComponentPropsWithRef<'tbody'> & {
-    rows?: Row<TableFeatures, T>[];
-  };
+export type TableBodyProps<T extends RowData> = Omit<
+  ComponentPropsWithRef<'tbody'>,
+  'className'
+> & {
+  classNames?: ClassNames;
+  rows?: Row<TableFeatures, T>[];
+};
 
 /**
  * Props for a table row (`<tr>`) component.
@@ -343,7 +379,11 @@ export type TableBodyProps<T extends RowData> =
  * @see {@link HTMLAttributes}
  * @see {@link RefAttributes}
  */
-export type TableRowProps<T extends RowData> = ComponentPropsWithRef<'tr'> & {
+export type TableRowProps<T extends RowData> = Omit<
+  ComponentPropsWithRef<'tr'>,
+  'className'
+> & {
+  classNames?: ClassNames;
   row?: Row<TableFeatures, T>;
 };
 
@@ -374,6 +414,7 @@ export type TableCellProps<T extends RowData> = ComponentPropsWithRef<'td'> & {
 export type TableHeaderCellProps<T extends RowData> =
   ComponentPropsWithRef<'th'> & {
     header?: Header<TableFeatures, T, unknown>;
+    hiddenKebabMenuIds?: string[];
   };
 
 /**
@@ -384,17 +425,21 @@ export type TableHeaderCellProps<T extends RowData> =
  * @see {@link HTMLAttributes}
  * @see {@link RefAttributes}
  */
-export type TableHeaderProps<T extends RowData> =
-  ComponentPropsWithRef<'thead'> & {
-    /**
-     * Array of header groups of the table
-     */
-    headerGroups?: HeaderGroup<TableFeatures, T>[];
-    /**
-     * The currently selected column ID
-     */
-    columnSelection?: string | null;
-  };
+export type TableHeaderProps<T extends RowData> = Omit<
+  ComponentPropsWithRef<'thead'>,
+  'className'
+> & {
+  classNames?: ClassNames;
+  /**
+   * Array of header groups of the table
+   */
+  headerGroups?: HeaderGroup<TableFeatures, T>[];
+  /**
+   * The currently selected column ID
+   */
+  columnSelection?: string | null;
+  hiddenKebabMenuIds?: string[];
+};
 
 /**
  * Context value for table configuration and state.
@@ -419,4 +464,5 @@ export type TableContextValue = {
   handleColumnReordering?: (index: number) => void;
   /** Active density, applied by header cells and body cells as a module class. */
   variant: DensityVariant;
+  hiddenKebabMenuIds?: string[];
 };
