@@ -1440,3 +1440,99 @@ describe('Table column order', () => {
     },
   );
 });
+
+describe('Table configOptions', () => {
+  const people: Person[] = [
+    { id: 'a', name: 'alpha' },
+    { id: 'b', name: 'bravo' },
+  ];
+
+  it('should size a column without a size from defaultColumn', () => {
+    render(
+      <Table
+        columns={personColumns}
+        data={people}
+        configOptions={{ defaultColumn: { size: 200 } }}
+      />,
+    );
+
+    expect(screen.getByRole('columnheader', { name: /Name/ })).toHaveStyle({
+      width: '200px',
+    });
+    expect(screen.getByText('alpha').closest('td')).toHaveStyle({
+      width: '200px',
+    });
+  });
+
+  it('should seed an unowned slice from initialState', () => {
+    render(
+      <Table
+        columns={personColumns}
+        data={people}
+        configOptions={{ initialState: { columnSizing: { name: 240 } } }}
+      />,
+    );
+
+    expect(screen.getByRole('columnheader', { name: /Name/ })).toHaveStyle({
+      width: '240px',
+    });
+  });
+
+  it('should let configOptions override the default getRowId', async () => {
+    const onRowSelectionChange = vi.fn();
+    const user = userEvent.setup();
+
+    render(
+      <Table
+        columns={personColumns}
+        data={people}
+        showCheckbox
+        onRowSelectionChange={onRowSelectionChange}
+        configOptions={{ getRowId: (row) => `person-${row.id}` }}
+      />,
+    );
+
+    await user.click(screen.getAllByRole('checkbox')[1] as HTMLElement);
+
+    expect(onRowSelectionChange).toHaveBeenCalledWith({ 'person-a': true });
+  });
+
+  it('should keep manual row order when configOptions overrides getRowId', async () => {
+    const data = [
+      { id: 'a', name: 'alpha' },
+      { id: 'b', name: 'bravo' },
+      { id: 'c', name: 'charlie' },
+    ];
+    const getRowId = (row: Person) => `person-${row.id}`;
+    const { rerender } = render(
+      <Table
+        columns={personColumns}
+        data={data}
+        enableSorting={false}
+        configOptions={{ getRowId }}
+      />,
+    );
+
+    await userEvent.click(
+      screen.getByRole('button', { name: 'row 1 actions' }),
+    );
+    await userEvent.click(screen.getByText('Move Down'));
+
+    expect(dataRowNames()).toEqual(['bravo', 'alpha', 'charlie']);
+
+    rerender(
+      <Table
+        columns={personColumns}
+        data={data.map((item) => ({ ...item, name: `${item.name}-updated` }))}
+        enableSorting={false}
+        configOptions={{ getRowId }}
+      />,
+    );
+
+    expect(dataRowNames()).toEqual([
+      'bravo-updated',
+      'alpha-updated',
+      'charlie-updated',
+    ]);
+  });
+});
