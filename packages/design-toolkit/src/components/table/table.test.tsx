@@ -63,6 +63,20 @@ describe('Table', () => {
     expect(screen.getByText('Cell 1')).toBeInTheDocument();
     expect(screen.getByText('Cell 2')).toBeInTheDocument();
   });
+
+  it('should accept table classNames in static table mode', () => {
+    render(
+      <Table classNames={{ table: 'custom-table' }}>
+        <TableHeader>
+          <TableRow>
+            <TableHeaderCell>Header</TableHeaderCell>
+          </TableRow>
+        </TableHeader>
+      </Table>,
+    );
+
+    expect(screen.getByRole('table')).toHaveClass('custom-table');
+  });
 });
 
 type Person = { id: string; name: string };

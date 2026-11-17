@@ -296,11 +296,6 @@ type ExtendedTableProps<T extends { id: Key }> = {
    * Callback when the page changes.
    */
   onPageChange?: (page: number) => void;
-
-  /**
-   * Custom CSS class names for table elements.
-   */
-  classNames?: ClassNames;
 };
 
 /**
