@@ -128,22 +128,18 @@ async function checkPnpmLock() {
     }
 
     const lockfile = document.toJSON();
-    const packages = lockfile?.packages || {};
-    const snapshots = lockfile?.snapshots || {};
+    const keys = [
+      ...Object.keys(lockfile?.packages ?? {}),
+      ...Object.keys(lockfile?.snapshots ?? {}),
+    ];
 
-    Object.keys(packages).forEach((key) => {
+    for (const key of keys) {
       const parsed = parsePackageKey(key);
+
       if (parsed && patternMatch(parsed.pkg)) {
         addVersion(parsed.pkg, parsed.version);
       }
-    });
-
-    Object.keys(snapshots).forEach((key) => {
-      const parsed = parsePackageKey(key);
-      if (parsed && patternMatch(parsed.pkg)) {
-        addVersion(parsed.pkg, parsed.version);
-      }
-    });
+    }
   }
 
   printConflicts();

@@ -10,6 +10,7 @@ publicHoistPattern:
   - '*@vitest/coverage-istanbul*'
   - '*prettier-plugin-tailwindcss*'
 overrides:
+  '@deck.gl-community/layers': ~9.2.8
   '@internationalized/date': ~3.12.1
 patchedDependencies:
   geodesy@2.4.0: patches/geodesy@2.4.0.patch
