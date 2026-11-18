@@ -28,10 +28,10 @@
   },
   "engines": {
     "node": ">=24",
-    "pnpm": ">=10"
+    "pnpm": ">=12"
   },
   "license": "Apache-2.0",
-  "packageManager": "pnpm@11.28.12",
+  "packageManager": "pnpm@12.21.0",
   "private": true,
   "repository": {
     "type": "git",
@@ -73,7 +73,7 @@
     "lint:deps": "pnpm syncpack lint",
     "lint:fs": "pnpm ls-lint",
     "lint:package": "pnpm turbo run lint:package",
-    "lint:rac": "pnpm zx scripts/rac-deps.mjs",
+    "lint:rac": "pnpm zx scripts/rac-deps.ts",
     "pre-build": "pnpm turbo run pre-build",
     "preview": "pnpm turbo run preview",
     "preview:filter": "pnpm turbo-filter preview",
