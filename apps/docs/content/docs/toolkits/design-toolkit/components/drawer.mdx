@@ -3,9 +3,9 @@ title: Drawer
 description: Slide-in panel for navigation or contextual content with stacked view support
 source: packages/design-toolkit/src/components/drawer/index.tsx
 source_sha: 777cfc7169a97a76dea66315fd7ae26c5f41971e
-doc_sha: 8e35818593c644d2f611707ffa74b6ec439c8fb5
+doc_sha: 67a5f0ea35232914e598de24e069c2e7d543ebc1
 deprecated: false
-updated: 2026-07-13
+updated: 2026-11-06
 ---
 
 ## Usage
@@ -60,6 +60,16 @@ interface DrawerProps {
   size?: 'small' | 'medium' | 'large';
   onChange?: (view: UniqueId | null) => void;
 }
+
+type DrawerLayoutTracks = Partial<
+  Record<'top' | 'right' | 'bottom' | 'left', string>
+>;
+
+interface DrawerLayoutProps extends React.ComponentPropsWithRef<'div'> {
+  extend?: 'top' | 'right' | 'bottom' | 'left' | /* supported combinations */ string;
+  push?: 'top' | 'right' | 'bottom' | 'left' | /* supported combinations */ string;
+  tracks?: DrawerLayoutTracks;
+}
 ```
 
 ### Props
@@ -100,6 +110,24 @@ Controls the drawer panel dimensions:
 #### `onChange`
 
 Callback invoked when the active view changes. Receives the new view ID or `null` when all views are closed.
+
+### `DrawerLayout` props
+
+| Prop | Type | Default | Required |
+|------|------|---------|----------|
+| `tracks` | `Partial<Record<'top' \| 'right' \| 'bottom' \| 'left', string>>` | Semantic Drawer size | No |
+| `extend` | Placement or supported placement combination | `'left right'` | No |
+| `push` | Placement or supported placement combination | Overlay behavior | No |
+
+#### `tracks`
+
+Configures the effective CSS grid track for each supplied placement. The approved signature is:
+
+```ts
+tracks?: Partial<Record<'top' | 'right' | 'bottom' | 'left', string>>
+```
+
+Each supplied string is passed verbatim to a CSS custom property and resolved by the browser as a CSS grid track value. A configured value overrides that placement's semantic Drawer `size` only while one or more Drawers at the placement are open. Omitted placements retain the existing semantic-size behavior; closed or absent placements settle to `0px`.
 
 ## Examples
 
@@ -231,6 +259,74 @@ function ControlledDrawer() {
   );
 }
 ```
+
+### Example: Configured browser-resolved tracks
+
+Pass CSS grid-track values for any combination of the four placements. The browser resolves fixed lengths, functions, and custom-property references.
+
+```tsx
+<DrawerLayout
+  tracks={{
+    top: '72px',
+    right: 'minmax(18rem, 30vw)',
+    bottom: 'minmax(8rem, 25vh)',
+    left: 'calc(12rem + 8px)'
+  }}
+>
+  <DrawerLayoutMain>Main content</DrawerLayoutMain>
+  {/* Open Drawers resolve their matching configured track. */}
+</DrawerLayout>
+```
+
+Use a CSS custom property when the host layout owns the value. For example, an open left Drawer resolves `var(--navigation-width)` to `240px` when its container defines `--navigation-width: 240px`.
+
+```tsx
+<DrawerLayout tracks={{ left: 'var(--navigation-width)' }}>
+  <DrawerLayoutMain>Main content</DrawerLayoutMain>
+  {/* The containing element defines --navigation-width: 240px. */}
+</DrawerLayout>
+```
+
+### Example: Partial configuration with semantic fallback
+
+Configure only the placement that needs a custom reservation. An open, unconfigured right Drawer continues to use its `small`, `medium`, or `large` semantic track.
+
+```tsx
+<DrawerLayout tracks={{ left: '256px' }} push="left">
+  <DrawerLayoutMain>Main content moves outside the open left track.</DrawerLayoutMain>
+  {/* An open left Drawer uses 256px; an open right Drawer uses its semantic size. */}
+</DrawerLayout>
+```
+
+### Example: Push and overlay use the same effective track
+
+`tracks` determines the grid track for both push and overlay Drawers. `push` only determines whether `DrawerLayoutMain` occupies the corresponding grid lines.
+
+```tsx
+<DrawerLayout tracks={{ right: '280px' }} push="right">
+  <DrawerLayoutMain>Main content is pushed outside the right track.</DrawerLayoutMain>
+</DrawerLayout>
+
+<DrawerLayout tracks={{ right: '280px' }}>
+  <DrawerLayoutMain>Main content retains its overlay placement.</DrawerLayoutMain>
+</DrawerLayout>
+```
+
+### Browser resolution, malformed values, and CSS-wide keywords
+
+Use values accepted by the browser's CSS grid-track grammar. `tracks` deliberately does not parse, normalize, or validate values at runtime. CSS-wide keywords such as `initial`, `inherit`, `unset`, `revert`, and `revert-layer` are also passed through unchanged.
+
+> **Good to know:** If a value is malformed or unsupported for the browser's grid-track grammar, no JavaScript validation error is thrown. The browser's CSS error-handling rules determine the resolved declaration. Test values in the browsers and container styles your application supports.
+
+### Migration and compatibility
+
+Adoption is opt-in. Existing `DrawerLayout` callers require no migration and keep semantic Drawer-size tracks. Add `tracks` only where a placement needs an explicit reservation.
+
+### Accessibility and non-goals
+
+`tracks` is layout-only. It does not change Drawer accessible names, roles, keyboard operation, focus management, dismissal behavior, screen-reader output, or open/closed content visibility. It also does not change Sidenav's independent reservation behavior.
+
+The API does not add a CSS parser, runtime validation, normalization, Drawer registration changes, a layout context, or aggregation for concurrent Drawers at the same placement. Same-placement Drawers continue to share their existing placement area; a configured placement supplies one effective track while any matching Drawer is open.
 
 ### Example: Large drawer with push behavior
 

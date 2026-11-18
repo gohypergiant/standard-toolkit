@@ -85,43 +85,79 @@
     }
 
     @variant has-[[data-placement=left][data-open][data-size=large]] {
-      --drawer-left-size: var(--drawer-size-large);
+      --drawer-left-size: var(
+        --drawer-left-configured-size,
+        var(--drawer-size-large)
+      );
     }
     @variant has-[[data-placement=left][data-open][data-size=medium]] {
-      --drawer-left-size: var(--drawer-size-medium);
+      --drawer-left-size: var(
+        --drawer-left-configured-size,
+        var(--drawer-size-medium)
+      );
     }
     @variant has-[[data-placement=left][data-open][data-size=small]] {
-      --drawer-left-size: var(--drawer-size-small);
+      --drawer-left-size: var(
+        --drawer-left-configured-size,
+        var(--drawer-size-small)
+      );
     }
 
     @variant has-[[data-placement=right][data-open][data-size=large]] {
-      --drawer-right-size: var(--drawer-size-large);
+      --drawer-right-size: var(
+        --drawer-right-configured-size,
+        var(--drawer-size-large)
+      );
     }
     @variant has-[[data-placement=right][data-open][data-size=medium]] {
-      --drawer-right-size: var(--drawer-size-medium);
+      --drawer-right-size: var(
+        --drawer-right-configured-size,
+        var(--drawer-size-medium)
+      );
     }
     @variant has-[[data-placement=right][data-open][data-size=small]] {
-      --drawer-right-size: var(--drawer-size-small);
+      --drawer-right-size: var(
+        --drawer-right-configured-size,
+        var(--drawer-size-small)
+      );
     }
 
     @variant has-[[data-placement=top][data-open][data-size=large]] {
-      --drawer-top-size: var(--drawer-size-large);
+      --drawer-top-size: var(
+        --drawer-top-configured-size,
+        var(--drawer-size-large)
+      );
     }
     @variant has-[[data-placement=top][data-open][data-size=medium]] {
-      --drawer-top-size: var(--drawer-size-medium);
+      --drawer-top-size: var(
+        --drawer-top-configured-size,
+        var(--drawer-size-medium)
+      );
     }
     @variant has-[[data-placement=top][data-open][data-size=small]] {
-      --drawer-top-size: var(--drawer-size-small);
+      --drawer-top-size: var(
+        --drawer-top-configured-size,
+        var(--drawer-size-small)
+      );
     }
 
     @variant has-[[data-placement=bottom][data-open][data-size=large]] {
-      --drawer-bottom-size: var(--drawer-size-large);
+      --drawer-bottom-size: var(
+        --drawer-bottom-configured-size,
+        var(--drawer-size-large)
+      );
     }
     @variant has-[[data-placement=bottom][data-open][data-size=medium]] {
-      --drawer-bottom-size: var(--drawer-size-medium);
+      --drawer-bottom-size: var(
+        --drawer-bottom-configured-size,
+        var(--drawer-size-medium)
+      );
     }
     @variant has-[[data-placement=bottom][data-open][data-size=small]] {
-      --drawer-bottom-size: var(--drawer-size-small);
+      --drawer-bottom-size: var(
+        --drawer-bottom-configured-size,
+        var(--drawer-size-small)
+      );
     }
   }
 

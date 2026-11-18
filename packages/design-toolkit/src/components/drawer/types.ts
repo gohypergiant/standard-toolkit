@@ -35,6 +35,16 @@ type XAxisUnion = Right | Left;
 type XAxisIntersection = `${Right} ${Left}` | `${Left} ${Right}`;
 
 /**
+ * Optional per-placement CSS grid-track values for {@link DrawerLayout}.
+ *
+ * Values are serialized verbatim to CSS custom properties and resolved by the
+ * browser. This type does not parse, normalize, or validate supplied values.
+ */
+export type DrawerLayoutTracks = Partial<
+  Record<'top' | 'right' | 'bottom' | 'left', string>
+>;
+
+/**
  * Props for the DrawerLayout component.
  */
 export type DrawerLayoutProps = ComponentPropsWithRef<'div'> & {
@@ -104,6 +114,13 @@ export type DrawerLayoutProps = ComponentPropsWithRef<'div'> & {
    * └─────────────────┴───────┘
    */
   extend?: XAxisUnion | XAxisIntersection | YAxisUnion | YAxisIntersection;
+  /**
+   * Configures the CSS grid track for each supplied Drawer placement.
+   *
+   * Values are passed verbatim to CSS custom properties for browser resolution.
+   * Omitted placements retain the semantic Drawer-size behavior.
+   */
+  tracks?: DrawerLayoutTracks;
   /**
    * Determines how drawer interact with the main content area and overall layout:
    *

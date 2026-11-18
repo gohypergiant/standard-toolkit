@@ -10,7 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
-import { describe, expect, it, vi } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import { HtmlOverlayWidget } from '.';
 import type { Viewport } from '@deck.gl/core';
 import type { Root } from 'react-dom/client';
@@ -27,7 +27,14 @@ function createViewport(overrides: Record<string, unknown> = {}): Viewport {
 }
 
 describe('HtmlOverlayWidget', () => {
+  const widgets: HtmlOverlayWidget[] = [];
+
   class TestableWidget extends HtmlOverlayWidget {
+    constructor(...args: ConstructorParameters<typeof HtmlOverlayWidget>) {
+      super(...args);
+      widgets.push(this);
+    }
+
     setTestViewport(vp: Viewport | null): void {
       this.viewport = vp;
     }
@@ -48,6 +55,13 @@ describe('HtmlOverlayWidget', () => {
       return this.viewport;
     }
   }
+
+  // Unmount React roots so scheduled renders don't fire after jsdom teardown
+  afterEach(() => {
+    for (const widget of widgets.splice(0)) {
+      widget.onRemove();
+    }
+  });
 
   describe('onRenderHTML', () => {
     describe('root element styling', () => {
