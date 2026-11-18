@@ -15,7 +15,7 @@
     "radash": "^12.1.1",
     "true-myth": "^9.0.1",
     "typescript": "^5.9.3",
-    "yaml": "^2.9.0"
+    "yaml": "^2.8.1"
   },
   "devDependencies": {
     "@accelint/typescript-config": "workspace:*",

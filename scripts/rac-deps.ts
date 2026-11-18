@@ -1,12 +1,11 @@
 #!/usr/bin/env zx
 
-import { parseAllDocuments } from 'yaml';
 /*
  * This script will report packages under the react-spectrum (v3) umbrella which have multiple versions in a project repo
  * by looking at the pnpm-lock.yaml file. Any packages that are reported by this script should be
  * fixed to only have 1 imported version so that react-spectrum works correctly in the project repo.
  */
-import { fs } from 'zx';
+import { fs, YAML } from 'zx';
 
 const patterns = [
   // packages
@@ -65,14 +64,15 @@ function printConflicts() {
   }
 
   Object.keys(versions)
-    .sort((a, b) => a.localeCompare(b))
+    .sort((left, right) => left.localeCompare(right))
     .forEach((pkg) => {
       const pkgVersions = versions[pkg];
+
       if (pkgVersions && pkgVersions.size > 1) {
         const label = `${pkg} (${pkgVersions.size})`;
         console.log(
           `${label.padEnd(maxPkgLen + 5)} - ${Array.from(pkgVersions)
-            .sort((a, b) => a.localeCompare(b))
+            .sort((left, right) => left.localeCompare(right))
             .join(', ')}`,
         );
       }
@@ -93,9 +93,11 @@ function parsePackageKey(key: string) {
     if (lastAtIndex > 0) {
       const pkg = key.slice(0, lastAtIndex);
       const version = key.slice(lastAtIndex + 1).split('(')[0]; // Remove peer dep suffix
+
       if (!version) {
         throw new Error(`Invalid package key: ${key}`);
       }
+
       return { pkg, version };
     }
   } else {
@@ -104,9 +106,11 @@ function parsePackageKey(key: string) {
     if (atIndex > 0) {
       const pkg = key.slice(0, atIndex);
       const version = key.slice(atIndex + 1).split('(')[0]; // Remove peer dep suffix
+
       if (!version) {
         throw new Error(`Invalid package key: ${key}`);
       }
+
       return { pkg, version };
     }
   }
@@ -116,7 +120,7 @@ function parsePackageKey(key: string) {
 
 async function checkPnpmLock() {
   const fileContents = await fs.promises.readFile('./pnpm-lock.yaml', 'utf8');
-  const documents = parseAllDocuments(fileContents);
+  const documents = YAML.parseAllDocuments(fileContents);
 
   for (const document of documents) {
     if (document.errors.length > 0) {
@@ -153,4 +157,5 @@ async function main() {
     process.exit(1);
   }
 }
+
 await main();
