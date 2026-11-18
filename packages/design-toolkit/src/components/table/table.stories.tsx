@@ -219,6 +219,7 @@ const meta = {
     enableRowActions: true,
     fullWidth: false,
     variant: 'cozy',
+    hiddenKebabMenuIds: ['firstName', 'lastName', 'age'],
   },
   argTypes: {
     variant: {
@@ -230,6 +231,9 @@ const meta = {
         type: 'radio',
         options: ['left', 'right'],
       },
+    },
+    hiddenKebabMenuIds: {
+      control: 'object',
     },
   },
   tags: ['autodocs'],
@@ -495,6 +499,7 @@ export const ControlledRowSelection: Story = {
       },
     },
   },
+
   render: (args) => {
     const [selection, setSelection] = useState<RowSelectionState>({
       tanner: true,
@@ -509,6 +514,9 @@ export const ControlledRowSelection: Story = {
           rowSelection={selection}
           onRowSelectionChange={setSelection}
           key={JSON.stringify(args)}
+          classNames={{
+            header: 'bg-[#FF69B4]',
+          }}
         />
         <div style={{ marginTop: '1rem' }}>
           <Button onPress={() => setSelection({})}>Clear selection</Button>

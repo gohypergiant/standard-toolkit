@@ -26,15 +26,12 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-turbo-
 
-      - uses: pnpm/action-setup@v6
+      - name: Setup PNPM
+        uses: pnpm/setup@v3
         with:
-          run_install: false
-
-      - uses: actions/setup-node@v7
-        with:
-          registry-url: 'https://registry.npmjs.org'
-          node-version-file: '.nvmrc'
-          cache: 'pnpm'
+          cache: true
+          save-cache: ${{ github.ref == 'refs/heads/main' }}
+          install: false
 
       - run: pnpm install
       - name: Creating .npmrc

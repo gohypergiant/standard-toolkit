@@ -13,7 +13,6 @@
     "@babel/parser": "^7.28.5",
     "@biomejs/biome": "^2.5.13",
     "@changesets/cli": "^3.0.2",
-    "@fission-ai/openspec": "^1.3.1",
     "@ls-lint/ls-lint": "^2.3.1",
     "@types/node": "^24",
     "lefthook": "^2.0.11",
@@ -29,27 +28,10 @@
   },
   "engines": {
     "node": ">=24",
-    "pnpm": ">=10"
+    "pnpm": ">=12"
   },
   "license": "Apache-2.0",
-  "packageManager": "pnpm@10.25.0",
-  "pnpm": {
-    "overrides": {
-      "@internationalized/date": "~3.12.1"
-    },
-    "patchedDependencies": {
-      "geodesy@2.4.0": "patches/geodesy@2.4.0.patch"
-    },
-    "onlyBuiltDependencies": [
-      "@fission-ai/openspec",
-      "@parcel/watcher",
-      "esbuild",
-      "lefthook",
-      "puppeteer",
-      "sharp",
-      "sleep"
-    ]
-  },
+  "packageManager": "pnpm@12.21.0",
   "private": true,
   "repository": {
     "type": "git",
@@ -91,7 +73,7 @@
     "lint:deps": "pnpm syncpack lint",
     "lint:fs": "pnpm ls-lint",
     "lint:package": "pnpm turbo run lint:package",
-    "lint:rac": "pnpm zx scripts/rac-deps.mjs",
+    "lint:rac": "pnpm zx scripts/rac-deps.ts",
     "pre-build": "pnpm turbo run pre-build",
     "preview": "pnpm turbo run preview",
     "preview:filter": "pnpm turbo-filter preview",

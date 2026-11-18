@@ -318,6 +318,9 @@ Only data mode (`columns` + `data`) accepts `variant`. Custom-children mode
 | `page` | `number` | - | Controlled current page (1-indexed) |
 | `defaultPage` | `number` | `1` | Uncontrolled default page (1-indexed) |
 | `onPageChange` | `(page: number) => void` | - | Callback when page changes |
+| `classNames` | `{ table?, header?, body?, row?, cell? }` | - | Class names for individual table elements; see [classNames](#classnames) |
+| `hiddenKebabMenuIds` | `string[]` | `[]` | Ids to indicate which columns should not display the kebab menu |
+| `configOptions` | `TableOptions<TableFeatures>` | `{}` | TanStack table config options  |
 
 ## Subcomponents
 
@@ -330,6 +333,16 @@ For static tables, use these subcomponents:
 | `TableBody` | Renders `<tbody>` section |
 | `TableRow` | Table row `<tr>` |
 | `TableCell` | Data cell `<td>` |
+
+## classNames
+
+| Key | Applied to |
+| ----|------------|
+| `table` | `<table>`, merged with the built-in table styles |
+| `header` | `<thead>` |
+| `body` | `<tbody>` |
+| `row` | `<tr>` in the body |
+| `cell` | `<td>` in the body |
 
 ## Accessibility
 

@@ -72,6 +72,11 @@ const EMPTY_SORT: SortingState = [];
 // every render. An empty array means the `columns` definition order.
 const EMPTY_COLUMN_ORDER: ColumnOrderState = [];
 
+// Use the index as the row ID if no unique identifier is available
+function defaultGetRowId<T extends { id: Key }>(row: T, index: number) {
+  return row.id ? row.id.toString() : index.toString();
+}
+
 type RowActionsMenuProps<T extends RowData> = {
   row: Row<TableFeatures, T>;
 };
@@ -162,6 +167,9 @@ function RowActionsMenu<T extends RowData>({ row }: RowActionsMenuProps<T>) {
  * @param props.page - Controlled current page (1-indexed).
  * @param props.defaultPage - Initial page (1-indexed) for uncontrolled use.
  * @param props.onPageChange - Callback receiving the plain next page number.
+ * @param props.classNames - Custom CSS class names for table elements.
+ * @param props.hiddenKebabMenuIds - Array of column ids for which the row kebab menu should be hidden.
+ * @param props.configOptions - Any TanStack table option, spread into `useTable`; options the Table sets from its own props are applied after and win.
  * @returns The rendered Table component.
  *
  * @example
@@ -207,15 +215,23 @@ export function Table<T extends { id: Key }>({
   fullWidth = false,
   variant = DEFAULT_TABLE_VARIANT,
   pageSize,
+  hiddenKebabMenuIds = [],
+  configOptions,
   page: pageProp,
   defaultPage = 1,
   onPageChange,
+  classNames,
   ...rest
 }: TableProps<T>) {
   // Only the manual row order is state (owned by the table's
   // rowOrderingFeature, mirrored here); row content stays owned by the data
   // prop so external updates (polling, refetch) flow through without remount.
   const [rowOrdering, setRowOrdering] = useState<RowOrderingState>([]);
+
+  // Saved row order holds TanStack row ids, so ranking data must resolve ids
+  // the same way the table does. Keep a custom getRowId referentially stable
+  // (module scope or useCallback); a new function each render recomputes this.
+  const getRowId = configOptions?.getRowId ?? defaultGetRowId;
 
   const data = useMemo(() => {
     const items = dataProp ?? [];
@@ -234,8 +250,8 @@ export function Table<T extends { id: Key }>({
     const slots = new Array<T | undefined>(rowOrdering.length);
     const unranked: T[] = [];
 
-    for (const item of items) {
-      const slot = rank.get(String(item.id));
+    items.forEach((item, index) => {
+      const slot = rank.get(getRowId(item, index));
 
       // duplicate ids fall through to unranked
       if (slot === undefined || slots[slot] !== undefined) {
@@ -243,7 +259,7 @@ export function Table<T extends { id: Key }>({
       } else {
         slots[slot] = item;
       }
-    }
+    });
 
     const ordered: T[] = [];
 
@@ -259,7 +275,7 @@ export function Table<T extends { id: Key }>({
     }
 
     return ordered;
-  }, [dataProp, rowOrdering]);
+  }, [dataProp, rowOrdering, getRowId]);
 
   const [rowSelection, setRowSelection] = useTableControlledState(
     rowSelectionProp,
@@ -413,6 +429,12 @@ export function Table<T extends { id: Key }>({
   };
 
   const table = useTable({
+    // defaults first, then consumer configOptions, then owned values so
+    // configOptions can never replace what the Table controls
+    enableRowSelection: true,
+    enableRowPinning: true,
+    ...configOptions,
+    getRowId,
     features: tableFeatures,
     data,
     columns,
@@ -425,12 +447,6 @@ export function Table<T extends { id: Key }>({
       columnOrder: tableColumnOrder,
       ...(pagination != null && { pagination }),
     },
-    getRowId: (row, index) => {
-      // Use the index as the row ID if no unique identifier is available
-      return row.id ? row.id.toString() : index.toString();
-    },
-    enableRowSelection: true,
-    enableRowPinning: true,
     manualSorting: manualSorting,
     // no pageSize → paginated row model passes rows through untouched
     manualPagination: pagination == null,
@@ -478,7 +494,7 @@ export function Table<T extends { id: Key }>({
   const className = clsx(
     styles.table,
     fullWidth && 'w-full table-fixed',
-    rest.className,
+    classNames?.table,
   );
 
   if (children) {
@@ -507,15 +523,19 @@ export function Table<T extends { id: Key }>({
         handleSortChange,
         handleColumnReordering,
         variant,
+        hiddenKebabMenuIds,
       }}
     >
       <table {...rest} className={className}>
         <TableHeader
           headerGroups={getHeaderGroups()}
           columnSelection={columnSelection}
+          classNames={classNames}
+          hiddenKebabMenuIds={hiddenKebabMenuIds}
         />
         <TableBody
           rows={[...getTopRows(), ...getCenterRows(), ...getBottomRows()]}
+          classNames={classNames}
         />
       </table>
     </TableContext.Provider>
