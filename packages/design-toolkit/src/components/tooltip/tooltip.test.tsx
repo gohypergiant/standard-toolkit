@@ -10,7 +10,8 @@
  * governing permissions and limitations under the License.
  */
 import { render, screen } from '@testing-library/react';
-import { describe, expect, it } from 'vitest';
+import { useRef } from 'react';
+import { describe, expect, it, vi } from 'vitest';
 import { Tooltip } from './';
 import { TooltipTrigger } from './trigger';
 import type { TooltipTriggerComponentProps } from 'react-aria-components/Tooltip';
@@ -39,5 +40,44 @@ describe('Tooltip', () => {
     const { children } = setup();
 
     expect(screen.getByText(`${children}`)).toBeInTheDocument();
+  });
+
+  describe('overlay container', () => {
+    function getOverlayContainers(spy: ReturnType<typeof vi.spyOn>) {
+      return spy.mock.results
+        .map((result) => result.value as HTMLElement)
+        .filter((el) => el.getAttribute?.('class') === 'absolute');
+    }
+
+    it('should not create an overlay container without a parentRef', () => {
+      const spy = vi.spyOn(document, 'createElement');
+
+      setup();
+
+      expect(getOverlayContainers(spy)).toHaveLength(0);
+
+      spy.mockRestore();
+    });
+
+    it('should attach an overlay container to the parentRef element', () => {
+      function Wrapper() {
+        const parentRef = useRef<HTMLDivElement>(null);
+
+        return (
+          <div ref={parentRef} data-testid='parent'>
+            <TooltipTrigger isOpen>
+              <span>Foo</span>
+              <Tooltip parentRef={parentRef}>My tooltip</Tooltip>
+            </TooltipTrigger>
+          </div>
+        );
+      }
+
+      render(<Wrapper />);
+
+      expect(
+        screen.getByTestId('parent').querySelector('div.absolute'),
+      ).not.toBeNull();
+    });
   });
 });
