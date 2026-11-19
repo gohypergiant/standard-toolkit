@@ -76,7 +76,13 @@ createComponentTests({
           { timeout: 30000 },
         );
       },
-      expectedLeaks: 3, // Tooltip may have minor leaks due to floating-ui
+      cleanup: async (page) => {
+        await page.mouse.move(0, 0);
+        await page.click('[data-testid="toggle-tooltips"]');
+        await page.waitForSelector('[data-testid="tooltip-container"]', {
+          state: 'hidden',
+        });
+      },
       actionWaitMs: 1000,
       cleanupWaitMs: 1000,
     },

@@ -52,7 +52,8 @@ export function Tooltip({
 }: TooltipProps) {
   const isSSR = useIsSSR();
   const overlayContainer = useMemo(() => {
-    if (isSSR) {
+    // Without a parentRef the container is never attached to the document.
+    if (isSSR || !parentRef) {
       return null;
     }
 
@@ -61,7 +62,7 @@ export function Tooltip({
     div.setAttribute('class', 'absolute');
 
     return div;
-  }, [isSSR]);
+  }, [isSSR, parentRef]);
 
   return (
     <PortalProvider parentRef={parentRef} inject={overlayContainer}>

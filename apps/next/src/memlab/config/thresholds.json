@@ -17,9 +17,9 @@
       "notes": "Simple component with zero tolerance for leaks"
     },
     "tooltip": {
-      "maxLeakedObjects": 2,
+      "maxLeakedObjects": 0,
       "maxRetainedSize": 102400,
-      "notes": "Uses React Aria's overlay system and portal - may have minor leaks from floating positioning during stress tests"
+      "notes": "Uses React Aria's overlay system and portal"
     },
     "dialog": {
       "maxLeakedObjects": 2,
